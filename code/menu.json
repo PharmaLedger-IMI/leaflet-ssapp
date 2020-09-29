@@ -1,0 +1,42 @@
+{
+  "defaultMenuConfig": {
+    "icon": "fa-bars",
+    "type": "route",
+    "component": "psk-page-loader",
+    "exact": true,
+    "404": "/pages/404.html"
+  },
+  "pages": [
+    {
+      "name": "Landing"
+    },
+    {
+      "name": "Scan",
+      "tags": "scan"
+    },
+    {
+      "name": "History",
+      "tags": "history"
+    },
+    {
+      "name": "About",
+      "tags": "about"
+    },
+    {
+      "name": "Help",
+      "tags": "help"
+    },
+    {
+      "name": "Drug details",
+      "indexed": false
+    },
+    {
+      "name": "Leaflet",
+      "indexed": false
+    },
+    {
+      "name": "View Leaflet",
+      "indexed": false
+    }
+  ]
+}
