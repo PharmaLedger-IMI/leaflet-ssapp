@@ -5,19 +5,22 @@
 
     <psk-container controller-name="DrugDetailsController">
 
-            <psk-text-input label="Name" value="@product.name"></psk-text-input>
-            <psk-text-input label="GTIN" value="@product.gtin"></psk-text-input>
-            <psk-textarea label="Description" value="@product.description"></psk-textarea>
-            <psk-button label="Download Leaflet"></psk-button>
-            <!--<psk-form-row>
-                <psk-label label="Photo"></psk-label>
-                <psk-img src="@product.photo" width="150"></psk-img>
-            </psk-form-row>-->
+        <psk-text-input label="Name" value="@product.name"></psk-text-input>
+        <psk-text-input label="GTIN" value="@product.gtin"></psk-text-input>
+        <psk-textarea label="Description" value="@product.description"></psk-textarea>
+
+        <psk-form-row>
+            <psk-label label="Photo"></psk-label>
+            <psk-img src="@product.photo" width="150"></psk-img>
+        </psk-form-row>
+
+        <psk-button label="Download Leaflet"></psk-button>
     </psk-container>
+
     <div slot="footer">
-        <psk-button-link name="Scan Pack" icon="qrcode" tag="scan"></psk-button-link>
+        <psk-button-link name="Scan Pack" icon="qrcode" page="scan"></psk-button-link>
         <psk-button-link name="History" icon="history" page="history"></psk-button-link>
-        <psk-button-link name="About" icon="bug" page="about"></psk-button-link>
+        <psk-button-link name="About" icon="info-circle" page="about"></psk-button-link>
         <psk-button-link name="Help" icon="question" page="help"></psk-button-link>
     </div>
 </psk-mobile>
