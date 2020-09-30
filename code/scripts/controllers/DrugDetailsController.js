@@ -8,7 +8,7 @@ export default class DrugDetailsController extends ContainerController {
             if (err) {
                 console.log(err);
             }
-            product.photo = '/tmp/batch/product'+product.photo;
+            product.photo = '/download/tmp/batch/product'+product.photo;
             this.setModel({product});
         });
     }
