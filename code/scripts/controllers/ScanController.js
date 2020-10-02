@@ -12,7 +12,7 @@ export default class ScanController extends ContainerController {
 		});
 		this.on("displayLeaflet", (event)=>{
 			const gtinComponents = utils.parse(this.model.data);
-			const gtinSSI = gtinResolver.createGTIN_SSI("default", gtinComponents.gtin, gtinComponents.batch, gtinComponents.expiration);
+			const gtinSSI = gtinResolver.createGTIN_SSI("default", gtinComponents.gtin, gtinComponents.batchNumber, gtinComponents.expirationDate);
 			if (typeof $$.interactions === "undefined") {
 				require('callflow').initialise();
 				const se = require("swarm-engine");
