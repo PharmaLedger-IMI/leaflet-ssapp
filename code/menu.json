@@ -8,7 +8,8 @@
   },
   "pages": [
     {
-      "name": "Landing"
+      "name": "Home",
+      "tags": "home"
     },
     {
       "name": "Scan",

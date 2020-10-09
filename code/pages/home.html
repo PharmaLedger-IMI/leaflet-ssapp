@@ -1,15 +1,16 @@
+<psk-img src="/assets/images/pharmaledgerEPI.png"></psk-img>
 <psk-mobile class="fullHeightWithFooter noPadding">
-    <section slot="title">
-        <span> EPI </span>
-    </section>
-
+  
     <psk-slideshow images="/assets/images/1.jpg, /assets/images/2.jpg">
     </psk-slideshow>
 
     <div slot="footer">
         <psk-button-link name="Scan Pack" icon="qrcode" page="scan"></psk-button-link>
         <psk-button-link name="History" icon="history" page="history"></psk-button-link>
-        <psk-button-link name="About" icon="info-circle" page="about"></psk-button-link>
+        <psk-link page="about" class='button-link'>
+            <psk-img src="/assets/images/PLLogo.png" width='30' height='12'></psk-img>
+            <div>About</div>
+        </psk-link>
         <psk-button-link name="Help" icon="question" page="help"></psk-button-link>
     </div>
 </psk-mobile>
