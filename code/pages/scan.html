@@ -3,11 +3,9 @@
 
 
     <psk-container controller-name="ScanController">
-
-        <psk-barcode-scanner title="Scan SGTIN" data="@data" normal-size></psk-barcode-scanner>
-
-        <psk-text-input label="SGTIN:" value="@data"></psk-text-input>
-        <psk-button class="fullWidth" label="Display leaflet" event-name="displayLeaflet" class="auto-width"></psk-button>
+        <psk-barcode-scanner title="Scan 2D Matrix" data="@data" normal-size></psk-barcode-scanner>
+        <psk-text-input label="Scanned data:" value="@data"></psk-text-input>
+        <psk-button class="fullWidth" label="Show Details" event-name="displayLeaflet" class="auto-width"></psk-button>
     </psk-container>
 
 </psk-mobile>
