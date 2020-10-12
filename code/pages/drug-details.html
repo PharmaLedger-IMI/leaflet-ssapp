@@ -1,38 +1,50 @@
 <psk-img src="/assets/images/pharmaledgerEPI.png"></psk-img>
-<psk-mobile class="fullHeightWithFooter">
+<psk-mobile class="fullHeightWithFooter noPadding" controller-name="DrugDetailsController">
+    <strong>
+            <psk-label label="@product.name"></psk-label>
+        </strong>
+        <psk-label label="@product.manufName"></psk-label>
 
-
-    <psk-container controller-name="DrugDetailsController">
-
-    <strong>    <psk-label label="@product.name"></psk-label>  </strong>  
-        <psk-label label="@product.manufName"> </psk-label>
-
-
-        <psk-details title="More details" layout="collapsable">
+        <psk-details layout="collapsable">
             GTIN:
             <psk-label label="@product.gtin"></psk-label>
             Serial Number:
-            <psk-label label="@package.serialNumber"> </psk-label>
+            <psk-label label="@package.serialNumber"></psk-label>
             Batch:
-            <psk-label label="@package.batch"> </psk-label>
+            <psk-label label="@package.batch"></psk-label>
+
+            <section slot="footer">
+                <psk-layout template-columns="1fr 1fr 1fr" gap="50px">
+                    <psk-layout-item>
+                        <img src="/assets/icons/serial_number/png/sn_green.png" width="50px" height="50px"></img>
+                    </psk-layout-item>
+
+                    <psk-layout-item>
+                        <img src="/assets/icons/product_status/png/productstatus_green.png" width="50px" height="50px"></img>
+                    </psk-layout-item>
+
+                    <psk-layout-item>
+                        <img src="/assets/icons/pack_verification/png/box_black.png" width="50px" height="50px"></img>
+                    </psk-layout-item>
+
+                </psk-layout>
+            </section>
         </psk-details>
 
-        <br/>
-        
-        <psk-button-link name="Product Information" icon="newspaper-o" page=""></psk-button-link>
-        <psk-button-link name="Pack Verification" icon="info" page=""></psk-button-link>
-        <br/>
-        <psk-button-link name="Report Adverse Event" icon="bullhorn" page=""></psk-button-link>
-        <psk-button-link name="Add to my cabinet" icon="archive" page=""></psk-button-link>
+        <!--        <br/>-->
 
-        <br />
+        <!--        <psk-button-link name="Product Information" icon="newspaper-o" page=""></psk-button-link>-->
+        <!--        <psk-button-link name="Pack Verification" icon="info" page=""></psk-button-link>-->
+        <!--        <br/>-->
+        <!--        <psk-button-link name="Report Adverse Event" icon="bullhorn" page=""></psk-button-link>-->
+        <!--        <psk-button-link name="Add to my cabinet" icon="archive" page=""></psk-button-link>-->
 
-<!-- 
-    <psk-grid columns="2" layout="xs=[12] s=[12] m=[12] l=[12] xl=[12]">
-            <psk-button class="fullWidth" label="Download Leaflet"></psk-button>
-        </psk-grid>
-    </psk-container> -->
+        <!--        <br />-->
 
+        <!--
+            <psk-grid columns="2" layout="xs=[12] s=[12] m=[12] l=[12] xl=[12]">
+                    <psk-button class="fullWidth" label="Download Leaflet"></psk-button>
+                </psk-grid>-->
     <div slot="footer">
         <psk-button-link name="Scan Pack" icon="qrcode" page="scan"></psk-button-link>
         <psk-button-link name="History" icon="history" page="history"></psk-button-link>
