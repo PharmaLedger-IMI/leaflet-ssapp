@@ -1,56 +1,79 @@
 <psk-img src="/assets/images/pharmaledgerEPI.png"></psk-img>
 <psk-mobile class="fullHeightWithFooter noPadding" controller-name="DrugDetailsController">
     <section slot="title">
-        <psk-icon icon="info-circle" color="#FFFFFF"></psk-icon>
+       Scanned Pack Details
         <!-- <span>Product information</span>
         CSS file modification needed for title to fit perfectly:
             .mobile > header > .title {
                              font-size: 1.2rem;
                             } -->
     </section>
+    <br />
+    <psk-layout template-columns="1fr 9fr">
+        <psk-layout-item>
+        </psk-layout-item>
+        <psk-layout-item>
+            <span style="color:blue;">
+                <strong>
+                    <psk-label label="@product.name"></psk-label>
+                </strong>
+            </span>
 
-    <strong>
-        <psk-label label="@product.name"></psk-label>
-    </strong>
-    <psk-label label="@product.manufName"></psk-label>
+        </psk-layout-item>
+        <psk-layout-item>
 
+        </psk-layout-item>
+        <psk-layout-item>
+           
+            <psk-label label="@product.manufName"></psk-label>
+      
+        </psk-layout-item>
+    </psk-layout>
+    <br />
     <psk-details layout="collapsable">
-        <psk-layout template-columns="2fr 9fr">
+        <psk-layout template-columns="6fr 9fr">
             <psk-layout-item>
                 GTIN/NTIN:
             </psk-layout-item>
             <psk-layout-item>
-                <strong><psk-label label="@product.gtin"></psk-label></strong>
+                <strong>
+                    <psk-label label="@product.gtin"></psk-label>
+                </strong>
+            </psk-layout-item>
+
+            <psk-layout-item>
+                Batch:
+            </psk-layout-item>
+            <psk-layout-item>
+                <strong>
+                    <psk-label label="@package.batch"></psk-label>
+                </strong>
             </psk-layout-item>
 
             <psk-layout-item>
                 Serial Number:
             </psk-layout-item>
             <psk-layout-item>
-                <strong><psk-label label="@package.serialNumber"></psk-label></strong>
+                <strong>
+                    <psk-label label="@package.serialNumber"></psk-label>
+                </strong>
             </psk-layout-item>
-            <psk-layout-item>
-                Batch:
-            </psk-layout-item>
-            <psk-layout-item>
-                <strong><psk-label label="@package.batch"></psk-label></strong>
-            </psk-layout-item>
+            
         </psk-layout>
 
-        <br><br>
+        <br/>
         <section slot="footer">
-            <psk-layout template-columns="1fr 1fr 1fr" gap="50px">
+            <psk-layout template-columns="1fr 1fr 1fr" gap="10px">
                 <psk-layout-item>
-                    <img src="/assets/icons/serial_number/png/sn_green.png" width="50px" height="50px"></img>
+                    <img src="/assets/icons/serial_number/png/SerialNum_Verified.png" width="75px" height="75px"></img>
                 </psk-layout-item>
 
                 <psk-layout-item>
-                    <img src="/assets/icons/product_status/png/productstatus_green.png" width="50px"
-                         height="50px"></img>
+                    <img src="/assets/icons/product_status/png/ProductS_Success.png" width="75px" height="75px"></img>
                 </psk-layout-item>
 
                 <psk-layout-item>
-                    <img src="/assets/icons/pack_verification/png/box_black.png" width="50px" height="50px"></img>
+                    <img src="/assets/icons/pack_verification/png/PackV_Pending.png" width="75px" height="75px"></img>
                 </psk-layout-item>
 
             </psk-layout>
@@ -59,9 +82,10 @@
 
 
     <psk-layout template-columns="2fr 2fr" template-rows="2fr 2fr" align-items="center" comlumn-gap="50px"
-                row-gap="50px">
+        row-gap="50px">
         <psk-layout-item>
-            <psk-button-link class="xxlIcon" name="Product Information" icon="newspaper-o" page="leaflet"></psk-button-link>
+            <psk-button-link class="xxlIcon" name="Product Information" icon="newspaper-o" page="leaflet">
+            </psk-button-link>
         </psk-layout-item>
         <psk-layout-item>
             <psk-button-link class="xxlIcon" name="Report Adverse Event" icon="bullhorn" page=""></psk-button-link>
@@ -78,7 +102,7 @@
         <psk-button-link name="Scan Pack" icon="qrcode" page="scan"></psk-button-link>
         <psk-button-link name="History" icon="history" page="history"></psk-button-link>
         <psk-link page="about" class='button-link'>
-            <psk-img src="/assets/images/PLLogo.png"  width='26' height='12'></psk-img>
+            <psk-img src="/assets/images/PLLogo.png" width='26' height='12'></psk-img>
             <div>About</div>
         </psk-link>
         <psk-button-link name="Home" icon="home" page="home"></psk-button-link>
