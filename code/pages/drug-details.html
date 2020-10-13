@@ -2,7 +2,7 @@
 <psk-mobile class="fullHeightWithFooter noPadding" controller-name="DrugDetailsController">
     <section slot="title">
         <psk-icon icon="info-circle" color="#FFFFFF"></psk-icon>
-        <!-- <span>Product information</span> 
+        <!-- <span>Product information</span>
         CSS file modification needed for title to fit perfectly:
             .mobile > header > .title {
                              font-size: 1.2rem;
@@ -13,49 +13,66 @@
         <psk-label label="@product.name"></psk-label>
     </strong>
     <psk-label label="@product.manufName"></psk-label>
-    <br />
 
     <psk-details layout="collapsable">
-        GTIN/NTIN: <psk-label label="@product.gtin"></psk-label>
-        Serial Number: <psk-label label="@package.serialNumber"></psk-label>
-        Expiry Date: <psk-label label="@package.expiry"></psk-label>
-        Batch: <psk-label label="@package.batch"></psk-label>
-        <!-- Find a way to display above label and data in same line -->
+        <psk-layout template-columns="2fr 9fr">
+            <psk-layout-item>
+                GTIN/NTIN:
+            </psk-layout-item>
+            <psk-layout-item>
+                <strong><psk-label label="@product.gtin"></psk-label></strong>
+            </psk-layout-item>
 
-        <!-- Adjusted icon size-->
+            <psk-layout-item>
+                Serial Number:
+            </psk-layout-item>
+            <psk-layout-item>
+                <strong><psk-label label="@package.serialNumber"></psk-label></strong>
+            </psk-layout-item>
+            <psk-layout-item>
+                Batch:
+            </psk-layout-item>
+            <psk-layout-item>
+                <strong><psk-label label="@package.batch"></psk-label></strong>
+            </psk-layout-item>
+        </psk-layout>
+
+        <br><br>
         <section slot="footer">
-            <br />
             <psk-layout template-columns="1fr 1fr 1fr" gap="50px">
                 <psk-layout-item>
-                    <img src="/assets/icons/serial_number/png/sn_green.png" width="25px" height="25px"></img>
+                    <img src="/assets/icons/serial_number/png/sn_green.png" width="50px" height="50px"></img>
                 </psk-layout-item>
-                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+
                 <psk-layout-item>
-                    <img src="/assets/icons/product_status/png/productstatus_green.png" width="20px"
-                        height="25px"></img>
+                    <img src="/assets/icons/product_status/png/productstatus_green.png" width="50px"
+                         height="50px"></img>
                 </psk-layout-item>
-                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+
                 <psk-layout-item>
-                    <img src="/assets/icons/pack_verification/png/box_black.png" width="28px" height="30px"></img>
+                    <img src="/assets/icons/pack_verification/png/box_black.png" width="50px" height="50px"></img>
                 </psk-layout-item>
+
             </psk-layout>
         </section>
-
     </psk-details>
-    <br />
-    <psk-button-link name="Product Information" icon="newspaper-o" page="Leaflet"></psk-button-link>
-    <psk-button-link name="Pack Verification" icon="info" page="history"></psk-button-link>
-    <br />
 
-    <psk-button-link name="Report Adverse Event" icon="bullhorn" page="history"></psk-button-link>
-    <psk-button-link name="Add to my cabinet" icon="archive" page="history"></psk-button-link>
-    <br />
 
-<!-- This button is not required at the moment. Need to insert download button on top right of the app bar -->
-
-    <!-- <psk-grid columns="2" layout="xs=[12] s=[12] m=[12] l=[12] xl=[12]">
-                    <psk-button class="fullWidth" label="Download Leaflet"></psk-button>
-    </psk-grid> -->
+    <psk-layout template-columns="2fr 2fr" template-rows="2fr 2fr" align-items="center" comlumn-gap="50px"
+                row-gap="50px">
+        <psk-layout-item>
+            <psk-button-link class="xxlIcon" name="Product Information" icon="newspaper-o"></psk-button-link>
+        </psk-layout-item>
+        <psk-layout-item>
+            <psk-button-link class="xxlIcon" name="Report Adverse Event" icon="bullhorn" page=""></psk-button-link>
+        </psk-layout-item>
+        <psk-layout-item>
+            <psk-button-link class="xxlIcon" name="Pack Verification" icon="info" page=""></psk-button-link>
+        </psk-layout-item>
+        <psk-layout-item>
+            <psk-button-link class="xxlIcon" name="Add to my cabinet" icon="archive" page=""></psk-button-link>
+        </psk-layout-item>
+    </psk-layout>
 
     <div slot="footer">
         <psk-button-link name="Scan Pack" icon="qrcode" page="scan"></psk-button-link>
@@ -70,5 +87,5 @@
 
 <!-- Serial Number, expiry  fields needs repairs
     Font re sizing , positioning with padding has to be evaluated
-    Grid for the components in mobile view has to be  
+    Grid for the components in mobile view has to be
  -->
