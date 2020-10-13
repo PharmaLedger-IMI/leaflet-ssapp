@@ -33,6 +33,7 @@
     },
     {
       "name": "Leaflet",
+      "tags": "leaflet",
       "indexed": false
     },
     {
