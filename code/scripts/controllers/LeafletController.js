@@ -6,7 +6,6 @@ export default class LeafletController extends ContainerController {
 	constructor(element, history) {
 		super(element, history);
 		this.setModel({});
-		debugger;
 		this.displayLeaflet();
 	}
 
