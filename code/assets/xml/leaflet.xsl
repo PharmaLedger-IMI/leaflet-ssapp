@@ -13,46 +13,54 @@
             <body>
                 <psk-accordion>
                     <xsl:for-each select="//xs:component/xs:structuredBody/xs:component">
-                        <psk-accordion-item>
-                            <xsl:attribute name="title">
-                                <xsl:value-of select="xs:section/xs:code/@displayName"/>
-                            </xsl:attribute>
+                        <xsl:choose>
+                            <!--for the moment we don't display section called "SPL LISTING DATA ELEMENTS SECTION"-->
+                            <xsl:when test="xs:section/xs:code/@displayName != 'SPL LISTING DATA ELEMENTS SECTION'">
+                                <psk-accordion-item>
+                                    <xsl:attribute name="title">
+                                        <xsl:value-of select="xs:section/xs:code/@displayName"/>
+                                    </xsl:attribute>
 
-                            <!--e.g. SPL LISTING DATA ELEMENTS SECTION-->
-                            <!--<xsl:choose>
-                                <xsl:when test="xs:section/xs:excerpt/xs:highlight">
-                                    <div>
-                                        <xsl:copy>
-                                            <xsl:apply-templates select="xs:section/xs:excerpt/xs:highlight"/>
-                                        </xsl:copy>
-                                    </div>
-                                </xsl:when>
-                            </xsl:choose>-->
-                            <!--e.g. INDICATIONS & USAGE SECTION-->
-                            <xsl:choose>
-                                <xsl:when test="xs:section/xs:excerpt/xs:highlight">
-                                    <xsl:copy>
-                                        <xsl:apply-templates select="xs:section/xs:excerpt/xs:highlight"/>
-                                    </xsl:copy>
-                                </xsl:when>
-                            </xsl:choose>
-                            <!--e.g. INSTRUCTIONS FOR USE SECTION-->
-                            <xsl:choose>
-                                <xsl:when test="xs:section/xs:text">
-                                    <xsl:copy>
-                                        <xsl:apply-templates select="xs:section/xs:text"/>
-                                    </xsl:copy>
-                                </xsl:when>
-                            </xsl:choose>
-                            <!--e.g. CLINICAL PHARMACOLOGY SECTION-->
-                            <xsl:choose>
-                                <xsl:when test="xs:section/xs:component/xs:section">
-                                    <xsl:copy>
-                                        <xsl:apply-templates select="xs:section/xs:component/xs:section"/>
-                                    </xsl:copy>
-                                </xsl:when>
-                            </xsl:choose>
-                        </psk-accordion-item>
+                                    <!--e.g. SPL LISTING DATA ELEMENTS SECTION-->
+                                    <!--<xsl:choose>
+                                        <xsl:when test="xs:section/xs:excerpt/xs:highlight">
+                                            <div>
+                                                <xsl:copy>
+                                                    <xsl:apply-templates select="xs:section/xs:excerpt/xs:highlight"/>
+                                                </xsl:copy>
+                                            </div>
+                                        </xsl:when>
+                                    </xsl:choose>-->
+                                    <!--e.g. INDICATIONS & USAGE SECTION-->
+                                    <xsl:choose>
+                                        <xsl:when test="xs:section/xs:excerpt/xs:highlight">
+                                            <xsl:copy>
+                                                <xsl:copy-of select="xs:section/xs:excerpt/xs:highlight/xs:text" />
+                                                <!--<xsl:apply-templates select="xs:section/xs:excerpt/xs:highlight"/>-->
+                                            </xsl:copy>
+                                        </xsl:when>
+                                    </xsl:choose>
+                                    <!--e.g. INSTRUCTIONS FOR USE SECTION-->
+                                    <xsl:choose>
+                                        <xsl:when test="xs:section/xs:text">
+                                            <xsl:copy>
+                                                <!--<xsl:apply-templates select="xs:section/xs:text"/>-->
+                                                <xsl:copy-of select="xs:section/xs:text" />
+                                            </xsl:copy>
+                                        </xsl:when>
+                                    </xsl:choose>
+                                    <!--e.g. CLINICAL PHARMACOLOGY SECTION-->
+                                    <xsl:choose>
+                                        <xsl:when test="xs:section/xs:component/xs:section">
+                                            <xsl:copy>
+                                                <!--<xsl:apply-templates select="xs:section/xs:component/xs:section"/>-->
+                                                <xsl:copy-of select="xs:section/xs:component/xs:section" />
+                                            </xsl:copy>
+                                        </xsl:when>
+                                    </xsl:choose>
+                                </psk-accordion-item>
+                            </xsl:when>
+                        </xsl:choose>
                     </xsl:for-each>
                 </psk-accordion>
             </body>
