@@ -5,9 +5,10 @@ const gtinResolver = require("gtin-resolver");
 export default class ScanController extends ContainerController {
     constructor(element, history) {
         super(element);
-        this.setModel({data: ''});
+        this.setModel({data: '', hasCode: false});
         this.history = history;
         this.model.onChange("data", () => {
+            this.model.hasCode = true;
             const gtinComponents = utils.parse(this.model.data);
             const gtinSSI = gtinResolver.createGTIN_SSI("default", gtinComponents.gtin, gtinComponents.batchNumber, gtinComponents.expirationDate);
             if (typeof $$.interactions === "undefined") {

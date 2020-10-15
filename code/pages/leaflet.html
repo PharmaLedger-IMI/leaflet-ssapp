@@ -1,5 +1,18 @@
 <psk-img src="/assets/images/pharmaledgerEPI.png"></psk-img>
 <psk-mobile class="fullHeightWithFooter noPadding" controller-name="LeafletController">
+    <psk-link page="drug-details" class="button-link">
+        <psk-layout template-columns="1fr 11fr">
+            <psk-layout-item>
+                <psk-icon icon="arrow-left">
+
+                </psk-icon>
+            </psk-layout-item>
+            <psk-layout-item>
+                Product Information
+            </psk-layout-item>
+        </psk-layout>
+    </psk-link>
+
     <psk-container id="content">
 
     </psk-container>
@@ -8,7 +21,7 @@
         <psk-button-link name="Scan Pack" icon="qrcode" page="scan"></psk-button-link>
         <psk-button-link name="History" icon="history" page="history"></psk-button-link>
         <psk-link page="about" class='button-link'>
-            <psk-img src="/assets/images/PLLogo.png"  width='26' height='12'></psk-img>
+            <psk-img src="/assets/images/PLLogo.png" width='26' height='12'></psk-img>
             <div>About</div>
         </psk-link>
         <psk-button-link name="Home" icon="home" page="home"></psk-button-link>

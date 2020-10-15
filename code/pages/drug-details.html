@@ -1,90 +1,105 @@
 <psk-img src="/assets/images/pharmaledgerEPI.png"></psk-img>
 <psk-mobile class="fullHeightWithFooter noPadding" controller-name="DrugDetailsController">
     <section slot="title">
-       Scanned Pack Details
+        Scanned Pack Details
     </section>
 
-    <psk-layout template-columns="1fr 9fr" class="coloredBackground">
-        <psk-layout-item>
-        </psk-layout-item>
-        <psk-layout-item>
-            <span style="color:blue;">
+        <psk-layout template-columns="1fr" align-items="center" class="coloredBackground">
+            <psk-layout-item>
+            <span style="color:blue; font-size: 19px;">
                 <strong>
                     <psk-label label="@product.name"></psk-label>
                 </strong>
             </span>
 
-        </psk-layout-item>
-        <psk-layout-item>
+            </psk-layout-item>
+            <psk-layout-item>
 
-        </psk-layout-item>
-        <psk-layout-item>
-           
-            <psk-label label="@product.manufName"></psk-label>
-      
-        </psk-layout-item>
-    </psk-layout>
+            </psk-layout-item>
+            <psk-layout-item>
+                <psk-label label="@product.manufName"></psk-label>
+            </psk-layout-item>
+        </psk-layout>
 
-    <psk-details layout="collapsable">
-        <div>
-            <psk-echo value="Expiry:"></psk-echo> <strong><psk-echo value="@expiry"></psk-echo></strong>
+
+        <psk-details layout="collapsable">
+            <div>
+                <psk-echo value="Expiry:"></psk-echo>
+                <strong>
+                    <psk-echo value="@expiry"></psk-echo>
+                </strong>
+            </div>
+
+            <div>
+                <psk-echo value="Serial number:"></psk-echo>
+                <strong>
+                    <psk-echo value="@package.serialNumber"></psk-echo>
+                </strong>
+            </div>
+
+            <div>
+                <psk-echo value="Product Code(GTIN/NTIN):"></psk-echo>
+                <strong>
+                    <psk-echo value="@product.gtin"></psk-echo>
+                </strong>
+            </div>
+
+            <div>
+                <psk-echo value="Batch:"></psk-echo>
+                <strong>
+                    <psk-echo value="@package.batch"></psk-echo>
+                </strong>
+            </div>
+
+            <section slot="footer">
+                <psk-layout template-columns="1fr 1fr 1fr" columns-gap="10px" class="coloredBackground smallTopPadding">
+                    <psk-layout-item>
+                        <img src="/assets/icons/serial_number/png/SerialNum_Verified.png" width="90px"
+                             height="90px"></img>
+                    </psk-layout-item>
+
+                    <psk-layout-item>
+                        <img src="/assets/icons/product_status/png/ProductS_Success.png" width="90px"
+                             height="90px"></img>
+                    </psk-layout-item>
+
+                    <psk-layout-item>
+                        <img src="/assets/icons/pack_verification/png/PackV_Pending.png" width="90px"
+                             height="90px"></img>
+                    </psk-layout-item>
+
+                </psk-layout>
+            </section>
+        </psk-details>
+
+        <psk-layout template-columns="1fr 1fr" align-items="center"  row-gap="20px" class="topPadding">
+            <psk-layout-item>
+                <psk-button-link class="xxlIcon purpleIcon" name="Product Information" icon="newspaper-o"
+                                 page="leaflet">
+                </psk-button-link>
+            </psk-layout-item>
+            <psk-layout-item>
+                <psk-button-link class="xxlIcon redIcon" name="Report Adverse Event" icon="bullhorn"
+                                 page=""></psk-button-link>
+            </psk-layout-item>
+            <psk-layout-item>
+                <psk-button-link class="xxlIcon blackIcon" name="Pack Verification" icon="info"
+                                 page=""></psk-button-link>
+            </psk-layout-item>
+            <psk-layout-item>
+                <psk-button-link class="xxlIcon cabinetIcon" name="Add to my cabinet" icon="archive"
+                                 page=""></psk-button-link>
+            </psk-layout-item>
+        </psk-layout>
+        <div slot="footer">
+            <psk-button-link name="Scan Pack" icon="qrcode" page="scan"></psk-button-link>
+            <psk-button-link name="History" icon="history" page="history"></psk-button-link>
+            <psk-link page="about" class='button-link'>
+                <psk-img src="/assets/images/PLLogo.png" width='26' height='12'></psk-img>
+                <div>About</div>
+            </psk-link>
+            <psk-button-link name="Home" icon="home" page="home"></psk-button-link>
         </div>
-
-        <div>
-            <psk-echo value="Serial number:"></psk-echo> <strong><psk-echo value="@package.serialNumber"></psk-echo></strong>
-        </div>
-
-        <div>
-            <psk-echo value="Product Code(GTIN/NTIN):"></psk-echo> <strong><psk-echo value="@product.gtin"></psk-echo></strong>
-        </div>
-
-        <div>
-            <psk-echo value="Batch:"></psk-echo> <strong><psk-echo value="@package.batch"></psk-echo></strong>
-        </div>
-
-        <section slot="footer">
-            <psk-layout template-columns="1fr 1fr 1fr" gap="10px" class="coloredBackground">
-                <psk-layout-item>
-                    <img src="/assets/icons/serial_number/png/SerialNum_Verified.png" width="90px" height="90px"></img>
-                </psk-layout-item>
-
-                <psk-layout-item>
-                    <img src="/assets/icons/product_status/png/ProductS_Success.png" width="90px" height="90px"></img>
-                </psk-layout-item>
-
-                <psk-layout-item>
-                    <img src="/assets/icons/pack_verification/png/PackV_Pending.png" width="90px" height="90px"></img>
-                </psk-layout-item>
-
-            </psk-layout>
-        </section>
-    </psk-details>
-
-    <psk-layout template-columns="1fr 1fr" align-items="center" class="topPadding">
-        <psk-layout-item>
-            <psk-button-link class="xxlIcon purpleIcon" name="Product Information" icon="newspaper-o" page="leaflet">
-            </psk-button-link>
-        </psk-layout-item>
-        <psk-layout-item>
-            <psk-button-link class="xxlIcon redIcon" name="Report Adverse Event" icon="bullhorn" page=""></psk-button-link>
-        </psk-layout-item>
-        <psk-layout-item>
-            <psk-button-link class="xxlIcon blackIcon" name="Pack Verification" icon="info" page=""></psk-button-link>
-        </psk-layout-item>
-        <psk-layout-item>
-            <psk-button-link class="xxlIcon cabinetIcon" name="Add to my cabinet" icon="archive" page=""></psk-button-link>
-        </psk-layout-item>
-    </psk-layout>
-
-    <div slot="footer">
-        <psk-button-link name="Scan Pack" icon="qrcode" page="scan"></psk-button-link>
-        <psk-button-link name="History" icon="history" page="history"></psk-button-link>
-        <psk-link page="about" class='button-link'>
-            <psk-img src="/assets/images/PLLogo.png" width='26' height='12'></psk-img>
-            <div>About</div>
-        </psk-link>
-        <psk-button-link name="Home" icon="home" page="home"></psk-button-link>
-    </div>
 </psk-mobile>
 
 <!-- Serial Number, expiry  fields needs repairs
