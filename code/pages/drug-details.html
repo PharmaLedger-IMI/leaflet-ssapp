@@ -2,14 +2,9 @@
 <psk-mobile class="fullHeightWithFooter noPadding" controller-name="DrugDetailsController">
     <section slot="title">
        Scanned Pack Details
-        <!-- <span>Product information</span>
-        CSS file modification needed for title to fit perfectly:
-            .mobile > header > .title {
-                             font-size: 1.2rem;
-                            } -->
     </section>
-    <br />
-    <psk-layout template-columns="1fr 9fr">
+
+    <psk-layout template-columns="1fr 9fr" class="coloredBackground">
         <psk-layout-item>
         </psk-layout-item>
         <psk-layout-item>
@@ -29,41 +24,26 @@
       
         </psk-layout-item>
     </psk-layout>
-    <br />
+
     <psk-details layout="collapsable">
-        <psk-layout template-columns="6fr 9fr">
-            <psk-layout-item>
-                GTIN/NTIN:
-            </psk-layout-item>
-            <psk-layout-item>
-                <strong>
-                    <psk-label label="@product.gtin"></psk-label>
-                </strong>
-            </psk-layout-item>
+        <div>
+            <psk-echo value="Expiry:"></psk-echo> <strong><psk-echo value="@expiry"></psk-echo></strong>
+        </div>
 
-            <psk-layout-item>
-                Batch:
-            </psk-layout-item>
-            <psk-layout-item>
-                <strong>
-                    <psk-label label="@package.batch"></psk-label>
-                </strong>
-            </psk-layout-item>
+        <div>
+            <psk-echo value="Serial number:"></psk-echo> <strong><psk-echo value="@package.serialNumber"></psk-echo></strong>
+        </div>
 
-            <psk-layout-item>
-                Serial Number:
-            </psk-layout-item>
-            <psk-layout-item>
-                <strong>
-                    <psk-label label="@package.serialNumber"></psk-label>
-                </strong>
-            </psk-layout-item>
-            
-        </psk-layout>
+        <div>
+            <psk-echo value="Product Code(GTIN/NTIN):"></psk-echo> <strong><psk-echo value="@product.gtin"></psk-echo></strong>
+        </div>
 
-        <br/>
+        <div>
+            <psk-echo value="Batch:"></psk-echo> <strong><psk-echo value="@package.batch"></psk-echo></strong>
+        </div>
+
         <section slot="footer">
-            <psk-layout template-columns="1fr 1fr 1fr" gap="10px">
+            <psk-layout template-columns="1fr 1fr 1fr" gap="10px" class="coloredBackground">
                 <psk-layout-item>
                     <img src="/assets/icons/serial_number/png/SerialNum_Verified.png" width="90px" height="90px"></img>
                 </psk-layout-item>
@@ -80,21 +60,19 @@
         </section>
     </psk-details>
 
-
-    <psk-layout template-columns="2fr 2fr" template-rows="2fr 2fr" align-items="center" comlumn-gap="50px"
-        row-gap="50px">
+    <psk-layout template-columns="1fr 1fr" align-items="center" class="topPadding">
         <psk-layout-item>
-            <psk-button-link class="xxlIcon" name="Product Information" icon="newspaper-o" page="leaflet">
+            <psk-button-link class="xxlIcon purpleIcon" name="Product Information" icon="newspaper-o" page="leaflet">
             </psk-button-link>
         </psk-layout-item>
         <psk-layout-item>
-            <psk-button-link class="xxlIcon" name="Report Adverse Event" icon="bullhorn" page=""></psk-button-link>
+            <psk-button-link class="xxlIcon redIcon" name="Report Adverse Event" icon="bullhorn" page=""></psk-button-link>
         </psk-layout-item>
         <psk-layout-item>
-            <psk-button-link class="xxlIcon" name="Pack Verification" icon="info" page=""></psk-button-link>
+            <psk-button-link class="xxlIcon blackIcon" name="Pack Verification" icon="info" page=""></psk-button-link>
         </psk-layout-item>
         <psk-layout-item>
-            <psk-button-link class="xxlIcon" name="Add to my cabinet" icon="archive" page=""></psk-button-link>
+            <psk-button-link class="xxlIcon cabinetIcon" name="Add to my cabinet" icon="archive" page=""></psk-button-link>
         </psk-layout-item>
     </psk-layout>
 
