@@ -5,65 +5,132 @@
                 xmlns="urn:hl7-org:v3" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
                 xsi:schemaLocation="urn:hl7-org:v3 https://www.accessdata.fda.gov/spl/schema/spl.xsd">
     <xsl:output method="html"/>
-    <xsl:template match="/">
-        <html>
-            <head>
-                <title>Electronic Product Information</title>
-            </head>
-            <body>
-                <psk-accordion>
-                    <xsl:for-each select="//xs:component/xs:structuredBody/xs:component">
-                        <xsl:choose>
-                            <!--for the moment we don't display section called "SPL LISTING DATA ELEMENTS SECTION"-->
-                            <xsl:when test="xs:section/xs:code/@displayName != 'SPL LISTING DATA ELEMENTS SECTION'">
-                                <psk-accordion-item>
-                                    <xsl:attribute name="title">
-                                        <xsl:value-of select="xs:section/xs:code/@displayName"/>
-                                    </xsl:attribute>
+    <!--setting identity transformation-->
+    <xsl:template match="@*|node()">
+        <xsl:copy>
+            <xsl:apply-templates select="@*|node()"/>
+        </xsl:copy>
+    </xsl:template>
 
-                                    <!--e.g. SPL LISTING DATA ELEMENTS SECTION-->
-                                    <!--<xsl:choose>
-                                        <xsl:when test="xs:section/xs:excerpt/xs:highlight">
-                                            <div>
-                                                <xsl:copy>
-                                                    <xsl:apply-templates select="xs:section/xs:excerpt/xs:highlight"/>
-                                                </xsl:copy>
-                                            </div>
-                                        </xsl:when>
-                                    </xsl:choose>-->
-                                    <!--e.g. INDICATIONS & USAGE SECTION-->
-                                    <xsl:choose>
-                                        <xsl:when test="xs:section/xs:excerpt/xs:highlight">
-                                            <xsl:copy>
-                                                <xsl:copy-of select="xs:section/xs:excerpt/xs:highlight/xs:text" />
-                                                <!--<xsl:apply-templates select="xs:section/xs:excerpt/xs:highlight"/>-->
-                                            </xsl:copy>
-                                        </xsl:when>
-                                    </xsl:choose>
-                                    <!--e.g. INSTRUCTIONS FOR USE SECTION-->
-                                    <xsl:choose>
-                                        <xsl:when test="xs:section/xs:text">
-                                            <xsl:copy>
-                                                <!--<xsl:apply-templates select="xs:section/xs:text"/>-->
-                                                <xsl:copy-of select="xs:section/xs:text" />
-                                            </xsl:copy>
-                                        </xsl:when>
-                                    </xsl:choose>
-                                    <!--e.g. CLINICAL PHARMACOLOGY SECTION-->
-                                    <xsl:choose>
-                                        <xsl:when test="xs:section/xs:component/xs:section">
-                                            <xsl:copy>
-                                                <!--<xsl:apply-templates select="xs:section/xs:component/xs:section"/>-->
-                                                <xsl:copy-of select="xs:section/xs:component/xs:section" />
-                                            </xsl:copy>
-                                        </xsl:when>
-                                    </xsl:choose>
-                                </psk-accordion-item>
-                            </xsl:when>
-                        </xsl:choose>
-                    </xsl:for-each>
-                </psk-accordion>
-            </body>
-        </html>
+    <xsl:template match="xs:document">
+        <psk-accordion>
+            <xsl:apply-templates select="@*|node()"/>
+        </psk-accordion>
+    </xsl:template>
+
+    <xsl:template match="xs:document/xs:component">
+        <xsl:apply-templates select="@*|node()"/>
+    </xsl:template>
+
+    <xsl:template match="xs:component/xs:structuredBody">
+        <xsl:apply-templates select="@*|node()"/>
+    </xsl:template>
+
+    <xsl:template match="xs:structuredBody/xs:component">
+        <xsl:apply-templates select="@*|node()"/>
+    </xsl:template>
+
+    <xsl:template match="xs:paragraph">
+        <p>
+            <xsl:apply-templates select="@*|node()"/>
+        </p>
+    </xsl:template>
+
+    <xsl:template match="xs:list">
+        <ul>
+            <xsl:apply-templates select="@*|node()"/>
+        </ul>
+    </xsl:template>
+
+    <xsl:template match="xs:item">
+        <li>
+            <xsl:apply-templates select="@*|node()"/>
+        </li>
+    </xsl:template>
+
+    <xsl:template match="xs:linkHtml">
+        <a>
+            <xsl:attribute name="href">
+                <xsl:value-of select="@href"/>
+            </xsl:attribute>
+            <xsl:value-of select="."/>
+        </a>
+    </xsl:template>
+
+    <xsl:template match="xs:section">
+        <xsl:choose>
+            <xsl:when test="xs:code/@displayName != 'SPL LISTING DATA ELEMENTS SECTION'">
+                <psk-accordion-item>
+                    <xsl:attribute name="title">
+                        <xsl:value-of select="xs:code/@displayName"/>
+                    </xsl:attribute>
+                    <xsl:apply-templates select="@*|node()"/>
+                </psk-accordion-item>
+            </xsl:when>
+            <xsl:otherwise></xsl:otherwise>
+        </xsl:choose>
+    </xsl:template>
+
+    <xsl:template match="xs:section/xs:component/xs:section">
+        <div>
+            <h3>
+                <xsl:value-of select="xs:code/@displayName"/>
+            </h3>
+            <div>
+                <xsl:apply-templates select="@*|node()"/>
+            </div>
+        </div>
+    </xsl:template>
+
+    <xsl:template match="xs:content">
+        <xsl:choose>
+            <xsl:when test="@styleCode = 'bold'">
+                <b>
+                    <xsl:value-of select="."/>
+                </b>
+            </xsl:when>
+            <xsl:when test="@styleCode = 'underline'">
+                <u>
+                    <xsl:value-of select="."/>
+                </u>
+            </xsl:when>
+            <xsl:otherwise>
+                <xsl:value-of select="."/>
+            </xsl:otherwise>
+        </xsl:choose>
+    </xsl:template>
+
+    <xsl:template match="xs:renderMultiMedia">
+        <xsl:apply-templates select="//xs:observationMedia[@ID=current()/@referencedObject]"/>
+    </xsl:template>
+
+    <xsl:template match="xs:observationMedia">
+        <img>
+            <xsl:attribute name="src">
+                <xsl:value-of select="xs:value/xs:reference/@value"/>
+            </xsl:attribute>
+            <xsl:attribute name="alt">
+                <xsl:value-of select="xs:text"/>
+            </xsl:attribute>
+        </img>
+    </xsl:template>
+
+    <xsl:template match="xs:document/xs:title">
+        <psk-accordion-item>
+            <xsl:attribute name="title">
+                HIGHLIGHTS OF PRESCRIBING INFORMATION
+            </xsl:attribute>
+            <xsl:attribute name="opened">
+                opened
+            </xsl:attribute>
+            <div>
+                <xsl:apply-templates select="@*|node()"/>
+            </div>
+        </psk-accordion-item>
+    </xsl:template>
+
+    <!--nodes or attributes that we need to hide for a cleaner output-->
+    <xsl:template match="xs:author|xs:id|xs:document/xs:code|xs:document/xs:effectiveTime|xs:document/xs:setId|xs:document/xs:versionNumber">
+        <!--hide selected nodes-->
     </xsl:template>
 </xsl:stylesheet>
