@@ -62,7 +62,13 @@
             <xsl:when test="xs:code/@displayName != 'SPL LISTING DATA ELEMENTS SECTION'">
                 <psk-accordion-item>
                     <xsl:attribute name="title">
-                        <xsl:value-of select="xs:code/@displayName"/>
+                        <!--<xsl:value-of select="xs:code/@displayName"/>-->
+                        <xsl:variable name="partialTitle" select="substring(xs:code/@displayName,2)"/>
+                        <xsl:variable name="firstLetter" select="substring(xs:code/@displayName,1,1)"/>
+                        <xsl:variable name="modifiedTitle">
+                            <xsl:value-of select="concat($firstLetter,translate($partialTitle,'ABCDEFGHIJKLMNOPQRSTUVWXYZ','abcdefghijklmnopqrstuvwxyz'))"/>
+                        </xsl:variable>
+                        <xsl:value-of select="$modifiedTitle"/>
                     </xsl:attribute>
                     <xsl:apply-templates select="@*|node()"/>
                 </psk-accordion-item>
@@ -74,7 +80,13 @@
     <xsl:template match="xs:section/xs:component/xs:section">
         <div>
             <h3>
-                <xsl:value-of select="xs:code/@displayName"/>
+                <!--<xsl:value-of select="xs:code/@displayName"/>-->
+                <xsl:variable name="partialTitle" select="substring(xs:code/@displayName,2)"/>
+                <xsl:variable name="firstLetter" select="substring(xs:code/@displayName,1,1)"/>
+                <xsl:variable name="modifiedTitle">
+                    <xsl:value-of select="concat($firstLetter,translate($partialTitle,'ABCDEFGHIJKLMNOPQRSTUVWXYZ','abcdefghijklmnopqrstuvwxyz'))"/>
+                </xsl:variable>
+                <xsl:value-of select="$modifiedTitle"/>
             </h3>
             <div>
                 <xsl:apply-templates select="@*|node()"/>
@@ -105,6 +117,7 @@
     </xsl:template>
 
     <xsl:template match="xs:observationMedia">
+        <!-- don't display images until folder upload mechanism is implemented
         <img>
             <xsl:attribute name="src">
                 <xsl:value-of select="xs:value/xs:reference/@value"/>
@@ -112,13 +125,13 @@
             <xsl:attribute name="alt">
                 <xsl:value-of select="xs:text"/>
             </xsl:attribute>
-        </img>
+        </img>-->
     </xsl:template>
 
     <xsl:template match="xs:document/xs:title">
         <psk-accordion-item>
             <xsl:attribute name="title">
-                HIGHLIGHTS OF PRESCRIBING INFORMATION
+                Highlights of prescribing information
             </xsl:attribute>
             <xsl:attribute name="opened">
                 opened
