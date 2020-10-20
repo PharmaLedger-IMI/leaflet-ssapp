@@ -15,28 +15,28 @@
 
     <psk-details layout="collapsable">
         <div>
-            <psk-echo value="Expiry:"></psk-echo>
+            <psk-echo value="Expiry: "></psk-echo>
             <strong>
                 <psk-echo value="@expiry"></psk-echo>
             </strong>
         </div>
 
         <div>
-            <psk-echo value="Serial number:"></psk-echo>
+            <psk-echo value="Serial number: "></psk-echo>
             <strong>
                 <psk-echo value="@package.serialNumber"></psk-echo>
             </strong>
         </div>
 
         <div>
-            <psk-echo value="Product Code(GTIN/NTIN):"></psk-echo>
+            <psk-echo value="Product Code (GTIN/ NTIN): "></psk-echo>
             <strong>
                 <psk-echo value="@product.gtin"></psk-echo>
             </strong>
         </div>
 
         <div>
-            <psk-echo value="Batch:"></psk-echo>
+            <psk-echo value="Batch: "></psk-echo>
             <strong>
                 <psk-echo value="@package.batch"></psk-echo>
             </strong>
@@ -45,18 +45,18 @@
         <section slot="footer">
             <psk-layout template-columns="1fr 1fr 1fr" columns-gap="10px" class="coloredBackground smallTopPadding">
                 <psk-layout-item>
-                    <img src="/assets/icons/serial_number/png/SerialNum_Verified.png" width="90px"
-                         height="90px"></img>
+                    <img src="/assets/icons/serial_number/png/SerialNum_Verified.png" width="70px"
+                         height="70px"></img>
                 </psk-layout-item>
 
                 <psk-layout-item>
-                    <img src="/assets/icons/product_status/png/ProductS_Success.png" width="90px"
-                         height="90px"></img>
+                    <img src="/assets/icons/product_status/png/ProductS_Success.png" width="70px"
+                         height="70px"></img>
                 </psk-layout-item>
 
                 <psk-layout-item>
-                    <img src="/assets/icons/pack_verification/png/PackV_Pending.png" width="90px"
-                         height="90px"></img>
+                    <img src="/assets/icons/pack_verification/png/PackV_Pending.png" width="70px"
+                         height="70px"></img>
                 </psk-layout-item>
 
             </psk-layout>
@@ -65,21 +65,21 @@
 
     <psk-layout template-columns="1fr 1fr" align-items="center" row-gap="20px" class="topPadding">
         <psk-layout-item>
-            <psk-button-link class="xxlIcon" name="Product Information" icon="file-text"
+            <psk-button-link class="xxlIcon" name="Product info" icon="file-text"
                              page="leaflet">
             </psk-button-link>
         </psk-layout-item>
         <psk-layout-item>
-            <psk-button-link class="xxlIcon" name="Report Adverse Event" icon="exclamation-triangle"
-                             page=""></psk-button-link>
+            <psk-button-link class="xxlIcon" name="Report" icon="exclamation-triangle"
+                             page="report"></psk-button-link>
         </psk-layout-item>
         <psk-layout-item>
-            <psk-button-link class="xxlIcon" name="Pack Verification" icon="info-circle"
-                             page=""></psk-button-link>
+            <psk-button-link class="xxlIcon" name="Verify pack" icon="info-circle"
+                             page="history"></psk-button-link>
         </psk-layout-item>
         <psk-layout-item>
-            <psk-button-link class="xxlIcon" name="Add to my cabinet" icon="archive"
-                             page=""></psk-button-link>
+            <psk-button-link class="xxlIcon" name="Add to cabinet" icon="archive"
+                             page="history"></psk-button-link>
         </psk-layout-item>
     </psk-layout>
     <div slot="footer">

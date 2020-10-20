@@ -133,9 +133,9 @@
             <xsl:attribute name="title">
                 Highlights of prescribing information
             </xsl:attribute>
-            <xsl:attribute name="opened">
+            <!-- <xsl:attribute name="opened">
                 opened
-            </xsl:attribute>
+            </xsl:attribute> -->
             <div>
                 <xsl:apply-templates select="@*|node()"/>
             </div>

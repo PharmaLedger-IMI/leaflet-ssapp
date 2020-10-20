@@ -28,6 +28,10 @@
       "tags": "help"
     },
     {
+      "name": "Report",
+      "tags": "report"
+    },
+    {
       "name": "Drug details",
       "indexed": false
     },
