@@ -9,8 +9,11 @@ export default class DrugDetailsController extends ContainerController {
         this.DSUStorage.getItem('/tmp/batch/product/product.json', 'json', (err, product) => {
             if (err) {
                 console.log(err);
+                console.log(product);
             }
             product.photo = '/download/tmp/batch/product' + product.photo;
+//            this.model.product.photo = '/download/tmp/batch/product' + this.model.product.photo;
+
             this.model.product = product;
 
             this.DSUStorage.getItem('/tmp/package.json', 'json', (err, pack) => {
