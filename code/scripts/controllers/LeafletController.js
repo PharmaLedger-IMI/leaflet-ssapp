@@ -1,5 +1,6 @@
 import ContainerController from '../../cardinal/controllers/base-controllers/ContainerController.js';
-const pathToXml = '/tmp/batch/product/leaflet.xml';
+const pathBase = '/tmp/batch/product/';
+const pathToXml = pathBase+'leaflet.xml';
 const pathToXsl = '/code/assets/xml/leaflet.xsl';
 
 export default class LeafletController extends ContainerController {
@@ -17,6 +18,7 @@ export default class LeafletController extends ContainerController {
 			this.DSUStorage.getItem(pathToXsl, (err, content) => {
 				const xslContent = textDecoder.decode(content);
 				let xsltProcessor = new XSLTProcessor();
+				xsltProcessor.setParameter(null, "resources_path", "/download"+pathBase);
 				let parser = new DOMParser();
 
 				let xmlDoc = parser.parseFromString(xmlContent,"text/xml");

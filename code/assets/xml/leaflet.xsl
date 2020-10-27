@@ -5,6 +5,7 @@
                 xmlns="urn:hl7-org:v3" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
                 xsi:schemaLocation="urn:hl7-org:v3 https://www.accessdata.fda.gov/spl/schema/spl.xsd">
     <xsl:output method="html"/>
+
     <!--setting identity transformation-->
     <xsl:template match="@*|node()">
         <xsl:copy>
@@ -117,15 +118,14 @@
     </xsl:template>
 
     <xsl:template match="xs:observationMedia">
-        <!-- don't display images until folder upload mechanism is implemented
         <img>
             <xsl:attribute name="src">
-                <xsl:value-of select="xs:value/xs:reference/@value"/>
+                <xsl:value-of select="concat($resources_path, xs:value/xs:reference/@value)"/>
             </xsl:attribute>
             <xsl:attribute name="alt">
                 <xsl:value-of select="xs:text"/>
             </xsl:attribute>
-        </img>-->
+        </img>
     </xsl:template>
 
     <xsl:template match="xs:document/xs:title">
