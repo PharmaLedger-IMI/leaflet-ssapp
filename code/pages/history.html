@@ -1,31 +1,32 @@
 <psk-img src="/assets/images/pharmaledgerEPI.png"></psk-img>
 <psk-mobile class="fullHeightWithFooter">
 
-    <!-- <psk-layout template-columns="1fr 1fr" align-items="center" row-gap="20px" class="topPadding">
-        <psk-layout-item>
-            <psk-img src="@photo" height='24' width='24'>
-            </psk-img>
-        </psk-layout-item>
-        <psk-layout-item>
-            <div>
-                <strong>
-                    <psk-echo value="@product.name"></psk-echo>
-                </strong>
-            </div>
-            <div>
-                <psk-echo value="@product.manufName"></psk-echo>
-            </div>
-            <div>
-                <psk-echo value="Expiry: "></psk-echo>
-                <psk-echo value="@expiry"></psk-echo>
-            </div>
+    <psk-container controller-name="HistoryController">
+        <!--        <psk-img src="/assets/images/underconstruction.png"></psk-img>-->
+        <psk-for-each data-view-model="@products">
+            <psk-layout template-columns="1fr 1fr" align-items="center" row-gap="20px" class="topPadding">
+                <psk-layout-item onclick="this.dispatchEvent(new Event('view-leaflet'))">
+                    <psk-img src="@photo" height='24' width='24'>
+                    </psk-img>
+                </psk-layout-item>
+                <psk-layout-item onclick="this.dispatchEvent(new Event('view-leaflet'))">
+                    <div>
+                        <strong>
+                            <psk-echo value="@name"></psk-echo>
+                        </strong>
+                    </div>
+                    <div>
+                        <psk-echo value="@manufName"></psk-echo>
+                    </div>
+                    <div>
+                        <psk-echo value="Expiry: "></psk-echo>
+                        <psk-echo value="@expiry"></psk-echo>
+                    </div>
 
-        </psk-layout-item>
-    </psk-layout> -->
-
-
-    
-    <psk-img src="/assets/images/underconstruction.png"></psk-img>
+                </psk-layout-item>
+            </psk-layout>
+        </psk-for-each>
+    </psk-container>
 
     <div slot="footer">
         <!-- <psk-button-link name="Scan Pack" icon="qrcode" page="scan"></psk-button-link> -->
@@ -40,4 +41,5 @@
         </psk-link>
         <psk-button-link name="Help" icon="question" page="help"></psk-button-link>
     </div>
+
 </psk-mobile>
