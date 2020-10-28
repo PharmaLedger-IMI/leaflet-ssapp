@@ -1,7 +1,6 @@
 import ContainerController from "../../cardinal/controllers/base-controllers/ContainerController.js";
-const monthNames = ["January", "February", "March", "April", "May", "June",
-    "July", "August", "September", "October", "November", "December"
-];
+import utils from "../../utils.js";
+
 export default class DrugDetailsController extends ContainerController {
     constructor(element, history) {
         super(element, history);
@@ -21,9 +20,7 @@ export default class DrugDetailsController extends ContainerController {
                     console.log(err);
                 }
 
-                const year = "20" + pack.expiration.substring(0, 2);
-                const month = parseInt(pack.expiration.substring(2, 4));
-                this.model.expiry = `${monthNames[month - 1]} - ${year}`;
+                this.model.expiry = utils.getDate(pack.expiration);
                 this.model.package = pack;
             });
         });

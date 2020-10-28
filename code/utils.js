@@ -83,4 +83,17 @@ function populateComponents(components, gs1String, ai) {
     }
 }
 
-export default {parse};
+const monthNames = ["January", "February", "March", "April", "May", "June",
+    "July", "August", "September", "October", "November", "December"
+];
+
+function getDate(gtinDate){
+    const year = "20" + gtinDate.substring(0, 2);
+    const month = parseInt(gtinDate.substring(2, 4));
+    return `${monthNames[month - 1]} - ${year}`;
+}
+
+export default {
+    parse,
+    getDate
+};
