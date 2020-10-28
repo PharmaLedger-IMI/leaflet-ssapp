@@ -11,22 +11,13 @@ export default class ScanController extends ContainerController {
             this.model.hasCode = true;
             const gtinComponents = utils.parse(this.model.data);
             const gtinSSI = gtinResolver.createGTIN_SSI("default", gtinComponents.gtin, gtinComponents.batchNumber, gtinComponents.expirationDate);
-            if (typeof $$.interactions === "undefined") {
-                require('callflow').initialise();
-                const se = require("swarm-engine");
-                const identity = "test/agent/007";
-                se.initialise(identity);
-                const SRPC = se.SmartRemoteChannelPowerCord;
-                let swUrl = "http://localhost:8080/";
-                const powerCord = new SRPC([swUrl]);
-                $$.swarmEngine.plug(identity, powerCord);
-            }
-
-            $$.interactions
-                .startSwarmAs("test/agent/007", "leafletLoader", "mountDSU", `/tmp`, gtinSSI.getIdentifier())
-                .onReturn((err, res) => {
+            this.DSUStorage.call("mountDSU", "/tmp", gtinSSI.getIdentifier(), (err) => {
+                this.DSUStorage.call("listDSUs", "/tmp", (err, dsuList) => {
+                    this.DSUStorage.call("mountDSU", `/packages/${Date.now()}`, gtinSSI.getIdentifier(), (err) => {
                     history.push("/drug-details");
                 });
+                });
+            });
         });
     }
 }
