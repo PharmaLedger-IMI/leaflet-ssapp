@@ -3,14 +3,19 @@ import utils from "../../utils.js";
 
 export default class HistoryController extends ContainerController {
     constructor(element, history) {
-        super(element);
+        super(element, history);
         this.setModel({});
 
         this.on("view-leaflet", (event) => {
             let target = event.target;
-            let targetLabel = target.shadowRoot.querySelector("slot").assignedElements()[0].innerHTML;
-            const regex = /[\d]+/gm;
-            const index = regex.exec(targetLabel);
+            let targetProduct = target.getAttribute("keySSI");
+            const index = parseInt(targetProduct.replace(/\D/g, ''));
+            history.push({
+                pathname: '/leaflet',
+                state: {
+                    productIndex: index
+                }
+            });
         }, {capture: true});
 
         this.DSUStorage.call("listDSUs", "/packages", (err, dsuList) => {
@@ -27,6 +32,7 @@ export default class HistoryController extends ContainerController {
                                 return callback(err);
                             }
 
+                            product.keySSI = pack.product;
                             product.expiry = utils.getDate(pack.expiration);
                             product.photo = '/download/tmp/batch/product' + product.photo;
                             products.push(product);

@@ -11,11 +11,9 @@ export default class ScanController extends ContainerController {
             this.model.hasCode = true;
             const gtinComponents = utils.parse(this.model.data);
             const gtinSSI = gtinResolver.createGTIN_SSI("default", gtinComponents.gtin, gtinComponents.batchNumber, gtinComponents.expirationDate);
-            this.DSUStorage.call("mountDSU", "/tmp", gtinSSI.getIdentifier(), (err) => {
-                this.DSUStorage.call("listDSUs", "/tmp", (err, dsuList) => {
-                    this.DSUStorage.call("mountDSU", `/packages/${Date.now()}`, gtinSSI.getIdentifier(), (err) => {
+            this.DSUStorage.call("mountDSU", '/tmp', gtinSSI.getIdentifier(), (err) => {
+                this.DSUStorage.call("mountDSU", `/packages/${Date.now()}`, gtinSSI.getIdentifier(), (err) => {
                     history.push("/drug-details");
-                });
                 });
             });
         });
