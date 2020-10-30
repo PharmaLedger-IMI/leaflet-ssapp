@@ -1,10 +1,12 @@
-<psk-img src="/assets/images/pharmaledgerEPI.png"></psk-img>
-<psk-mobile class="fullHeightWithoutFooter">
-    <psk-container controller-name="ScanController">
-        <psk-condition condition="@hasCode">
-            <psk-barcode-scanner slot="condition-false" data="@data" normal-size></psk-barcode-scanner>
-            <psk-ui-loader slot="condition-true" should-be-rendered="true"></psk-ui-loader>
-        </psk-condition>
-    </psk-container>
+<psk-example class="mobile-example">
+    <psk-img src="/assets/images/pharmaledgerEPI.png"></psk-img>
+    <psk-mobile class="fullHeightWithoutFooter">
+        <psk-container controller-name="ScanController">
+            <psk-condition condition="@hasCode">
+                <psk-barcode-scanner slot="condition-false" data="@data" normal-size></psk-barcode-scanner>
+                <psk-ui-loader slot="condition-true" should-be-rendered="true"></psk-ui-loader>
+            </psk-condition>
+        </psk-container>
 
-</psk-mobile>
+    </psk-mobile>
+</psk-example>
