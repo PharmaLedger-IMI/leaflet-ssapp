@@ -1,5 +1,5 @@
 import ContainerController from '../../cardinal/controllers/base-controllers/ContainerController.js';
-import utils from "../../utils.js";
+import interpretGS1scan from "../gs1ScanInterpreter/interpretGS1scan/interpretGS1scan.js";
 
 const gtinResolver = require("gtin-resolver");
 export default class ScanController extends ContainerController {
@@ -9,7 +9,15 @@ export default class ScanController extends ContainerController {
         this.history = history;
         this.model.onChange("data", () => {
             this.model.hasCode = true;
-            const gtinComponents = utils.parse(this.model.data);
+            const gs1Elements = interpretGS1scan.interpretScan(this.model.data);
+            const gtinComponents = {};
+            gtinComponents.gtin = gs1Elements.ol.find(el => el.label.includes("GTIN")).value;
+            gtinComponents.batchNumber = gs1Elements.ol.find(el => el.label.includes("BATCH")).value;
+            gtinComponents.serialNumber = gs1Elements.ol.find(el => el.label.includes("SERIAL")).value;
+            let expiry = gs1Elements.ol.find(el => el.label.includes("EXPIRY")).value;
+            expiry = expiry.split("-");
+            expiry[0] = expiry[0].substring(2);
+            gtinComponents.expirationDate = expiry.join('');
             const gtinSSI = gtinResolver.createGTIN_SSI("default", gtinComponents.gtin, gtinComponents.batchNumber, gtinComponents.expirationDate);
             this.DSUStorage.call("mountDSU", '/tmp', gtinSSI.getIdentifier(), (err) => {
                 this.DSUStorage.call("mountDSU", `/packages/${Date.now()}`, gtinSSI.getIdentifier(), (err) => {
