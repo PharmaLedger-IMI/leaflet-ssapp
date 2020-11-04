@@ -20,21 +20,23 @@ export default class HistoryController extends ContainerController {
 
         this.DSUStorage.call("listDSUs", "/packages", (err, dsuList) => {
             const products = [];
+            dsuList.sort((a, b) => parseInt(a.path) <= parseInt(b.path));
             const __readProductsRecursively = (packageNumber, callback) => {
                 if (packageNumber < dsuList.length) {
-                    this.DSUStorage.getItem(`/packages/${dsuList[packageNumber].path}/batch/product/product.json`, 'json', (err, product) => {
+                    const basePath = `/packages/${dsuList[packageNumber].path}`;
+                    this.DSUStorage.getItem(`${basePath}/batch/product/product.json`, 'json', (err, product) => {
                         if (err) {
                             return callback(err);
                         }
 
-                        this.DSUStorage.getItem(`/packages/${dsuList[packageNumber].path}/package.json`, 'json', (err, pack) => {
+                        this.DSUStorage.getItem(`${basePath}/package.json`, 'json', (err, pack) => {
                             if (err) {
                                 return callback(err);
                             }
 
                             product.keySSI = pack.product;
                             product.expiry = utils.getDate(pack.expiration);
-                            product.photo = '/download/tmp/batch/product' + product.photo;
+                            product.photo = `/download${basePath}/batch/product` + product.photo;
                             products.push(product);
                             packageNumber++;
                             __readProductsRecursively(packageNumber, callback);

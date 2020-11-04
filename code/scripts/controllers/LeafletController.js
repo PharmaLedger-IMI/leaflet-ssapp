@@ -17,6 +17,7 @@ export default class LeafletController extends ContainerController {
             if (typeof this.packageIndex === "undefined"){
                 this.packageIndex = packs.length - 1;
             }
+            packs.sort((a, b) => parseInt(a.path) <= parseInt(b.path));
             let pack = packs[this.packageIndex].path;
             let pathBase = `/packages/${pack}/batch/product/`;
             const pathToXml = pathBase + 'leaflet.xml';
