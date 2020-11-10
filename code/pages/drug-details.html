@@ -1,5 +1,4 @@
 <psk-example class="mobile-example">
-    <psk-img src="/assets/images/pharmaledgerEPI.png"></psk-img>
     <psk-mobile class="fullHeightWithFooter noPadding" controller-name="DrugDetailsController">
         <psk-layout template-columns="1fr" align-items="center" class="coloredBackground">
             <psk-layout-item>
@@ -9,7 +8,7 @@
 
             </psk-layout-item>
             <psk-layout-item>
-                <psk-label label="@product.manufName"></psk-label>
+                <psk-label class="manufName" label="@product.manufName"></psk-label>
             </psk-layout-item>
         </psk-layout>
 
@@ -37,7 +36,7 @@
             </div>
 
             <div>
-                <psk-echo value="Batch: "></psk-echo>
+                <psk-echo value="Batch Number: "></psk-echo>
                 <strong>
                     <psk-echo value="@package.batch"></psk-echo>
                 </strong>
@@ -45,40 +44,45 @@
 
             <section slot="footer">
                 <psk-layout template-columns="1fr 1fr 1fr" columns-gap="10px" class="coloredBackground smallTopPadding">
-                    <psk-layout-item>
-                        <img src="/assets/icons/serial_number/png/SerialNum_Verified.png" width="70px"
-                             height="70px"></img>
+                    <psk-layout-item class="horizontal-aligned">
+                        <psk-echo value="Serial number"></psk-echo>
+                        <img src="/assets/icons/serial_number/png/SN_icon.png" width='70' height='70' class="productStatusImg"/>
+                        <psk-label class="small-text" label="Verified"></psk-label>
                     </psk-layout-item>
 
-                    <psk-layout-item>
-                        <img src="/assets/icons/product_status/png/ProductS_Success.png" width="70px"
-                             height="70px"></img>
+                    <psk-layout-item class="horizontal-aligned">
+                        <psk-echo value="Product status"></psk-echo>
+                        <img src="/assets/icons/product_status/png/PS_icon.png" width='70' height='70' class="productStatusImg"/>
+                        <psk-label class="small-text" label="Valid"></psk-label>
                     </psk-layout-item>
 
-                    <psk-layout-item>
-                        <img src="/assets/icons/pack_verification/png/PackV_Pending.png" width="70px"
-                             height="70px"></img>
+                    <psk-layout-item class="horizontal-aligned">
+                        <psk-echo value="Pack verification"></psk-echo>
+                        <img src="/assets/icons/pack_verification/png/PV_icon.png" width='70' height='70' class="productStatusImg"/>
+                        <psk-label class="small-text" style="color: orange" label="Action required"></psk-label>
                     </psk-layout-item>
 
                 </psk-layout>
             </section>
         </psk-details>
 
-        <psk-layout template-columns="1fr 1fr" align-items="center" row-gap="20px" class="topPadding">
-            <psk-layout-item>
-                <psk-button-link class="xxlIcon" name="Product information" icon="file-text" page="leaflet">
+        <psk-layout template-columns="1fr 1fr" align-items="center" row-gap="30px" class="topPadding">
+            <psk-layout-item class="controlButton">
+                <psk-button-link class="xxlIcon" name="Product info" icon="file-text"
+                                 page="leaflet">
                 </psk-button-link>
             </psk-layout-item>
-            <psk-layout-item>
-                <psk-button-link class="xxlIcon" name="Report a problem" icon="exclamation-triangle"
+            <psk-layout-item class="controlButton">
+                <psk-button-link class="xxlIcon" name="Report" icon="exclamation-triangle"
                                  page="report"></psk-button-link>
             </psk-layout-item>
-            <psk-layout-item>
-                <psk-button-link class="xxlIcon" name="Verify package" icon="info-circle"
+            <psk-layout-item class="controlButton">
+                <psk-button-link class="xxlIcon" name="Verify pack" icon="info-circle"
                                  page="history"></psk-button-link>
             </psk-layout-item>
-            <psk-layout-item>
-                <psk-button-link class="xxlIcon" name="Add to cabinet" icon="archive" page="history"></psk-button-link>
+            <psk-layout-item class="controlButton">
+                <psk-button-link class="xxlIcon" name="Add to cabinet" icon="archive"
+                                 page="history"></psk-button-link>
             </psk-layout-item>
         </psk-layout>
 
@@ -104,19 +108,19 @@
                 </psk-layout-item>
             </psk-layout> -->
 
-
         <div slot="footer">
-            <!-- <psk-button-link name="Scan Pack" icon="qrcode" page="scan"></psk-button-link> -->
             <psk-link page="scan" class='button-link alignBottom'>
-                <psk-img src="/assets/images/2dmatrix.png" height='18'></psk-img>
-                <div>Scan Package</div>
+                <psk-img src="/assets/images/footer/data.png" height='18'></psk-img>
             </psk-link>
-            <psk-button-link name="History" icon="history" page="history"></psk-button-link>
-            <psk-link page="about" class='button-link alignBottom'>
-                <psk-img src="/assets/images/PLLogo.png" height='18'></psk-img>
-                <div>About</div>
+            <psk-link page="home" class='button-link alignBottom'>
+                <psk-img src="/assets/images/footer/home.png" height='18'></psk-img>
             </psk-link>
-            <psk-button-link name="Home" icon="home" page="home"></psk-button-link>
+            <psk-link page="history" class='button-link alignBottom'>
+                <psk-img src="/assets/images/footer/history.png" height='18'></psk-img>
+            </psk-link>
+            <psk-link page="help" class='button-link alignBottom'>
+                <psk-img src="/assets/images/footer/about.png" height='18'></psk-img>
+            </psk-link>
         </div>
     </psk-mobile>
 </psk-example>

@@ -1,5 +1,5 @@
-<psk-img src="/assets/images/pharmaledgerEPI.png"></psk-img>
 <psk-mobile class="pdfViewer" class="no-title">
+
     <psk-container class="pdfViewer" controller-name="displayLeafletPDF">
         <div class='container'>
             <div class='content'>
@@ -8,14 +8,18 @@
     </psk-container>
 
     <div slot="footer">
-        <!-- <psk-button-link name="Scan Pack" icon="qrcode" tag="scan"></psk-button-link> -->
         <psk-link page="scan" class='button-link alignBottom'>
-            <psk-img src="/assets/images/2dmatrix.png" height='18'></psk-img>
-            <div>Scan Package</div>
+            <psk-img src="/assets/images/footer/data.png" height='18'></psk-img>
         </psk-link>
-        <psk-button-link name="History" icon="history" page="history"></psk-button-link>
-        <psk-button-link name="About" icon="bug" page="about"></psk-button-link>
-        <psk-button-link name="Help" icon="question" page="help"></psk-button-link>
+        <psk-link page="home" class='button-link alignBottom'>
+            <psk-img src="/assets/images/footer/home.png" height='18'></psk-img>
+        </psk-link>
+        <psk-link page="history" class='button-link alignBottom'>
+            <psk-img src="/assets/images/footer/history.png" height='18'></psk-img>
+        </psk-link>
+        <psk-link page="help" class='button-link alignBottom'>
+            <psk-img src="/assets/images/footer/about.png" height='18'></psk-img>
+        </psk-link>
     </div>
     
 </psk-mobile>
