@@ -6,12 +6,12 @@ export default class HistoryController extends ContainerController {
         super(element, history);
         this.setModel({});
 
-        this.on("view-leaflet", (event) => {
+        this.on("view-details", (event) => {
             let target = event.target;
             let targetProduct = target.getAttribute("keySSI");
             const index = parseInt(targetProduct.replace(/\D/g, ''));
             history.push({
-                pathname: '/leaflet',
+                pathname: '/drug-details',
                 state: {
                     productIndex: index
                 }
@@ -21,21 +21,19 @@ export default class HistoryController extends ContainerController {
         this.DSUStorage.call("listDSUs", "/packages", (err, dsuList) => {
             const products = [];
             dsuList.sort((a, b) => parseInt(a.path) <= parseInt(b.path));
+
             const __readProductsRecursively = (packageNumber, callback) => {
                 if (packageNumber < dsuList.length) {
                     const basePath = `/packages/${dsuList[packageNumber].path}`;
-                    this.DSUStorage.getItem(`${basePath}/batch/product/product.json`, 'json', (err, product) => {
-                        if (err) {
-                            return callback(err);
-                        }
-
-                        this.DSUStorage.getItem(`${basePath}/package.json`, 'json', (err, pack) => {
+                    this.DSUStorage.getItem(`${basePath}/batch/batch.json`, 'json', (err, batch) => {
+                        this.DSUStorage.getItem(`${basePath}/batch/product/${batch.version}/${batch.language}/product.json`, 'json', (err, product) => {
                             if (err) {
                                 return callback(err);
                             }
 
-                            product.keySSI = pack.product;
-                            product.expiry = utils.getDate(pack.expiration);
+
+                            product.keySSI = batch.product;
+                            product.expiry = utils.getDate(batch.expiry);
                             product.photo = `/download${basePath}/batch/product` + product.photo;
                             products.push(product);
                             packageNumber++;

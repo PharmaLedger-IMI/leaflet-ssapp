@@ -1,46 +1,48 @@
 <psk-example class="mobile-example">
-    <psk-mobile class="fullHeightWithFooter noPadding" controller-name="DrugDetailsController">
-        <psk-layout template-columns="1fr" align-items="center" class="coloredBackground">
-            <psk-layout-item>
-                <psk-label class="drugName" label="@product.name"></psk-label>
-            </psk-layout-item>
-            <psk-layout-item>
+    <psk-img src="/assets/images/pharmaledgerEPI.png"></psk-img>
+    <psk-mobile class="fullHeightWithFooter noPadding">
+        <psk-container controller-name="DrugDetailsController">
+            <psk-layout template-columns="1fr" align-items="center" class="coloredBackground">
+                <psk-layout-item>
+                    <psk-label class="drugName" label="@product.name"></psk-label>
+                </psk-layout-item>
+                <psk-layout-item>
 
-            </psk-layout-item>
-            <psk-layout-item>
-                <psk-label class="manufName" label="@product.manufName"></psk-label>
-            </psk-layout-item>
-        </psk-layout>
+                </psk-layout-item>
+                <psk-layout-item>
+                    <psk-label label="@product.manufName"></psk-label>
+                </psk-layout-item>
+            </psk-layout>
 
 
-        <psk-details layout="collapsable">
-            <div>
-                <psk-echo value="Expiry: "></psk-echo>
-                <strong>
-                    <psk-echo value="@expiry"></psk-echo>
-                </strong>
-            </div>
+            <psk-details layout="collapsable">
+                <div>
+                    <psk-echo value="Expiry: "></psk-echo>
+                    <strong>
+                        <psk-echo value="@batch.expiry"></psk-echo>
+                    </strong>
+                </div>
 
-            <div>
-                <psk-echo value="Serial number: "></psk-echo>
-                <strong>
-                    <psk-echo value="@package.serialNumber"></psk-echo>
-                </strong>
-            </div>
+                <div>
+                    <psk-echo value="Serial number: "></psk-echo>
+                    <strong>
+                        <psk-echo value="@batch.serialNumber"></psk-echo>
+                    </strong>
+                </div>
 
-            <div>
-                <psk-echo value="Product Code (GTIN/ NTIN): "></psk-echo>
-                <strong>
-                    <psk-echo value="@product.gtin"></psk-echo>
-                </strong>
-            </div>
+                <div>
+                    <psk-echo value="Product Code (GTIN/ NTIN): "></psk-echo>
+                    <strong>
+                        <psk-echo value="@product.gtin"></psk-echo>
+                    </strong>
+                </div>
 
-            <div>
-                <psk-echo value="Batch Number: "></psk-echo>
-                <strong>
-                    <psk-echo value="@package.batch"></psk-echo>
-                </strong>
-            </div>
+                <div>
+                    <psk-echo value="Batch: "></psk-echo>
+                    <strong>
+                        <psk-echo value="@batch.batchNumber"></psk-echo>
+                    </strong>
+                </div>
 
             <section slot="footer">
                 <psk-layout template-columns="1fr 1fr 1fr" columns-gap="10px" class="coloredBackground smallTopPadding">
@@ -62,14 +64,14 @@
                         <psk-label class="small-text" style="color: orange" label="Action required"></psk-label>
                     </psk-layout-item>
 
-                </psk-layout>
-            </section>
-        </psk-details>
+                    </psk-layout>
+                </section>
+            </psk-details>
 
         <psk-layout template-columns="1fr 1fr" align-items="center" row-gap="30px" class="topPadding">
             <psk-layout-item class="controlButton">
                 <psk-button-link class="xxlIcon" name="Product info" icon="file-text"
-                                 page="leaflet">
+                                 event-name="view-leaflet">
                 </psk-button-link>
             </psk-layout-item>
             <psk-layout-item class="controlButton">

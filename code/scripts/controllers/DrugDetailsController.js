@@ -5,24 +5,48 @@ export default class DrugDetailsController extends ContainerController {
     constructor(element, history) {
         super(element, history);
         this.setModel({});
+        if (typeof history.location.state !== "undefined") {
+            this.productIndex = history.location.state.productIndex;
+        }
+
+        this.on("view-leaflet", () => {
+            history.push({
+                pathname: '/leaflet',
+                state: {
+                    productIndex: this.productIndex
+                }
+            });
+        });
+
         this.DSUStorage.call("listDSUs", "/packages", (err, dsuList) => {
             dsuList.sort((a, b) => parseInt(a.path) <= parseInt(b.path));
-            const basePath = `/packages/${dsuList[dsuList.length - 1].path}`;
-            this.DSUStorage.getItem(basePath + `/batch/product/product.json`, 'json', (err, product) => {
+            let targetDSU = dsuList[dsuList.length - 1];
+            if (typeof this.productIndex !== "undefined") {
+                targetDSU = dsuList[this.productIndex];
+            }
+            const basePath = `/packages/${targetDSU.path}`;
+
+            this.DSUStorage.getItem(`${basePath}/batch/batch.json`, "json", (err, batchData) => {
                 if (err) {
                     console.log(err);
-                    console.log(product);
+                    return;
                 }
-                product.photo = `/download/${basePath}/batch/product` + product.photo;
-                this.model.product = product;
 
-                this.DSUStorage.getItem(`${basePath}/package.json`, 'json', (err, pack) => {
+                this.DSUStorage.getItem(`${basePath}/batch/product/${batchData.version}/${batchData.language}/product.json`, "json", (err, product) => {
                     if (err) {
-                        console.log(err);
+                        return console.log(err);
                     }
+                    product.photo = `/download${basePath}/batch/product/${batchData.version}/${batchData.language}` + product.photo;
+                    this.model.product = product;
 
-                    this.model.expiry = utils.getDate(pack.expiration);
-                    this.model.package = pack;
+                    this.DSUStorage.getItem(`${basePath}/batch/batch.json`, "json", (err, batchData) => {
+                        if (err) {
+                            return console.log(err);
+                        }
+
+                        batchData.expiry = utils.getDate(batchData.expiry);
+                        this.model.batch = batchData;
+                    });
                 });
             });
         });

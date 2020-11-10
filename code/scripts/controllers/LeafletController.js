@@ -19,25 +19,32 @@ export default class LeafletController extends ContainerController {
             }
             packs.sort((a, b) => parseInt(a.path) <= parseInt(b.path));
             let pack = packs[this.packageIndex].path;
-            let pathBase = `/packages/${pack}/batch/product/`;
-            const pathToXml = pathBase + 'leaflet.xml';
-            this.DSUStorage.getItem(pathToXml, (err, content) => {
-                let textDecoder = new TextDecoder("utf-8");
-                const xmlContent = textDecoder.decode(content);
+            this.DSUStorage.getItem(`/packages/${pack}/batch/batch.json`, "json", (err, batchData) => {
+                if (err) {
+                    console.log(err);
+                    return;
+                }
 
-                this.DSUStorage.getItem(pathToXsl, (err, content) => {
-                    const xslContent = textDecoder.decode(content);
-                    let xsltProcessor = new XSLTProcessor();
-                    xsltProcessor.setParameter(null, "resources_path", "/download" + pathBase);
-                    let parser = new DOMParser();
+                let pathBase = `/packages/${pack}/batch/product/${batchData.version}/${batchData.language}/`;
+                const pathToXml = pathBase + 'leaflet.xml';
+                this.DSUStorage.getItem(pathToXml, (err, content) => {
+                    let textDecoder = new TextDecoder("utf-8");
+                    const xmlContent = textDecoder.decode(content);
 
-                    let xmlDoc = parser.parseFromString(xmlContent, "text/xml");
-                    let xslDoc = parser.parseFromString(xslContent, "text/xml");
+                    this.DSUStorage.getItem(pathToXsl, (err, content) => {
+                        const xslContent = textDecoder.decode(content);
+                        let xsltProcessor = new XSLTProcessor();
+                        xsltProcessor.setParameter(null, "resources_path", "/download" + pathBase);
+                        let parser = new DOMParser();
 
-                    xsltProcessor.importStylesheet(xslDoc);
+                        let xmlDoc = parser.parseFromString(xmlContent, "text/xml");
+                        let xslDoc = parser.parseFromString(xslContent, "text/xml");
 
-                    let resultDocument = xsltProcessor.transformToFragment(xmlDoc, document);
-                    this.element.querySelector("#content").appendChild(resultDocument);
+                        xsltProcessor.importStylesheet(xslDoc);
+
+                        let resultDocument = xsltProcessor.transformToFragment(xmlDoc, document);
+                        this.element.querySelector("#content").appendChild(resultDocument);
+                    });
                 });
             });
         });
