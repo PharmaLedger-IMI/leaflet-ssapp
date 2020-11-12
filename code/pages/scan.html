@@ -1,6 +1,10 @@
 <psk-example class="mobile-example">
     <psk-mobile>
         <psk-container controller-name="ScanController">
+            <psk-condition condition="@hasError">
+                <psk-label slot="condition-true" class="products-does-not-exist"
+                           label="Product scanned does not exist."></psk-label>
+            </psk-condition>
             <psk-condition condition="@hasCode">
                 <psk-barcode-scanner slot="condition-false" data="@data" normal-size></psk-barcode-scanner>
                 <psk-ui-loader slot="condition-true" should-be-rendered="true"></psk-ui-loader>

@@ -5,7 +5,7 @@ const gtinResolver = require("gtin-resolver");
 export default class ScanController extends ContainerController {
     constructor(element, history) {
         super(element);
-        this.setModel({data: '', hasCode: false});
+        this.setModel({data: '', hasCode: false, hasError: false});
         this.history = history;
         this.model.onChange("data", () => {
             this.model.hasCode = true;
@@ -19,17 +19,29 @@ export default class ScanController extends ContainerController {
             expiry[0] = expiry[0].substring(2);
             gtinComponents.expirationDate = expiry.join('');
             const gtinSSI = gtinResolver.createGTIN_SSI("default", gtinComponents.gtin, gtinComponents.batchNumber, gtinComponents.expirationDate);
-
             this.DSUStorage.call("listDSUs", `/packages`, (err, dsuList) => {
                 const productDSU = dsuList.find(dsu => dsu.identifier === gtinSSI.getIdentifier());
                 if (typeof productDSU === "undefined") {
-                    this.DSUStorage.call("mountDSU", `/packages/${Date.now()}`, gtinSSI.getIdentifier(), (err) => {
-                        history.push("/drug-details");
+                    this.DSUStorage.call("mountDSU", `/package`, gtinSSI.getIdentifier(), (err) => {
+                        this.productExists(gtinSSI, (productExists) => {
+                            if (productExists) {
+                                this.DSUStorage.call("mountDSU", `/packages/${Date.now()}`, gtinSSI.getIdentifier(), (err) => {
+                                    history.push("/drug-details");
+                                });
+                            } else {
+                                this.model.hasError = true;
+                                this.model.hasCode = false;
+                            }
+                        });
                     });
                 } else {
                     history.push("/drug-details");
                 }
             });
         });
+    }
+
+    productExists(gtinSSI, callback) {
+        this.DSUStorage.getItem(`/package/batch/batch.json`, "json",(err) => callback(!err));
     }
 }
