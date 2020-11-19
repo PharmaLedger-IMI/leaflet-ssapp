@@ -43,6 +43,10 @@
     {
       "name": "View Leaflet",
       "indexed": false
+    },
+    {
+      "name": "Scan error",
+      "indexed": false
     }
   ]
 }

@@ -29,8 +29,7 @@ export default class ScanController extends ContainerController {
                                     history.push("/drug-details");
                                 });
                             } else {
-                                this.model.hasError = true;
-                                this.model.hasCode = false;
+                                history.push("/scan-error");
                             }
                         });
                     });
