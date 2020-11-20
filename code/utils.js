@@ -87,13 +87,16 @@ const monthNames = ["January", "February", "March", "April", "May", "June",
     "July", "August", "September", "October", "November", "December"
 ];
 
-function getDate(gtinDate){
-    const year = "20" + gtinDate.substring(0, 2);
-    const month = parseInt(gtinDate.substring(2, 4));
-    return `${monthNames[month - 1]} - ${year}`;
+/**
+ * converts date from ISO (YYYY-MM-DD) to YYYY-HM, where HM comes from human name for the month, i.e. 2021-DECEMBER
+ * @param {string} dateString
+ */
+function convertFromISOtoYYYY_HM(dateString){
+    const splitDate = dateString.split('-');
+    const month = parseInt(splitDate[1]);
+    return `${monthNames[month - 1]} - ${splitDate[0]}`;
 }
 
 export default {
-    parse,
-    getDate
+    convertFromISOtoYYYY_HM
 };
