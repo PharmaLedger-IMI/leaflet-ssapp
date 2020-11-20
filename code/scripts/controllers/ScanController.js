@@ -60,7 +60,6 @@ export default class ScanController extends ContainerController {
 
     parseGs1Fields(orderedList) {
         const gs1Fields = {};
-        console.log("Fields", orderedList);
         const fieldsConfig = {
             "GTIN": "gtin",
             "BATCH/LOT": "batchNumber",
