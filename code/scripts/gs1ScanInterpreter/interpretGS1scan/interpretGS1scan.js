@@ -75,7 +75,7 @@ const plausibleGs1DlUriRegEx = /^https?:(\/\/((([^\/?#]*)@)?([^\/?#:]*)(:([^\/?#
 
 const plausibleCompressedGs1DlUriRegEx = /^https?:(\/\/((([^\/?#]*)@)?([^\/?#:]*)(:([^\/?#]*))?))?\/[0-9A-Za-z_-]{10,}$/;
 
-
+const gs1Url = 'https://id.gs1.orgx';
 
 
 function isPlausibleGs1DlUri(s) {
@@ -84,6 +84,12 @@ function isPlausibleGs1DlUri(s) {
 
 
 function interpretScan(scan) {
+    function throwError(message){
+        throw {
+            message,
+            dlOrderedAIlist
+        }
+    }
     let re = /\((\d{2,4}?)\)/g;
     const toBeReplaced = [];
     const toBeRemoved = [];
@@ -107,41 +113,39 @@ function interpretScan(scan) {
         scan = '(01)' + scan;
     } else if (scan.indexOf(String.fromCharCode(29)) == 0) {
         scan = scan.substring(1);
-        console.log('We have this ' + scan);
     }
     try {
         gs1dlt = new GS1DigitalLinkToolkit();
         if (isPlausibleGs1DlUri(scan)) {
             if (plausibleCompressedGs1DlUriRegEx.test(scan)) {
-                scan = gs1dlt.decompressGS1DigitalLink(scan,false,'https://id.gs1.org');  // Decompress if it's likely to be compressed
+                scan = gs1dlt.decompressGS1DigitalLink(scan,false, gs1Url);  // Decompress if it's likely to be compressed
             }
             try {
                 gs1ElementStrings = gs1dlt.gs1digitalLinkToGS1elementStrings(scan, true);
                 gs1DigitalLinkURI = scan;
             } catch(err) {
-                console.log(err);
-                errmsg = err;
+                throwError(err.message);
             }
         } else {
             try {
-                gs1DigitalLinkURI = gs1dlt.gs1ElementStringsToGS1DigitalLink(scan, false, 'https://id.gs1.org');
+                gs1DigitalLinkURI = gs1dlt.gs1ElementStringsToGS1DigitalLink(scan, false, gs1Url);
             } catch(err) {
-                throw err;
+                throwError(err.message);
             }
         }
         //    console.log('We have a DL of ' + gs1DigitalLinkURI);
     } catch(err) {
-        throw err;
+        throwError(err.message);
     }
 
     // Whatever the input, we have a DL or an error. If an error, the value of gs1DigitalLinkURI is undefined
     if (gs1DigitalLinkURI == undefined) {
-        throw errmsg;
+        throwError(errmsg);
     } else {
         try {
             gs1Array = gs1dlt.extractFromGS1digitalLink(gs1DigitalLinkURI);
         } catch(err) {
-            throw err;
+            throwError(err.message);
         }
 
         // Want to find the primary identifier
@@ -150,7 +154,6 @@ function interpretScan(scan) {
         for (let i in gs1Array.GS1) {
             if (gs1dlt.aitable.find(x => x.ai === i).type === 'I') {
                 primaryKey = i;
-                console.log('Primary key is ' + primaryKey);
                 dlOrderedAIlist.push(getAIElement(i, gs1dlt, gs1Array.GS1, dateAIs));
                 done.push(i);
             }
@@ -182,7 +185,6 @@ function interpretScan(scan) {
         let returnObject = sortElementString(gs1Array.GS1);
         returnObject['ol'] = dlOrderedAIlist;
         returnObject['dl'] = gs1DigitalLinkURI;
-        console.log(returnObject);
         return returnObject;
     }
 }
@@ -228,8 +230,6 @@ function sortElementString(a) {
         }
     }
     if (sortedFNC1.lastIndexOf(FNC1) == sortedFNC1.length -1) { sortedFNC1 = sortedFNC1.substring(0, sortedFNC1.length -1)}
-    console.log(sortedBrackets);
-    console.log(sortedFNC1);
     return {'AIbrackets' : sortedBrackets, 'AIfnc1' : sortedFNC1}
 }
 function gs1ToISO(gs1Date) {

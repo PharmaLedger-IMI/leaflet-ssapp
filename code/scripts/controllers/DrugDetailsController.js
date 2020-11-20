@@ -1,5 +1,4 @@
 import ContainerController from "../../cardinal/controllers/base-controllers/ContainerController.js";
-import utils from "../../utils.js";
 
 export default class DrugDetailsController extends ContainerController {
     constructor(element, history) {
@@ -44,7 +43,6 @@ export default class DrugDetailsController extends ContainerController {
                             return console.log(err);
                         }
 
-                        batchData.expiry = utils.getDate(batchData.expiry);
                         this.model.batch = batchData;
                     });
                 });
