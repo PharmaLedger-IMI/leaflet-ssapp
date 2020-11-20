@@ -9,12 +9,23 @@ export default class ScanController extends ContainerController {
         this.history = history;
         this.model.onChange("data", () => {
             this.model.hasCode = true;
-            const gs1Elements = interpretGS1scan.interpretScan(this.model.data);
+            let gs1Elements;
+            try {
+                gs1Elements = interpretGS1scan.interpretScan(this.model.data);
+            } catch (e) {
+                history.push("/scan-error");
+                return;
+            }
             const gtinComponents = {};
             gtinComponents.gtin = gs1Elements.ol.find(el => el.label.includes("GTIN")).value;
             gtinComponents.batchNumber = gs1Elements.ol.find(el => el.label.includes("BATCH")).value;
             gtinComponents.serialNumber = gs1Elements.ol.find(el => el.label.includes("SERIAL")).value;
             let expiry = gs1Elements.ol.find(el => el.label.includes("EXPIRY")).value;
+
+            if (!gtinComponents.gtin || !gtinComponents.serialNumber || !gtinComponents.serialNumber || !expiry) {
+                history.push("/scan-error");
+                return;
+            }
             expiry = expiry.split("-");
             expiry[0] = expiry[0].substring(2);
             gtinComponents.expirationDate = expiry.join('');
@@ -23,8 +34,8 @@ export default class ScanController extends ContainerController {
                 const productDSU = dsuList.find(dsu => dsu.identifier === gtinSSI.getIdentifier());
                 if (typeof productDSU === "undefined") {
                     this.DSUStorage.call("mountDSU", `/package`, gtinSSI.getIdentifier(), (err) => {
-                        this.productExists(gtinSSI, (productExists) => {
-                            if (productExists) {
+                        this.productExists(gtinSSI, (err, status) => {
+                            if (status) {
                                 this.DSUStorage.call("mountDSU", `/packages/${Date.now()}`, gtinSSI.getIdentifier(), (err) => {
                                     history.push("/drug-details");
                                 });
@@ -41,6 +52,11 @@ export default class ScanController extends ContainerController {
     }
 
     productExists(gtinSSI, callback) {
-        this.DSUStorage.getItem(`/package/batch/batch.json`, "json",(err) => callback(!err));
+        this.DSUStorage.getItem(`/package/batch/batch.json`, "json", err => {
+            if (err) {
+                return callback(undefined, false)
+            }
+            return callback(undefined, true);
+        });
     }
 }
