@@ -31,8 +31,8 @@ export default class ScanController extends ContainerController {
             gtinComponents.expirationDate = expiry.join('');
             const gtinSSI = gtinResolver.createGTIN_SSI("default", gtinComponents.gtin, gtinComponents.batchNumber, gtinComponents.expirationDate);
             this.DSUStorage.call("listDSUs", `/packages`, (err, dsuList) => {
-                const productDSU = dsuList.find(dsu => dsu.identifier === gtinSSI.getIdentifier());
-                if (typeof productDSU === "undefined") {
+                this.productIndex = dsuList.findIndex(dsu => dsu.identifier === gtinSSI.getIdentifier());
+                if (this.productIndex === -1) {
                     this.DSUStorage.call("mountDSU", `/package`, gtinSSI.getIdentifier(), (err) => {
                         this.productExists(gtinSSI, (err, status) => {
                             if (status) {
@@ -45,7 +45,12 @@ export default class ScanController extends ContainerController {
                         });
                     });
                 } else {
-                    history.push("/drug-details");
+                    history.push({
+                        pathname:"/drug-details",
+                        state: {
+                            productIndex: this.productIndex
+                        }
+                    });
                 }
             });
         });
