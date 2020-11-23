@@ -78,18 +78,26 @@
                     </psk-button-link>
                 </psk-layout-item>
                 <psk-layout-item class="controlButton">
-                    <psk-button-link class="xxlIcon" name="Report" icon="exclamation-triangle"
+                    <psk-button-link class="xxlIcon" name="SMPC" icon="book"
+                                     page="report"></psk-button-link>
+                </psk-layout-item>
+            </psk-layout>
+
+            <psk-layout template-columns="1fr 1fr 1fr" align-items="center" row-gap="30px" class="topPadding">
+                <psk-layout-item class="controlButton">
+                    <psk-button-link class="xlIcon" name="Verify pack" icon="info-circle"
+                                     page="history"></psk-button-link>
+                </psk-layout-item>
+                <psk-layout-item class="controlButton">
+                    <psk-button-link class="xlIcon" name="Report" icon="exclamation-triangle"
                                      page="report"></psk-button-link>
                 </psk-layout-item>
                 <psk-layout-item class="controlButton">
-                    <psk-button-link class="xxlIcon" name="Verify pack" icon="info-circle"
-                                     page="history"></psk-button-link>
-                </psk-layout-item>
-                <psk-layout-item class="controlButton">
-                    <psk-button-link class="xxlIcon" name="Add to cabinet" icon="archive"
+                    <psk-button-link class="xlIcon" name="Add to cabinet" icon="archive"
                                      page="history"></psk-button-link>
                 </psk-layout-item>
             </psk-layout>
+
         </psk-container>
         <div slot="footer">
             <psk-link page="scan" class='button-link alignBottom'>
