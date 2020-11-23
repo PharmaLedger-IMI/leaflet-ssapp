@@ -1,10 +1,8 @@
 <psk-example class="mobile-example">
-    <psk-mobile disable-sidebar enable-back>
+    <psk-mobile>
         <psk-container controller-name="ScanErrorController">
             <div class="header-row">
-                <psk-button event-name="go-back">
-                    <psk-icon icon="arrow-left"></psk-icon>
-                </psk-button>
+                <psk-button-link icon="arrow-left" class="go-back-link" page="scan"></psk-button-link>
                 <psk-label class="scan-error-title" label="@title"></psk-label>
             </div>
 
@@ -41,7 +39,6 @@
                         <psk-echo value="@fields.expiry"></psk-echo>
                     </strong>
                 </div>
-
             </psk-form>
         </psk-container>
     </psk-mobile>

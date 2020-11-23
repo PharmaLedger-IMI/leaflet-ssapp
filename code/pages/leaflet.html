@@ -1,19 +1,11 @@
 <psk-example class="mobile-example">
-    <psk-mobile class="noPadding">
+    <psk-mobile>
         <psk-container controller-name="LeafletController">
 
-            <psk-link page="drug-details" class="button-link">
-                <psk-layout template-columns="1fr 11fr">
-                    <psk-layout-item>
-                        <psk-icon icon="arrow-left">
-
-                        </psk-icon>
-                    </psk-layout-item>
-                    <psk-layout-item>
-                        Product Information
-                    </psk-layout-item>
-                </psk-layout>
-            </psk-link>
+            <div class="header-row">
+                <psk-button-link icon="arrow-left" class="go-back-link" page="drug-details"></psk-button-link>
+                <psk-label class="scan-error-title" label="Product Information"></psk-label>
+            </div>
 
             <psk-container id="content">
             </psk-container>
