@@ -31,11 +31,11 @@ export default class DrugDetailsController extends ContainerController {
                     return;
                 }
 
-                this.DSUStorage.getItem(`${basePath}/batch/product/${batchData.version}/${batchData.language}/product.json`, "json", (err, product) => {
+                this.DSUStorage.getItem(`${basePath}/batch/product/${batchData.version}/product.json`, "json", (err, product) => {
                     if (err) {
                         return console.log(err);
                     }
-                    product.photo = `/download${basePath}/batch/product/${batchData.version}/${batchData.language}` + product.photo;
+                    product.photo = `/download${basePath}/batch/product/${batchData.version}` + product.photo;
                     this.model.product = product;
 
                     this.DSUStorage.getItem(`${basePath}/batch/batch.json`, "json", (err, batchData) => {

@@ -25,7 +25,7 @@ export default class HistoryController extends ContainerController {
                 if (packageNumber < dsuList.length) {
                     const basePath = `/packages/${dsuList[packageNumber].path}`;
                     this.DSUStorage.getItem(`${basePath}/batch/batch.json`, 'json', (err, batch) => {
-                        this.DSUStorage.getItem(`${basePath}/batch/product/${batch.version}/${batch.language}/product.json`, 'json', (err, product) => {
+                        this.DSUStorage.getItem(`${basePath}/batch/product/${batch.version}/product.json`, 'json', (err, product) => {
                             if (err) {
                                 return callback(err);
                             }

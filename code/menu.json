@@ -41,6 +41,11 @@
       "indexed": false
     },
     {
+      "name": "smpc",
+      "tags": "smpc",
+      "indexed": false
+    },
+    {
       "name": "View Leaflet",
       "indexed": false
     },
