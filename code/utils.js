@@ -97,10 +97,16 @@ function convertFromISOtoYYYY_HM(dateString){
     return `${monthNames[month - 1]} - ${splitDate[0]}`;
 }
 
+function getErrorMessageElement(errorMessage) {
+    let pskLabel = document.createElement("psk-label");
+    pskLabel.className = "scan-error-message";
+    pskLabel.label = errorMessage;
+    return pskLabel;
+}
+
 import Languages from "./scripts/models/Languages.js";
 function displayXml(storage, element, xmlType, language, xmlFile) {
     const pathToXsl = '/code/assets/xml/leaflet.xsl';
-
     storage.call("listDSUs", "/packages", (err, packs) => {
         if (typeof this.packageIndex === "undefined") {
             this.packageIndex = packs.length - 1;
@@ -117,10 +123,20 @@ function displayXml(storage, element, xmlType, language, xmlFile) {
             const pathToXml = pathBase + xmlFile;
 
             storage.getItem(pathToXml, (err, content) => {
+                if (err) {
+                    let errorMessageElement = getErrorMessageElement("Product does not have this information")
+                    element.querySelector("#content").appendChild(errorMessageElement);
+                    return;
+                }
                 let textDecoder = new TextDecoder("utf-8");
                 const xmlContent = textDecoder.decode(content);
 
                 storage.getItem(pathToXsl, (err, content) => {
+                    if (err) {
+                        let errorMessageElement = getErrorMessageElement("Product does not have this information")
+                        element.querySelector("#content").appendChild(errorMessageElement);
+                        return;
+                    }
                     const xslContent = textDecoder.decode(content);
                     let xsltProcessor = new XSLTProcessor();
                     xsltProcessor.setParameter(null, "resources_path", "/download" + pathBase);
