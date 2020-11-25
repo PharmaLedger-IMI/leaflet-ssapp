@@ -32,7 +32,7 @@ export default class HistoryController extends ContainerController {
                             }
 
                             product.keySSI = batch.product;
-                            product.expiry = utils.convertFromISOtoYYYY_HM(batch.expiry);
+                            product.expiry = utils.convertFromGS1DateToYYYY_HM(batch.expiry);
                             product.photo = `/download${basePath}/batch/product` + product.photo;
                             products.push(product);
                             packageNumber++;
