@@ -97,6 +97,11 @@ function convertFromISOtoYYYY_HM(dateString){
     return `${monthNames[month - 1]} - ${splitDate[0]}`;
 }
 
+function convertFromGS1DateToYYYY_HM(gs1DateString){
+    let year = "20" + gs1DateString.slice(0, 2);
+    let month = gs1DateString.slice(2, 4);
+    return `${monthNames[month - 1]} - ${year}`
+}
 function getErrorMessageElement(errorMessage) {
     let pskLabel = document.createElement("psk-label");
     pskLabel.className = "scan-error-message";
@@ -156,5 +161,6 @@ function displayXml(storage, element, xmlType, language, xmlFile) {
 }
 export default {
     convertFromISOtoYYYY_HM,
+    convertFromGS1DateToYYYY_HM,
     displayXml
 };

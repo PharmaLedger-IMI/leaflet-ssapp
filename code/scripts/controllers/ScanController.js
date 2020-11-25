@@ -27,13 +27,13 @@ export default class ScanController extends ContainerController {
                 this.productIndex = dsuList.findIndex(dsu => dsu.identifier === gtinSSI.getIdentifier());
                 if (this.productIndex === -1) {
                     this.DSUStorage.call("mountDSU", `/package`, gtinSSI.getIdentifier(), (err) => {
-                        this.productExists(gtinSSI, (err, status) => {
+                        this.packageAnchorExists(gtinSSI, (err, status) => {
                             if (status) {
                                 this.DSUStorage.call("mountDSU", `/packages/${Date.now()}`, gtinSSI.getIdentifier(), (err) => {
                                     history.push("/drug-details");
                                 });
                             } else {
-                                this.redirectToError("This product is not anchored in blockchain", gs1Fields);
+                                this.redirectToError("This package is not anchored in blockchain", gs1Fields);
                             }
                         });
                     });
@@ -49,7 +49,7 @@ export default class ScanController extends ContainerController {
         });
     }
 
-    productExists(gtinSSI, callback) {
+    packageAnchorExists(gtinSSI, callback) {
         this.DSUStorage.getItem(`/package/batch/batch.json`, "json", err => {
             if (err) {
                 return callback(undefined, false)

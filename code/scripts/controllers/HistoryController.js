@@ -1,4 +1,5 @@
 import ContainerController from "../../cardinal/controllers/base-controllers/ContainerController.js";
+import utils from "../../utils.js";
 
 export default class HistoryController extends ContainerController {
     constructor(element, history) {
@@ -31,7 +32,7 @@ export default class HistoryController extends ContainerController {
                             }
 
                             product.keySSI = batch.product;
-                            product.expiry = batch.expiry;
+                            product.expiry = utils.convertFromISOtoYYYY_HM(batch.expiry);
                             product.photo = `/download${basePath}/batch/product` + product.photo;
                             products.push(product);
                             packageNumber++;
