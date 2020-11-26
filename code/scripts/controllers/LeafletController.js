@@ -5,13 +5,18 @@ export default class LeafletController extends ContainerController {
         super(element, history);
         this.setModel({});
         if (typeof history.location.state !== "undefined") {
-            this.packageIndex = history.location.state.productIndex;
-            this.language =  history.location.state.language;
-        }
-        if (typeof this.language === "undefined") {
-            this.language = "English";
+            this.gtinSSI = history.location.state.gtinSSI;
         }
 
-        utils.displayXml(this.DSUStorage, this.element, "leaflet", this.language, "leaflet.xml");
+        this.on("go-back", (event)=> {
+            history.push({
+                pathname: '/drug-details',
+                state: {
+                    gtinSSI: this.gtinSSI
+                }
+            });
+        })
+
+        utils.displayXml(this.DSUStorage, this.element, this.gtinSSI, "leaflet", "leaflet.xml");
     }
 }

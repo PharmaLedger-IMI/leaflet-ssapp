@@ -23,39 +23,59 @@ export default class ScanController extends ContainerController {
                 this.redirectToError("Invalid GS1DataMatrix", gs1Fields);
             }
             const gtinSSI = gtinResolver.createGTIN_SSI("default", gs1Fields.gtin, gs1Fields.batchNumber);
-            this.DSUStorage.call("listDSUs", `/packages`, (err, dsuList) => {
-                this.productIndex = dsuList.findIndex(dsu => dsu.identifier === gtinSSI.getIdentifier());
-                if (this.productIndex === -1) {
-                    this.DSUStorage.call("mountDSU", `/package`, gtinSSI.getIdentifier(), (err) => {
-                        this.packageAnchorExists(gtinSSI, (err, status) => {
-                            if (status) {
-                                this.DSUStorage.call("mountDSU", `/packages/${Date.now()}`, gtinSSI.getIdentifier(), (err) => {
-                                    history.push("/drug-details");
-                                });
-                            } else {
-                                this.redirectToError("This package is not anchored in blockchain", gs1Fields);
-                            }
-                        });
-                    });
-                } else {
-                    history.push({
-                        pathname: "/drug-details",
-                        state: {
-                            productIndex: this.productIndex
+            this.packageAlreadyScanned(gtinSSI, (err, status) => {
+                if (err) {
+                    return this.redirectToError("Failed to verify package existence.", gs1Fields);
+                }
+                if (status === false) {
+                    this.packageAnchorExists(gtinSSI, (err, status) => {
+                        if (status) {
+                            this.addPackageToScannedPackagesList(gtinSSI, (err)=>{
+                                this.redirectToDrugDetails({gtinSSI: gtinSSI.getIdentifier()});
+                            })
+                        } else {
+                            this.redirectToError("This package is not anchored in blockchain", gs1Fields);
                         }
                     });
+                } else {
+                   this.redirectToDrugDetails({gtinSSI: gtinSSI.getIdentifier()});
                 }
             });
         });
     }
 
-    packageAnchorExists(gtinSSI, callback) {
-        this.DSUStorage.getItem(`/package/batch/batch.json`, "json", err => {
+    redirectToDrugDetails(state){
+        this.history.push("/drug-details", state);
+    }
+
+    packageAlreadyScanned(packageGTIN_SSI, callback) {
+        this.DSUStorage.call("listDSUs", `/packages`, (err, dsuList) => {
             if (err) {
-                return callback(undefined, false)
+                return callback(err);
             }
-            return callback(undefined, true);
+
+            let packageIndex = dsuList.findIndex(dsu => dsu.identifier === packageGTIN_SSI.getIdentifier());
+            if (packageIndex === -1) {
+                callback(undefined, false);
+            }else{
+                callback(undefined, true);
+            }
         });
+    }
+
+    addPackageToScannedPackagesList(packageGTIN_SSI, callback) {
+        this.DSUStorage.call("mountDSU", `/packages/${packageGTIN_SSI.getIdentifier()}`, packageGTIN_SSI.getIdentifier(), callback);
+    }
+
+    packageAnchorExists(packageGTIN_SSI, callback) {
+        this.DSUStorage.call("mountDSU", `/package`, packageGTIN_SSI.getIdentifier(), (err) => {
+            this.DSUStorage.getItem(`/package/batch/batch.json`, "json", err => {
+                if (err) {
+                    return callback(undefined, false)
+                }
+                return callback(undefined, true);
+            });
+        })
     }
 
     parseGs1Fields(orderedList) {
@@ -67,7 +87,7 @@ export default class ScanController extends ContainerController {
             "USE BY OR EXPIRY": "expiry"
         };
 
-        orderedList.map(el=> {
+        orderedList.map(el => {
             let fieldName = fieldsConfig[el.label];
             gs1Fields[fieldName] = el.value;
         })

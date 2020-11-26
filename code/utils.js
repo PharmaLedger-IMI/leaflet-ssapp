@@ -29,7 +29,8 @@ const APPLICATION_IDENTIFIERS = {
 
 function parse(gs1String) {
     const components = {};
-    function __parseRecursively(_gs1String){
+
+    function __parseRecursively(_gs1String) {
         if (_gs1String.length === 0) {
             return components;
         }
@@ -46,7 +47,7 @@ function extractFirstAI(gs1String) {
     if (gs1String.startsWith("(")) {
         const endIndex = gs1String.indexOf(')');
         ai = gs1String.substring(1, endIndex);
-        newGs1String = gs1String.substring(endIndex+1);
+        newGs1String = gs1String.substring(endIndex + 1);
     } else {
         ai = gs1String.slice(0, 2);
         let i = 2;
@@ -91,17 +92,18 @@ const monthNames = ["January", "February", "March", "April", "May", "June",
  * converts date from ISO (YYYY-MM-DD) to YYYY-HM, where HM comes from human name for the month, i.e. 2021-DECEMBER
  * @param {string} dateString
  */
-function convertFromISOtoYYYY_HM(dateString){
+function convertFromISOtoYYYY_HM(dateString) {
     const splitDate = dateString.split('-');
     const month = parseInt(splitDate[1]);
     return `${monthNames[month - 1]} - ${splitDate[0]}`;
 }
 
-function convertFromGS1DateToYYYY_HM(gs1DateString){
+function convertFromGS1DateToYYYY_HM(gs1DateString) {
     let year = "20" + gs1DateString.slice(0, 2);
     let month = gs1DateString.slice(2, 4);
     return `${monthNames[month - 1]} - ${year}`
 }
+
 function getErrorMessageElement(errorMessage) {
     let pskLabel = document.createElement("psk-label");
     pskLabel.className = "scan-error-message";
@@ -110,55 +112,70 @@ function getErrorMessageElement(errorMessage) {
 }
 
 import Languages from "./scripts/models/Languages.js";
-function displayXml(storage, element, xmlType, language, xmlFile) {
-    const pathToXsl = '/code/assets/xml/leaflet.xsl';
-    storage.call("listDSUs", "/packages", (err, packs) => {
-        if (typeof this.packageIndex === "undefined") {
-            this.packageIndex = packs.length - 1;
-        }
-        packs.sort((a, b) => parseInt(a.path) <= parseInt(b.path));
-        let pack = packs[this.packageIndex].path;
-        const languageCode = Languages.getCode(language);
-        storage.getItem(`/packages/${pack}/batch/batch.json`, "json", (err, batchData) => {
-            if (err) {
-                console.log(err);
-                return;
-            }
-            let pathBase = `/packages/${pack}/batch/product/${batchData.version}/${xmlType}/${languageCode}/`;
-            const pathToXml = pathBase + xmlFile;
 
-            storage.getItem(pathToXml, (err, content) => {
+function displayXml(storage, element, gtinSSI, xmlType, xmlFile) {
+    const pathToXsl = '/code/assets/xml/leaflet.xsl';
+    let pack = gtinSSI;
+    storage.getItem(`/packages/${pack}/batch/batch.json`, "json", (err, batchData) => {
+        if (err) {
+            console.log(err);
+            return;
+        }
+
+        getXMLContent(storage, pack, batchData, xmlType, xmlFile, (err, content, pathBase) => {
+            if (err) {
+                let errorMessageElement = getErrorMessageElement("Product does not have this information")
+                element.querySelector("#content").appendChild(errorMessageElement);
+            }
+            let textDecoder = new TextDecoder("utf-8");
+            const xmlContent = textDecoder.decode(content);
+
+            storage.getItem(pathToXsl, (err, content) => {
                 if (err) {
                     let errorMessageElement = getErrorMessageElement("Product does not have this information")
                     element.querySelector("#content").appendChild(errorMessageElement);
                     return;
                 }
-                let textDecoder = new TextDecoder("utf-8");
-                const xmlContent = textDecoder.decode(content);
+                const xslContent = textDecoder.decode(content);
+                let xsltProcessor = new XSLTProcessor();
+                xsltProcessor.setParameter(null, "resources_path", "/download" + pathBase);
+                let parser = new DOMParser();
 
-                storage.getItem(pathToXsl, (err, content) => {
-                    if (err) {
-                        let errorMessageElement = getErrorMessageElement("Product does not have this information")
-                        element.querySelector("#content").appendChild(errorMessageElement);
-                        return;
-                    }
-                    const xslContent = textDecoder.decode(content);
-                    let xsltProcessor = new XSLTProcessor();
-                    xsltProcessor.setParameter(null, "resources_path", "/download" + pathBase);
-                    let parser = new DOMParser();
+                let xmlDoc = parser.parseFromString(xmlContent, "text/xml");
+                let xslDoc = parser.parseFromString(xslContent, "text/xml");
 
-                    let xmlDoc = parser.parseFromString(xmlContent, "text/xml");
-                    let xslDoc = parser.parseFromString(xslContent, "text/xml");
+                xsltProcessor.importStylesheet(xslDoc);
 
-                    xsltProcessor.importStylesheet(xslDoc);
-
-                    let resultDocument = xsltProcessor.transformToFragment(xmlDoc, document);
-                    element.querySelector("#content").appendChild(resultDocument);
-                });
+                let resultDocument = xsltProcessor.transformToFragment(xmlDoc, document);
+                element.querySelector("#content").appendChild(resultDocument);
             });
         });
     });
 }
+
+function getXMLContent(storage, pack, batchData, xmlType, xmlFile, callback) {
+    const languageCodes = Languages.getList().map(l => l.code);
+
+    function searchForXML(langCodes) {
+        const languageCode = langCodes.shift()
+        let pathBase = `/packages/${pack}/batch/product/${batchData.version}/${xmlType}/${languageCode}/`;
+        const pathToXml = pathBase + xmlFile;
+        storage.getItem(pathToXml, (err, content) => {
+            if (err) {
+                if (langCodes.length) {
+                    searchForXML(langCodes);
+                } else {
+                    callback(err);
+                }
+            } else {
+                callback(undefined, content, pathBase);
+            }
+        });
+    }
+
+    searchForXML(languageCodes);
+}
+
 export default {
     convertFromISOtoYYYY_HM,
     convertFromGS1DateToYYYY_HM,

@@ -6,12 +6,18 @@ export default class SMPCController extends ContainerController {
         super(element, history);
         this.setModel({});
         if (typeof history.location.state !== "undefined") {
-            this.packageIndex = history.location.state.productIndex;
-            this.language = history.location.state.language;
+            this.gtinSSI = history.location.state.gtinSSI;
         }
-        if (typeof this.language === "undefined") {
-            this.language = "English";
-        }
-        utils.displayXml(this.DSUStorage, this.element, "smpc", this.language, "smpc.xml");
+
+        this.on("go-back", (event)=> {
+            history.push({
+                pathname: '/drug-details',
+                state: {
+                    gtinSSI: this.gtinSSI
+                }
+            });
+        })
+
+        utils.displayXml(this.DSUStorage, this.element, this.gtinSSI, "smpc", "smpc.xml");
     }
 }

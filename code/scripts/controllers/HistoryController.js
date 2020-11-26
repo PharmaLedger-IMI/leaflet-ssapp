@@ -10,18 +10,17 @@ export default class HistoryController extends ContainerController {
             let target = event.target;
             let targetProduct = target.getAttribute("keySSI");
             const index = parseInt(targetProduct.replace(/\D/g, ''));
+            let gtinSSI = this.model.products[index].batchGtinSSI;
             history.push({
                 pathname: '/drug-details',
                 state: {
-                    productIndex: index
+                    gtinSSI
                 }
             });
         }, {capture: true});
 
         this.DSUStorage.call("listDSUs", "/packages", (err, dsuList) => {
             const products = [];
-            dsuList.sort((a, b) => parseInt(a.path) <= parseInt(b.path));
-
             const __readProductsRecursively = (packageNumber, callback) => {
                 if (packageNumber < dsuList.length) {
                     const basePath = `/packages/${dsuList[packageNumber].path}`;
@@ -30,7 +29,7 @@ export default class HistoryController extends ContainerController {
                             if (err) {
                                 return callback(err);
                             }
-
+                            product.batchGtinSSI = dsuList[packageNumber].identifier;
                             product.keySSI = batch.product;
                             product.expiry = utils.convertFromGS1DateToYYYY_HM(batch.expiry);
                             product.photo = `/download${basePath}/batch/product` + product.photo;
