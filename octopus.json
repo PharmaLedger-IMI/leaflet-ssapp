@@ -44,14 +44,6 @@
         },
         {
           "type": "copy",
-          "src": "../privatesky/psknode/bundles/openDSU.js",
-          "target": "code/scripts/bundles/openDSU.js",
-          "options": {
-            "overwrite": true
-          }
-        },
-        {
-          "type": "copy",
           "src": "../gtin-resolver/build/bundles/gtinResolver.js",
           "target": "code/scripts/bundles/gtinResolver.js",
           "options": {

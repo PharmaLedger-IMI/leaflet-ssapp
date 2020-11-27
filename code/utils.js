@@ -126,6 +126,7 @@ function displayXml(storage, element, gtinSSI, xmlType, xmlFile) {
             if (err) {
                 let errorMessageElement = getErrorMessageElement("Product does not have this information")
                 element.querySelector("#content").appendChild(errorMessageElement);
+                return;
             }
             let textDecoder = new TextDecoder("utf-8");
             const xmlContent = textDecoder.decode(content);
