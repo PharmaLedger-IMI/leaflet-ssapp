@@ -11,7 +11,7 @@ export default class DrugDetailsController extends ContainerController {
             this.model.serialNumber       = this.gs1Fields.serialNumber;
             this.model.gtin               = this.gs1Fields.gtin;
             this.model.batchNumber        = this.gs1Fields.batchNumber;
-            this.model.expiryForDisplay   = utils.convertFromGS1DateToYYYY_HM(this.gs1Fields.expiry);
+            this.model.expiryForDisplay   = this.gs1Fields.expiry;
         }
 
         this.on("view-leaflet", () => {
