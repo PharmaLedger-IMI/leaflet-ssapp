@@ -6,13 +6,15 @@ export default class LeafletController extends ContainerController {
         this.setModel({});
         if (typeof history.location.state !== "undefined") {
             this.gtinSSI = history.location.state.gtinSSI;
+            this.gs1Fields = history.location.state.gs1Fields;
         }
 
         this.on("go-back", (event)=> {
             history.push({
                 pathname: '/drug-details',
                 state: {
-                    gtinSSI: this.gtinSSI
+                    gtinSSI: this.gtinSSI,
+                    gs1Fields:this.gs1Fields
                 }
             });
         })

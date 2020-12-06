@@ -31,14 +31,14 @@ export default class ScanController extends ContainerController {
                     this.packageAnchorExists(gtinSSI, (err, status) => {
                         if (status) {
                             this.addPackageToScannedPackagesList(gtinSSI, (err)=>{
-                                this.redirectToDrugDetails({gtinSSI: gtinSSI.getIdentifier()});
+                                this.redirectToDrugDetails({gtinSSI: gtinSSI.getIdentifier(), gs1Fields});
                             })
                         } else {
                             this.redirectToError("Product code combination could not be resolved.", gs1Fields);
                         }
                     });
                 } else {
-                   this.redirectToDrugDetails({gtinSSI: gtinSSI.getIdentifier()});
+                   this.redirectToDrugDetails({gtinSSI: gtinSSI.getIdentifier(), gs1Fields});
                 }
             });
         });

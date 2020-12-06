@@ -7,13 +7,19 @@ export default class DrugDetailsController extends ContainerController {
         this.setModel({});
         if (typeof history.location.state !== "undefined") {
             this.gtinSSI = history.location.state.gtinSSI;
+            this.gs1Fields = history.location.state.gs1Fields;
+            this.model.serialNumber       = this.gs1Fields.serialNumber;
+            this.model.gtin               = this.gs1Fields.gtin;
+            this.model.batchNumber        = this.gs1Fields.batchNumber;
+            this.model.expiryForDisplay   = utils.convertFromGS1DateToYYYY_HM(this.gs1Fields.expiry);
         }
 
         this.on("view-leaflet", () => {
             history.push({
                 pathname: '/leaflet',
                 state: {
-                    gtinSSI: this.gtinSSI
+                    gtinSSI: this.gtinSSI,
+                    gs1Fields: this.gs1Fields
                 }
             });
         });
@@ -22,7 +28,8 @@ export default class DrugDetailsController extends ContainerController {
             history.push({
                 pathname: '/smpc',
                 state: {
-                    gtinSSI: this.gtinSSI
+                    gtinSSI: this.gtinSSI,
+                    gs1Fields: this.gs1Fields
                 }
             });
         });
@@ -49,6 +56,12 @@ export default class DrugDetailsController extends ContainerController {
 
                     batchData.expiryForDisplay = utils.convertFromGS1DateToYYYY_HM(batchData.expiry);
                     this.model.batch = batchData;
+                    if(this.model.gtin !=  batchData.gtin ||
+                        this.model.batchNumber !=  batchData.batchNumber ||
+                        this.model.expiryForDisplay != batchData.expiryForDisplay) {
+                        //TODO antocounterfeit WIP
+                        alert("Anti Counterfeiting warning. Will be improved in next days ");
+                    }
                 });
             });
         });
