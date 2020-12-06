@@ -5,6 +5,7 @@ export default class HistoryController extends ContainerController {
     constructor(element, history) {
         super(element, history);
         this.setModel({});
+        this.model.loadingStatusMessage = "Loading...";
 
         this.on("view-details", (event) => {
             let target = event.target;
@@ -21,6 +22,9 @@ export default class HistoryController extends ContainerController {
 
         this.DSUStorage.call("listDSUs", "/packages", (err, dsuList) => {
             const products = [];
+            if(dsuList.length == 0 ){
+                this.model.loadingStatusMessage = "You have not scanned any valid products previously. Kindly click on the scan button below to scan.";
+            }
             const __readProductsRecursively = (packageNumber, callback) => {
                 if (packageNumber < dsuList.length) {
                     const basePath = `/packages/${dsuList[packageNumber].path}`;

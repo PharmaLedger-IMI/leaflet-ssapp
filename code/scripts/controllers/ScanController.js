@@ -14,18 +14,18 @@ export default class ScanController extends ContainerController {
             try {
                 gs1FormatFields = interpretGS1scan.interpretScan(this.model.data);
             } catch (e) {
-                this.redirectToError("Invalid GS1DataMatrix", this.parseGs1Fields(e.dlOrderedAIlist));
+                this.redirectToError("Barcode is not readable, please contact pharmacy / doctor who issued the medicine package.", this.parseGs1Fields(e.dlOrderedAIlist));
                 return;
             }
 
             const gs1Fields = this.parseGs1Fields(gs1FormatFields.ol);
             if (!this.hasMandatoryFields(gs1Fields)) {
-                this.redirectToError("Invalid GS1DataMatrix", gs1Fields);
+                this.redirectToError("Barcode is not readable, please contact pharmacy / doctor who issued the medicine package.", gs1Fields);
             }
-            const gtinSSI = gtinResolver.createGTIN_SSI("default", gs1Fields.gtin, gs1Fields.batchNumber);
+            const gtinSSI = gtinResolver.createGTIN_SSI("epi", gs1Fields.gtin, gs1Fields.batchNumber);
             this.packageAlreadyScanned(gtinSSI, (err, status) => {
                 if (err) {
-                    return this.redirectToError("Failed to verify package existence.", gs1Fields);
+                    return this.redirectToError("Product code combination could not be resolved.", gs1Fields);
                 }
                 if (status === false) {
                     this.packageAnchorExists(gtinSSI, (err, status) => {
@@ -34,7 +34,7 @@ export default class ScanController extends ContainerController {
                                 this.redirectToDrugDetails({gtinSSI: gtinSSI.getIdentifier()});
                             })
                         } else {
-                            this.redirectToError("This package is not anchored in blockchain", gs1Fields);
+                            this.redirectToError("Product code combination could not be resolved.", gs1Fields);
                         }
                     });
                 } else {
