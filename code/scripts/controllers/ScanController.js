@@ -1,8 +1,9 @@
 import ContainerController from '../../cardinal/controllers/base-controllers/ContainerController.js';
 import interpretGS1scan from "../gs1ScanInterpreter/interpretGS1scan/interpretGS1scan.js";
 import utils from "../../utils.js";
-
+import constants from "../../constants.js";
 const gtinResolver = require("gtin-resolver");
+
 export default class ScanController extends ContainerController {
     constructor(element, history) {
         super(element, history);
@@ -30,7 +31,7 @@ export default class ScanController extends ContainerController {
                 if (status === false) {
                     this.packageAnchorExists(gtinSSI, (err, status) => {
                         if (status) {
-                            this.addPackageToScannedPackagesList(gtinSSI, (err)=>{
+                            this.addPackageToScannedPackagesList(gtinSSI, gs1Fields,(err)=>{
                                 this.redirectToDrugDetails({gtinSSI: gtinSSI.getIdentifier(), gs1Fields});
                             })
                         } else {
@@ -63,8 +64,25 @@ export default class ScanController extends ContainerController {
         });
     }
 
-    addPackageToScannedPackagesList(packageGTIN_SSI, callback) {
-        this.DSUStorage.call("mountDSU", `/packages/${packageGTIN_SSI.getIdentifier()}`, packageGTIN_SSI.getIdentifier(), callback);
+    addPackageToScannedPackagesList(packageGTIN_SSI, gs1Fields, callback) {
+        const gtinSSIIdentifier = packageGTIN_SSI.getIdentifier();
+        this.DSUStorage.call("mountDSU", `/packages/${packageGTIN_SSI.getIdentifier()}`, gtinSSIIdentifier, (err) => {
+            if (err) {
+                return callback(err);
+            }
+
+            this.DSUStorage.getObject(constants.PACKAGES_STORAGE_PATH, (err, packages) => {
+                if (err) {
+                    //TODO: Error handling
+                }
+                if (typeof packages === "undefined") {
+                    packages = {};
+                }
+                packages[gtinSSIIdentifier] = gs1Fields;
+
+                this.DSUStorage.setObject(constants.PACKAGES_STORAGE_PATH, packages, callback);
+            });
+        });
     }
 
     packageAnchorExists(packageGTIN_SSI, callback) {
