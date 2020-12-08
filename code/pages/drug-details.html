@@ -18,28 +18,28 @@
                 <div>
                     <psk-echo value="Expiry: "></psk-echo>
                     <strong>
-                        <psk-echo value="@batch.expiryForDisplay"></psk-echo>
+                        <psk-echo value="@expiryForDisplay"></psk-echo>
                     </strong>
                 </div>
 
                 <div>
                     <psk-echo value="Serial number: "></psk-echo>
                     <strong>
-                        <psk-echo value="@batch.serialNumber"></psk-echo>
+                        <psk-echo value="@serialNumber"></psk-echo>
                     </strong>
                 </div>
 
                 <div>
                     <psk-echo value="Product Code (GTIN/ NTIN): "></psk-echo>
                     <strong>
-                        <psk-echo value="@product.gtin"></psk-echo>
+                        <psk-echo value="@gtin"></psk-echo>
                     </strong>
                 </div>
 
                 <div>
                     <psk-echo value="Batch: "></psk-echo>
                     <strong>
-                        <psk-echo value="@batch.batchNumber"></psk-echo>
+                        <psk-echo value="@batchNumber"></psk-echo>
                     </strong>
                 </div>
 
@@ -50,21 +50,22 @@
                             <psk-echo value="Serial number"></psk-echo>
                             <img src="assets/icons/serial_number/png/SN_icon.png" width='70' height='70'
                                  class="productStatusImg"/>
-                            <psk-label class="small-text" label="Verified"></psk-label>
+                            <psk-label class="small-text" label=@serialNumberVerification></psk-label>
                         </psk-layout-item>
 
                         <psk-layout-item class="horizontal-aligned">
                             <psk-echo value="Product status"></psk-echo>
                             <img src="assets/icons/product_status/png/PS_icon.png" width='70' height='70'
                                  class="productStatusImg"/>
-                            <psk-label class="small-text" label="Valid"></psk-label>
+                            <psk-label class="small-text" label=@productStatus></psk-label>
                         </psk-layout-item>
 
                         <psk-layout-item class="horizontal-aligned">
-                            <psk-echo value="Pack verification"></psk-echo>
+
+                            <psk-echo value="Package verification"></psk-echo>
                             <img src="assets/icons/pack_verification/png/PV_icon.png" width='70' height='70'
                                  class="productStatusImg"/>
-                            <psk-label class="small-text" style="color: orange" label="Action required"></psk-label>
+                            <psk-label class="small-text" style="color: orange" label=@packageVerification></psk-label>
                         </psk-layout-item>
 
                     </psk-layout>
@@ -73,19 +74,19 @@
 
             <psk-layout template-columns="1fr 1fr" align-items="center" row-gap="30px" class="topPadding">
                 <psk-layout-item class="controlButton">
-                    <psk-button-link class="xxlIcon" name="Product info" icon="file-text"
+                    <psk-button-link class="xxlIcon" name="Product information" icon="file-text"
                                      event-name="view-leaflet">
                     </psk-button-link>
                 </psk-layout-item>
                 <psk-layout-item class="controlButton">
-                    <psk-button-link class="xxlIcon" name="SMPC" icon="book"
+                    <psk-button-link class="xxlIcon smpc" name="SMPC" icon="book"
                                      event-name="view-smpc"></psk-button-link>
                 </psk-layout-item>
             </psk-layout>
 
             <psk-layout template-columns="1fr 1fr 1fr" align-items="center" row-gap="30px" class="topPadding">
                 <psk-layout-item class="controlButton">
-                    <psk-button-link class="xlIcon" name="Verify pack" icon="info-circle"
+                    <psk-button-link class="xlIcon" name="Verify package" icon="info-circle"
                                      page="history"></psk-button-link>
                 </psk-layout-item>
                 <psk-layout-item class="controlButton">

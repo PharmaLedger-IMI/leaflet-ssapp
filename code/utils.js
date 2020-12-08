@@ -116,6 +116,13 @@ import Languages from "./scripts/models/Languages.js";
 function displayXml(storage, element, gtinSSI, xmlType, xmlFile) {
     const pathToXsl = '/code/assets/xml/leaflet.xsl';
     let pack = gtinSSI;
+
+    let errorMessage = "This is a valid product. However, more information about this product has not been published by the Pharmaceutical Company. Please check back later.";
+
+    if(xmlType == "smpc"){
+        errorMessage = "This is a valid product. However, more information about this product has not been published by the Pharmaceutical Company. Please check back later.";
+    }
+
     storage.getItem(`/packages/${pack}/batch/batch.json`, "json", (err, batchData) => {
         if (err) {
             console.log(err);
@@ -124,7 +131,7 @@ function displayXml(storage, element, gtinSSI, xmlType, xmlFile) {
 
         getXMLContent(storage, pack, batchData, xmlType, xmlFile, (err, content, pathBase) => {
             if (err) {
-                let errorMessageElement = getErrorMessageElement("Product does not have this information")
+                let errorMessageElement = getErrorMessageElement(errorMessage);
                 element.querySelector("#content").appendChild(errorMessageElement);
                 return;
             }
@@ -133,7 +140,7 @@ function displayXml(storage, element, gtinSSI, xmlType, xmlFile) {
 
             storage.getItem(pathToXsl, (err, content) => {
                 if (err) {
-                    let errorMessageElement = getErrorMessageElement("Product does not have this information")
+                    let errorMessageElement = getErrorMessageElement(errorMessage)
                     element.querySelector("#content").appendChild(errorMessageElement);
                     return;
                 }
