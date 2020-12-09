@@ -42,7 +42,7 @@ export default class HistoryController extends ContainerController {
                             product.batchGtinSSI = gtinSSI;
                             product.keySSI = batch.product;
                             product.expiry = utils.convertFromGS1DateToYYYY_HM(batch.expiry);
-                            product.photo = `/download${basePath}/batch/product` + product.photo;
+                            product.photo = utils.getFetchUrl(`/download${basePath}/batch/product` + product.photo);
                             products.push(product);
                             packageNumber++;
                             __readProductsRecursively(packageNumber, callback);
