@@ -32,6 +32,10 @@
       "tags": "report"
     },
     {
+      "name": "Settings",
+      "tags": "settings"
+    },
+    {
       "name": "Drug details",
       "indexed": false
     },
