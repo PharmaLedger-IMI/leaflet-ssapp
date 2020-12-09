@@ -111,8 +111,7 @@ function getErrorMessageElement(errorMessage) {
     return pskLabel;
 }
 
-import Languages from "./scripts/models/Languages.js";
-
+import languageServiceUtils from "./scripts/services/languageServiceUtils.js";
 function displayXml(storage, element, gtinSSI, xmlType, xmlFile) {
     const pathToXsl = '/code/assets/xml/leaflet.xsl';
     let pack = gtinSSI;
@@ -162,7 +161,7 @@ function displayXml(storage, element, gtinSSI, xmlType, xmlFile) {
 }
 
 function getXMLContent(storage, pack, batchData, xmlType, xmlFile, callback) {
-    const languageCodes = Languages.getList().map(l => l.code);
+    const languageCodes = languageServiceUtils.getList().map(l => l.code);
 
     function searchForXML(langCodes) {
         const languageCode = langCodes.shift()

@@ -1,4 +1,5 @@
 import ContainerController from "../../cardinal/controllers/base-controllers/ContainerController.js";
+import LanguageService from "../services/LanguageService.js";
 import utils from "../../utils.js";
 
 export default class DrugDetailsController extends ContainerController {
@@ -9,6 +10,7 @@ export default class DrugDetailsController extends ContainerController {
             productStatus: "Verified",
             packageVerification: "Action required"
         });
+
         if (typeof history.location.state !== "undefined") {
             this.gtinSSI = history.location.state.gtinSSI;
             this.gs1Fields = history.location.state.gs1Fields;
