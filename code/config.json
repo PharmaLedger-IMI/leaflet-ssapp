@@ -5,6 +5,6 @@
     "profile": {
         "username": "Consumer",
         "email": "",
-        "avatar": "/resources/images/person.png"
+        "avatar": "resources/images/person.png"
     }
 }

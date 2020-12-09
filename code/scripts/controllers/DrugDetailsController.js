@@ -4,7 +4,11 @@ import utils from "../../utils.js";
 export default class DrugDetailsController extends ContainerController {
     constructor(element, history) {
         super(element, history);
-        this.setModel({});
+        this.setModel({
+            serialNumberVerification: "Verified",
+            productStatus: "Verified",
+            packageVerification: "Action required"
+        });
         if (typeof history.location.state !== "undefined") {
             this.gtinSSI = history.location.state.gtinSSI;
             this.gs1Fields = history.location.state.gs1Fields;
