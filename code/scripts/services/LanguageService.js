@@ -1,6 +1,6 @@
 import languageServiceUtils from "./languageServiceUtils.js";
 import constants from "../../constants.js";
-const defaultLanguages = ["Romanian", "German"];
+const defaultLanguages = ["English", "German"];
 
 export default class LanguageService {
     constructor(dsuStorageInstance) {

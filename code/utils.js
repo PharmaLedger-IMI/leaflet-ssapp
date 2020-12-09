@@ -1,3 +1,4 @@
+
 const APPLICATION_IDENTIFIERS = {
     "01": {
         type: "gtin",
@@ -118,7 +119,7 @@ function displayXml(storage, element, gtinSSI, xmlType, xmlFile) {
 
     let errorMessage = "This is a valid product. However, more information about this product has not been published by the Pharmaceutical Company. Please check back later.";
 
-    if(xmlType == "smpc"){
+    if(xmlType === "smpc"){
         errorMessage = "This is a valid product. However, more information about this product has not been published by the Pharmaceutical Company. Please check back later.";
     }
 
@@ -159,10 +160,17 @@ function displayXml(storage, element, gtinSSI, xmlType, xmlFile) {
         });
     });
 }
-
+import LanguageService from "./scripts/services/LanguageService.js";
 function getXMLContent(storage, pack, batchData, xmlType, xmlFile, callback) {
-    const languageCodes = languageServiceUtils.getList().map(l => l.code);
+    const languageService = new LanguageService(storage);
+    languageService.getOrderedListOfLanguages((err, languages) => {
+        if (err) {
+            return callback(err);
+        }
 
+        const langCodes = languages.map(languageName => languageServiceUtils.getLanguageCode(languageName));
+        searchForXML(langCodes);
+    });
     function searchForXML(langCodes) {
         const languageCode = langCodes.shift()
         let pathBase = `/packages/${pack}/batch/product/${batchData.version}/${xmlType}/${languageCode}/`;
@@ -179,8 +187,6 @@ function getXMLContent(storage, pack, batchData, xmlType, xmlFile, callback) {
             }
         });
     }
-
-    searchForXML(languageCodes);
 }
 
 export default {
