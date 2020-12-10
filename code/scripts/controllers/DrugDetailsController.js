@@ -11,6 +11,8 @@ export default class DrugDetailsController extends ContainerController {
             packageVerification: "Action required"
         });
 
+        this.model.SNCheckIcon = ""
+
         if (typeof history.location.state !== "undefined") {
             this.gtinSSI = history.location.state.gtinSSI;
             this.gs1Fields = history.location.state.gs1Fields;
@@ -19,6 +21,8 @@ export default class DrugDetailsController extends ContainerController {
             this.model.batchNumber        = this.gs1Fields.batchNumber;
             this.model.expiryForDisplay   = this.gs1Fields.expiry;
         }
+
+        this.model.SNCheckIcon = "assets/icons/serial_number/png/sn_ok.png"
 
         this.on("view-leaflet", () => {
             history.push({
@@ -60,13 +64,25 @@ export default class DrugDetailsController extends ContainerController {
                         return console.log(err);
                     }
 
+                    function checkSNCheck(){
+                        let res = false;
+                        try{
+                            let bloomFilter = require("opendsu").loadAPI("crypto").createBloomFilter(batchData.bloomFilterSerialisation);
+                            res = bloomFilter.test(this.model.batchNumber);
+                        } catch(err){
+                            alert(err.message);
+                        }
+                        return res;
+                    }
+
                     batchData.expiryForDisplay = utils.convertFromGS1DateToYYYY_HM(batchData.expiry);
                     this.model.batch = batchData;
                     if(this.model.gtin !=  batchData.gtin ||
                         this.model.batchNumber !=  batchData.batchNumber ||
-                        this.model.expiryForDisplay != batchData.expiryForDisplay) {
-                        //TODO antocounterfeit WIP
-                        alert("Anti Counterfeiting warning. Will be improved in next days ");
+                        this.model.expiryForDisplay != batchData.expiryForDisplay ||
+                        !checkSNCheck()) {
+                        this.model.serialNumberVerification = "Failed";
+                        this.model.SNCheckIcon = "assets/icons/serial_number/png/sn_fail.png"
                     }
                 });
             });
