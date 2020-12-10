@@ -51,7 +51,7 @@ function updateDossier(bar, callback) {
             throw err;
         }
 
-        bar.addFolder("code", "/", {batch: true, encrypt: false}, (err, archiveDigest) => {
+        bar.addFolder("code", "/", {batch: false, encrypt: false}, (err, archiveDigest) => {
             if (err) {
                 return callback(err);
             }
