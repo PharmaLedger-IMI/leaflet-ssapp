@@ -9,8 +9,16 @@
 
             <psk-accordion>
                 <psk-accordion-item title="Product Information Language Priorities">
-                    <psk-draggable-list view-model="@languages"></psk-draggable-list>
-                    <psk-button label="Add language" event-name="add-language"></psk-button>
+                    <psk-draggable-list view-model="@workingLanguages"></psk-draggable-list>
+                    <psk-condition condition="@languageSelectorOpened">
+                        <div slot="condition-true">
+                            <psk-select view-model="@languagesToAdd">
+                            </psk-select>
+                        </div>
+                        <div slot="condition-false">
+                            <psk-button label="Add language" event-name="add-language"></psk-button>
+                        </div>
+                    </psk-condition>
                 </psk-accordion-item>
             </psk-accordion>
         </psk-container>

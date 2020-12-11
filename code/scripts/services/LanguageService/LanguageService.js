@@ -45,7 +45,8 @@ export default class LanguageService {
         const systemLanguage = this.getSystemLanguage();
         const index = workingLanguagesCache.findIndex(lang => lang.value === systemLanguage.value);
         if (index === 0) {
-            return this.saveWorkingLanguages(workingLanguagesCache, callback);
+            // return this.saveWorkingLanguages(workingLanguagesCache, callback);
+            return callback();
         }
         if (index > 0) {
             workingLanguagesCache.splice(index, 1);
@@ -55,7 +56,7 @@ export default class LanguageService {
     }
 
     registerWorkingLanguages(languages, callback) {
-        if (typeof languages === "object" && !Array.isArray(languages)) {
+        if (!Array.isArray(languages)) {
             languages = [languages];
         }
         let normalizedLanguages;
@@ -71,7 +72,7 @@ export default class LanguageService {
 
     hasWorkingLanguage(language) {
         language = normalizeLanguage(language);
-        let index = workingLanguagesCache.findIndex(lang => lang.value = language.value);
+        let index = workingLanguagesCache.findIndex(lang => lang.value === language.value);
         if (index >= 0) {
             return true;
         }
@@ -81,8 +82,8 @@ export default class LanguageService {
 
     getWorkingLanguages(callback) {
         this.addSystemLanguage((err) => {
-            if (workingLanguagesCache.length >= 0) {
-                return callback(undefined, workingLanguagesCache);
+            if (err) {
+                return callback(err);
             }
             this.DSUStorage.getObject(constants.LANGUAGES_STORAGE_PATH, (err, languages) => {
                 if (err) {
