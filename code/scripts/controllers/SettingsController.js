@@ -10,8 +10,8 @@ export default class SettingsController extends ContainerController {
         this.languageService.getLanguageListForOrdering((err, vm) => {
             this.model.workingLanguages = vm;
 
-            this.model.onChange("languages", (event)=>{
-                this.languageService.saveWorkingLanguages(this.model.workingLanguages.items, (err)=>{
+            this.model.onChange("workingLanguages", (event)=>{
+                this.languageService.overwriteWorkingLanguages(this.model.workingLanguages.items, (err)=>{
                     if (err) {
                         throw err;
                     }
@@ -27,7 +27,7 @@ export default class SettingsController extends ContainerController {
         });
 
         this.model.onChange("languagesToAdd", () => {
-            this.languageService.registerWorkingLanguages(this.model.languagesToAdd.value, (err)=>{
+            this.languageService.addWorkingLanguages(this.model.languagesToAdd.value, (err)=>{
                 if (err) {
                     throw err;
                 }

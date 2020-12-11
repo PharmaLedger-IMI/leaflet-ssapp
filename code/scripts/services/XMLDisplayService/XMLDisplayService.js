@@ -20,7 +20,6 @@ export default class XmlDisplayService {
             return this.displayXmlForLanguage(language);
         }
 
-        // this.registerAvailableLanguages(err => {
             this.languageService.getWorkingLanguages((err, workingLanguages) => {
                 const searchForLeaflet = (languages) => {
                     const languageCode = languages.shift().value;
@@ -35,20 +34,24 @@ export default class XmlDisplayService {
 
                 searchForLeaflet(workingLanguages);
             })
-        // });
     }
 
     populateModel(){
-        this.registerAvailableLanguages((err) => {
-            this.languageService.getLanguageListForSelect((err, languages) => {
+        this.getAvailableLanguagesForXmlType((err, languages) => {
+            this.languageService.addWorkingLanguages(languages, (err) => {
                 if (languages.length >= 2) {
-                    this.createLanguageSelector(languages);
-                    this.model.onChange("languages.value", () => {
-                        this.displayXmlForLanguage(this.model.languages.value);
-                    })
+                    this.languageService.getLanguagesForSelect(languages, (err, languagesForSelect) => {
+                        if (err) {
+                            return callback(err);
+                        }
+                        this.createLanguageSelector(languagesForSelect);
+                            this.model.onChange("languages.value", () => {
+                                this.displayXmlForLanguage(this.model.languages.value);
+                            })
+                    });
                 }
                 this.displayXml();
-            })
+            });
         })
     }
 
@@ -139,13 +142,17 @@ export default class XmlDisplayService {
         this.DSUStorage.getObject(`/packages/${this.gtinSSI}/batch/batch.json`, (err, batchData) => {
             let pathBase = `/packages/${this.gtinSSI}/batch/product/${batchData.version}/${this.xmlType}/`;
             this.DSUStorage.call("listFolders", pathBase, (err, languages) => {
-                callback(undefined, languages);
+                if (err) {
+                    return callback(err);
+                }
+
+                callback(undefined, this.languageService.normalizeLanguages(languages));
             })
         });
     }
 
     registerLanguages(languages, callback) {
-        this.languageService.registerWorkingLanguages(languages, callback);
+        this.languageService.addWorkingLanguages(languages, callback);
     }
 
     registerAvailableLanguages(callback) {

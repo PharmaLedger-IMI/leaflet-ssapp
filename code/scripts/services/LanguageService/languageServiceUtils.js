@@ -240,6 +240,11 @@ export default {
         const vmItems = languages.map(language => createVMItem(language));
         return vmItems;
     },
+    getLanguagesAsVMItemsFromCodes(codes){
+        const languages = codes.map(code => getLanguageFromName(code));
+        const vmItems = languages.map(language => createVMItem(language));
+        return vmItems;
+    },
     getLanguagesAsVMItems(languageList){
         const vmItems = languageList.map(language => createVMItem(language));
         return vmItems;

@@ -15,15 +15,14 @@ function listDSUs(path, callback) {
 }
 
 function listFolders(path, callback) {
-    // if (path.endsWith("/")) {
-    //     path = path.slice(0, -1);
-    // }
-    mainDSU.listFolders(path,{ignoreMounts: true}, (err, folders) => {
+    if (path.endsWith("/")) {
+        path = path.slice(0, -1);
+    }
+    mainDSU.listFolders(path,{ignoreMounts: false}, (err, folders) => {
         if (err) {
             return callback(err);
         }
 
-        console.log("Got folders ................", folders);
         callback(undefined, folders);
     });
 }
