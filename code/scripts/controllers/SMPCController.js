@@ -1,5 +1,6 @@
 import ContainerController from '../../cardinal/controllers/base-controllers/ContainerController.js';
 import utils from "../../utils.js";
+import XMLDisplayService from "../services/XMLDisplayService/XMLDisplayService.js";
 
 export default class SMPCController extends ContainerController {
     constructor(element, history) {
@@ -20,6 +21,7 @@ export default class SMPCController extends ContainerController {
             });
         })
 
-        utils.displayXml(this.DSUStorage, this.element, this.gtinSSI, "smpc", "smpc.xml");
+        const xmlDisplayService = new XMLDisplayService(this.DSUStorage, element, this.gtinSSI, "smpc", "smpc.xml", this.model);
+        xmlDisplayService.populateModel();
     }
 }

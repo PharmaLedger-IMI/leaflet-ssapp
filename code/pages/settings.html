@@ -8,8 +8,9 @@
             </div>
 
             <psk-accordion>
-                <psk-accordion-item title="Language">
-                    <psk-draggable-list view-model="@languageListModel"></psk-draggable-list>
+                <psk-accordion-item title="Product Information Language Priorities">
+                    <psk-draggable-list view-model="@languages"></psk-draggable-list>
+                    <psk-button label="Add language" event-name="add-language"></psk-button>
                 </psk-accordion-item>
             </psk-accordion>
         </psk-container>

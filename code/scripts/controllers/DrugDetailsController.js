@@ -1,5 +1,4 @@
 import ContainerController from "../../cardinal/controllers/base-controllers/ContainerController.js";
-import LanguageService from "../services/LanguageService.js";
 import utils from "../../utils.js";
 
 export default class DrugDetailsController extends ContainerController {

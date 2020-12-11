@@ -111,84 +111,6 @@ function getErrorMessageElement(errorMessage) {
     pskLabel.label = errorMessage;
     return pskLabel;
 }
-
-import languageServiceUtils from "./scripts/services/languageServiceUtils.js";
-function displayXml(storage, element, gtinSSI, xmlType, xmlFile) {
-    const pathToXsl = '/code/assets/xml/leaflet.xsl';
-    let pack = gtinSSI;
-
-    let errorMessage = "This is a valid product. However, more information about this product has not been published by the Pharmaceutical Company. Please check back later.";
-
-    if(xmlType === "smpc"){
-        errorMessage = "This is a valid product. However, more information about this product has not been published by the Pharmaceutical Company. Please check back later.";
-    }
-
-    storage.getItem(`/packages/${pack}/batch/batch.json`, "json", (err, batchData) => {
-        if (err) {
-            console.log(err);
-            return;
-        }
-
-        getXMLContent(storage, pack, batchData, xmlType, xmlFile, (err, content, pathBase) => {
-            if (err) {
-                let errorMessageElement = getErrorMessageElement(errorMessage);
-                element.querySelector("#content").appendChild(errorMessageElement);
-                return;
-            }
-            let textDecoder = new TextDecoder("utf-8");
-            const xmlContent = textDecoder.decode(content);
-
-            storage.getItem(pathToXsl, (err, content) => {
-                if (err) {
-                    let errorMessageElement = getErrorMessageElement(errorMessage)
-                    element.querySelector("#content").appendChild(errorMessageElement);
-                    return;
-                }
-                const xslContent = textDecoder.decode(content);
-                let xsltProcessor = new XSLTProcessor();
-                xsltProcessor.setParameter(null, "resources_path", "/download" + pathBase);
-                let parser = new DOMParser();
-
-                let xmlDoc = parser.parseFromString(xmlContent, "text/xml");
-                let xslDoc = parser.parseFromString(xslContent, "text/xml");
-
-                xsltProcessor.importStylesheet(xslDoc);
-
-                let resultDocument = xsltProcessor.transformToFragment(xmlDoc, document);
-                element.querySelector("#content").appendChild(resultDocument);
-            });
-        });
-    });
-}
-import LanguageService from "./scripts/services/LanguageService.js";
-function getXMLContent(storage, pack, batchData, xmlType, xmlFile, callback) {
-    const languageService = new LanguageService(storage);
-    languageService.getOrderedListOfLanguages((err, languages) => {
-        if (err) {
-            return callback(err);
-        }
-
-        const langCodes = languages.map(languageName => languageServiceUtils.getLanguageCode(languageName));
-        searchForXML(langCodes);
-    });
-    function searchForXML(langCodes) {
-        const languageCode = langCodes.shift()
-        let pathBase = `/packages/${pack}/batch/product/${batchData.version}/${xmlType}/${languageCode}/`;
-        const pathToXml = pathBase + xmlFile;
-        storage.getItem(pathToXml, (err, content) => {
-            if (err) {
-                if (langCodes.length) {
-                    searchForXML(langCodes);
-                } else {
-                    callback(err);
-                }
-            } else {
-                callback(undefined, content, pathBase);
-            }
-        });
-    }
-}
-
 function getFetchUrl(relativePath) {
     if (window["$$"] && $$.SSAPP_CONTEXT && $$.SSAPP_CONTEXT.BASE_URL && $$.SSAPP_CONTEXT.SEED) {
         // if we have a BASE_URL then we prefix the fetch url with BASE_URL
@@ -203,6 +125,5 @@ function getFetchUrl(relativePath) {
 export default {
     convertFromISOtoYYYY_HM,
     convertFromGS1DateToYYYY_HM,
-    displayXml,
     getFetchUrl
 };

@@ -14,6 +14,20 @@ function listDSUs(path, callback) {
     mainDSU.listMountedDossiers(path, callback);
 }
 
+function listFolders(path, callback) {
+    // if (path.endsWith("/")) {
+    //     path = path.slice(0, -1);
+    // }
+    mainDSU.listFolders(path,{ignoreMounts: true}, (err, folders) => {
+        if (err) {
+            return callback(err);
+        }
+
+        console.log("Got folders ................", folders);
+        callback(undefined, folders);
+    });
+}
+
 function readJSONData(path, callback){
     mainDSU.readFile(path, (err, data) => {
         if (err) {
@@ -83,6 +97,7 @@ function getXSLT(version, callback){
 module.exports = {
     mountDSU,
     listDSUs,
+    listFolders,
     getVersion,
     getLeafletFolder,
     getBatchData,
