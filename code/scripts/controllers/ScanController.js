@@ -46,7 +46,7 @@ export default class ScanController extends ContainerController {
     }
 
     redirectToDrugDetails(state){
-        this.history.push("/drug-details", state);
+        this.history.push(`${new URL(this.history.win.basePath).pathname}drug-details`, state);
     }
 
     packageAlreadyScanned(packageGTIN_SSI, callback) {
@@ -127,7 +127,7 @@ export default class ScanController extends ContainerController {
 
     redirectToError(message, fields) {
         this.history.push({
-            pathname: "/scan-error",
+            pathname: `${new URL(this.history.win.basePath).pathname}scan-error`,
             state: {
                 message,
                 fields

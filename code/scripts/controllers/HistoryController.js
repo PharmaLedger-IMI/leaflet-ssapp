@@ -15,7 +15,7 @@ export default class HistoryController extends ContainerController {
             let gtinSSI = this.model.products[index].batchGtinSSI;
             this.getGS1Fields(gtinSSI, (err, gs1Fields) => {
                 history.push({
-                    pathname: '/drug-details',
+                    pathname: `${new URL(history.win.basePath).pathname}drug-details`,
                     state: {
                         gtinSSI,
                         gs1Fields

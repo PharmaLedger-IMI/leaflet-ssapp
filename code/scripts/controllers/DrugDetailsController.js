@@ -26,7 +26,7 @@ export default class DrugDetailsController extends ContainerController {
 
         this.on("view-leaflet", () => {
             history.push({
-                pathname: '/leaflet',
+                pathname: `${new URL(history.win.basePath).pathname}leaflet`,
                 state: {
                     gtinSSI: this.gtinSSI,
                     gs1Fields: this.gs1Fields
@@ -36,7 +36,7 @@ export default class DrugDetailsController extends ContainerController {
 
         this.on("view-smpc", () => {
             history.push({
-                pathname: '/smpc',
+                pathname: `${new URL(history.win.basePath).pathname}smpc`,
                 state: {
                     gtinSSI: this.gtinSSI,
                     gs1Fields: this.gs1Fields

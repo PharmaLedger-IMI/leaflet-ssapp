@@ -13,7 +13,7 @@ export default class LeafletController extends ContainerController {
 
         this.on("go-back", (event) => {
             history.push({
-                pathname: '/drug-details',
+                pathname: `${new URL(history.win.basePath).pathname}drug-details`,
                 state: {
                     gtinSSI: this.gtinSSI,
                     gs1Fields: this.gs1Fields
