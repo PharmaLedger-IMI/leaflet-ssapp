@@ -22,6 +22,7 @@ export default class DrugDetailsController extends ContainerController {
         }
 
         this.model.SNCheckIcon = "assets/icons/serial_number/png/sn_ok.png"
+        this.model.PSCheckIcon = "assets/icons/product_status/png/ps_ok.png"
 
         this.on("view-leaflet", () => {
             history.push({
@@ -63,26 +64,31 @@ export default class DrugDetailsController extends ContainerController {
                         return console.log(err);
                     }
 
-                    function checkSNCheck(){
+                     let checkSNCheck = ()=>{
                         let res = false;
                         try{
                             let bloomFilter = require("opendsu").loadAPI("crypto").createBloomFilter(batchData.bloomFilterSerialisation);
-                            res = bloomFilter.test(this.model.batchNumber);
+                            res = bloomFilter.test(this.model.serialNumber);
                         } catch(err){
                             alert(err.message);
                         }
                         return res;
-                    }
+                    };
 
                     batchData.expiryForDisplay = utils.convertFromGS1DateToYYYY_HM(batchData.expiry);
                     this.model.batch = batchData;
-                    if(this.model.gtin !=  batchData.gtin ||
-                        this.model.batchNumber !=  batchData.batchNumber ||
-                        this.model.expiryForDisplay != batchData.expiryForDisplay ||
-                        !checkSNCheck()) {
+                    let snCheck =  checkSNCheck();
+                    let expiryCheck =  this.model.expiryForDisplay != batchData.expiryForDisplay;
+                    if(!snCheck){
                         this.model.serialNumberVerification = "Failed";
                         this.model.SNCheckIcon = "assets/icons/serial_number/png/sn_fail.png"
                     }
+
+                    if(expiryCheck){
+                        this.model.productStatus = "Wrong expiry";
+                        this.model.PSCheckIcon = "assets/icons/serial_number/png/ps_fail.png"
+                    }
+
                 });
             });
         });
