@@ -58,7 +58,7 @@ export default class XmlDisplayService {
     createLanguageSelector(languages) {
         this.model.twoOrMoreLanguages = true;
         this.model.languages = {
-            placeholder: languages[0].label,
+            value: languages[0].value,
             options: languages
         }
     }
