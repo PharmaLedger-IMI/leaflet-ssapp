@@ -38,6 +38,8 @@ export default class ScanController extends ContainerController {
                             });
                         } else {
                             const constProductDSU_SSI = this.createConstProductDSU_SSI(gs1Fields);
+                            gs1Fields.expiry = "NOT AVAILABLE";
+                            gs1Fields.batchNumber = "GTIN ONLY";
                             this.addPackageToHistoryAndRedirect(constProductDSU_SSI, gs1Fields, (err) => {
                                 if (err) {
                                     return console.log("Failed to add package to history", err);
