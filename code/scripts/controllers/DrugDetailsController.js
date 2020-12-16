@@ -1,12 +1,13 @@
 import ContainerController from "../../cardinal/controllers/base-controllers/ContainerController.js";
 import utils from "../../utils.js";
-
+import DSUDataRetrievalService from "../services/DSUDataRetrievalService/DSUDataRetrievalService.js";
+import constants from "../../constants.js";
 export default class DrugDetailsController extends ContainerController {
     constructor(element, history) {
         super(element, history);
         this.setModel({
-            serialNumberVerification: "Verified",
-            productStatus: "Verified",
+            serialNumberVerification: constants.SN_OK_MESSAGE,
+            productStatus: constants.PRODUCT_STATUS_OK_MESSAGE,
             packageVerification: "Action required"
         });
 
@@ -15,14 +16,16 @@ export default class DrugDetailsController extends ContainerController {
         if (typeof history.location.state !== "undefined") {
             this.gtinSSI = history.location.state.gtinSSI;
             this.gs1Fields = history.location.state.gs1Fields;
-            this.model.serialNumber       = this.gs1Fields.serialNumber;
-            this.model.gtin               = this.gs1Fields.gtin;
-            this.model.batchNumber        = this.gs1Fields.batchNumber;
-            this.model.expiryForDisplay   = this.gs1Fields.expiry;
+            this.model.serialNumber = this.gs1Fields.serialNumber;
+            this.model.gtin = this.gs1Fields.gtin;
+            this.model.batchNumber = this.gs1Fields.batchNumber;
+            this.model.expiryForDisplay = this.gs1Fields.expiry;
         }
 
-        this.model.SNCheckIcon = "assets/icons/serial_number/png/sn_ok.png"
-        this.model.PSCheckIcon = "assets/icons/product_status/png/ps_ok.png"
+        const basePath = `/packages/${this.gtinSSI}`;
+        this.dsuDataRetrievalService = new DSUDataRetrievalService(this.DSUStorage, this.gtinSSI, basePath);
+        this.model.SNCheckIcon = constants.SN_OK_ICON;
+        this.model.PSCheckIcon = constants.PRODUCT_STATUS_OK_ICON;
 
         this.on("view-leaflet", () => {
             history.push({
@@ -44,52 +47,47 @@ export default class DrugDetailsController extends ContainerController {
             });
         });
 
-        const basePath = `/packages/${this.gtinSSI}`;
 
-        this.DSUStorage.getItem(`${basePath}/batch/batch.json`, "json", (err, batchData) => {
+        this.dsuDataRetrievalService.readProductData((err, product) => {
             if (err) {
-                console.log(err);
-                return;
+                return console.log(err);
             }
 
-            this.DSUStorage.getItem(`${basePath}/batch/product/${batchData.version}/product.json`, "json", (err, product) => {
+            this.model.product = product;
+
+            this.dsuDataRetrievalService.readBatchData((err, batchData) => {
                 if (err) {
+                    this.model.serialNumberVerification = constants.SN_FAIL_MESSAGE;
+                    this.model.SNCheckIcon = constants.SN_FAIL_ICON
+                    this.model.productStatus = constants.PRODUCT_STATUS_FAIL_MESSAGE;
+                    this.model.PSCheckIcon = constants.PRODUCT_STATUS_FAIL_ICON;
                     return console.log(err);
                 }
-                product.photo = `/download${basePath}/batch/product/${batchData.version}` + product.photo;
-                this.model.product = product;
 
-                this.DSUStorage.getItem(`${basePath}/batch/batch.json`, "json", (err, batchData) => {
-                    if (err) {
-                        return console.log(err);
+                let checkSNCheck = () => {
+                    let res = false;
+                    try {
+                        let bloomFilter = require("opendsu").loadAPI("crypto").createBloomFilter(batchData.bloomFilterSerialisation);
+                        res = bloomFilter.test(this.model.serialNumber);
+                    } catch (err) {
+                        alert(err.message);
                     }
+                    return res;
+                };
 
-                     let checkSNCheck = ()=>{
-                        let res = false;
-                        try{
-                            let bloomFilter = require("opendsu").loadAPI("crypto").createBloomFilter(batchData.bloomFilterSerialisation);
-                            res = bloomFilter.test(this.model.serialNumber);
-                        } catch(err){
-                            alert(err.message);
-                        }
-                        return res;
-                    };
+                batchData.expiryForDisplay = utils.convertFromGS1DateToYYYY_HM(batchData.expiry);
+                this.model.batch = batchData;
+                let snCheck = checkSNCheck();
+                let expiryCheck = this.model.expiryForDisplay != batchData.expiryForDisplay;
+                if (!snCheck) {
+                    this.model.serialNumberVerification = constants.SN_FAIL_MESSAGE;
+                    this.model.SNCheckIcon = constants.SN_FAIL_ICON;
+                }
 
-                    batchData.expiryForDisplay = utils.convertFromGS1DateToYYYY_HM(batchData.expiry);
-                    this.model.batch = batchData;
-                    let snCheck =  checkSNCheck();
-                    let expiryCheck =  this.model.expiryForDisplay != batchData.expiryForDisplay;
-                    if(!snCheck){
-                        this.model.serialNumberVerification = "Failed";
-                        this.model.SNCheckIcon = "assets/icons/serial_number/png/sn_fail.png"
-                    }
-
-                    if(expiryCheck){
-                        this.model.productStatus = "Wrong expiry";
-                        this.model.PSCheckIcon = "assets/icons/serial_number/png/ps_fail.png"
-                    }
-
-                });
+                if (expiryCheck) {
+                    this.model.productStatus = constants.PRODUCT_STATUS_FAIL_MESSAGE;
+                    this.model.PSCheckIcon = constants.PRODUCT_STATUS_FAIL_ICON;
+                }
             });
         });
     }

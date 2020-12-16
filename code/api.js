@@ -18,7 +18,7 @@ function listFolders(path, callback) {
     if (path.endsWith("/")) {
         path = path.slice(0, -1);
     }
-    mainDSU.listFolders(path,{ignoreMounts: false}, (err, folders) => {
+    mainDSU.listFolders(path, {ignoreMounts: false}, (err, folders) => {
         if (err) {
             return callback(err);
         }
@@ -26,6 +26,7 @@ function listFolders(path, callback) {
         callback(undefined, folders);
     });
 }
+
 
 function readJSONData(path, callback){
     mainDSU.readFile(path, (err, data) => {

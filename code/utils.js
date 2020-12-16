@@ -105,12 +105,6 @@ function convertFromGS1DateToYYYY_HM(gs1DateString) {
     return `${monthNames[month - 1]} - ${year}`
 }
 
-function getErrorMessageElement(errorMessage) {
-    let pskLabel = document.createElement("psk-label");
-    pskLabel.className = "scan-error-message";
-    pskLabel.label = errorMessage;
-    return pskLabel;
-}
 function getFetchUrl(relativePath) {
     if (window["$$"] && $$.SSAPP_CONTEXT && $$.SSAPP_CONTEXT.BASE_URL && $$.SSAPP_CONTEXT.SEED) {
         // if we have a BASE_URL then we prefix the fetch url with BASE_URL
@@ -120,6 +114,7 @@ function getFetchUrl(relativePath) {
     }
     return relativePath;
 }
+
 
 
 export default {

@@ -29,13 +29,20 @@ export default class ScanController extends ContainerController {
                     return this.redirectToError("Product code combination could not be resolved.", gs1Fields);
                 }
                 if (status === false) {
-                    this.packageAnchorExists(gtinSSI, (err, status) => {
+                    this.batchAnchorExists(gtinSSI, (err, status) => {
                         if (status) {
-                            this.addPackageToScannedPackagesList(gtinSSI, gs1Fields,(err)=>{
-                                this.redirectToDrugDetails({gtinSSI: gtinSSI.getIdentifier(), gs1Fields});
-                            })
+                            this.addPackageToHistoryAndRedirect(gtinSSI, gs1Fields, (err) => {
+                                if (err) {
+                                    return console.log("Failed to add package to history", err);
+                                }
+                            });
                         } else {
-                            this.redirectToError("Product code combination could not be resolved.", gs1Fields);
+                            const constProductDSU_SSI = this.createConstProductDSU_SSI(gs1Fields);
+                            this.addPackageToHistoryAndRedirect(constProductDSU_SSI, gs1Fields, (err) => {
+                                if (err) {
+                                    return console.log("Failed to add package to history", err);
+                                }
+                            });
                         }
                     });
                 } else {
@@ -45,6 +52,17 @@ export default class ScanController extends ContainerController {
         });
     }
 
+    addPackageToHistoryAndRedirect(gtinSSI, gs1Fields, callback) {
+        this.addPackageToScannedPackagesList(gtinSSI, gs1Fields,(err)=>{
+            if (err) {
+                return callback(err);
+            }
+            this.redirectToDrugDetails({gtinSSI: gtinSSI.getIdentifier(), gs1Fields});
+        })
+    }
+    createConstProductDSU_SSI(gs1Fields){
+        return gtinResolver.createGTIN_SSI("epi", gs1Fields.gtin);
+    }
     redirectToDrugDetails(state){
         this.history.push(`${new URL(this.history.win.basePath).pathname}drug-details`, state);
     }
@@ -85,7 +103,7 @@ export default class ScanController extends ContainerController {
         });
     }
 
-    packageAnchorExists(packageGTIN_SSI, callback) {
+    batchAnchorExists(packageGTIN_SSI, callback) {
         this.DSUStorage.call("mountDSU", `/package`, packageGTIN_SSI.getIdentifier(), (err) => {
             this.DSUStorage.getItem(`/package/batch/batch.json`, "json", err => {
                 if (err) {

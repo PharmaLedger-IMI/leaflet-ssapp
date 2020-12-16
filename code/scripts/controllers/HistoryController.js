@@ -1,6 +1,7 @@
 import ContainerController from "../../cardinal/controllers/base-controllers/ContainerController.js";
 import utils from "../../utils.js";
 import constants from "../../constants.js";
+import DSUDataRetrievalService from "../services/DSUDataRetrievalService/DSUDataRetrievalService.js";
 
 export default class HistoryController extends ContainerController {
     constructor(element, history) {
@@ -33,21 +34,23 @@ export default class HistoryController extends ContainerController {
                 if (packageNumber < dsuList.length) {
                     const gtinSSI = dsuList[packageNumber].identifier;
                     const basePath = `/packages/${dsuList[packageNumber].path}`;
-                    this.DSUStorage.getItem(`${basePath}/batch/batch.json`, 'json', (err, batch) => {
-                        this.DSUStorage.getItem(`${basePath}/batch/product/${batch.version}/product.json`, 'json', (err, product) => {
+                    const dsuDataRetrievalService = new DSUDataRetrievalService(this.DSUStorage, gtinSSI, basePath);
+                        dsuDataRetrievalService.readProductData((err, product)=>{
                             if (err) {
                                 return callback(err);
                             }
 
-                            product.batchGtinSSI = gtinSSI;
-                            product.keySSI = batch.product;
-                            product.expiry = utils.convertFromGS1DateToYYYY_HM(batch.expiry);
-                            product.photo = utils.getFetchUrl(`/download${basePath}/batch/product` + product.photo);
-                            products.push(product);
-                            packageNumber++;
-                            __readProductsRecursively(packageNumber, callback);
+                            this.getGS1Fields(gtinSSI, (err, gs1Fields) => {
+                                if (err) {
+                                    return callback(err);
+                                }
+                                product.batchGtinSSI = gtinSSI;
+                                product.expiry = gs1Fields.expiry;
+                                products.push(product);
+                                packageNumber++;
+                                __readProductsRecursively(packageNumber, callback);
+                            });
                         });
-                    });
                 } else {
                     callback(undefined, products);
                 }

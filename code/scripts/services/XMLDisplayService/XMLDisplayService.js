@@ -1,4 +1,5 @@
 import LanguageService from "../LanguageService/LanguageService.js";
+import DSUDataRetrievalService from "../DSUDataRetrievalService/DSUDataRetrievalService.js";
 import constants from "../../../constants.js";
 
 const pathToXsl = constants.XSL_PATH;
@@ -13,6 +14,7 @@ export default class XmlDisplayService {
         this.xmlType = xmlType;
         this.xmlFile = xmlFile;
         this.model = model;
+        this.dsuDataRetrievalService = new DSUDataRetrievalService(dsuStorage, gtinSSI);
     }
 
     displayXml(language) {
@@ -20,23 +22,26 @@ export default class XmlDisplayService {
             return this.displayXmlForLanguage(language);
         }
 
-            this.languageService.getWorkingLanguages((err, workingLanguages) => {
-                const searchForLeaflet = (languages) => {
-                    const languageCode = languages.shift().value;
-                    this.readXmlFile(languageCode, (err, xmlContent, pathBase) => {
-                        if (err) {
-                            searchForLeaflet(languages);
-                        } else {
-                            this.applyStylesheetAndDisplayXml(pathBase, xmlContent);
-                        }
-                    });
+        this.languageService.getWorkingLanguages((err, workingLanguages) => {
+            const searchForLeaflet = (languages) => {
+                if(languages.length === 0) {
+                    this.displayError();
+                    return;
                 }
-
-                searchForLeaflet(workingLanguages);
-            })
+                const languageCode = languages.shift().value;
+                this.readXmlFile(languageCode, (err, xmlContent, pathBase) => {
+                    if (err) {
+                        searchForLeaflet(languages);
+                    } else {
+                        return this.applyStylesheetAndDisplayXml(pathBase, xmlContent);
+                    }
+                });
+            }
+            searchForLeaflet(workingLanguages);
+        })
     }
 
-    populateModel(){
+    populateModel() {
         this.getAvailableLanguagesForXmlType((err, languages) => {
             this.languageService.addWorkingLanguages(languages, (err) => {
                 if (languages.length >= 2) {
@@ -45,9 +50,9 @@ export default class XmlDisplayService {
                             return callback(err);
                         }
                         this.createLanguageSelector(languagesForSelect);
-                            this.model.onChange("languages.value", () => {
-                                this.displayXmlForLanguage(this.model.languages.value);
-                            })
+                        this.model.onChange("languages.value", () => {
+                            this.displayXmlForLanguage(this.model.languages.value);
+                        })
                     });
                 }
                 this.displayXml();
@@ -64,10 +69,9 @@ export default class XmlDisplayService {
     }
 
     displayXmlForLanguage(language) {
-        this.readXmlFile(language,(err, xmlContent, pathBase) => {
+        this.readXmlFile(language, (err, xmlContent, pathBase) => {
             if (err) {
-                let errorMessageElement = this.getErrorMessageElement(errorMessage)
-                this.element.querySelector("#content").appendChild(errorMessageElement);
+                this.displayError();
                 return;
             }
 
@@ -76,15 +80,16 @@ export default class XmlDisplayService {
     }
 
     readXmlFile(language, callback) {
-        this.buildBasePath(language, (err, pathBase) => {
-            const pathToXml = pathBase + this.xmlFile;
+        this.buildBasePath((err, pathBase) => {
+            const pathToLeafletLanguage = `${pathBase}${language}/`;
+            const pathToXml = pathToLeafletLanguage + this.xmlFile;
 
             this.readFileAndDecodeContent(pathToXml, (err, xmlContent) => {
                 if (err) {
                     return callback(err);
                 }
 
-                callback(undefined, xmlContent, pathBase);
+                callback(undefined, xmlContent, pathToLeafletLanguage);
             })
         })
     }
@@ -92,12 +97,16 @@ export default class XmlDisplayService {
     applyStylesheetAndDisplayXml(pathBase, xmlContent) {
         this.readFileAndDecodeContent(pathToXsl, (err, xslContent) => {
             if (err) {
-                let errorMessageElement = this.getErrorMessageElement(errorMessage)
-                this.element.querySelector("#content").appendChild(errorMessageElement);
+                this.displayError();
                 return;
             }
             this.displayXmlContent(pathBase, xmlContent, xslContent);
         });
+    }
+
+    displayError(){
+        let errorMessageElement = this.getErrorMessageElement(errorMessage)
+        this.element.querySelector("#content").appendChild(errorMessageElement);
     }
 
     displayXmlContent(pathBase, xmlContent, xslContent) {
@@ -115,9 +124,14 @@ export default class XmlDisplayService {
         this.element.querySelector("#content").appendChild(resultDocument)
     }
 
-    buildBasePath(language, callback) {
-        this.DSUStorage.getObject(`/packages/${this.gtinSSI}/batch/batch.json`, (err, batchData) => {
-            callback(undefined, `/packages/${this.gtinSSI}/batch/product/${batchData.version}/${this.xmlType}/${language}/`);
+    buildBasePath(callback) {
+        this.dsuDataRetrievalService.getPathToProductVersion((err, pathToProductVersion) => {
+            if (err) {
+                return callback(err);
+            }
+
+            let pathBase = `${pathToProductVersion}${this.xmlType}/`;
+            callback(undefined, pathBase);
         });
     }
 
@@ -139,8 +153,7 @@ export default class XmlDisplayService {
     }
 
     getAvailableLanguagesForXmlType(callback) {
-        this.DSUStorage.getObject(`/packages/${this.gtinSSI}/batch/batch.json`, (err, batchData) => {
-            let pathBase = `/packages/${this.gtinSSI}/batch/product/${batchData.version}/${this.xmlType}/`;
+        this.buildBasePath((err, pathBase) => {
             this.DSUStorage.call("listFolders", pathBase, (err, languages) => {
                 if (err) {
                     return callback(err);
