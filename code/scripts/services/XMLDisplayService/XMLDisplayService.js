@@ -111,7 +111,7 @@ export default class XmlDisplayService {
 
     displayXmlContent(pathBase, xmlContent, xslContent) {
         let xsltProcessor = new XSLTProcessor();
-        xsltProcessor.setParameter(null, "resources_path", "/download" + pathBase);
+        xsltProcessor.setParameter(null, "resources_path", "download" + pathBase);
         let parser = new DOMParser();
 
         let xmlDoc = parser.parseFromString(xmlContent, "text/xml");
