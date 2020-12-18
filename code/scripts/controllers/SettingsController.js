@@ -5,13 +5,13 @@ import languageServiceUtils from "../services/LanguageService/languageServiceUti
 export default class SettingsController extends ContainerController {
     constructor(element, history) {
         super(element, history);
-        this.setModel({languageSelectorOpened: false});
+        this.setModel({languageSelectorOpened: false, origin: window.location.origin});
         this.languageService = new LanguageService(this.DSUStorage);
         this.languageService.getLanguageListForOrdering((err, vm) => {
             this.model.workingLanguages = vm;
 
-            this.model.onChange("workingLanguages", (event)=>{
-                this.languageService.overwriteWorkingLanguages(this.model.workingLanguages.items, (err)=>{
+            this.model.onChange("workingLanguages", (event) => {
+                this.languageService.overwriteWorkingLanguages(this.model.workingLanguages.items, (err) => {
                     if (err) {
                         throw err;
                     }
@@ -27,7 +27,7 @@ export default class SettingsController extends ContainerController {
         });
 
         this.model.onChange("languagesToAdd", () => {
-            this.languageService.addWorkingLanguages(this.model.languagesToAdd.value, (err)=>{
+            this.languageService.addWorkingLanguages(this.model.languagesToAdd.value, (err) => {
                 if (err) {
                     throw err;
                 }

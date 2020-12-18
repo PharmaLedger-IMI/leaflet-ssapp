@@ -1,7 +1,6 @@
 import constants from "../../../constants.js";
 import languageServiceUtils from "./languageServiceUtils.js";
 
-// let workingLanguagesCache = [{label:"English", value: "en"}, {label:"German", value: "de"}];
 let workingLanguagesCache = [];
 
 
