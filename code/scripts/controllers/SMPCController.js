@@ -21,7 +21,7 @@ export default class SMPCController extends ContainerController {
             });
         })
 
-        const xmlDisplayService = new XMLDisplayService(this.DSUStorage, element, this.gtinSSI, "smpc", "smpc.xml", this.model);
+        const xmlDisplayService = new XMLDisplayService(this.DSUStorage, element, this.gtinSSI, utils.getMountPath(this.gtinSSI, this.gs1Fields), "smpc", "smpc.xml", this.model);
         xmlDisplayService.populateModel();
     }
 }

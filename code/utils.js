@@ -115,10 +115,16 @@ function getFetchUrl(relativePath) {
     return relativePath;
 }
 
-
+function getMountPath(gtinSSI, gs1Fields){
+    if (typeof gtinSSI !== "string") {
+        gtinSSI = gtinSSI.getIdentifier();
+    }
+    return  `/packages/${gtinSSI}${gs1Fields.serialNumber}`;
+}
 
 export default {
     convertFromISOtoYYYY_HM,
     convertFromGS1DateToYYYY_HM,
-    getFetchUrl
+    getFetchUrl,
+    getMountPath
 };

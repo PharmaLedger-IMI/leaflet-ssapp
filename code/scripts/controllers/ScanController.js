@@ -24,7 +24,7 @@ export default class ScanController extends ContainerController {
                 this.redirectToError("Barcode is not readable, please contact pharmacy / doctor who issued the medicine package.", gs1Fields);
             }
             const gtinSSI = gtinResolver.createGTIN_SSI("epi", gs1Fields.gtin, gs1Fields.batchNumber);
-            this.packageAlreadyScanned(gtinSSI, (err, status) => {
+            this.packageAlreadyScanned(gtinSSI, gs1Fields,(err, status) => {
                 if (err) {
                     return this.redirectToError("Product code combination could not be resolved.", gs1Fields);
                 }
@@ -69,13 +69,13 @@ export default class ScanController extends ContainerController {
         this.history.push(`${new URL(this.history.win.basePath).pathname}drug-details`, state);
     }
 
-    packageAlreadyScanned(packageGTIN_SSI, callback) {
+    packageAlreadyScanned(packageGTIN_SSI, gs1Fields, callback) {
         this.DSUStorage.call("listDSUs", `/packages`, (err, dsuList) => {
             if (err) {
                 return callback(err);
             }
 
-            let packageIndex = dsuList.findIndex(dsu => dsu.identifier === packageGTIN_SSI.getIdentifier());
+            let packageIndex = dsuList.findIndex(dsu => dsu.path === utils.getMountPath(packageGTIN_SSI, gs1Fields));
             if (packageIndex === -1) {
                 callback(undefined, false);
             }else{
@@ -86,7 +86,7 @@ export default class ScanController extends ContainerController {
 
     addPackageToScannedPackagesList(packageGTIN_SSI, gs1Fields, callback) {
         const gtinSSIIdentifier = packageGTIN_SSI.getIdentifier();
-        this.DSUStorage.call("mountDSU", `/packages/${packageGTIN_SSI.getIdentifier()}`, gtinSSIIdentifier, (err) => {
+        this.DSUStorage.call("mountDSU", utils.getMountPath(packageGTIN_SSI, gs1Fields), gtinSSIIdentifier, (err) => {
             if (err) {
                 return callback(err);
             }
@@ -98,7 +98,7 @@ export default class ScanController extends ContainerController {
                 if (typeof packages === "undefined") {
                     packages = {};
                 }
-                packages[gtinSSIIdentifier] = gs1Fields;
+                packages[utils.getMountPath(packageGTIN_SSI, gs1Fields)] = gs1Fields;
 
                 this.DSUStorage.setObject(constants.PACKAGES_STORAGE_PATH, packages, callback);
             });

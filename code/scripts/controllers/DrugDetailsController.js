@@ -22,7 +22,7 @@ export default class DrugDetailsController extends ContainerController {
             this.model.expiryForDisplay = this.gs1Fields.expiry;
         }
 
-        const basePath = `/packages/${this.gtinSSI}`;
+        const basePath = utils.getMountPath(this.gtinSSI, this.gs1Fields);
         this.dsuDataRetrievalService = new DSUDataRetrievalService(this.DSUStorage, this.gtinSSI, basePath);
         this.model.SNCheckIcon = constants.SN_OK_ICON;
         this.model.PSCheckIcon = constants.PRODUCT_STATUS_OK_ICON;

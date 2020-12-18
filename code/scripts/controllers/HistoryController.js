@@ -13,8 +13,9 @@ export default class HistoryController extends ContainerController {
             let target = event.target;
             let targetProduct = target.getAttribute("keySSI");
             const index = parseInt(targetProduct.replace(/\D/g, ''));
+            let basePath = this.model.products[index].identifier;
             let gtinSSI = this.model.products[index].batchGtinSSI;
-            this.getGS1Fields(gtinSSI, (err, gs1Fields) => {
+            this.getGS1Fields(basePath, (err, gs1Fields) => {
                 history.push({
                     pathname: `${new URL(history.win.basePath).pathname}drug-details`,
                     state: {
@@ -40,10 +41,11 @@ export default class HistoryController extends ContainerController {
                                 return callback(err);
                             }
 
-                            this.getGS1Fields(gtinSSI, (err, gs1Fields) => {
+                            this.getGS1Fields(basePath, (err, gs1Fields) => {
                                 if (err) {
                                     return callback(err);
                                 }
+                                product.identifier = basePath;
                                 product.batchGtinSSI = gtinSSI;
                                 product.expiry = gs1Fields.expiry;
                                 products.push(product);
@@ -66,13 +68,13 @@ export default class HistoryController extends ContainerController {
         });
     }
 
-    getGS1Fields(gtinSSI, callback){
+    getGS1Fields(basePath, callback){
         this.DSUStorage.getObject(constants.PACKAGES_STORAGE_PATH, (err, packages) => {
             if (err) {
                 return callback(err);
             }
 
-            callback(undefined, packages[gtinSSI]);
+            callback(undefined, packages[basePath]);
         });
     }
 }

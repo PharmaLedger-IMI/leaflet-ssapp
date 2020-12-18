@@ -1,6 +1,7 @@
 import ContainerController from '../../cardinal/controllers/base-controllers/ContainerController.js';
 import LanguageService from "../services/LanguageService/LanguageService.js";
 import XMLDisplayService from "../services/XMLDisplayService/XMLDisplayService.js";
+import utils from "../../utils.js";
 
 export default class LeafletController extends ContainerController {
     constructor(element, history) {
@@ -21,7 +22,7 @@ export default class LeafletController extends ContainerController {
             });
         })
 
-        const xmlDisplayService = new XMLDisplayService(this.DSUStorage, element, this.gtinSSI, "leaflet", "leaflet.xml", this.model);
+        const xmlDisplayService = new XMLDisplayService(this.DSUStorage, element, this.gtinSSI, utils.getMountPath(this.gtinSSI, this.gs1Fields), "leaflet", "leaflet.xml", this.model);
         xmlDisplayService.populateModel();
     }
 }

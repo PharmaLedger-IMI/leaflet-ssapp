@@ -4,7 +4,7 @@ export default class DSUDataRetrievalService {
     constructor(storage, gtinSSI, basePath) {
         this.storage = storage;
         this.gtinSSI = gtinSSI;
-        this.basePath = basePath || `/packages/${this.gtinSSI}`;
+        this.basePath = basePath;
         this.cache = {};
     }
 

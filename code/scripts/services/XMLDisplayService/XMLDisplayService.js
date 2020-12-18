@@ -6,7 +6,7 @@ const pathToXsl = constants.XSL_PATH;
 let errorMessage = "This is a valid product. However, more information about this product has not been published by the Pharmaceutical Company. Please check back later.";
 
 export default class XmlDisplayService {
-    constructor(dsuStorage, element, gtinSSI, xmlType, xmlFile, model) {
+    constructor(dsuStorage, element, gtinSSI, basePath, xmlType, xmlFile, model) {
         this.languageService = new LanguageService(dsuStorage);
         this.DSUStorage = dsuStorage;
         this.element = element;
@@ -14,7 +14,7 @@ export default class XmlDisplayService {
         this.xmlType = xmlType;
         this.xmlFile = xmlFile;
         this.model = model;
-        this.dsuDataRetrievalService = new DSUDataRetrievalService(dsuStorage, gtinSSI);
+        this.dsuDataRetrievalService = new DSUDataRetrievalService(dsuStorage, gtinSSI, basePath);
     }
 
     displayXml(language) {
