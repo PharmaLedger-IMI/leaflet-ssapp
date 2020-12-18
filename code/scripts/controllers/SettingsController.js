@@ -26,6 +26,11 @@ export default class SettingsController extends ContainerController {
             this.model.languageSelectorOpened = true;
         });
 
+        this.on("go-back", (event) => {
+            history.push({
+                pathname: `${new URL(history.win.basePath).pathname}home`,
+            });
+        })
         this.model.onChange("languagesToAdd", () => {
             this.languageService.addWorkingLanguages(this.model.languagesToAdd.value, (err) => {
                 if (err) {
