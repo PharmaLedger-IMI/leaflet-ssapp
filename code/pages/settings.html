@@ -7,7 +7,7 @@
                 <psk-label class="scan-error-title smpc-error-title" label="User settings"></psk-label>
             </div>
 
-            <psk-accordion>
+            <psk-accordion multiple="true">
                 <psk-accordion-item title="Product Information Language Priorities" opened="true">
                     <psk-draggable-list view-model="@workingLanguages"></psk-draggable-list>
                     <psk-condition condition="@languageSelectorOpened">
