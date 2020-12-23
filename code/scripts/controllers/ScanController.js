@@ -37,14 +37,7 @@ export default class ScanController extends ContainerController {
                                 }
                             });
                         } else {
-                            const constProductDSU_SSI = this.createConstProductDSU_SSI(gs1Fields);
-                            gs1Fields.expiry = "NOT AVAILABLE";
-                            gs1Fields.batchNumber = "GTIN ONLY";
-                            this.addPackageToHistoryAndRedirect(constProductDSU_SSI, gs1Fields, (err) => {
-                                if (err) {
-                                    return console.log("Failed to add package to history", err);
-                                }
-                            });
+                            this.addConstProductDSUToHistory(gs1Fields);
                         }
                     });
                 } else {
@@ -54,13 +47,43 @@ export default class ScanController extends ContainerController {
         });
     }
 
-    addPackageToHistoryAndRedirect(gtinSSI, gs1Fields, callback) {
-        this.addPackageToScannedPackagesList(gtinSSI, gs1Fields,(err)=>{
+    addConstProductDSUToHistory(gs1Fields){
+        const constProductDSU_SSI = this.createConstProductDSU_SSI(gs1Fields);
+        this.constProductDSUExists(constProductDSU_SSI, (err, status)=>{
             if (err) {
-                return callback(err);
+                return console.log("Failed to check constProductDSU existence", err);
             }
-            this.redirectToDrugDetails({gtinSSI: gtinSSI.getIdentifier(), gs1Fields});
-        })
+            if (status) {
+                gs1Fields.expiry = "NOT AVAILABLE";
+                gs1Fields.batchNumber = "GTIN ONLY";
+                this.addPackageToHistoryAndRedirect(constProductDSU_SSI, gs1Fields, (err) => {
+                    if (err) {
+                        return console.log("Failed to add package to history", err);
+                    }
+                });
+            }else{
+                return this.redirectToError("Product code combination could not be resolved.", gs1Fields);
+            }
+        });
+    }
+    addPackageToHistoryAndRedirect(gtinSSI, gs1Fields, callback) {
+        this.packageAlreadyScanned(gtinSSI, gs1Fields, (err, status) => {
+            if (err) {
+                return console.log("Failed to verify if package was already scanned", err);
+            }
+
+            if(!status){
+                this.addPackageToScannedPackagesList(gtinSSI, gs1Fields,(err)=>{
+                    if (err) {
+                        return callback(err);
+                    }
+                    this.redirectToDrugDetails({gtinSSI: gtinSSI.getIdentifier(), gs1Fields});
+                });
+            }else{
+                this.redirectToDrugDetails({gtinSSI: gtinSSI.getIdentifier(), gs1Fields});
+            }
+        });
+
     }
     createConstProductDSU_SSI(gs1Fields){
         return gtinResolver.createGTIN_SSI("epi", gs1Fields.gtin);
@@ -105,9 +128,20 @@ export default class ScanController extends ContainerController {
         });
     }
 
+    constProductDSUExists(constProductDSU_SSI, callback){
+        this.DSUStorage.call("mountDSU", `/product`, constProductDSU_SSI.getIdentifier(), (err) => {
+            this.DSUStorage.getObject(`/product/product/1/product.json`, err => {
+                if (err) {
+                    return callback(undefined, false)
+                }
+                return callback(undefined, true);
+            });
+        })
+    }
+
     batchAnchorExists(packageGTIN_SSI, callback) {
         this.DSUStorage.call("mountDSU", `/package`, packageGTIN_SSI.getIdentifier(), (err) => {
-            this.DSUStorage.getItem(`/package/batch/batch.json`, "json", err => {
+            this.DSUStorage.getObject(`/package/batch/batch.json`, err => {
                 if (err) {
                     return callback(undefined, false)
                 }
