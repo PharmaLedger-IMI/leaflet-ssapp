@@ -47,6 +47,15 @@ export default class DrugDetailsController extends ContainerController {
             });
         });
 
+        this.on("report", () => {
+            history.push({
+                pathname: `${new URL(history.win.basePath).pathname}report`,
+                state: {
+                    gtinSSI: this.gtinSSI,
+                    gs1Fields: this.gs1Fields
+                }
+            });
+        });
 
         this.dsuDataRetrievalService.readProductData((err, product) => {
             if (err) {

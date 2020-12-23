@@ -29,7 +29,11 @@
     },
     {
       "name": "Report",
-      "tags": "report"
+      "indexed": false
+    },
+    {
+      "name": "Report Dummy",
+      "indexed": false
     },
     {
       "name": "Settings",
