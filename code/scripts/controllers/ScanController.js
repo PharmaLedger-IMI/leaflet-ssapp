@@ -98,7 +98,7 @@ export default class ScanController extends ContainerController {
                 return callback(err);
             }
 
-            let packageIndex = dsuList.findIndex(dsu => dsu.path === utils.getMountPath(packageGTIN_SSI, gs1Fields));
+            let packageIndex = dsuList.findIndex(dsu => utils.getMountPath(packageGTIN_SSI, gs1Fields).includes(dsu.path));
             if (packageIndex === -1) {
                 callback(undefined, false);
             }else{
