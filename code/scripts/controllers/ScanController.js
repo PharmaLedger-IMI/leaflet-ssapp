@@ -7,43 +7,67 @@ const gtinResolver = require("gtin-resolver");
 export default class ScanController extends ContainerController {
     constructor(element, history) {
         super(element, history);
-        this.setModel({data: '', hasCode: false, hasError: false});
+        this.setModel({data: '', hasCode: false, hasError: false, nativeSupport: false});
         this.history = history;
-        this.model.onChange("data", () => {
-            this.model.hasCode = true;
-            let gs1FormatFields;
-            try {
-                gs1FormatFields = interpretGS1scan.interpretScan(this.model.data);
-            } catch (e) {
-                this.redirectToError("Barcode is not readable, please contact pharmacy / doctor who issued the medicine package.", this.parseGs1Fields(e.dlOrderedAIlist));
-                return;
-            }
 
-            const gs1Fields = this.parseGs1Fields(gs1FormatFields.ol);
-            if (!this.hasMandatoryFields(gs1Fields)) {
-                this.redirectToError("Barcode is not readable, please contact pharmacy / doctor who issued the medicine package.", gs1Fields);
+        this.model.onChange("data", () => {
+            this.process(this.model.data);
+        });
+
+        this.getNativeApiHandler((err, handler) => {
+            if (handler) {
+                this.model.nativeSupport = true;
+                const scan = handler.importNativeAPI("dataMatrixScan");
+                scan().then((resultArray) => {
+                    if (resultArray && resultArray.length > 0) {
+                        return this.process(resultArray[0]);
+                    }
+                    this.redirectToError("2dMatrix code scan process finished. No code scanned or process canceled.");
+                }, (error) => {
+                    this.redirectToError("2dMatrix code scan process finished with errors.");
+                }).catch((err) => {
+                    this.redirectToError("Code scanning and processing finished with errors.");
+                });
+            } else if (err) {
+                console.log("Not able to activate native API support. Continue using bar code scanner from web.", err);
             }
-            const gtinSSI = gtinResolver.createGTIN_SSI("epi", gs1Fields.gtin, gs1Fields.batchNumber);
-            this.packageAlreadyScanned(gtinSSI, gs1Fields,(err, status) => {
-                if (err) {
-                    return this.redirectToError("Product code combination could not be resolved.", gs1Fields);
-                }
-                if (status === false) {
-                    this.batchAnchorExists(gtinSSI, (err, status) => {
-                        if (status) {
-                            this.addPackageToHistoryAndRedirect(gtinSSI, gs1Fields, (err) => {
-                                if (err) {
-                                    return console.log("Failed to add package to history", err);
-                                }
-                            });
-                        } else {
-                            this.addConstProductDSUToHistory(gs1Fields);
-                        }
-                    });
-                } else {
-                   this.redirectToDrugDetails({gtinSSI: gtinSSI.getIdentifier(), gs1Fields});
-                }
-            });
+        });
+    }
+
+    process(twoDMatrixCode){
+        this.model.hasCode = true;
+        let gs1FormatFields;
+        try {
+            gs1FormatFields = interpretGS1scan.interpretScan(twoDMatrixCode);
+        } catch (e) {
+            this.redirectToError("Barcode is not readable, please contact pharmacy / doctor who issued the medicine package.", this.parseGs1Fields(e.dlOrderedAIlist));
+            return;
+        }
+
+        const gs1Fields = this.parseGs1Fields(gs1FormatFields.ol);
+        if (!this.hasMandatoryFields(gs1Fields)) {
+            this.redirectToError("Barcode is not readable, please contact pharmacy / doctor who issued the medicine package.", gs1Fields);
+        }
+        const gtinSSI = gtinResolver.createGTIN_SSI("epi", gs1Fields.gtin, gs1Fields.batchNumber);
+        this.packageAlreadyScanned(gtinSSI, gs1Fields,(err, status) => {
+            if (err) {
+                return this.redirectToError("Product code combination could not be resolved.", gs1Fields);
+            }
+            if (status === false) {
+                this.batchAnchorExists(gtinSSI, (err, status) => {
+                    if (status) {
+                        this.addPackageToHistoryAndRedirect(gtinSSI, gs1Fields, (err) => {
+                            if (err) {
+                                return console.log("Failed to add package to history", err);
+                            }
+                        });
+                    } else {
+                        this.addConstProductDSUToHistory(gs1Fields);
+                    }
+                });
+            } else {
+                this.redirectToDrugDetails({gtinSSI: gtinSSI.getIdentifier(), gs1Fields});
+            }
         });
     }
 
@@ -187,5 +211,18 @@ export default class ScanController extends ContainerController {
                 fields
             }
         })
+    }
+
+    getNativeApiHandler(callback) {
+        try{
+            const nativeBridgeSupport = window.opendsu_native_apis;
+            if(typeof nativeBridgeSupport === "object"){
+                return nativeBridgeSupport.createNativeBridge(callback);
+            }
+
+            callback(undefined, undefined);
+        }catch(err){
+            console.log("Caught an error during initialization of the native API bridge", err);
+        }
     }
 }

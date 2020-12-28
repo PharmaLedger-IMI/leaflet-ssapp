@@ -6,7 +6,12 @@
                            label="Product scanned does not exist."></psk-label>
             </psk-condition>
             <psk-condition condition="@hasCode">
-                <psk-barcode-scanner slot="condition-false" data="@data" normal-size></psk-barcode-scanner>
+                <psk-condition condition="@nativeSupport" slot="condition-false">
+                    <psk-barcode-scanner slot="condition-false" data="@data" normal-size></psk-barcode-scanner>
+                    <div slot="condition-true">
+                        In a few seconds a native API will pop on you screen and guide you.
+                    </div>
+                </psk-condition>
                 <psk-ui-loader slot="condition-true" should-be-rendered="true"></psk-ui-loader>
             </psk-condition>
         </psk-container>
