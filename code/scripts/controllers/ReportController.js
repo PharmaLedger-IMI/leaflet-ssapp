@@ -16,7 +16,8 @@ export default class ReportController extends ContainerController {
             this.model.expiryForDisplay = this.gs1Fields.expiry;
         }
 
-        this.dsuDataRetrievalService = new DSUDataRetrievalService(this.DSUStorage, this.gtinSSI, this.gs1Fields);
+        const basePath = utils.getMountPath(this.gtinSSI, this.gs1Fields);
+        this.dsuDataRetrievalService = new DSUDataRetrievalService(this.DSUStorage, this.gtinSSI, basePath);
         this.dsuDataRetrievalService.readProductData((err, product) => {
             let iframe = document.createElement("iframe");
             iframe.src = product.reportURL;
