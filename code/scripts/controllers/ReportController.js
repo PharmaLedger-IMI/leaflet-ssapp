@@ -20,7 +20,7 @@ export default class ReportController extends ContainerController {
         this.dsuDataRetrievalService = new DSUDataRetrievalService(this.DSUStorage, this.gtinSSI, basePath);
         this.dsuDataRetrievalService.readProductData((err, product) => {
             let iframe = document.createElement("iframe");
-            iframe.src = product.reportURL;
+            iframe.src = `${product.reportURL}#x-blockchain-domain-request`;
             iframe.style = "height: 100%; width:100%";
             console.log(iframe);
             this.element.querySelector("#content").appendChild(iframe);
