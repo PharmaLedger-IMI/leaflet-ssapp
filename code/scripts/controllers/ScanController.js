@@ -1,4 +1,5 @@
 import ContainerController from '../../cardinal/controllers/base-controllers/ContainerController.js';
+import SettingsService from "../services/SettingsService.js";
 import interpretGS1scan from "../gs1ScanInterpreter/interpretGS1scan/interpretGS1scan.js";
 import utils from "../../utils.js";
 import constants from "../../constants.js";
@@ -7,7 +8,9 @@ const gtinResolver = require("gtin-resolver");
 export default class ScanController extends ContainerController {
     constructor(element, history) {
         super(element, history);
+
         this.setModel({data: '', hasCode: false, hasError: false, nativeSupport: false});
+        this.settingsService = new SettingsService(this.DSUStorage);
         this.history = history;
 
         this.model.onChange("data", () => {
@@ -48,46 +51,62 @@ export default class ScanController extends ContainerController {
         if (!this.hasMandatoryFields(gs1Fields)) {
             this.redirectToError("Barcode is not readable, please contact pharmacy / doctor who issued the medicine package.", gs1Fields);
         }
-        const gtinSSI = gtinResolver.createGTIN_SSI("epi", gs1Fields.gtin, gs1Fields.batchNumber);
-        this.packageAlreadyScanned(gtinSSI, gs1Fields,(err, status) => {
-            if (err) {
-                return this.redirectToError("Product code combination could not be resolved.", gs1Fields);
+
+        this.buildSSI(gs1Fields, (err, gtinSSI)=>{
+            this.packageAlreadyScanned(gtinSSI, gs1Fields,(err, status) => {
+                if (err) {
+                    return this.redirectToError("Product code combination could not be resolved.", gs1Fields);
+                }
+                if (status === false) {
+                    this.batchAnchorExists(gtinSSI, (err, status) => {
+                        if (status) {
+                            this.addPackageToHistoryAndRedirect(gtinSSI, gs1Fields, (err) => {
+                                if (err) {
+                                    return console.log("Failed to add package to history", err);
+                                }
+                            });
+                        } else {
+                            this.addConstProductDSUToHistory(gs1Fields);
+                        }
+                    });
+                } else {
+                    this.redirectToDrugDetails({gtinSSI: gtinSSI.getIdentifier(), gs1Fields});
+                }
+            });
+        });
+    }
+
+    buildSSI(gs1Fields, callback){
+        this.settingsService.readSetting("networkname", (err, networkName)=>{
+            if(err || typeof networkName === "undefined"){
+                networkName = constants.DEFAULT_NETWORK_NAME;
             }
-            if (status === false) {
-                this.batchAnchorExists(gtinSSI, (err, status) => {
-                    if (status) {
-                        this.addPackageToHistoryAndRedirect(gtinSSI, gs1Fields, (err) => {
-                            if (err) {
-                                return console.log("Failed to add package to history", err);
-                            }
-                        });
-                    } else {
-                        this.addConstProductDSUToHistory(gs1Fields);
-                    }
-                });
-            } else {
-                this.redirectToDrugDetails({gtinSSI: gtinSSI.getIdentifier(), gs1Fields});
-            }
+            return callback(undefined, gtinResolver.createGTIN_SSI(networkName, gs1Fields.gtin, gs1Fields.batchNumber));
         });
     }
 
     addConstProductDSUToHistory(gs1Fields){
-        const constProductDSU_SSI = this.createConstProductDSU_SSI(gs1Fields);
-        this.constProductDSUExists(constProductDSU_SSI, (err, status)=>{
-            if (err) {
-                return console.log("Failed to check constProductDSU existence", err);
+        this.createConstProductDSU_SSI(gs1Fields, (err, constProductDSU_SSI)=>{
+            if(err){
+                //todo: what to do in this case?
             }
-            if (status) {
-                gs1Fields.expiry = "NOT AVAILABLE";
-                gs1Fields.batchNumber = "GTIN ONLY";
-                this.addPackageToHistoryAndRedirect(constProductDSU_SSI, gs1Fields, (err) => {
-                    if (err) {
-                        return console.log("Failed to add package to history", err);
-                    }
-                });
-            }else{
-                return this.redirectToError("Product code combination could not be resolved.", gs1Fields);
-            }
+
+            this.constProductDSUExists(constProductDSU_SSI, (err, status)=>{
+                if (err) {
+                    return console.log("Failed to check constProductDSU existence", err);
+                }
+                if (status) {
+                    gs1Fields.expiry = "NOT AVAILABLE";
+                    gs1Fields.batchNumber = "GTIN ONLY";
+                    this.addPackageToHistoryAndRedirect(constProductDSU_SSI, gs1Fields, (err) => {
+                        if (err) {
+                            return console.log("Failed to add package to history", err);
+                        }
+                    });
+                }else{
+                    return this.redirectToError("Product code combination could not be resolved.", gs1Fields);
+                }
+            });
         });
     }
     addPackageToHistoryAndRedirect(gtinSSI, gs1Fields, callback) {
@@ -109,8 +128,13 @@ export default class ScanController extends ContainerController {
         });
 
     }
-    createConstProductDSU_SSI(gs1Fields){
-        return gtinResolver.createGTIN_SSI("epi", gs1Fields.gtin);
+    createConstProductDSU_SSI(gs1Fields, callback){
+        this.settingsService.readSetting("networkname", (err, networkName)=>{
+            if(err || typeof networkName === "undefined"){
+                networkName = constants.DEFAULT_NETWORK_NAME;
+            }
+            return callback(undefined, gtinResolver.createGTIN_SSI(networkName, gs1Fields.gtin));
+        });
     }
     redirectToDrugDetails(state){
         this.history.push(`${new URL(this.history.win.basePath).pathname}drug-details`, state);

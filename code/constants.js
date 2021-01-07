@@ -1,6 +1,8 @@
 export default {
     PACKAGES_STORAGE_PATH: "/data/packages.json",
     LANGUAGES_STORAGE_PATH: "/data/languages.json",
+    SETTINGS_STORAGE_PATH: "/data/settings.json",
+    DEFAULT_NETWORK_NAME: "epi",
     XSL_PATH: "/code/assets/xml/leaflet.xsl",
     SN_FAIL_ICON:"assets/icons/serial_number/sn_fail_red_x.svg",
     SN_FAIL_MESSAGE:"Failed",
