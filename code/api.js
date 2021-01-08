@@ -2,6 +2,7 @@ const securityContext = require("opendsu").loadApi("sc");
 const mainDSU = securityContext.getMainDSU();
 
 function mountDSU(path, keySSI, callback) {
+    //TODO: check if this is still usefull
     mainDSU.readFile("/code/constitution/gtinResolver.js", (err, content) => {
         eval(content.toString());
         mainDSU.mount(path, keySSI, (err) => {
