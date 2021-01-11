@@ -65,7 +65,7 @@ export default class SettingsService {
 
 	read(callback){
 		this.DSUStorage.getObject(constants.SETTINGS_STORAGE_PATH, (err, settings)=>{
-			if(err){
+			if(err || typeof settings === "undefined"){
 				settings = {};
 			}
 
