@@ -21,6 +21,9 @@ export default class DSUDataRetrievalService {
             if (err) {
                 return callback(err);
             }
+            if (typeof batchData === "undefined") {
+                return callback(Error(`Batch data is undefined`));
+            }
             this.cache.batchData = batchData;
             callback(undefined, batchData);
         });
@@ -75,6 +78,10 @@ export default class DSUDataRetrievalService {
                     return callback(err);
                 }
 
+                if (typeof productData === "undefined") {
+                    return callback(Error(`Product data is undefined.`))
+                }
+
                 productData.photo = utils.getFetchUrl(`/download${pathToProductVersion}` + productData.photo);
                 this.cache.productData = productData;
                 callback(undefined, productData);
@@ -102,7 +109,7 @@ export default class DSUDataRetrievalService {
             return callback(undefined, this.cache.productVersion);
         }
         this.readBatchData((err, batchData) => {
-            if (err) {
+            if (err || typeof batchData === "undefined") {
                 return this.getPathToProductDSU((err, pathToProductDSU) => {
                     if (err) {
                         return callback(err);

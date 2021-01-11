@@ -16,10 +16,12 @@ function listDSUs(path, callback) {
 }
 
 function listFolders(path, callback) {
+    console.log("Listing folders ...............", path);
     if (path.endsWith("/")) {
         path = path.slice(0, -1);
     }
     mainDSU.listFolders(path, {ignoreMounts: false}, (err, folders) => {
+        console.log("List folders callback ====================================", err, folders);
         if (err) {
             return callback(err);
         }

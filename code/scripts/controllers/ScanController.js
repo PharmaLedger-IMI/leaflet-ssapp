@@ -163,9 +163,6 @@ export default class ScanController extends ContainerController {
             }
 
             this.DSUStorage.getObject(constants.PACKAGES_STORAGE_PATH, (err, packages) => {
-                if (err) {
-                    //TODO: Error handling
-                }
                 if (typeof packages === "undefined") {
                     packages = {};
                 }
@@ -178,8 +175,8 @@ export default class ScanController extends ContainerController {
 
     constProductDSUExists(constProductDSU_SSI, callback){
         this.DSUStorage.call("mountDSU", `/product`, constProductDSU_SSI.getIdentifier(), (err) => {
-            this.DSUStorage.getObject(`/product/product/1/product.json`, err => {
-                if (err) {
+            this.DSUStorage.getObject(`/product/product/1/product.json`, (err, prod) => {
+                if (err || typeof prod === "undefined") {
                     return callback(undefined, false)
                 }
                 return callback(undefined, true);
@@ -189,8 +186,8 @@ export default class ScanController extends ContainerController {
 
     batchAnchorExists(packageGTIN_SSI, callback) {
         this.DSUStorage.call("mountDSU", `/package`, packageGTIN_SSI.getIdentifier(), (err) => {
-            this.DSUStorage.getObject(`/package/batch/batch.json`, err => {
-                if (err) {
+            this.DSUStorage.getObject(`/package/batch/batch.json`, (err, batch) => {
+                if (err || typeof batch === "undefined") {
                     return callback(undefined, false)
                 }
                 return callback(undefined, true);

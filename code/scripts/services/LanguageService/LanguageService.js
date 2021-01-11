@@ -78,7 +78,7 @@ export default class LanguageService {
 
     getWorkingLanguages(callback) {
         this.DSUStorage.getObject(constants.LANGUAGES_STORAGE_PATH, (err, languages) => {
-            if (err) {
+            if (err || typeof languages === "undefined") {
                 workingLanguagesCache.push(this.getSystemLanguage());
                 return this.overwriteWorkingLanguages(workingLanguagesCache, (err => callback(err, workingLanguagesCache)));
             }

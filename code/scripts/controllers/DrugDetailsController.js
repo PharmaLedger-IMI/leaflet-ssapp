@@ -62,10 +62,14 @@ export default class DrugDetailsController extends ContainerController {
                 return console.log(err);
             }
 
+            if (typeof product === "undefined") {
+                return;
+            }
+
             this.model.product = product;
 
             this.dsuDataRetrievalService.readBatchData((err, batchData) => {
-                if (err) {
+                if (err || typeof batchData === "undefined") {
                     this.model.serialNumberVerification = constants.SN_FAIL_MESSAGE;
                     this.model.SNCheckIcon = constants.SN_FAIL_ICON
                     this.model.productStatus = constants.PRODUCT_STATUS_FAIL_MESSAGE;
