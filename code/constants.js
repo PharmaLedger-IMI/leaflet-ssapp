@@ -7,9 +7,13 @@ export default {
     SN_FAIL_ICON:"assets/icons/serial_number/sn_fail_red_x.svg",
     SN_FAIL_MESSAGE:"Failed",
     SN_OK_ICON:"assets/icons/serial_number/sn_ok.png",
+    SN_GRAY_ICON:"assets/icons/serial_number/SN_gray_icon.svg",
     SN_OK_MESSAGE:"Verified",
     PRODUCT_STATUS_FAIL_ICON:"assets/icons/product_status/ps_fail_red_x.svg",
     PRODUCT_STATUS_FAIL_MESSAGE:"Wrong expiry",
     PRODUCT_STATUS_OK_ICON:"assets/icons/product_status/ps_ok.png",
+    PRODUCT_STATUS_GRAY_ICON:"assets/icons/product_status/ps_gray_icon.svg",
     PRODUCT_STATUS_OK_MESSAGE:"Verified",
+    PACK_VERIFICATION_GRAY_ICON:"assets/icons/pack_verification/svg/PV_gray_icon.svg",
+    PACK_VERIFICATION_ICON:"assets/icons/pack_verification/svg/PV_icon.svg",
 }

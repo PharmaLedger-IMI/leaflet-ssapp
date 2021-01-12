@@ -6,5 +6,8 @@
         "username": "Consumer",
         "email": "",
         "avatar": "resources/images/person.png"
+    },
+    "modals": {
+        "loadingModal": "loading-modal.html"
     }
 }
