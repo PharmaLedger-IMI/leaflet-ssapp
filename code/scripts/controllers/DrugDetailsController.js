@@ -71,7 +71,7 @@ export default class DrugDetailsController extends ContainerController {
 
             this.dsuDataRetrievalService.readBatchData((err, batchData) => {
                 if (err || typeof batchData === "undefined") {
-                    this.adjustUIInGTINOnlyCase();
+                    this.updateUIInGTINOnlyCase();
                     return console.log(err);
                 }
 
@@ -98,26 +98,38 @@ export default class DrugDetailsController extends ContainerController {
                 if (expiryCheck) {
                     this.model.productStatus = constants.PRODUCT_STATUS_FAIL_MESSAGE;
                     this.model.PSCheckIcon = constants.PRODUCT_STATUS_FAIL_ICON;
+                    return;
+                }
+
+                const expiryTime = new Date(batchData.expiryForDisplay.replaceAll(' ', '')).getTime();
+                const currentTime = Date.now();
+                console.log(currentTime, expiryTime);
+                if (expiryTime < currentTime) {
+                    this.model.productStatus = constants.PRODUCT_EXPIRED_MESSAGE;
+                    this.model.PSCheckIcon = constants.PRODUCT_STATUS_FAIL_ICON;
                 }
             });
         });
     }
 
-    adjustUIInGTINOnlyCase(){
+    updateUIInGTINOnlyCase(){
         const title = "The batch number in the barcode cannot be found."
         const message = "You are being provided with the latest leaflet.";
         this.displayModal(message, title);
-        this.model.serialNumberVerification = constants.SN_FAIL_MESSAGE;
+        this.model.serialNumberVerification = constants.SN_UNABLE_TO_VERIFY_MESSAGE;
         this.model.SNCheckIcon = constants.SN_GRAY_ICON
-        this.model.productStatus = constants.PRODUCT_STATUS_FAIL_MESSAGE;
+        this.model.productStatus = constants.PRODUCT_STATUS_UNABLE_TO_VALIDATE_MESSAGE;
         this.model.PSCheckIcon = constants.PRODUCT_STATUS_GRAY_ICON;
+        this.model.packageVerification = constants.PACK_VERIFICATION_UNABLE_TO_VERIFY_MESSAGE;
         this.model.PVIcon = constants.PACK_VERIFICATION_GRAY_ICON;
+
         let snVerification = this.element.querySelector("#snVerification");
         let productStatusVerification = this.element.querySelector("#productStatus");
         let packageVerification = this.element.querySelector("#packVerification");
         snVerification.style.color = "#cecece";
         productStatusVerification.style.color = "#cecece";
         packageVerification.style.color = "#cecece";
+
         setTimeout(() => {
             this.closeModal();
         },5000);

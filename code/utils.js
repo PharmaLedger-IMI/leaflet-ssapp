@@ -96,13 +96,14 @@ const monthNames = ["January", "February", "March", "April", "May", "June",
 function convertFromISOtoYYYY_HM(dateString) {
     const splitDate = dateString.split('-');
     const month = parseInt(splitDate[1]);
-    return `${monthNames[month - 1]} - ${splitDate[0]}`;
+    return `${splitDate[2]} - ${monthNames[month - 1].slice(0, 3)} - ${splitDate[0]}`;
 }
 
 function convertFromGS1DateToYYYY_HM(gs1DateString) {
     let year = "20" + gs1DateString.slice(0, 2);
     let month = gs1DateString.slice(2, 4);
-    return `${monthNames[month - 1]} - ${year}`
+    let day = gs1DateString.slice(4);
+    return `${day} - ${monthNames[month - 1].slice(0, 3)} - ${year}`
 }
 
 function getFetchUrl(relativePath) {

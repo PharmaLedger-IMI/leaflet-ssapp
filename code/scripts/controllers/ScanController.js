@@ -112,8 +112,8 @@ export default class ScanController extends ContainerController {
                     return console.log("Failed to check constProductDSU existence", err);
                 }
                 if (status) {
-                    gs1Fields.expiry = "NOT AVAILABLE";
-                    gs1Fields.batchNumber = "GTIN ONLY";
+                    gs1Fields.expiry = "MISSING";
+                    gs1Fields.batchNumber = "MISSING";
                     this.addPackageToHistoryAndRedirect(constProductDSU_SSI, gs1Fields, (err) => {
                         if (err) {
                             return console.log("Failed to add package to history", err);
@@ -193,25 +193,23 @@ export default class ScanController extends ContainerController {
     }
 
     constProductDSUExists(constProductDSU_SSI, callback) {
-        this.DSUStorage.call("mountDSU", `/product`, constProductDSU_SSI.getIdentifier(), (err) => {
-            this.DSUStorage.getObject(`/product/product/1/product.json`, (err, prod) => {
-                if (err || typeof prod === "undefined") {
-                    return callback(undefined, false)
-                }
-                return callback(undefined, true);
-            });
-        })
+        this.DSUStorage.call("loadDSU", constProductDSU_SSI.getIdentifier(), (err) => {
+            if (err) {
+                return callback(undefined, false);
+            }
+
+            callback(undefined, true);
+        });
     }
 
     batchAnchorExists(packageGTIN_SSI, callback) {
-        this.DSUStorage.call("mountDSU", `/package`, packageGTIN_SSI.getIdentifier(), (err) => {
-            this.DSUStorage.getObject(`/package/batch/batch.json`, (err, batch) => {
-                if (err || typeof batch === "undefined") {
-                    return callback(undefined, false)
-                }
-                return callback(undefined, true);
-            });
-        })
+        this.DSUStorage.call("loadDSU",  packageGTIN_SSI.getIdentifier(), (err, dsu) => {
+            if (err) {
+                return callback(undefined, false);
+            }
+
+            callback(undefined, true);
+        });
     }
 
     parseGs1Fields(orderedList) {
