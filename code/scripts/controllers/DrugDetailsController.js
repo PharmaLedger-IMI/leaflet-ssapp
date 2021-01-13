@@ -26,6 +26,7 @@ export default class DrugDetailsController extends ContainerController {
         this.dsuDataRetrievalService = new DSUDataRetrievalService(this.DSUStorage, this.gtinSSI, basePath);
         this.model.SNCheckIcon = constants.SN_OK_ICON;
         this.model.PSCheckIcon = constants.PRODUCT_STATUS_OK_ICON;
+        this.model.PVIcon = constants.PACK_VERIFICATION_ICON;
 
         this.on("view-leaflet", () => {
             history.push({
