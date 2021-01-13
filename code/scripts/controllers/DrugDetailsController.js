@@ -25,8 +25,13 @@ export default class DrugDetailsController extends ContainerController {
         const basePath = utils.getMountPath(this.gtinSSI, this.gs1Fields);
         this.dsuDataRetrievalService = new DSUDataRetrievalService(this.DSUStorage, this.gtinSSI, basePath);
         this.model.SNCheckIcon = constants.SN_OK_ICON;
+        this.setColor('serialNumberVerification', '#7eba7e');
+
         this.model.PSCheckIcon = constants.PRODUCT_STATUS_OK_ICON;
+        this.setColor('productStatusVerification', '#7eba7e');
+
         this.model.PVIcon = constants.PACK_VERIFICATION_ICON;
+        this.setColor('packageVerification', 'orange');
 
         this.on("view-leaflet", () => {
             history.push({
@@ -93,11 +98,13 @@ export default class DrugDetailsController extends ContainerController {
                 if (!snCheck) {
                     this.model.serialNumberVerification = constants.SN_FAIL_MESSAGE;
                     this.model.SNCheckIcon = constants.SN_FAIL_ICON;
+                    this.setColor('serialNumberVerification', 'red');
                 }
 
                 if (expiryCheck) {
                     this.model.productStatus = constants.PRODUCT_STATUS_FAIL_MESSAGE;
                     this.model.PSCheckIcon = constants.PRODUCT_STATUS_FAIL_ICON;
+                    this.setColor('productStatusVerification', 'red');
                     return;
                 }
 
@@ -107,6 +114,7 @@ export default class DrugDetailsController extends ContainerController {
                 if (expiryTime < currentTime) {
                     this.model.productStatus = constants.PRODUCT_EXPIRED_MESSAGE;
                     this.model.PSCheckIcon = constants.PRODUCT_STATUS_FAIL_ICON;
+                    this.setColor('productStatusVerification', 'red');
                 }
             });
         });
@@ -123,15 +131,17 @@ export default class DrugDetailsController extends ContainerController {
         this.model.packageVerification = constants.PACK_VERIFICATION_UNABLE_TO_VERIFY_MESSAGE;
         this.model.PVIcon = constants.PACK_VERIFICATION_GRAY_ICON;
 
-        let snVerification = this.element.querySelector("#snVerification");
-        let productStatusVerification = this.element.querySelector("#productStatus");
-        let packageVerification = this.element.querySelector("#packVerification");
-        snVerification.style.color = "#cecece";
-        productStatusVerification.style.color = "#cecece";
-        packageVerification.style.color = "#cecece";
+        this.setColor("serialNumberVerification", "#cecece");
+        this.setColor("productStatusVerification", "#cecece");
+        this.setColor("packageVerification", "#cecece");
 
         setTimeout(() => {
             this.closeModal();
         },5000);
+    }
+
+    setColor(id, color){
+        let el = this.element.querySelector('#' + id);
+        el.style.color = color;
     }
 }

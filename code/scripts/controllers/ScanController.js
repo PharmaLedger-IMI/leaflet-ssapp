@@ -112,8 +112,8 @@ export default class ScanController extends ContainerController {
                     return console.log("Failed to check constProductDSU existence", err);
                 }
                 if (status) {
-                    gs1Fields.expiry = "MISSING";
-                    gs1Fields.batchNumber = "MISSING";
+                    // gs1Fields.expiry = "MISSING";
+                    // gs1Fields.batchNumber = "MISSING";
                     this.addPackageToHistoryAndRedirect(constProductDSU_SSI, gs1Fields, (err) => {
                         if (err) {
                             return console.log("Failed to add package to history", err);
