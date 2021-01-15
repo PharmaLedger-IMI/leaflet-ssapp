@@ -123,7 +123,7 @@ export default class DrugDetailsController extends ContainerController {
     updateUIInGTINOnlyCase(){
         const title = "The batch number in the barcode cannot be found."
         const message = "You are being provided with the latest leaflet.";
-        this.displayModal(message, title);
+        this.displayModal(title + " " + message, " ");
         this.model.serialNumberVerification = constants.SN_UNABLE_TO_VERIFY_MESSAGE;
         this.model.SNCheckIcon = constants.SN_GRAY_ICON
         this.model.productStatus = constants.PRODUCT_STATUS_UNABLE_TO_VALIDATE_MESSAGE;
@@ -134,10 +134,6 @@ export default class DrugDetailsController extends ContainerController {
         this.setColor("serialNumberVerification", "#cecece");
         this.setColor("productStatusVerification", "#cecece");
         this.setColor("packageVerification", "#cecece");
-
-        setTimeout(() => {
-            this.closeModal();
-        },5000);
     }
 
     setColor(id, color){
