@@ -39,7 +39,7 @@ export default class ScanController extends ContainerController {
                             this.redirectToError("No camera available for scanning.");
                             break;
                         case "ERR_USER_CANCELLED":
-                            this.redirectToError("Scan process canceled by the user.");
+                            this.history.push(`${new URL(this.history.win.basePath).pathname}home`);
                             break;
                         default:
                             this.redirectToError("Failed to scan GS1 data matrix.");
