@@ -35,7 +35,7 @@ export default class DSUDataRetrievalService {
         }
         this.readBatchData((err, batchData) => {
             if (err) {
-                this.cache.pathToProductDSU = `${this.basePath}/product/`
+                this.cache.pathToProductDSU = `${this.basePath}/product/product/`
             } else {
                 this.cache.pathToProductDSU = `${this.basePath}/batch/gtinDSU/product/`;
             }
