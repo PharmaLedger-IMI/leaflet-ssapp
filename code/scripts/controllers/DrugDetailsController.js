@@ -43,6 +43,13 @@ export default class DrugDetailsController extends ContainerController {
             });
         });
 
+        element.querySelectorAll("[disabled]").forEach(node=>{
+            node.addEventListener("click", (event)=>{
+                event.preventDefault();
+                event.stopImmediatePropagation();
+            }, true)
+        });
+
         this.on("view-smpc", () => {
             history.push({
                 pathname: `${new URL(history.win.basePath).pathname}smpc`,
