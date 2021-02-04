@@ -4,10 +4,9 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "postinstall": "node ./node_modules/octopus/scripts/run",
-    "prebuild": "node ./node_modules/octopus/scripts/run prebuild",
-    "build": "node ./bin/build.js",
-    "postbuild": "node ./node_modules/octopus/scripts/run postbuild",
+    "prebuild": "node ./node_modules/octopus/scripts/run prebuild devmode",
+    "build": "node ./node_modules/octopus/scripts/buildDossier.js",
+    "postbuild": "node ./node_modules/octopus/scripts/run postbuild devmode",
     "update": "npm install",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
@@ -22,6 +21,6 @@
   },
   "homepage": "https://github.com/PharmaLedger-IMI/leaflet-ssapp#readme",
   "dependencies": {
-    "octopus": "git+http://github.com/privatesky/octopus.git#1.0.4"
+    "octopus": "git+http://github.com/privatesky/octopus.git"
   }
 }
