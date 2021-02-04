@@ -37,7 +37,8 @@
     },
     {
       "name": "Settings",
-      "tags": "settings"
+      "tags": "settings",
+      "indexed": false
     },
     {
       "name": "Drug details",
