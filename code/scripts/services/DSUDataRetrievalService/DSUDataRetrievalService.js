@@ -109,7 +109,7 @@ export default class DSUDataRetrievalService {
             return callback(undefined, this.cache.productVersion);
         }
         this.readBatchData((err, batchData) => {
-            if (err || typeof batchData === "undefined") {
+            if (err || typeof batchData === "undefined" || batchData.version === 'latest') {
                 return this.getPathToProductDSU((err, pathToProductDSU) => {
                     if (err) {
                         return callback(err);
