@@ -97,7 +97,7 @@ export default class ScanController extends ContainerController {
             if (err || typeof networkName === "undefined") {
                 networkName = constants.DEFAULT_NETWORK_NAME;
             }
-            return callback(undefined, gtinResolver.createGTIN_SSI(networkName, gs1Fields.gtin, gs1Fields.batchNumber));
+            return callback(undefined, gtinResolver.createGTIN_SSI(networkName, undefined, gs1Fields.gtin, gs1Fields.batchNumber));
         });
     }
 
@@ -151,7 +151,7 @@ export default class ScanController extends ContainerController {
             if (err || typeof networkName === "undefined") {
                 networkName = constants.DEFAULT_NETWORK_NAME;
             }
-            return callback(undefined, gtinResolver.createGTIN_SSI(networkName, gs1Fields.gtin));
+            return callback(undefined, gtinResolver.createGTIN_SSI(networkName, undefined, gs1Fields.gtin));
         });
     }
 
