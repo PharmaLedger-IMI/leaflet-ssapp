@@ -8,6 +8,7 @@
         "avatar": "resources/images/person.png"
     },
     "modals": {
-        "loadingModal": "loading-modal.html"
+        "loadingModal": "loading-modal.html",
+        "batchInfoModal": "batch-info.html"
     }
 }
