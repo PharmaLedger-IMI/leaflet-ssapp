@@ -11,7 +11,7 @@ export default {
     SN_OK_MESSAGE: "Verified",
     SN_UNABLE_TO_VERIFY_MESSAGE: "Unable to verify",
     PRODUCT_STATUS_FAIL_ICON: "assets/icons/product_status/ps_fail_red_x.svg",
-    PRODUCT_STATUS_FAIL_MESSAGE: "Wrong expiry",
+    PRODUCT_STATUS_FAIL_MESSAGE: "Invalid expiry date",
     PRODUCT_EXPIRED_MESSAGE: "Product expired",
     PRODUCT_STATUS_OK_ICON: "assets/icons/product_status/ps_ok.png",
     PRODUCT_STATUS_GRAY_ICON: "assets/icons/product_status/ps_gray_icon.svg",

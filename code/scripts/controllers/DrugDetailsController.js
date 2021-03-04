@@ -9,7 +9,8 @@ export default class DrugDetailsController extends ContainerController {
     this.setModel({
       serialNumberVerification: constants.SN_OK_MESSAGE,
       productStatus: constants.PRODUCT_STATUS_OK_MESSAGE,
-      packageVerification: "Action required"
+      packageVerification: "Action required",
+      displayItems: 3
     });
 
     this.model.SNCheckIcon = ""
@@ -88,11 +89,22 @@ export default class DrugDetailsController extends ContainerController {
           return console.log(err);
         }
 
-        if(batchData.defaultMessage || batchData.recalled ){
+        //serial number data validation item is not displayed
+        if (!batchData.serialCheck) {
+          this.model.displayItems--;
+          this.element.querySelector("#serial-number-validation-item").hidden = true;
+        }
+        //expiration date validation item is not displayed
+        if (!batchData.incorectDateCheck && !batchData.expiredDateCheck) {
+          this.model.displayItems--;
+          this.element.querySelector("#date-validation-item").hidden = true;
+        }
+
+        if (batchData.defaultMessage || batchData.recalled) {
           this.displayConfigurableModal({
             title: "Important notes!!!",
             modalName: "batchInfoModal",
-            modalContent : {
+            modalContent: {
               recallMessage: batchData.recalled ? batchData.recalledMessage : "",
               defaultMessage: batchData.defaultMessage
             }
@@ -114,13 +126,13 @@ export default class DrugDetailsController extends ContainerController {
         this.model.batch = batchData;
         let snCheck = checkSNCheck();
         let expiryCheck = this.model.expiryForDisplay != batchData.expiryForDisplay;
-        if (!snCheck) {
+        if (!snCheck && batchData.serialCheck) {
           this.model.serialNumberVerification = constants.SN_FAIL_MESSAGE;
           this.model.SNCheckIcon = constants.SN_FAIL_ICON;
           this.setColor('serialNumberVerification', 'red');
         }
 
-        if (expiryCheck) {
+        if (expiryCheck && batchData.incorectDateCheck) {
           this.model.productStatus = constants.PRODUCT_STATUS_FAIL_MESSAGE;
           this.model.PSCheckIcon = constants.PRODUCT_STATUS_FAIL_ICON;
           this.setColor('productStatusVerification', 'red');
@@ -130,7 +142,7 @@ export default class DrugDetailsController extends ContainerController {
         const expiryTime = new Date(batchData.expiryForDisplay.replaceAll(' ', '')).getTime();
         const currentTime = Date.now();
         console.log(currentTime, expiryTime);
-        if (expiryTime < currentTime) {
+        if (expiryTime < currentTime && batchData.expiredDateCheck) {
           this.model.productStatus = constants.PRODUCT_EXPIRED_MESSAGE;
           this.model.PSCheckIcon = constants.PRODUCT_STATUS_FAIL_ICON;
           this.setColor('productStatusVerification', 'red');
