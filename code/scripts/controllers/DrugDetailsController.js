@@ -2,6 +2,7 @@ import ContainerController from "../../cardinal/controllers/base-controllers/Con
 import utils from "../../utils.js";
 import DSUDataRetrievalService from "../services/DSUDataRetrievalService/DSUDataRetrievalService.js";
 import constants from "../../constants.js";
+import XMLDisplayService from "../services/XMLDisplayService/XMLDisplayService.js";
 
 export default class DrugDetailsController extends ContainerController {
   constructor(element, history) {
@@ -34,6 +35,9 @@ export default class DrugDetailsController extends ContainerController {
 
     this.model.PVIcon = constants.PACK_VERIFICATION_ICON;
     this.setColor('packageVerification', 'orange');
+
+    const smpcDisplayService = new XMLDisplayService(this.DSUStorage, element, this.gtinSSI, basePath, "smpc", "smpc.xml", this.model);
+    smpcDisplayService.isXmlAvailable()
 
     this.on("view-leaflet", () => {
       history.push({

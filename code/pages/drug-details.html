@@ -73,28 +73,32 @@
                 </section>
             </psk-details>
 
-            <psk-layout align-items="center" class="topPadding" row-gap="30px" template-columns="1fr 1fr">
+            <psk-layout template-columns="1fr 1fr" align-items="center" row-gap="30px" class="topPadding">
                 <psk-layout-item class="controlButton">
-                    <psk-button-link class="xxlIcon" event-name="view-leaflet" icon="file-text"
-                                     name="Patient Information">
+                    <psk-button-link class="xxlIcon active" name="Patient Information" icon="file-text" event-name="view-leaflet">
                     </psk-button-link>
                 </psk-layout-item>
                 <psk-layout-item class="controlButton">
-                    <psk-button-link class="xxlIcon smpc" event-name="view-smpc" icon="book"
-                                     name="SmPC"></psk-button-link>
+                    <psk-condition condition="isSmpc">
+                        <div slot="condition-true">
+                            <psk-button-link class="xxlIcon active" name="SmPC" icon="book" event-name="view-smpc"></psk-button-link>
+                        </div>
+                        <div slot="condition-false" style="pointer-events:none;">
+                            <psk-button-link class="xxlIcon inactive" name="SmPC" icon="book" disabled></psk-button-link>
+                        </div>
+                    </psk-condition>
                 </psk-layout-item>
             </psk-layout>
 
-            <psk-layout align-items="center" class="topPadding" row-gap="30px" template-columns="1fr 1fr 1fr">
+            <psk-layout template-columns="1fr 1fr 1fr" align-items="center" row-gap="30px" class="topPadding">
                 <psk-layout-item class="controlButton">
-                    <psk-button-link class="xlIcon" disabled icon="info-circle" name="Verify package"></psk-button-link>
+                    <psk-button-link class="xlIcon inactive" name="Verify package" icon="info-circle" disabled></psk-button-link>
                 </psk-layout-item>
                 <psk-layout-item class="controlButton">
-                    <psk-button-link class="xlIcon" disabled icon="exclamation-triangle"
-                                     name="Report"></psk-button-link>
+                    <psk-button-link class="xlIcon inactive" name="Report" icon="exclamation-triangle" disabled></psk-button-link>
                 </psk-layout-item>
                 <psk-layout-item class="controlButton">
-                    <psk-button-link class="xlIcon" disabled icon="archive" name="Add to cabinet"></psk-button-link>
+                    <psk-button-link class="xlIcon inactive" name="Add to cabinet" icon="archive" disabled></psk-button-link>
                 </psk-layout-item>
             </psk-layout>
 

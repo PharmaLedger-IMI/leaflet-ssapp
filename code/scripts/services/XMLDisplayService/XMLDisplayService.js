@@ -41,6 +41,12 @@ export default class XmlDisplayService {
         })
     }
 
+    isXmlAvailable() {
+        this.getAvailableLanguagesForXmlType((err, languages) => {
+            this.model.isSmpc = languages.length > 0;
+        });
+    }
+
     populateModel() {
         this.getAvailableLanguagesForXmlType((err, languages) => {
             this.languageService.addWorkingLanguages(languages, (err) => {
