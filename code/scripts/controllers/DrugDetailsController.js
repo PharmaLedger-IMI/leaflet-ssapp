@@ -18,7 +18,7 @@ export default class DrugDetailsController extends ContainerController {
     if (typeof history.location.state !== "undefined") {
       this.gtinSSI = history.location.state.gtinSSI;
       this.gs1Fields = history.location.state.gs1Fields;
-      this.model.serialNumber = this.gs1Fields.serialNumber;
+      this.model.serialNumber = this.gs1Fields.serialNumber === "0" ? "-" : this.gs1Fields.serialNumber;
       this.model.gtin = this.gs1Fields.gtin;
       this.model.batchNumber = this.gs1Fields.batchNumber;
       this.model.expiryForDisplay = this.gs1Fields.expiry;
