@@ -116,19 +116,16 @@ export default class DrugDetailsController extends ContainerController {
         }
 
         let checkSNCheck = () => {
-          let res = {};
+          let res;
           try {
-            const bloomFilter = require("opendsu").loadAPI("crypto").createBloomFilter(batchData.bloomFilterSerialisation);
-            const recalledBloomFilter = require("opendsu").loadAPI("crypto").createBloomFilter(batchData.bloomFilterRecalledSerialisation);
-            const decommissionedBloomFilter = require("opendsu").loadAPI("crypto").createBloomFilter(batchData.bloomFilterDecommissionedSerialisation);
-
             res = {
-              validSerial: bloomFilter.test(this.model.serialNumber),
-              recalledSerial: recalledBloomFilter.test(this.model.serialNumber),
-              decommissionedSerial: decommissionedBloomFilter.test(this.model.serialNumber),
+              validSerial: this.serialNumberIsInBloomFilter(this.model.serialNumber, batchData.bloomFilterSerialisations),
+              recalledSerial: this.serialNumberIsInBloomFilter(this.model.serialNumber, batchData.bloomFilterRecalledSerialisations),
+              decommissionedSerial: this.serialNumberIsInBloomFilter(this.model.serialNumber, batchData.bloomFilterDecommissionedSerialisations),
             };
           } catch (err) {
-            alert(err.message);
+            console.log("Error", err);
+            return alert(err.message);
           }
           return res;
         };
@@ -191,5 +188,24 @@ export default class DrugDetailsController extends ContainerController {
   setColor(id, color) {
     let el = this.element.querySelector('#' + id);
     el.style.color = color;
+  }
+
+  serialNumberIsInBloomFilter(serialNumber, bloomFilterSerialisations){
+    let createBloomFilter;
+    try {
+      createBloomFilter = require("opendsu").loadAPI("crypto").createBloomFilter;
+    } catch (err) {
+      console.log("Error when requiring bloom filter");
+      return alert(err.message);
+    }
+
+    for (let i = 0; i < bloomFilterSerialisations.length; i++) {
+      let bf = createBloomFilter(bloomFilterSerialisations[i]);
+      if (bf.test(serialNumber)) {
+        return true;
+      }
+    }
+
+    return false;
   }
 }
