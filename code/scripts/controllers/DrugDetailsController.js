@@ -116,24 +116,41 @@ export default class DrugDetailsController extends ContainerController {
         }
 
         let checkSNCheck = () => {
-          let res = false;
+          let res = {};
           try {
-            let bloomFilter = require("opendsu").loadAPI("crypto").createBloomFilter(batchData.bloomFilterSerialisation);
-            res = bloomFilter.test(this.model.serialNumber);
+            const bloomFilter = require("opendsu").loadAPI("crypto").createBloomFilter(batchData.bloomFilterSerialisation);
+            const recalledBloomFilter = require("opendsu").loadAPI("crypto").createBloomFilter(batchData.bloomFilterRecalledSerialisation);
+            const decommissionedBloomFilter = require("opendsu").loadAPI("crypto").createBloomFilter(batchData.bloomFilterDecommissionedSerialisation);
+
+            res = {
+              validSerial: bloomFilter.test(this.model.serialNumber),
+              recalledSerial: recalledBloomFilter.test(this.model.serialNumber),
+              decommissionedSerial: decommissionedBloomFilter.test(this.model.serialNumber),
+            };
           } catch (err) {
             alert(err.message);
           }
           return res;
         };
-
+        const showError = (message) => {
+          this.model.serialNumberVerification = message;
+          this.model.SNCheckIcon = constants.SN_FAIL_ICON;
+          this.setColor('serialNumberVerification', 'red');
+        }
         batchData.expiryForDisplay = utils.convertFromGS1DateToYYYY_HM(batchData.expiry);
         this.model.batch = batchData;
         let snCheck = checkSNCheck();
         let expiryCheck = this.model.expiryForDisplay != batchData.expiryForDisplay;
-        if (!snCheck && batchData.serialCheck) {
-          this.model.serialNumberVerification = constants.SN_FAIL_MESSAGE;
-          this.model.SNCheckIcon = constants.SN_FAIL_ICON;
-          this.setColor('serialNumberVerification', 'red');
+        if (snCheck.recalledSerial) {
+          showError(constants.SN_RECALLED_MESSAGE);
+          return;
+        }
+        if (snCheck.decommissionedSerial) {
+          showError(constants.SN_DECOMMISSIONED_MESSAGE + ' reason: ' + batchData.decommissionReason);
+          return;
+        }
+        if (!snCheck.validSerial && batchData.serialCheck) {
+          showError(constants.SN_FAIL_MESSAGE)
         }
 
         if (expiryCheck && batchData.incorectDateCheck) {
