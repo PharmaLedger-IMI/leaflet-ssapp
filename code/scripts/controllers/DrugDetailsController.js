@@ -120,7 +120,7 @@ export default class DrugDetailsController extends ContainerController {
           try {
             res = {
               validSerial: this.serialNumberIsInBloomFilter(this.model.serialNumber, batchData.bloomFilterSerialisations),
-              recalledSerial: this.serialNumberIsInBloomFilter(this.model.serialNumber, batchData.bloomFilterRecalledSerialisations),
+              recalledSerial: this.serialNumberIsInBloomFilter(this.model.serialNumber, batchData.bloomFilterRecalledSerialisations) || batchData.recalled,
               decommissionedSerial: this.serialNumberIsInBloomFilter(this.model.serialNumber, batchData.bloomFilterDecommissionedSerialisations),
             };
           } catch (err) {
@@ -165,6 +165,23 @@ export default class DrugDetailsController extends ContainerController {
           this.model.PSCheckIcon = constants.PRODUCT_STATUS_FAIL_ICON;
           this.setColor('productStatusVerification', 'red');
         }
+        this.model.showLeaflet = true;
+        if (snCheck.recalledSerial) {
+          this.model.showLeaflet = product.show_ePI_on_batch_recalled || product.show_ePI_on_sn_recalled === true
+        }
+        if (snCheck.decommissionedSerial) {
+          this.model.showLeaflet = product.show_ePI_on_sn_decommissioned
+        }
+        if (this.model.serialNumber === "undefined") {
+          this.model.showLeaflet = product.show_ePI_on_sn_unknown
+        }
+        if (batchData.incorrectDateCheck) {
+          this.model.showLeaflet = product.show_ePI_on_incorect_expiry_dated;
+        }
+        if (batchData.expiredDateCheck) {
+          this.model.showLeaflet = product.show_ePI_on_batch_expired;
+        }
+
       });
     });
   }
@@ -190,7 +207,7 @@ export default class DrugDetailsController extends ContainerController {
     el.style.color = color;
   }
 
-  serialNumberIsInBloomFilter(serialNumber, bloomFilterSerialisations){
+  serialNumberIsInBloomFilter(serialNumber, bloomFilterSerialisations) {
     let createBloomFilter;
     try {
       createBloomFilter = require("opendsu").loadAPI("crypto").createBloomFilter;
