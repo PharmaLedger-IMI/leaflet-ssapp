@@ -165,21 +165,21 @@ export default class DrugDetailsController extends ContainerController {
           this.model.PSCheckIcon = constants.PRODUCT_STATUS_FAIL_ICON;
           this.setColor('productStatusVerification', 'red');
         }
-        this.model.showLeaflet = true;
+        this.model.showLeaflet = false;
         if (snCheck.recalledSerial) {
           this.model.showLeaflet = product.show_ePI_on_batch_recalled || product.show_ePI_on_sn_recalled === true
         }
         if (snCheck.decommissionedSerial) {
-          this.model.showLeaflet = product.show_ePI_on_sn_decommissioned
+          this.model.showLeaflet = product.show_ePI_on_sn_decommissioned === true
         }
         if (this.model.serialNumber === "undefined") {
-          this.model.showLeaflet = product.show_ePI_on_sn_unknown
+          this.model.showLeaflet = product.show_ePI_on_sn_unknown === true
         }
         if (batchData.incorrectDateCheck) {
-          this.model.showLeaflet = product.show_ePI_on_incorect_expiry_dated;
+          this.model.showLeaflet = product.show_ePI_on_incorrect_expiry_date === true;
         }
         if (batchData.expiredDateCheck) {
-          this.model.showLeaflet = product.show_ePI_on_batch_expired;
+          this.model.showLeaflet = product.show_ePI_on_batch_expired === true;
         }
 
       });

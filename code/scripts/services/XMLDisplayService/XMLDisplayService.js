@@ -44,6 +44,7 @@ export default class XmlDisplayService {
     isXmlAvailable() {
         this.getAvailableLanguagesForXmlType((err, languages) => {
             this.model.isSmpc = languages.length > 0;
+            this.model.leafletColumns = languages.length > 0 ? 2 : 1;
         });
     }
 
@@ -94,7 +95,6 @@ export default class XmlDisplayService {
                 if (err) {
                     return callback(err);
                 }
-
                 callback(undefined, xmlContent, pathToLeafletLanguage);
             })
         })
@@ -135,7 +135,6 @@ export default class XmlDisplayService {
             if (err) {
                 return callback(err);
             }
-
             let pathBase = `${pathToProductVersion}${this.xmlType}/`;
             callback(undefined, pathBase);
         });
