@@ -151,7 +151,11 @@ export default class DrugDetailsController extends ContainerController {
         batchData.expiryForDisplay = utils.convertFromGS1DateToYYYY_HM(batchData.expiry);
         this.model.batch = batchData;
         let snCheck = checkSNCheck();
-        let expiryCheck = this.model.expiryForDisplay != batchData.expiryForDisplay;
+        let expiryCheck = this.model.expiryForDisplay !== batchData.expiryForDisplay;
+        const expiryTime = new Date(batchData.expiryForDisplay.replaceAll(' ', '')).getTime();
+        const currentTime = Date.now();
+        this.model.showLeaflet = this.leafletShouldBeDisplayed(product, batchData, snCheck, expiryCheck, currentTime, expiryTime);
+
         if (snCheck.recalledSerial) {
           showError(constants.SN_RECALLED_MESSAGE);
           return;
@@ -171,15 +175,13 @@ export default class DrugDetailsController extends ContainerController {
           return;
         }
 
-        const expiryTime = new Date(batchData.expiryForDisplay.replaceAll(' ', '')).getTime();
-        const currentTime = Date.now();
+
         console.log(currentTime, expiryTime);
         if (expiryTime < currentTime && batchData.expiredDateCheck) {
           this.model.productStatus = constants.PRODUCT_EXPIRED_MESSAGE;
           this.model.PSCheckIcon = constants.PRODUCT_STATUS_FAIL_ICON;
           this.setColor('productStatusVerification', 'red');
         }
-        this.model.showLeaflet = this.leafletShouldBeDisplayed(product, batchData, snCheck, expiryCheck, currentTime, expiryTime);
       });
     });
   }
@@ -260,7 +262,7 @@ export default class DrugDetailsController extends ContainerController {
       return true;
     }
 
-    if (batchData.serialCheck && snCheck.decommissionedSerial && product.show_ePI_on_sn_decommissioned) {
+    if (batchData.serialCheck && snCheck.decommissionedSerial && product.showEPIOnSNDecommissioned) {
       return true;
     }
 
