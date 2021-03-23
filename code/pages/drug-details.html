@@ -60,7 +60,7 @@
                                        label=@productStatus></psk-label>
                         </div>
 
-                        <div class="horizontal-aligned">
+                        <div class="horizontal-aligned" id="package-verification-item">
                             <psk-echo value="Package verification"></psk-echo>
                             <psk-img class="productStatusImg" height='70' src="@PVIcon" width='70'>
                             </psk-img>
@@ -73,7 +73,8 @@
             </psk-details>
 
             <psk-condition condition="showLeaflet">
-                <psk-layout align-items="center" class="topPadding" columns="@leafletColumns" row-gap="30px" slot="condition-true">
+                <psk-layout align-items="center" class="topPadding" columns="@leafletColumns" row-gap="30px"
+                            slot="condition-true">
                     <psk-layout-item class="controlButton">
                         <psk-button-link class="xxlIcon active" event-name="view-leaflet" icon="file-text"
                                          name="Patient Information"></psk-button-link>
@@ -87,19 +88,27 @@
                 </psk-layout>
                 <div slot="condition-false"></div>
             </psk-condition>
-            <psk-layout align-items="center" class="topPadding" row-gap="30px" template-columns="1fr 1fr 1fr">
-                <psk-layout-item class="controlButton">
-                    <psk-button-link class="xlIcon inactive" disabled icon="info-circle"
-                                     name="Verify package"></psk-button-link>
-                </psk-layout-item>
-                <psk-layout-item class="controlButton">
-                    <psk-button-link class="xlIcon inactive" disabled icon="exclamation-triangle"
-                                     name="Report"></psk-button-link>
-                </psk-layout-item>
-                <psk-layout-item class="controlButton">
-                    <psk-button-link class="xlIcon inactive" disabled icon="archive"
-                                     name="Add to cabinet"></psk-button-link>
-                </psk-layout-item>
+            <psk-layout align-items="center" class="topPadding" columns="@secondRowColumns" row-gap="30px">
+                <psk-condition condition="showVerifyPackageButton">
+                    <psk-layout-item class="controlButton" slot="condition-true">
+                        <psk-button-link class="xlIcon active" disabled icon="info-circle"
+                                         name="Verify package"></psk-button-link>
+                    </psk-layout-item>
+                </psk-condition>
+
+                <psk-condition condition="showReportButton">
+                    <psk-layout-item class="controlButton" slot="condition-true">
+                        <psk-button-link class="xlIcon active" disabled icon="exclamation-triangle"
+                                         name="Report"></psk-button-link>
+                    </psk-layout-item>
+                </psk-condition>
+
+                <psk-condition condition="showAddToCabinetButton">
+                    <psk-layout-item class="controlButton" slot="condition-true">
+                        <psk-button-link class="xlIcon active" disabled icon="archive"
+                                         name="Add to cabinet"></psk-button-link>
+                    </psk-layout-item>
+                </psk-condition>
             </psk-layout>
 
         </psk-container>

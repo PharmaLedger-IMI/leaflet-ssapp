@@ -11,7 +11,11 @@ export default class DrugDetailsController extends ContainerController {
       serialNumberVerification: constants.SN_OK_MESSAGE,
       productStatus: constants.PRODUCT_STATUS_OK_MESSAGE,
       packageVerification: "Action required",
-      displayItems: 3
+      displayItems: 3,
+      secondRowColumns: 3,
+      showVerifyPackageButton: true,
+      showReportButton: true,
+      showAddToCabinetButton: true
     });
 
     this.model.SNCheckIcon = ""
@@ -85,8 +89,19 @@ export default class DrugDetailsController extends ContainerController {
         return;
       }
 
-      this.model.product = product;
+      if(!product.antiCounterfeitingEnabled){
+        this.model.displayItems--;
+        this.model.secondRowColumns--;
+        this.element.querySelector("#package-verification-item").hidden = true;
+        this.model.showVerifyPackageButton = false;
+      }
 
+      if (!product.adverseEventsReportingEnabled) {
+        this.model.secondRowColumns--;
+        this.model.showReportButton = false;
+      }
+
+      this.model.product = product;
       this.dsuDataRetrievalService.readBatchData((err, batchData) => {
         if (err || typeof batchData === "undefined") {
           this.updateUIInGTINOnlyCase();
@@ -99,7 +114,7 @@ export default class DrugDetailsController extends ContainerController {
           this.element.querySelector("#serial-number-validation-item").hidden = true;
         }
         //expiration date validation item is not displayed
-        if (!batchData.incorectDateCheck && !batchData.expiredDateCheck) {
+        if (!batchData.incorrectDateCheck && !batchData.expiredDateCheck) {
           this.model.displayItems--;
           this.element.querySelector("#date-validation-item").hidden = true;
         }
@@ -124,7 +139,6 @@ export default class DrugDetailsController extends ContainerController {
               decommissionedSerial: this.serialNumberIsInBloomFilter(this.model.serialNumber, batchData.bloomFilterDecommissionedSerialisations),
             };
           } catch (err) {
-            console.log("Error", err);
             return alert(err.message);
           }
           return res;
@@ -150,7 +164,7 @@ export default class DrugDetailsController extends ContainerController {
           showError(constants.SN_FAIL_MESSAGE)
         }
 
-        if (expiryCheck && batchData.incorectDateCheck) {
+        if (expiryCheck && batchData.incorrectDateCheck) {
           this.model.productStatus = constants.PRODUCT_STATUS_FAIL_MESSAGE;
           this.model.PSCheckIcon = constants.PRODUCT_STATUS_FAIL_ICON;
           this.setColor('productStatusVerification', 'red');
@@ -165,23 +179,7 @@ export default class DrugDetailsController extends ContainerController {
           this.model.PSCheckIcon = constants.PRODUCT_STATUS_FAIL_ICON;
           this.setColor('productStatusVerification', 'red');
         }
-        this.model.showLeaflet = false;
-        if (snCheck.recalledSerial) {
-          this.model.showLeaflet = product.show_ePI_on_batch_recalled || product.show_ePI_on_sn_recalled === true
-        }
-        if (snCheck.decommissionedSerial) {
-          this.model.showLeaflet = product.show_ePI_on_sn_decommissioned === true
-        }
-        if (this.model.serialNumber === "undefined") {
-          this.model.showLeaflet = product.show_ePI_on_sn_unknown === true
-        }
-        if (batchData.incorrectDateCheck) {
-          this.model.showLeaflet = product.show_ePI_on_incorrect_expiry_date === true;
-        }
-        if (batchData.expiredDateCheck) {
-          this.model.showLeaflet = product.show_ePI_on_batch_expired === true;
-        }
-
+        this.model.showLeaflet = this.leafletShouldBeDisplayed(product, batchData, snCheck, expiryCheck, currentTime, expiryTime);
       });
     });
   }
@@ -212,7 +210,6 @@ export default class DrugDetailsController extends ContainerController {
     try {
       createBloomFilter = require("opendsu").loadAPI("crypto").createBloomFilter;
     } catch (err) {
-      console.log("Error when requiring bloom filter");
       return alert(err.message);
     }
 
@@ -221,6 +218,79 @@ export default class DrugDetailsController extends ContainerController {
       if (bf.test(serialNumber)) {
         return true;
       }
+    }
+
+    return false;
+  }
+
+  leafletShouldBeDisplayed(product, batchData, snCheck, expiryCheck, currentTime, expiryTime){
+    if (!batchData.expiredDateCheck  && !batchData.incorrectDateCheck && !batchData.serialCheck) {
+      return true;
+    }
+
+    if (batchData.expiredDateCheck && currentTime < expiryTime && !batchData.incorrectDateCheck && !batchData.serialCheck) {
+      return true;
+    }
+
+    if (batchData.expiredDateCheck && expiryTime < currentTime && product.showEPIOnBatchExpired && !batchData.incorrectDateCheck && !batchData.serialCheck) {
+      return true;
+    }
+
+    if (batchData.incorrectDateCheck && !expiryCheck && !batchData.serialCheck && product.showEPIOnIncorrectExpiryDate && !batchData.serialCheck) {
+      return true;
+    }
+
+    if (!batchData.expiredDateCheck && batchData.incorrectDateCheck && expiryCheck && !batchData.serialCheck) {
+      return true;
+    }
+
+    if (batchData.expiredDateCheck && currentTime < expiryTime && batchData.incorrectDateCheck && expiryCheck && !batchData.serialCheck) {
+      return true;
+    }
+
+    if (batchData.expiredDateCheck && expiryTime < currentTime && product.showEPIOnBatchExpired && batchData.incorrectDateCheck && expiryCheck && !batchData.serialCheck) {
+      return true;
+    }
+
+    if (batchData.serialCheck && typeof this.model.serialNumber === "undefined" && product.showEPIOnSNUnknown) {
+      return true;
+    }
+
+    if (batchData.serialCheck && snCheck.recalledSerial && (product.showEPIOnBatchRecalled || product.showEPIOnSNRecalled)) {
+      return true;
+    }
+
+    if (batchData.serialCheck && snCheck.decommissionedSerial && product.show_ePI_on_sn_decommissioned) {
+      return true;
+    }
+
+    if (!batchData.expiredDateCheck && !batchData.incorrectDateCheck && batchData.serialCheck && snCheck.validSerial) {
+      return true;
+    }
+
+    if (batchData.expiredDateCheck && currentTime < expiryTime && !batchData.incorrectDateCheck && batchData.serialCheck && snCheck.validSerial) {
+      return true;
+    }
+
+    if (batchData.expiredDateCheck && expiryTime < currentTime && product.showEPIOnBatchExpired && !batchData.incorrectDateCheck && batchData.serialCheck && snCheck.validSerial) {
+      return true;
+    }
+
+    if (batchData.incorrectDateCheck && !expiryCheck && product.showEPIOnIncorrectExpiryDate && batchData.serialCheck && snCheck.validSerial) {
+      return true;
+    }
+
+    if (!batchData.expiredDateCheck && batchData.incorrectDateCheck && expiryCheck && batchData.serialCheck && snCheck.validSerial) {
+      return true;
+    }
+
+    if (batchData.expiredDateCheck && currentTime < expiryTime && batchData.incorrectDateCheck && expiryCheck && batchData.serialCheck && snCheck.validSerial) {
+      return true;
+    }
+
+    if (batchData.expiredDateCheck && expiryTime < currentTime && product.showEPIOnBatchExpired && batchData.incorrectDateCheck && expiryCheck
+        && batchData.serialCheck && snCheck.validSerial) {
+      return true;
     }
 
     return false;
