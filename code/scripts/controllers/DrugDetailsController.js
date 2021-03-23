@@ -151,7 +151,7 @@ export default class DrugDetailsController extends ContainerController {
         batchData.expiryForDisplay = utils.convertFromGS1DateToYYYY_HM(batchData.expiry);
         this.model.batch = batchData;
         let snCheck = checkSNCheck();
-        let expiryCheck = this.model.expiryForDisplay !== batchData.expiryForDisplay;
+        let expiryCheck = this.model.expiryForDisplay === batchData.expiryForDisplay;
         const expiryTime = new Date(batchData.expiryForDisplay.replaceAll(' ', '')).getTime();
         const currentTime = Date.now();
         this.model.showLeaflet = this.leafletShouldBeDisplayed(product, batchData, snCheck, expiryCheck, currentTime, expiryTime);
@@ -168,7 +168,7 @@ export default class DrugDetailsController extends ContainerController {
           showError(constants.SN_FAIL_MESSAGE)
         }
 
-        if (expiryCheck && batchData.incorrectDateCheck) {
+        if (!expiryCheck && batchData.incorrectDateCheck) {
           this.model.productStatus = constants.PRODUCT_STATUS_FAIL_MESSAGE;
           this.model.PSCheckIcon = constants.PRODUCT_STATUS_FAIL_ICON;
           this.setColor('productStatusVerification', 'red');
