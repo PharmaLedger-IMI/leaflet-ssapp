@@ -89,14 +89,14 @@ export default class DrugDetailsController extends ContainerController {
         return;
       }
 
-      if(!product.antiCounterfeitingEnabled){
+      if(!product.antiCounterfeiting){
         this.model.displayItems--;
         this.model.secondRowColumns--;
         this.element.querySelector("#package-verification-item").hidden = true;
         this.model.showVerifyPackageButton = false;
       }
 
-      if (!product.adverseEventsReportingEnabled) {
+      if (!product.adverseReportingEnabled) {
         this.model.secondRowColumns--;
         this.model.showReportButton = false;
       }
