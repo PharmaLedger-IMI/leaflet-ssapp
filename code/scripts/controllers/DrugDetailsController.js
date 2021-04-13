@@ -96,7 +96,7 @@ export default class DrugDetailsController extends ContainerController {
         this.model.showVerifyPackageButton = false;
       }
 
-      if (!product.adverseReportingEnabled) {
+      if (!product.adverseEventsReportingEnabled) {
         this.model.secondRowColumns--;
         this.model.showReportButton = false;
       }

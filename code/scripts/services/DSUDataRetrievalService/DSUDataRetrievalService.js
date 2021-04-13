@@ -82,7 +82,7 @@ export default class DSUDataRetrievalService {
                     return callback(Error(`Product data is undefined.`))
                 }
 
-                productData.photo = utils.getFetchUrl(`/download${pathToProductVersion}` + productData.photo);
+                productData.photo = utils.getFetchUrl(`/download${pathToProductVersion}/image.png`);
                 this.cache.productData = productData;
                 callback(undefined, productData);
             });
