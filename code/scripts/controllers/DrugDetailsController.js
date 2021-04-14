@@ -116,7 +116,7 @@ export default class DrugDetailsController extends ContainerController {
           this.element.querySelector("#serial-number-validation-item").hidden = true;
         }
         //expiration date validation item is not displayed
-        if (!batchData.incorrectDateCheck && !batchData.expiredDateCheck) {
+        if (!batchData.incorrectDateCheck || !batchData.expiredDateCheck) {
           this.model.displayItems--;
           this.element.querySelector("#date-validation-item").hidden = true;
         }
