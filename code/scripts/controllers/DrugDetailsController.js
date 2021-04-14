@@ -94,11 +94,13 @@ export default class DrugDetailsController extends ContainerController {
         this.model.secondRowColumns--;
         this.element.querySelector("#package-verification-item").hidden = true;
         this.model.showVerifyPackageButton = false;
+        this.element.querySelector("[condition=showVerifyPackageButton]").hidden = true;
       }
 
       if (!product.adverseEventsReportingEnabled) {
         this.model.secondRowColumns--;
         this.model.showReportButton = false;
+        this.element.querySelector("[condition=showReportButton]").hidden = true;
       }
 
       this.model.product = product;
