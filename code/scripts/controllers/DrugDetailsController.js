@@ -228,6 +228,23 @@ export default class DrugDetailsController extends ContainerController {
   }
 
   leafletShouldBeDisplayed(product, batchData, snCheck, expiryCheck, currentTime, expiryTime){
+    //fix for the missing case describe here: https://github.com/PharmaLedger-IMI/epi-workspace/issues/167
+    if(batchData.serialCheck && !snCheck.validSerial && !snCheck.recalledSerial && !snCheck.decommissionedSerial && product.showEPIOnSNUnknown){
+      return true;
+    }
+
+    if (batchData.serialCheck && typeof this.model.serialNumber === "undefined" && product.showEPIOnSNUnknown) {
+      return true;
+    }
+
+    if (batchData.serialCheck && snCheck.recalledSerial && (product.showEPIOnBatchRecalled || product.showEPIOnSNRecalled)) {
+      return true;
+    }
+
+    if (batchData.serialCheck && snCheck.decommissionedSerial && product.showEPIOnSNDecommissioned) {
+      return true;
+    }
+
     if (!batchData.expiredDateCheck  && !batchData.incorrectDateCheck && !batchData.serialCheck) {
       return true;
     }
@@ -256,35 +273,11 @@ export default class DrugDetailsController extends ContainerController {
       return true;
     }
 
-    if (batchData.serialCheck && typeof this.model.serialNumber === "undefined" && product.showEPIOnSNUnknown) {
-      return true;
-    }
-
-    if (batchData.serialCheck && snCheck.recalledSerial && (product.showEPIOnBatchRecalled || product.showEPIOnSNRecalled)) {
-      return true;
-    }
-
-    if (batchData.serialCheck && snCheck.decommissionedSerial && product.showEPIOnSNDecommissioned) {
-      return true;
-    }
-
-    if (!batchData.expiredDateCheck && !batchData.incorrectDateCheck && batchData.serialCheck && snCheck.validSerial) {
-      return true;
-    }
-
     if (batchData.expiredDateCheck && currentTime < expiryTime && !batchData.incorrectDateCheck && batchData.serialCheck && snCheck.validSerial) {
       return true;
     }
 
     if (batchData.expiredDateCheck && expiryTime < currentTime && product.showEPIOnBatchExpired && !batchData.incorrectDateCheck && batchData.serialCheck && snCheck.validSerial) {
-      return true;
-    }
-
-    if (batchData.incorrectDateCheck && !expiryCheck && product.showEPIOnIncorrectExpiryDate && batchData.serialCheck && snCheck.validSerial) {
-      return true;
-    }
-
-    if (!batchData.expiredDateCheck && batchData.incorrectDateCheck && expiryCheck && batchData.serialCheck && snCheck.validSerial) {
       return true;
     }
 
@@ -294,6 +287,18 @@ export default class DrugDetailsController extends ContainerController {
 
     if (batchData.expiredDateCheck && expiryTime < currentTime && product.showEPIOnBatchExpired && batchData.incorrectDateCheck && expiryCheck
         && batchData.serialCheck && snCheck.validSerial) {
+      return true;
+    }
+
+    if (batchData.incorrectDateCheck && !expiryCheck && product.showEPIOnIncorrectExpiryDate && batchData.serialCheck && snCheck.validSerial) {
+      return true;
+    }
+
+    if (!batchData.expiredDateCheck && !batchData.incorrectDateCheck && batchData.serialCheck && snCheck.validSerial) {
+      return true;
+    }
+
+    if (!batchData.expiredDateCheck && batchData.incorrectDateCheck && expiryCheck && batchData.serialCheck && snCheck.validSerial) {
       return true;
     }
 
