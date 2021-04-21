@@ -7,10 +7,15 @@
             </psk-condition>
             <psk-condition condition="@hasCode">
                 <psk-condition condition="@nativeSupport" slot="condition-false">
-                    <psk-barcode-scanner slot="condition-false" data="@data" normal-size></psk-barcode-scanner>
-                    <div slot="condition-true">
-                        In a few seconds a native API will pop on you screen and guide you.
-                    </div>
+                    <psk-condition condition="@useScanditLib" slot="condition-true">
+                        <script src="https://cdn.jsdelivr.net/npm/scandit-sdk@5.x"></script>
+                        <div id="scandit-barcode-picker" style="max-width: 1280px; max-height: 80%;"></div>
+                    </psk-condition>
+
+<!--                    <psk-barcode-scanner slot="condition-false" data="@data" normal-size></psk-barcode-scanner>-->
+<!--                    <div slot="condition-true">-->
+<!--                        In a few seconds a native API will pop on you screen and guide you.-->
+<!--                    </div>-->
                 </psk-condition>
                 <psk-ui-loader slot="condition-true" should-be-rendered="true"></psk-ui-loader>
             </psk-condition>
