@@ -11,7 +11,7 @@ export default class ScanController extends ContainerController {
     constructor(element, history) {
         super(element, history);
 
-        this.setModel({data: '', hasCode: false, hasError: false, nativeSupport: false});
+        this.setModel({data: '', hasCode: false, hasError: false, nativeSupport: false, useScanditLib: true});
         this.settingsService = new SettingsService(this.DSUStorage);
         this.history = history;
 
@@ -52,6 +52,10 @@ export default class ScanController extends ContainerController {
                 console.log("Not able to activate native API support. Continue using bar code scanner from web.", err);
             }
         });
+
+        if (this.model.nativeSupport) {
+          this.initScanditLib()
+        }
     }
 
     process(twoDMatrixCode) {
@@ -92,6 +96,38 @@ export default class ScanController extends ContainerController {
                 }
             });
         });
+    }
+
+    initScanditLib() {
+        const defaultScanSettings = {
+            enabledSymbologies: ["databar-limited", "micropdf417"],
+            maxNumberOfCodesPerFrame: 2
+        }
+
+        const createNewBarcodePicker = (scanSettings = defaultScanSettings) => {
+            return window.ScanditSDK.BarcodePicker.create(document.getElementById("scandit-barcode-picker"), {
+                // enable some common symbologies
+                scanSettings: new window.ScanditSDK.ScanSettings(defaultScanSettings),
+            })
+        }
+
+        const newBarcodePickerCallback = (barcodePicker) => {
+            // barcodePicker is ready here, show a message every time a barcode is scanned
+            barcodePicker.on("scan", (scanResult) => {
+                console.log(scanResult)
+                if (scanResult.barcodes.length === 2) {
+                    alert('Composite code scan successfull.')
+                }
+            });
+        }
+
+        window.ScanditSDK.configure("api-key", {
+            engineLocation: "https://cdn.jsdelivr.net/npm/scandit-sdk@5.x/build/",
+        })
+          .then(() => {
+              return createNewBarcodePicker()
+          })
+          .then(newBarcodePickerCallback);
     }
 
     buildSSI(gs1Fields, callback) {
