@@ -53,7 +53,7 @@ export default class ScanController extends ContainerController {
             }
         });
 
-        if (this.model.nativeSupport) {
+        if (window.ScanditSDK) {
           this.initScanditLib()
         }
     }
@@ -101,11 +101,12 @@ export default class ScanController extends ContainerController {
     initScanditLib() {
         const defaultScanSettings = {
             enabledSymbologies: ["databar-limited", "micropdf417"],
-            maxNumberOfCodesPerFrame: 2
+            maxNumberOfCodesPerFrame: 2,
+            guiStyle: "viewfinder"
         }
 
         const createNewBarcodePicker = (scanSettings = defaultScanSettings) => {
-            return window.ScanditSDK.BarcodePicker.create(document.getElementById("scandit-barcode-picker"), {
+            return window.ScanditSDK.BarcodePicker.create(this.element.querySelector("#scandit-barcode-picker"), {
                 // enable some common symbologies
                 scanSettings: new window.ScanditSDK.ScanSettings(defaultScanSettings),
             })
@@ -114,9 +115,9 @@ export default class ScanController extends ContainerController {
         const newBarcodePickerCallback = (barcodePicker) => {
             // barcodePicker is ready here, show a message every time a barcode is scanned
             barcodePicker.on("scan", (scanResult) => {
-                console.log(scanResult)
                 if (scanResult.barcodes.length === 2) {
-                    alert('Composite code scan successfull.')
+                    alert('Composite code scan successfull. See the console output')
+                    console.log(scanResult)
                 }
             });
         }
