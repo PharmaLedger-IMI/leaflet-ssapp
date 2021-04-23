@@ -165,7 +165,7 @@ export default class ScanController extends ContainerController {
                 return callback(err);
             }
 
-            let packageIndex = dsuList.findIndex(dsu => utils.getMountPath(packageGTIN_SSI, gs1Fields).includes(dsu.path));
+            let packageIndex = dsuList.findIndex(dsu => utils.getMountPath(packageGTIN_SSI, gs1Fields).endsWith(dsu.path));
             if (packageIndex === -1) {
                 callback(undefined, false);
             } else {
@@ -173,6 +173,8 @@ export default class ScanController extends ContainerController {
             }
         });
     }
+
+
 
     addPackageToScannedPackagesList(packageGTIN_SSI, gs1Fields, callback) {
         const gtinSSIIdentifier = packageGTIN_SSI.getIdentifier();
