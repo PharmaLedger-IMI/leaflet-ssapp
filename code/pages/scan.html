@@ -1,7 +1,14 @@
 <psk-example class="mobile-example">
+    <style>
+        #scandit-barcode-picker video {
+            width: 100% !important;
+            height: 100vh !important;
+        }
+    </style>
     <psk-mobile disable-sidebar enable-back class="noPadding">
         <psk-container controller-name="ScanController">
-            <div id="scandit-barcode-picker"></div>
+            <div id="scandit-barcode-picker-wrapper">
+                <div id="scandit-barcode-picker"></div>
             <!--            <psk-condition condition="@hasError">-->
             <!--                <psk-label slot="condition-true" class="products-does-not-exist"-->
             <!--                           label="Product scanned does not exist."></psk-label>-->
@@ -15,6 +22,7 @@
             <!--                </psk-condition>-->
             <!--                <psk-ui-loader slot="condition-true" should-be-rendered="true"></psk-ui-loader>-->
             <!--            </psk-condition>-->
+            </div>
         </psk-container>
     </psk-mobile>
 </psk-example>
