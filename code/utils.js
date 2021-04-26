@@ -1,4 +1,3 @@
-
 const APPLICATION_IDENTIFIERS = {
     "01": {
         type: "gtin",
@@ -116,16 +115,32 @@ function getFetchUrl(relativePath) {
     return relativePath;
 }
 
-function getMountPath(gtinSSI, gs1Fields){
+function getMountPath(gtinSSI, gs1Fields) {
     if (typeof gtinSSI !== "string") {
         gtinSSI = gtinSSI.getIdentifier();
     }
-    return  `/packages/${gtinSSI}${gs1Fields.serialNumber}`;
+    return `/packages/${gtinSSI}${gs1Fields.serialNumber}`;
+}
+
+function refreshProductDSU(dsuDataRetrievalService, storage, callback) {
+    dsuDataRetrievalService.getPathToProductDSU((err, pathToProductDSU) => {
+        if (err) {
+            return callback(err);
+        }
+        storage.call("refreshDSUMountedAtPath", pathToProductDSU, (err) => {
+            if (err) {
+                return callback(err);
+            }
+
+            callback(undefined, true);
+        });
+    });
 }
 
 export default {
     convertFromISOtoYYYY_HM,
     convertFromGS1DateToYYYY_HM,
     getFetchUrl,
-    getMountPath
+    getMountPath,
+    refreshProductDSU
 };

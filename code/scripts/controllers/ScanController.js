@@ -3,6 +3,7 @@ import SettingsService from "../services/SettingsService.js";
 import interpretGS1scan from "../gs1ScanInterpreter/interpretGS1scan/interpretGS1scan.js";
 import utils from "../../utils.js";
 import constants from "../../constants.js";
+import DSUDataRetrievalService from "../services/DSUDataRetrievalService/DSUDataRetrievalService.js";
 
 const gtinResolver = require("gtin-resolver");
 
@@ -36,7 +37,7 @@ export default class ScanController extends ContainerController {
                             this.redirectToError("The code cannot be scanned.");
                             break;
                         case "ERR_CAM_UNAVAILABLE":
-                            this.redirectToError("No camera available for scanning.");
+                            this.redirectToError("No camera availcallbackable for scanning.");
                             break;
                         case "ERR_USER_CANCELLED":
                             this.history.push(`${new URL(this.history.win.basePath).pathname}home`);
@@ -69,6 +70,7 @@ export default class ScanController extends ContainerController {
         }
 
         this.buildSSI(gs1Fields, (err, gtinSSI) => {
+            this.dsuDataRetrievalService = new DSUDataRetrievalService(this.DSUStorage, gtinSSI, utils.getMountPath(gtinSSI, gs1Fields));
             this.packageAlreadyScanned(gtinSSI, gs1Fields, (err, status) => {
                 if (err) {
                     return this.redirectToError("Product code combination could not be resolved.", gs1Fields);
@@ -112,8 +114,6 @@ export default class ScanController extends ContainerController {
                     return console.log("Failed to check constProductDSU existence", err);
                 }
                 if (status) {
-                    // gs1Fields.expiry = "MISSING";
-                    // gs1Fields.batchNumber = "MISSING";
                     this.addPackageToHistoryAndRedirect(constProductDSU_SSI, gs1Fields, (err) => {
                         if (err) {
                             return console.log("Failed to add package to history", err);
@@ -169,11 +169,16 @@ export default class ScanController extends ContainerController {
             if (packageIndex === -1) {
                 callback(undefined, false);
             } else {
-                callback(undefined, true);
+                utils.refreshProductDSU(this.dsuDataRetrievalService, this.DSUStorage, (err) => {
+                    if (err) {
+                        return callback(err);
+                    }
+
+                    callback(undefined, true);
+                });
             }
         });
     }
-
 
 
     addPackageToScannedPackagesList(packageGTIN_SSI, gs1Fields, callback) {
@@ -205,7 +210,7 @@ export default class ScanController extends ContainerController {
     }
 
     batchAnchorExists(packageGTIN_SSI, callback) {
-        this.DSUStorage.call("loadDSU",  packageGTIN_SSI.getIdentifier(), (err, dsu) => {
+        this.DSUStorage.call("loadDSU", packageGTIN_SSI.getIdentifier(), (err, dsu) => {
             if (err) {
                 return callback(undefined, false);
             }

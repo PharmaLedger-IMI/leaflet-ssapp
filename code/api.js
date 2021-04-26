@@ -37,9 +37,24 @@ function listFolders(path, callback) {
     });
 }
 
+function refreshDSUMountedAtPath(path, callback) {
+    if (path.endsWith("/")) {
+        path = path.slice(0, -1);
+    }
+
+    mainDSU.getArchiveForPath(path, (err, dsuContext) => {
+        if (err) {
+            return callback(err);
+        }
+
+        dsuContext.archive.refresh(callback);
+    });
+}
+
 module.exports = {
     mountDSU,
     listDSUs,
     listFolders,
-    loadDSU
+    loadDSU,
+    refreshDSUMountedAtPath
 }

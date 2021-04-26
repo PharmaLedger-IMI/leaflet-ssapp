@@ -36,6 +36,11 @@ export default class HistoryController extends ContainerController {
                     const gtinSSI = dsuList[packageNumber].identifier;
                     const basePath = `/packages/${dsuList[packageNumber].path}`;
                     const dsuDataRetrievalService = new DSUDataRetrievalService(this.DSUStorage, gtinSSI, basePath);
+                    utils.refreshProductDSU(dsuDataRetrievalService, this.DSUStorage, (err) => {
+                        if (err) {
+                            return callback(err);
+                        }
+
                         dsuDataRetrievalService.readProductData((err, product)=>{
                             if (err) {
                                 return callback(err);
@@ -52,6 +57,7 @@ export default class HistoryController extends ContainerController {
                                 packageNumber++;
                                 __readProductsRecursively(packageNumber, callback);
                             });
+                        });
                         });
                 } else {
                     callback(undefined, products);

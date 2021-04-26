@@ -98,7 +98,21 @@ export default class DSUDataRetrievalService {
                 return callback(err);
             }
 
-            versions.sort();
+            versions.sort((v1, v2) => {
+                v1 = parseInt(v1);
+                v2 = parseInt(v2);
+                if (v1 < v2) {
+                    return -1;
+                }
+
+                if (v1 === v2) {
+                    return 0;
+                }
+
+                if (v1 > v2) {
+                    return 1;
+                }
+            });
             this.cache.latestProductVersion = versions[versions.length - 1];
             callback(undefined, this.cache.latestProductVersion);
         });
