@@ -12,7 +12,7 @@ export default class ScanController extends ContainerController {
 
         this.setModel({data: '', hasCode: false, hasError: false, nativeSupport: false, useScanditLib: true});
         // pass useScandit from env/build config
-        this.model.useScandit = true;
+        this.model.useScandit = false;
         this.settingsService = new SettingsService(this.DSUStorage);
         this.history = history;
 
