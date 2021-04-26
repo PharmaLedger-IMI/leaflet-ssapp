@@ -12,6 +12,8 @@ export default class ScanController extends ContainerController {
         super(element, history);
 
         this.setModel({data: '', hasCode: false, hasError: false, nativeSupport: false, useScanditLib: true});
+        // pass useScandit from env/build config
+        this.model.useScandit = true;
         this.settingsService = new SettingsService(this.DSUStorage);
         this.history = history;
 
@@ -185,7 +187,7 @@ export default class ScanController extends ContainerController {
             });
         }
 
-        window.ScanditSDK.configure("api-key", {
+        window.ScanditSDK.configure("api-key-scandit", {
             engineLocation: "https://cdn.jsdelivr.net/npm/scandit-sdk@5.x/build/",
         })
           .then(() => {
