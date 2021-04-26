@@ -16,7 +16,7 @@ export default class ScanController extends ContainerController {
         this.history = history;
 
         this.model.onChange("data", () => {
-            this.process(this.parseDataMatrix(this.model.data));
+            this.process(this.parseGS1Code(this.model.data));
         });
 
         this.getNativeApiHandler((err, handler) => {
@@ -28,7 +28,7 @@ export default class ScanController extends ContainerController {
                 const scan = handler.importNativeAPI("dataMatrixScan");
                 scan().then((resultArray) => {
                     if (resultArray && resultArray.length > 0) {
-                        return this.process(this.parseDataMatrix(resultArray[0]));
+                        return this.process(this.parseGS1Code(resultArray[0]));
                     }
                     this.redirectToError("2dMatrix code scan process finished. No code scanned or process canceled.");
                 }, (error) => {
@@ -59,7 +59,7 @@ export default class ScanController extends ContainerController {
         });
     }
 
-    parseDataMatrix() {
+    parseGS1Code(scannedBarcode) {
         let gs1FormatFields;
         try {
             gs1FormatFields = interpretGS1scan.interpretScan(scannedBarcode);
@@ -132,7 +132,7 @@ export default class ScanController extends ContainerController {
 
 
         const defaultScanSettings = {
-            enabledSymbologies: ["databar-limited", "micropdf417", "data-matrix", "code128", "ean13"],
+            enabledSymbologies: ["databar-limited", "micropdf417", "data-matrix", "code128"],
             maxNumberOfCodesPerFrame: 2
         }
 
@@ -151,27 +151,35 @@ export default class ScanController extends ContainerController {
                     compositeOngoing = false
                     return this.process(this.parseCompositeCodeScan(scanResult.barcodes));
                 }
-
-                if (scanResult.barcodes[0]) {
+                const firstBarcodeObj = scanResult.barcodes[0];
+                if (firstBarcodeObj) {
                     // single barcode
-                    if (scanResult.barcodes[0].compositeFlag < 2) {
+                    if (firstBarcodeObj.compositeFlag < 2) {
                         compositeOngoing = false
-                        // TODO
-                        // distinguish the parse regarding the symbology
-                        return this.process(this.parseDataMatrix(scanResult.barcodes[0].data));
+
+                        if (firstBarcodeObj.symbology === "data-matrix") {
+                            return this.process(this.parseGS1Code(firstBarcodeObj.data));
+                        }
+                        else if (firstBarcodeObj.symbology === "code128") {
+                            return this.process(this.parseGS1Code(firstBarcodeObj.data));
+                        }
+                        else {
+                            console.error(`Incompatible barcode scan: `, firstBarcodeObj)
+                            throw new Error($`code symbology "${firstBarcodeObj.symbology}" not recognized.`)
+                        }
                     }
                     // composite barcode
                     if (compositeOngoing) {
-                        if (compositeMap[compositeOngoing.compositeFlag] === scanResult.barcodes[0].symbology) {
+                        if (compositeMap[compositeOngoing.compositeFlag] === firstBarcodeObj.symbology) {
                             this.process(this.parseCompositeCodeScan([
                                 compositeOngoing,
-                                scanResult.barcodes[0]
+                                firstBarcodeObj
                             ]));
                             compositeOngoing = false
                         }
                     }
                     else {
-                        compositeOngoing = scanResult.barcodes[0]
+                        compositeOngoing = firstBarcodeObj
                     }
                 }
             });
