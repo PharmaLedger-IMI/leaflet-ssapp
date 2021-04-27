@@ -11,9 +11,7 @@ export default class ScanController extends ContainerController {
     constructor(element, history) {
         super(element, history);
 
-        this.setModel({data: '', hasCode: false, hasError: false, nativeSupport: false, useScanditLib: true});
-        // pass useScandit from env/build config
-        this.model.useScandit = false;
+        this.setModel({data: '', hasCode: false, hasError: false, nativeSupport: false, useScandit: false});
         this.settingsService = new SettingsService(this.DSUStorage);
         this.history = history;
 
@@ -54,11 +52,28 @@ export default class ScanController extends ContainerController {
                     this.redirectToError("Code scanning and processing finished with errors.");
                 });
             } else {
-                if (window.ScanditSDK) {
-                    this.initScanditLib()
-                }
+                this.settingsService.readSetting("scanditlicense", (err, scanditLicense) => {
+                    console.log('scanditLicense', scanditLicense)
+                    if (scanditLicense && window.ScanditSDK) {
+                        this.model.useScandit = true;
+                        this.initScanditLib(scanditLicense)
+                    }
+                });
             }
         });
+    }
+
+    callAfterElementLoad(querySelector, callback, ms = 100) {
+        const delayedInit = () => {
+            const element = this.element.querySelector(querySelector)
+            if (element) {
+                callback(element)
+            } else {
+                setTimeout(delayedInit, ms);
+            }
+        };
+
+        delayedInit();
     }
 
     parseGS1Code(scannedBarcode) {
@@ -121,10 +136,13 @@ export default class ScanController extends ContainerController {
 
         style.setAttribute('type', 'text/css');
         style.innerHTML = ".scandit.scandit-container{width:100%;height:100%;display:flex;justify-content:center;align-items:center;overflow:hidden}.scandit.scandit-barcode-picker{position:relative;min-width:1px;min-height:1px;width:100%;height:100%;background-color:#000}.scandit .scandit-video{width:100%;height:100%;position:relative;display:block}.scandit .scandit-video.mirrored{transform:scaleX(-1)}.scandit .scandit-logo{bottom:5%;right:5%;max-width:35%;max-height:12.5%}.scandit .scandit-laser,.scandit .scandit-logo{position:absolute;pointer-events:none;transform:translateZ(0)}.scandit .scandit-laser{z-index:10;box-sizing:border-box;top:-9999px;display:flex;align-items:center}.scandit .scandit-laser img{width:100%;max-height:47px}.scandit .scandit-laser img,.scandit .scandit-viewfinder{position:absolute;transition:opacity .25s ease;animation-duration:.25s}.scandit .scandit-viewfinder{z-index:10;box-sizing:border-box;border:2px solid #fff;border-radius:10px;top:-9999px;pointer-events:none;transform:translateZ(0)}.scandit .scandit-viewfinder.paused{opacity:.4}.scandit .scandit-camera-switcher,.scandit .scandit-torch-toggle{-webkit-tap-highlight-color:rgba(255,255,255,0);position:absolute;top:5%;max-width:15%;max-height:15%;z-index:10;cursor:pointer;filter:drop-shadow(0 2px 0 #808080);transform:translateZ(0)}.scandit .scandit-camera-switcher{left:5%}.scandit .scandit-torch-toggle{right:5%}.scandit .scandit-camera-upload{-webkit-tap-highlight-color:rgba(255,255,255,0);width:100%;height:100%;z-index:5}.scandit .scandit-camera-upload,.scandit .scandit-camera-upload label{display:flex;flex-direction:column;justify-content:center;align-items:center}.scandit .scandit-camera-upload label{cursor:pointer;width:180px;height:180px;margin-top:18px;border-radius:50%}.scandit .scandit-camera-upload label input[type=file]{position:absolute;top:-9999px}.scandit .radial-progress{width:180px;height:180px;background-color:transparent;border-width:3px;border-style:solid;border-radius:50%;position:absolute;transition:opacity 1s ease,border-color .5s;animation-duration:.25s;box-sizing:border-box}.scandit .radial-progress[data-progress=\"0\"]{opacity:.2}.scandit .radial-progress[data-progress=\"5\"]{opacity:.24}.scandit .radial-progress[data-progress=\"10\"]{opacity:.28}.scandit .radial-progress[data-progress=\"15\"]{opacity:.32}.scandit .radial-progress[data-progress=\"20\"]{opacity:.36}.scandit .radial-progress[data-progress=\"25\"]{opacity:.4}.scandit .radial-progress[data-progress=\"30\"]{opacity:.44}.scandit .radial-progress[data-progress=\"35\"]{opacity:.48}.scandit .radial-progress[data-progress=\"40\"]{opacity:.52}.scandit .radial-progress[data-progress=\"45\"]{opacity:.56}.scandit .radial-progress[data-progress=\"50\"]{opacity:.6}.scandit .radial-progress[data-progress=\"55\"]{opacity:.64}.scandit .radial-progress[data-progress=\"60\"]{opacity:.68}.scandit .radial-progress[data-progress=\"65\"]{opacity:.72}.scandit .radial-progress[data-progress=\"70\"]{opacity:.76}.scandit .radial-progress[data-progress=\"75\"]{opacity:.8}.scandit .radial-progress[data-progress=\"80\"]{opacity:.84}.scandit .radial-progress[data-progress=\"85\"]{opacity:.88}.scandit .radial-progress[data-progress=\"90\"]{opacity:.92}.scandit .radial-progress[data-progress=\"95\"]{opacity:.96}.scandit .radial-progress[data-progress=\"100\"]{opacity:1}.scandit .scandit-flash-color{animation-name:scandit-flash-color}.scandit .scandit-flash-white{animation-name:scandit-flash-white}.scandit .scandit-flash-inset{animation-name:scandit-flash-inset}.scandit .scandit-opacity-pulse{animation-duration:.333s,1s;animation-iteration-count:1,infinite;animation-delay:0s,.333s;animation-timing-function:cubic-bezier(.645,.045,.355,1),cubic-bezier(.645,.045,.355,1);animation-name:scandit-opacity-pulse-before,scandit-opacity-pulse}.scandit .scandit-hidden-opacity{opacity:0}.scandit-hidden{display:none!important}@keyframes scandit-flash-color{0%{filter:none}50%{filter:drop-shadow(0 0 .75rem #fff) drop-shadow(0 0 2.5rem #7ed9e2)}to{filter:none}}@keyframes scandit-flash-white{0%{filter:none}50%{filter:drop-shadow(0 0 .5rem #fff) drop-shadow(0 0 1rem #fff) drop-shadow(0 0 2.5rem #fff)}to{filter:none}}@keyframes scandit-flash-inset{0%{box-shadow:none}50%{box-shadow:inset 0 0 .5rem,inset 0 0 1rem,inset 0 0 2.5rem}to{box-shadow:none}}@keyframes scandit-opacity-pulse-before{0%{opacity:1}to{opacity:.4}}@keyframes scandit-opacity-pulse{0%{opacity:.4}50%{opacity:.6}to{opacity:.4}}";
-        this.element.querySelector("#scandit-barcode-picker-wrapper").appendChild(style);
+
+        this.callAfterElementLoad("#scandit-barcode-picker-wrapper", (element) => {
+            element.appendChild(style);
+        })
     }
 
-    initScanditLib() {
+    initScanditLib(scanditLicense) {
         this.insertScanditStyles()
 
         let compositeOngoing = false
@@ -137,13 +155,17 @@ export default class ScanController extends ContainerController {
             enabledSymbologies: ["databar-limited", "micropdf417", "data-matrix", "code128"],
             maxNumberOfCodesPerFrame: 2
         }
-
         const createNewBarcodePicker = (scanSettings = defaultScanSettings) => {
-            return window.ScanditSDK.BarcodePicker.create(this.element.querySelector("#scandit-barcode-picker"), {
-                scanSettings: new window.ScanditSDK.ScanSettings(scanSettings),
-                guiStyle: "none",
-                videoFit: "cover"
+            return new Promise((resolve, reject) => {
+                this.callAfterElementLoad("#scandit-barcode-picker", (element) => {
+                    return resolve(window.ScanditSDK.BarcodePicker.create(element, {
+                        scanSettings: new window.ScanditSDK.ScanSettings(scanSettings),
+                        guiStyle: "none",
+                        videoFit: "cover"
+                    }))
+                })
             })
+
         }
 
         const newBarcodePickerCallback = (barcodePicker) => {
@@ -187,7 +209,7 @@ export default class ScanController extends ContainerController {
             });
         }
 
-        window.ScanditSDK.configure("api-key-scandit", {
+        window.ScanditSDK.configure(scanditLicense, {
             engineLocation: "https://cdn.jsdelivr.net/npm/scandit-sdk@5.x/build/",
         })
           .then(() => {
