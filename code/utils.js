@@ -119,7 +119,7 @@ function getMountPath(gtinSSI, gs1Fields) {
     if (typeof gtinSSI !== "string") {
         gtinSSI = gtinSSI.getIdentifier();
     }
-    return `/packages/${gtinSSI}${gs1Fields.serialNumber}`;
+    return `/packages/${gtinSSI}${gs1Fields.serialNumber}|${gs1Fields.expiry}`;
 }
 
 function refreshProductDSU(dsuDataRetrievalService, storage, callback) {
