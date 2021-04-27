@@ -193,8 +193,12 @@ export default class ScanController extends ContainerController {
                     packages = {};
                 }
                 packages[utils.getMountPath(packageGTIN_SSI, gs1Fields)] = gs1Fields;
-
-                this.DSUStorage.setObject(constants.PACKAGES_STORAGE_PATH, packages, callback);
+                utils.refreshBatchDSU(this.DSUStorage, utils.getMountPath(packageGTIN_SSI, gs1Fields), (err) => {
+                    if (err) {
+                        return callback(err);
+                    }
+                    this.DSUStorage.setObject(constants.PACKAGES_STORAGE_PATH, packages, callback);
+                });
             });
         });
     }

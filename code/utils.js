@@ -137,10 +137,21 @@ function refreshProductDSU(dsuDataRetrievalService, storage, callback) {
     });
 }
 
+function refreshBatchDSU(storage, basePath, callback) {
+    storage.call("refreshDSUMountedAtPath", `${basePath}/batch`, (err) => {
+        if (err) {
+            return callback(err);
+        }
+
+        callback(undefined, true);
+    });
+}
+
 export default {
     convertFromISOtoYYYY_HM,
     convertFromGS1DateToYYYY_HM,
     getFetchUrl,
     getMountPath,
-    refreshProductDSU
+    refreshProductDSU,
+    refreshBatchDSU
 };

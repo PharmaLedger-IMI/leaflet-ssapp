@@ -36,29 +36,34 @@ export default class HistoryController extends ContainerController {
                     const gtinSSI = dsuList[packageNumber].identifier;
                     const basePath = `/packages/${dsuList[packageNumber].path}`;
                     const dsuDataRetrievalService = new DSUDataRetrievalService(this.DSUStorage, gtinSSI, basePath);
-                    utils.refreshProductDSU(dsuDataRetrievalService, this.DSUStorage, (err) => {
+                    utils.refreshBatchDSU(this.DSUStorage, basePath, (err) => {
                         if (err) {
                             return callback(err);
                         }
-
-                        dsuDataRetrievalService.readProductData((err, product)=>{
+                        utils.refreshProductDSU(dsuDataRetrievalService, this.DSUStorage, (err) => {
                             if (err) {
                                 return callback(err);
                             }
 
-                            this.getGS1Fields(basePath, (err, gs1Fields) => {
+                            dsuDataRetrievalService.readProductData((err, product)=>{
                                 if (err) {
                                     return callback(err);
                                 }
-                                product.identifier = basePath;
-                                product.batchGtinSSI = gtinSSI;
-                                product.expiry = gs1Fields.expiry;
-                                products.push(product);
-                                packageNumber++;
-                                __readProductsRecursively(packageNumber, callback);
+
+                                this.getGS1Fields(basePath, (err, gs1Fields) => {
+                                    if (err) {
+                                        return callback(err);
+                                    }
+                                    product.identifier = basePath;
+                                    product.batchGtinSSI = gtinSSI;
+                                    product.expiry = gs1Fields.expiry;
+                                    products.push(product);
+                                    packageNumber++;
+                                    __readProductsRecursively(packageNumber, callback);
+                                });
                             });
                         });
-                        });
+                    });
                 } else {
                     callback(undefined, products);
                 }
