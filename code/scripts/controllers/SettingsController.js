@@ -69,7 +69,20 @@ export default class SettingsController extends ContainerController {
                 });
             })
         });
+
+        // scanning settings
+        this.model.useScanditLicense = { label: "Use Scandit with API key:" };
+        this.initScanningSettingsTab();
+
+        this.on("set-scandit-license", ()=>{
+            this.settingsService.writeSetting("scanditlicense", this.model.useScanditLicense.value, (err)=>{
+                if(err){
+                    console.log(err);
+                }
+            });
+        });
     }
+
     initNetworkSettingsTab(){
         this.settingsService.readSetting("networkname", (err, networkname)=>{
             if(err || typeof networkname === "undefined"){
@@ -82,6 +95,21 @@ export default class SettingsController extends ContainerController {
             }
 
             this.model.networkNameSetting.value = networkname;
+        });
+    }
+
+    initScanningSettingsTab(){
+        this.settingsService.readSetting("scanditlicense", (err, scanditlicense)=>{
+            if(err || typeof scanditlicense === "undefined"){
+                this.settingsService.writeSetting("scanditlicense", "", (err)=>{
+                    if(err){
+                        return console.log("Unable to write setting scanditlicense");
+                    }
+                    this.model.useScanditLicense.value = "";
+                });
+            }
+
+            this.model.useScanditLicense.value = scanditlicense;
         });
     }
 }
