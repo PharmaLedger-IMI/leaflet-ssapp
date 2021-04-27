@@ -53,7 +53,6 @@ export default class ScanController extends ContainerController {
                 });
             } else {
                 this.settingsService.readSetting("scanditlicense", (err, scanditLicense) => {
-                    console.log('scanditLicense', scanditLicense)
                     if (scanditLicense && window.ScanditSDK) {
                         this.model.useScandit = true;
                         this.initScanditLib(scanditLicense)
@@ -170,7 +169,6 @@ export default class ScanController extends ContainerController {
 
         const newBarcodePickerCallback = (barcodePicker) => {
             barcodePicker.on("scan", (scanResult) => {
-                console.log(scanResult)
                 if (scanResult.barcodes.length === 2) {
                     compositeOngoing = false
                     return this.process(this.parseCompositeCodeScan(scanResult.barcodes));
