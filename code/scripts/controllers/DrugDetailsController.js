@@ -277,16 +277,20 @@ export default class DrugDetailsController extends ContainerController {
       return true;
     }
 
-    if (batchData.expiredDateCheck && expiryTime < currentTime && product.showEPIOnBatchExpired && !batchData.incorrectDateCheck && batchData.serialCheck && snCheck.validSerial && product.showEPIOnBatchRecalled) {
+    if (batchData.expiredDateCheck && expiryTime < currentTime && product.showEPIOnBatchExpired && !batchData.incorrectDateCheck && batchData.serialCheck && snCheck.validSerial) {
       return true;
     }
 
-    if (batchData.expiredDateCheck && currentTime < expiryTime && batchData.incorrectDateCheck && expiryCheck && batchData.serialCheck && snCheck.validSerial && product.showEPIOnBatchRecalled) {
+    if (batchData.expiredDateCheck && currentTime < expiryTime && batchData.incorrectDateCheck && expiryCheck && batchData.serialCheck && snCheck.validSerial && batchData.recalled && product.showEPIOnBatchRecalled) {
+      return true;
+    }
+
+    if (batchData.expiredDateCheck && currentTime < expiryTime && batchData.incorrectDateCheck && expiryCheck && batchData.serialCheck && snCheck.validSerial && !batchData.recalled) {
       return true;
     }
 
     if (batchData.expiredDateCheck && expiryTime < currentTime && product.showEPIOnBatchExpired && batchData.incorrectDateCheck && expiryCheck
-        && batchData.serialCheck && snCheck.validSerial && product.showEPIOnBatchRecalled) {
+        && batchData.serialCheck && snCheck.validSerial) {
       return true;
     }
 
