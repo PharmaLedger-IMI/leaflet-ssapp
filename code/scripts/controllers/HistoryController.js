@@ -28,7 +28,7 @@ export default class HistoryController extends ContainerController {
 
         this.DSUStorage.call("listDSUs", "/packages", (err, dsuList) => {
             const products = [];
-            if(dsuList.length === 0 ){
+            if (dsuList.length === 0) {
                 this.model.loadingStatusMessage = "You have not scanned any valid products previously. Kindly click on the scan button below to scan.";
             }
             const __readProductsRecursively = (packageNumber, callback) => {
@@ -36,31 +36,26 @@ export default class HistoryController extends ContainerController {
                     const gtinSSI = dsuList[packageNumber].identifier;
                     const basePath = `/packages/${dsuList[packageNumber].path}`;
                     const dsuDataRetrievalService = new DSUDataRetrievalService(this.DSUStorage, gtinSSI, basePath);
-                    utils.refreshBatchDSU(this.DSUStorage, basePath, (err) => {
+                    utils.refreshMountedDSUs(dsuDataRetrievalService, this.DSUStorage, basePath, (err) => {
                         if (err) {
                             return callback(err);
                         }
-                        utils.refreshProductDSU(dsuDataRetrievalService, this.DSUStorage, (err) => {
+
+                        dsuDataRetrievalService.readProductData((err, product) => {
                             if (err) {
                                 return callback(err);
                             }
 
-                            dsuDataRetrievalService.readProductData((err, product)=>{
+                            this.getGS1Fields(basePath, (err, gs1Fields) => {
                                 if (err) {
                                     return callback(err);
                                 }
-
-                                this.getGS1Fields(basePath, (err, gs1Fields) => {
-                                    if (err) {
-                                        return callback(err);
-                                    }
-                                    product.identifier = basePath;
-                                    product.batchGtinSSI = gtinSSI;
-                                    product.expiry = gs1Fields.expiry;
-                                    products.push(product);
-                                    packageNumber++;
-                                    __readProductsRecursively(packageNumber, callback);
-                                });
+                                product.identifier = basePath;
+                                product.batchGtinSSI = gtinSSI;
+                                product.expiry = gs1Fields.expiry;
+                                products.push(product);
+                                packageNumber++;
+                                __readProductsRecursively(packageNumber, callback);
                             });
                         });
                     });
@@ -79,7 +74,7 @@ export default class HistoryController extends ContainerController {
         });
     }
 
-    getGS1Fields(basePath, callback){
+    getGS1Fields(basePath, callback) {
         this.DSUStorage.getObject(constants.PACKAGES_STORAGE_PATH, (err, packages) => {
             if (err) {
                 return callback(err);

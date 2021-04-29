@@ -293,7 +293,7 @@ export default class ScanController extends ContainerController {
             if (packageIndex === -1) {
                 callback(undefined, false);
             } else {
-                utils.refreshProductDSU(this.dsuDataRetrievalService, this.DSUStorage, (err) => {
+                utils.refreshMountedDSUs(this.dsuDataRetrievalService, this.DSUStorage, utils.getMountPath(packageGTIN_SSI, gs1Fields),(err) => {
                     if (err) {
                         return callback(err);
                     }
@@ -303,7 +303,6 @@ export default class ScanController extends ContainerController {
             }
         });
     }
-
 
     addPackageToScannedPackagesList(packageGTIN_SSI, gs1Fields, callback) {
         const gtinSSIIdentifier = packageGTIN_SSI.getIdentifier();

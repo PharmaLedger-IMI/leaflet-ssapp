@@ -147,11 +147,21 @@ function refreshBatchDSU(storage, basePath, callback) {
     });
 }
 
+function refreshMountedDSUs(dsuDataRetrievalService, storage, basePath, callback){
+    refreshBatchDSU(storage, basePath, (err)=>{
+        if (err) {
+            return callback(err);
+        }
+
+        refreshProductDSU(dsuDataRetrievalService, storage, callback);
+    });
+}
 export default {
     convertFromISOtoYYYY_HM,
     convertFromGS1DateToYYYY_HM,
     getFetchUrl,
     getMountPath,
     refreshProductDSU,
-    refreshBatchDSU
+    refreshBatchDSU,
+    refreshMountedDSUs
 };
