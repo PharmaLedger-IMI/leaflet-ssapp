@@ -168,7 +168,9 @@ export default class ScanController extends ContainerController {
         }
 
         const newBarcodePickerCallback = (barcodePicker) => {
+            barcodePicker.setMirrorImageEnabled(false);
             barcodePicker.on("scan", (scanResult) => {
+                barcodePicker.destroy(true);
                 if (scanResult.barcodes.length === 2) {
                     compositeOngoing = false
                     return this.process(this.parseCompositeCodeScan(scanResult.barcodes));
@@ -187,7 +189,7 @@ export default class ScanController extends ContainerController {
                         }
                         else {
                             console.error(`Incompatible barcode scan: `, firstBarcodeObj)
-                            throw new Error($`code symbology "${firstBarcodeObj.symbology}" not recognized.`)
+                            throw new Error(`code symbology "${firstBarcodeObj.symbology}" not recognized.`)
                         }
                     }
                     // composite barcode
