@@ -100,6 +100,15 @@ export default class ScanController extends ContainerController {
         }
     }
 
+    parseEAN13CodeScan(scannedEan13Code) {
+        return {
+            "gtin": `0${scannedEan13Code}`,
+            "batchNumber": "",
+            "expiry": "",
+            "serialNumber": ""
+        }
+    }
+
     process(gs1Fields) {
         if (!this.hasMandatoryFields(gs1Fields)) {
             this.redirectToError("Barcode is not readable, please contact pharmacy / doctor who issued the medicine package.", gs1Fields);
@@ -151,7 +160,7 @@ export default class ScanController extends ContainerController {
 
 
         const defaultScanSettings = {
-            enabledSymbologies: ["databar-limited", "micropdf417", "data-matrix", "code128"],
+            enabledSymbologies: ["databar-limited", "micropdf417", "data-matrix", "code128", "ean13"],
             maxNumberOfCodesPerFrame: 2
         }
         const createNewBarcodePicker = (scanSettings = defaultScanSettings) => {
@@ -186,6 +195,9 @@ export default class ScanController extends ContainerController {
                         }
                         else if (firstBarcodeObj.symbology === "code128") {
                             return this.process(this.parseGS1Code(firstBarcodeObj.data));
+                        }
+                        else if (firstBarcodeObj.symbology === "ean13") {
+                            return this.process(this.parseEAN13CodeScan(firstBarcodeObj.data))
                         }
                         else {
                             console.error(`Incompatible barcode scan: `, firstBarcodeObj)
@@ -368,7 +380,7 @@ export default class ScanController extends ContainerController {
     }
 
     hasMandatoryFields(gs1Fields) {
-        if (!gs1Fields.gtin || !gs1Fields.serialNumber || !gs1Fields.expiry) {
+        if (!gs1Fields.gtin) {
             return false;
         }
 
