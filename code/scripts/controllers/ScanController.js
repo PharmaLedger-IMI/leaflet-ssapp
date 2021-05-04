@@ -101,8 +101,13 @@ export default class ScanController extends ContainerController {
     }
 
     parseEAN13CodeScan(scannedEan13Code) {
+        let ean13 = scannedEan13Code ? scannedEan13Code : ""
+        const length = scannedEan13Code && scannedEan13Code.length ? scannedEan13Code.length : 0;
+        for (let i = length; i < 14; i++) {
+            ean13 = `0${ean13}`
+        }
         return {
-            "gtin": `0${scannedEan13Code}`,
+            "gtin": ean13,
             "batchNumber": "",
             "expiry": "",
             "serialNumber": ""
