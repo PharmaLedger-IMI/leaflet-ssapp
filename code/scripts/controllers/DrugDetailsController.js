@@ -210,6 +210,9 @@ export default class DrugDetailsController extends ContainerController {
   }
 
   serialNumberIsInBloomFilter(serialNumber, bloomFilterSerialisations) {
+    if (typeof serialNumber === "undefined" || typeof bloomFilterSerialisations === "undefined" || bloomFilterSerialisations.length === 0) {
+      return false;
+    }
     let createBloomFilter;
     try {
       createBloomFilter = require("opendsu").loadAPI("crypto").createBloomFilter;
