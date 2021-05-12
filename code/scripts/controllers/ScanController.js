@@ -162,6 +162,10 @@ export default class ScanController extends ContainerController {
             maxNumberOfCodesPerFrame: 2
         }
         const createNewBarcodePicker = (scanSettings = defaultScanSettings) => {
+            const scanningSettings = new window.ScanditSDK.ScanSettings(scanSettings)
+            scanningSettings.getSymbologySettings('micropdf417').setColorInvertedEnabled(true)
+            scanningSettings.getSymbologySettings('databar-limited').setColorInvertedEnabled(true)
+
             return new Promise((resolve, reject) => {
                 this.callAfterElementLoad("#scandit-barcode-picker", (element) => {
                     return resolve(window.ScanditSDK.BarcodePicker.create(element, {
@@ -177,12 +181,14 @@ export default class ScanController extends ContainerController {
         const newBarcodePickerCallback = (barcodePicker) => {
             barcodePicker.setMirrorImageEnabled(false);
             barcodePicker.on("scan", (scanResult) => {
-                if (scanResult.barcodes.length === 2) {
+                const firstBarcodeObj = scanResult.barcodes[0];
+                const secondBarcodeObj = scanResult.barcodes[1];
+                if (scanResult.barcodes.length === 2 && firstBarcodeObj.symbology !== secondBarcodeObj.symbology) {
                     barcodePicker.destroy()
                     compositeOngoing = false
                     return this.process(this.parseCompositeCodeScan(scanResult.barcodes));
                 }
-                const firstBarcodeObj = scanResult.barcodes[0];
+
                 if (firstBarcodeObj) {
                     // single barcode
                     if (firstBarcodeObj.compositeFlag < 2) {
