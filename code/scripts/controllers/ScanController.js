@@ -92,12 +92,7 @@ export default class ScanController extends ContainerController {
         const gtinObject = barrcodesArray.find((item) => item.symbology.indexOf('databar') !== -1)
         const batchAndExpiriCodeObject = barrcodesArray.find((item) => item.symbology === "micropdf417")
 
-        return {
-            "gtin": gtinObject.data.substr(2),
-            "batchNumber": batchAndExpiriCodeObject.data.substr(6),
-            "expiry": batchAndExpiriCodeObject.data.substr(0,6),
-            "serialNumber": ""
-        }
+        return this.parseGS1Code(`${gtinObject.data}${batchAndExpiriCodeObject.data}`)
     }
 
     parseEAN13CodeScan(scannedEan13Code) {
@@ -182,8 +177,8 @@ export default class ScanController extends ContainerController {
         const newBarcodePickerCallback = (barcodePicker) => {
             barcodePicker.setMirrorImageEnabled(false);
             barcodePicker.on("scan", (scanResult) => {
-                barcodePicker.destroy(true);
                 if (scanResult.barcodes.length === 2) {
+                    barcodePicker.destroy()
                     compositeOngoing = false
                     return this.process(this.parseCompositeCodeScan(scanResult.barcodes));
                 }
@@ -192,7 +187,7 @@ export default class ScanController extends ContainerController {
                     // single barcode
                     if (firstBarcodeObj.compositeFlag < 2) {
                         compositeOngoing = false
-
+                        barcodePicker.destroy()
                         if (firstBarcodeObj.symbology === "data-matrix") {
                             return this.process(this.parseGS1Code(firstBarcodeObj.data));
                         }
@@ -210,11 +205,12 @@ export default class ScanController extends ContainerController {
                     // composite barcode
                     if (compositeOngoing) {
                         if (compositeMap[compositeOngoing.compositeFlag] === firstBarcodeObj.symbology) {
+                            barcodePicker.destroy()
+                            compositeOngoing = false
                             this.process(this.parseCompositeCodeScan([
                                 compositeOngoing,
                                 firstBarcodeObj
                             ]));
-                            compositeOngoing = false
                         }
                     }
                     else {
