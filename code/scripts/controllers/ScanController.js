@@ -170,6 +170,7 @@ export default class ScanController extends ContainerController {
                 this.callAfterElementLoad("#scandit-barcode-picker", (element) => {
                     return resolve(window.ScanditSDK.BarcodePicker.create(element, {
                         scanSettings: new window.ScanditSDK.ScanSettings(scanSettings),
+                        cameraSettings: {resolutionPreference: "full-hd"},
                         guiStyle: "none",
                         videoFit: "cover"
                     }))
@@ -180,11 +181,15 @@ export default class ScanController extends ContainerController {
 
         const newBarcodePickerCallback = (barcodePicker) => {
             barcodePicker.setMirrorImageEnabled(false);
+            barcodePicker.resumeScanning()
             barcodePicker.on("scan", (scanResult) => {
+
                 const firstBarcodeObj = scanResult.barcodes[0];
                 const secondBarcodeObj = scanResult.barcodes[1];
+
                 if (scanResult.barcodes.length === 2 && firstBarcodeObj.symbology !== secondBarcodeObj.symbology) {
                     barcodePicker.destroy()
+                    barcodePicker.pauseScanning()
                     compositeOngoing = false
                     return this.process(this.parseCompositeCodeScan(scanResult.barcodes));
                 }
@@ -194,6 +199,7 @@ export default class ScanController extends ContainerController {
                     if (firstBarcodeObj.compositeFlag < 2) {
                         compositeOngoing = false
                         barcodePicker.destroy()
+                        barcodePicker.pauseScanning()
                         if (firstBarcodeObj.symbology === "data-matrix") {
                             return this.process(this.parseGS1Code(firstBarcodeObj.data));
                         }
@@ -212,6 +218,7 @@ export default class ScanController extends ContainerController {
                     if (compositeOngoing) {
                         if (compositeMap[compositeOngoing.compositeFlag] === firstBarcodeObj.symbology) {
                             barcodePicker.destroy()
+                            barcodePicker.pauseScanning()
                             compositeOngoing = false
                             this.process(this.parseCompositeCodeScan([
                                 compositeOngoing,
