@@ -14,6 +14,14 @@ export default class ScanController extends ContainerController {
         this.setModel({data: '', hasCode: false, hasError: false, nativeSupport: false, useScandit: false});
         this.settingsService = new SettingsService(this.DSUStorage);
         this.history = history;
+        this.barcodePicker = null;
+
+        const popStateHandler = (event) => {
+            this.disposeOfBarcodePicker();
+
+            window.removeEventListener('popstate', popStateHandler);
+        }
+        window.addEventListener('popstate', popStateHandler);
 
         this.model.onChange("data", () => {
             this.process(this.parseGS1Code(this.model.data));
@@ -43,6 +51,7 @@ export default class ScanController extends ContainerController {
                             this.redirectToError("No camera availcallbackable for scanning.");
                             break;
                         case "ERR_USER_CANCELLED":
+                            this.disposeOfBarcodePicker()
                             this.history.push(`${new URL(this.history.win.basePath).pathname}home`);
                             break;
                         default:
@@ -108,6 +117,7 @@ export default class ScanController extends ContainerController {
     }
 
     process(gs1Fields) {
+
         if (!this.hasMandatoryFields(gs1Fields)) {
             return this.redirectToError("Barcode is not readable, please contact pharmacy / doctor who issued the medicine package.", gs1Fields);
         }
@@ -180,16 +190,14 @@ export default class ScanController extends ContainerController {
         }
 
         const newBarcodePickerCallback = (barcodePicker) => {
+            this.barcodePicker = barcodePicker;
             barcodePicker.setMirrorImageEnabled(false);
             barcodePicker.resumeScanning()
             barcodePicker.on("scan", (scanResult) => {
-
                 const firstBarcodeObj = scanResult.barcodes[0];
                 const secondBarcodeObj = scanResult.barcodes[1];
 
                 if (scanResult.barcodes.length === 2 && firstBarcodeObj.symbology !== secondBarcodeObj.symbology) {
-                    barcodePicker.destroy()
-                    barcodePicker.pauseScanning()
                     compositeOngoing = false
                     return this.process(this.parseCompositeCodeScan(scanResult.barcodes));
                 }
@@ -198,8 +206,7 @@ export default class ScanController extends ContainerController {
                     // single barcode
                     if (firstBarcodeObj.compositeFlag < 2) {
                         compositeOngoing = false
-                        barcodePicker.destroy()
-                        barcodePicker.pauseScanning()
+
                         if (firstBarcodeObj.symbology === "data-matrix") {
                             return this.process(this.parseGS1Code(firstBarcodeObj.data));
                         }
@@ -217,13 +224,12 @@ export default class ScanController extends ContainerController {
                     // composite barcode
                     if (compositeOngoing) {
                         if (compositeMap[compositeOngoing.compositeFlag] === firstBarcodeObj.symbology) {
-                            barcodePicker.destroy()
-                            barcodePicker.pauseScanning()
-                            compositeOngoing = false
+
                             this.process(this.parseCompositeCodeScan([
                                 compositeOngoing,
                                 firstBarcodeObj
                             ]));
+                            compositeOngoing = false
                         }
                     }
                     else {
@@ -301,10 +307,6 @@ export default class ScanController extends ContainerController {
             }
             return callback(undefined, gtinResolver.createGTIN_SSI(networkName, undefined, gs1Fields.gtin));
         });
-    }
-
-    redirectToDrugDetails(state) {
-        this.history.push(`${new URL(this.history.win.basePath).pathname}drug-details`, state);
     }
 
     packageAlreadyScanned(packageGTIN_SSI, gs1Fields, callback) {
@@ -400,6 +402,7 @@ export default class ScanController extends ContainerController {
     }
 
     redirectToError(message, fields) {
+        this.disposeOfBarcodePicker()
         this.history.push({
             pathname: `${new URL(this.history.win.basePath).pathname}scan-error`,
             state: {
@@ -407,6 +410,11 @@ export default class ScanController extends ContainerController {
                 fields
             }
         })
+    }
+
+    redirectToDrugDetails(state) {
+        this.disposeOfBarcodePicker()
+        this.history.push(`${new URL(this.history.win.basePath).pathname}drug-details`, state);
     }
 
     getNativeApiHandler(callback) {
@@ -419,6 +427,13 @@ export default class ScanController extends ContainerController {
             callback(undefined, undefined);
         } catch (err) {
             console.log("Caught an error during initialization of the native API bridge", err);
+        }
+    }
+
+    disposeOfBarcodePicker() {
+        if (this.barcodePicker) {
+            this.barcodePicker.pauseScanning()
+            this.barcodePicker.destroy()
         }
     }
 }
