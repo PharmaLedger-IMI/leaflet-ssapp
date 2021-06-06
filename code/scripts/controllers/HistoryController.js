@@ -52,7 +52,7 @@ export default class HistoryController extends ContainerController {
                                 }
                                 product.identifier = basePath;
                                 product.batchGtinSSI = gtinSSI;
-                                product.expiry = gs1Fields.expiry;
+                                product.expiry = gs1Fields.expiry.slice(0,2) === "00" ? gs1Fields.expiry.slice(5) : gs1Fields.expiry;
                                 products.push(product);
                                 packageNumber++;
                                 __readProductsRecursively(packageNumber, callback);

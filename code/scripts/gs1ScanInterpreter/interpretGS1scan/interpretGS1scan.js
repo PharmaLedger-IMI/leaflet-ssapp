@@ -250,10 +250,7 @@ function gs1ToISO(gs1Date) {
             fullyear=(currentFirstYY+1).toString()+year.toString();
         }
         if (fullyear !== undefined) {
-            rv = fullyear + '-' + doubleDigits[3];
-            if (doubleDigits[5] != '00') {
-                rv += '-' + doubleDigits[5];
-            }
+            rv = fullyear + '-' + doubleDigits[3] + '-' + doubleDigits[5];
         }
     }
     return rv;

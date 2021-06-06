@@ -26,7 +26,7 @@ export default class DrugDetailsController extends ContainerController {
       this.model.serialNumber = this.gs1Fields.serialNumber === "0" ? "-" : this.gs1Fields.serialNumber;
       this.model.gtin = this.gs1Fields.gtin;
       this.model.batchNumber = this.gs1Fields.batchNumber;
-      this.model.expiryForDisplay = this.gs1Fields.expiry;
+      this.model.expiryForDisplay = this.gs1Fields.expiry.slice(0,2) === "00" ? this.gs1Fields.expiry.slice(5) : this.gs1Fields.expiry;
     }
 
     const basePath = utils.getMountPath(this.gtinSSI, this.gs1Fields);
@@ -89,7 +89,7 @@ export default class DrugDetailsController extends ContainerController {
         return;
       }
 
-      if(!product.antiCounterfeitingEnabled){
+      if (!product.antiCounterfeitingEnabled) {
         this.model.displayItems--;
         this.model.secondRowColumns--;
         this.element.querySelector("#package-verification-item").hidden = true;
@@ -150,7 +150,9 @@ export default class DrugDetailsController extends ContainerController {
           this.model.SNCheckIcon = constants.SN_FAIL_ICON;
           this.setColor('serialNumberVerification', 'red');
         }
+
         batchData.expiryForDisplay = utils.convertFromGS1DateToYYYY_HM(batchData.expiry);
+        batchData.expiryForDisplay.slice(0,2) === "00" ? batchData.expiryForDisplay.slice(5) : batchData.expiryForDisplay;
         this.model.batch = batchData;
         let snCheck = checkSNCheck();
         let expiryCheck = this.model.expiryForDisplay === batchData.expiryForDisplay;
@@ -230,9 +232,9 @@ export default class DrugDetailsController extends ContainerController {
     return false;
   }
 
-  leafletShouldBeDisplayed(product, batchData, snCheck, expiryCheck, currentTime, expiryTime){
+  leafletShouldBeDisplayed(product, batchData, snCheck, expiryCheck, currentTime, expiryTime) {
     //fix for the missing case describe here: https://github.com/PharmaLedger-IMI/epi-workspace/issues/167
-    if(batchData.serialCheck && !snCheck.validSerial && !snCheck.recalledSerial && !snCheck.decommissionedSerial && product.showEPIOnSNUnknown){
+    if (batchData.serialCheck && !snCheck.validSerial && !snCheck.recalledSerial && !snCheck.decommissionedSerial && product.showEPIOnSNUnknown) {
       return true;
     }
 
@@ -248,7 +250,7 @@ export default class DrugDetailsController extends ContainerController {
       return true;
     }
 
-    if (!batchData.expiredDateCheck  && !batchData.incorrectDateCheck && !batchData.serialCheck) {
+    if (!batchData.expiredDateCheck && !batchData.incorrectDateCheck && !batchData.serialCheck) {
       return true;
     }
 
@@ -293,7 +295,7 @@ export default class DrugDetailsController extends ContainerController {
     }
 
     if (batchData.expiredDateCheck && expiryTime < currentTime && product.showEPIOnBatchExpired && batchData.incorrectDateCheck && expiryCheck
-        && batchData.serialCheck && snCheck.validSerial) {
+      && batchData.serialCheck && snCheck.validSerial) {
       return true;
     }
 
