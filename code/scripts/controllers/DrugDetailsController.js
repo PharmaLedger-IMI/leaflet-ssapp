@@ -8,6 +8,7 @@ export default class DrugDetailsController extends ContainerController {
   constructor(element, history) {
     super(element, history);
     this.setModel({
+      serialNumberLabel: constants.SN_LABEL,
       serialNumberVerification: constants.SN_OK_MESSAGE,
       productStatus: constants.PRODUCT_STATUS_OK_MESSAGE,
       packageVerification: "Action required",
@@ -123,7 +124,7 @@ export default class DrugDetailsController extends ContainerController {
 
         if (batchData.defaultMessage || batchData.recalled) {
           this.displayConfigurableModal({
-            title: "Important notes!!!",
+            title: "Note",
             modalName: "batchInfoModal",
             modalContent: {
               recallMessage: batchData.recalled ? batchData.recalledMessage : "",
@@ -160,16 +161,18 @@ export default class DrugDetailsController extends ContainerController {
         const currentTime = Date.now();
         this.model.showLeaflet = this.leafletShouldBeDisplayed(product, batchData, snCheck, expiryCheck, currentTime, expiryTime);
 
-        if (snCheck.recalledSerial) {
-          showError(constants.SN_RECALLED_MESSAGE);
-          return;
-        }
-        if (snCheck.decommissionedSerial) {
-          showError(constants.SN_DECOMMISSIONED_MESSAGE + ' reason: ' + batchData.decommissionReason);
-          return;
-        }
         if (!snCheck.validSerial && batchData.serialCheck) {
           showError(constants.SN_FAIL_MESSAGE)
+        }
+
+        if (snCheck.recalledSerial) {
+          this.model.serialNumberLabel = "Batch";
+          showError(constants.SN_RECALLED_MESSAGE);
+        }
+
+        if (snCheck.decommissionedSerial) {
+          const reasonMsg = batchData.decommissionReason ? ' reason: ' + batchData.decommissionReason : "";
+          showError(constants.SN_DECOMMISSIONED_MESSAGE + reasonMsg);
         }
 
         if (!expiryCheck && batchData.incorrectDateCheck) {
