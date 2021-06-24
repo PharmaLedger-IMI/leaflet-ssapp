@@ -20,7 +20,7 @@ export default class DrugDetailsController extends ContainerController {
     });
 
     this.model.SNCheckIcon = ""
-
+      console.log(history.location.state);
     if (typeof history.location.state !== "undefined") {
       this.gtinSSI = history.location.state.gtinSSI;
       this.gs1Fields = history.location.state.gs1Fields;

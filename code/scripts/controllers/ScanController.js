@@ -7,6 +7,9 @@ import DSUDataRetrievalService from "../services/DSUDataRetrievalService/DSUData
 
 const gtinResolver = require("gtin-resolver");
 
+const opendsu = require("opendsu");
+const resolver = opendsu.loadApi("resolver");
+
 export default class ScanController extends ContainerController {
     constructor(element, history) {
         super(element, history);

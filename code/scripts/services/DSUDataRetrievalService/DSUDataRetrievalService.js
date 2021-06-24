@@ -33,15 +33,9 @@ export default class DSUDataRetrievalService {
         if (typeof this.cache.pathToProductDSU !== "undefined") {
             return callback(undefined, this.cache.pathToProductDSU);
         }
-        this.readBatchData((err, batchData) => {
-            if (err) {
-                this.cache.pathToProductDSU = `${this.basePath}/product/product/`
-            } else {
-                this.cache.pathToProductDSU = `${this.basePath}/batch/gtinDSU/product/`;
-            }
 
-            callback(undefined, this.cache.pathToProductDSU);
-        });
+        this.cache.pathToProductDSU = `${this.basePath}/product/`
+        callback(undefined, this.cache.pathToProductDSU);
     }
 
     getPathToProductVersion(callback) {
@@ -68,7 +62,7 @@ export default class DSUDataRetrievalService {
         if (typeof this.cache.productData !== "undefined") {
             return callback(undefined, this.cache.productData);
         }
-        this.getPathToProductVersion((err, pathToProductVersion) => {
+        this.getPathToProductDSU((err, pathToProductVersion) => {
             if (err) {
                 return callback(err);
             }

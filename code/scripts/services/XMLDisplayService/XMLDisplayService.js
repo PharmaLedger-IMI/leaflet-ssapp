@@ -131,11 +131,11 @@ export default class XmlDisplayService {
     }
 
     buildBasePath(callback) {
-        this.dsuDataRetrievalService.getPathToProductVersion((err, pathToProductVersion) => {
+        this.dsuDataRetrievalService.getPathToProductDSU((err, pathToProductDSU) => {
             if (err) {
                 return callback(err);
             }
-            let pathBase = `${pathToProductVersion}${this.xmlType}/`;
+            let pathBase = `${pathToProductDSU}${this.xmlType}/`;
             callback(undefined, pathBase);
         });
     }
