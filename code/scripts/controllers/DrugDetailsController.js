@@ -108,7 +108,7 @@ export default class DrugDetailsController extends ContainerController {
       this.dsuDataRetrievalService.readBatchData((err, batchData) => {
         if (err || typeof batchData === "undefined") {
           this.updateUIInGTINOnlyCase();
-          if(this.model.product.gtin){
+          if(this.model.product.gtin && this.model.product.showEPIOnUnknownBatchNumber){
             this.model.showLeaflet = true;
           }
           return console.log(err);
