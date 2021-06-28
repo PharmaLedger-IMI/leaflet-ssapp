@@ -48,12 +48,15 @@ export default class ScanController extends ContainerController {
                                 }
 
                                 if (resultArray.length == 4) {
-                                    const scanObjArray = [{
-                                        symbology: resultArray[2],
-                                        data:  resultArray[3]
-                                    }]
+                                    const scanObjArray = [
+                                        firstScanObj,
+                                        {
+                                            symbology: resultArray[2],
+                                            data:  resultArray[3]
+                                        }
+                                    ]
 
-                                    return this.processCompositeCodeScan(scanObj)
+                                    return this.processCompositeCodeScan(scanObjArray)
                                 }
                             }
                             this.redirectToError("2dMatrix code scan process finished. No code scanned or process canceled.");
