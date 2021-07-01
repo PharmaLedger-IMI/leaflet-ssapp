@@ -36,32 +36,84 @@ export default class ScanController extends ContainerController {
             }
             else if (handler) {
                 this.model.nativeSupport = true;
-                const scan = handler.importNativeAPI("dataMatrixScan");
-                scan().then((resultArray) => {
-                    if (resultArray && resultArray.length > 0) {
-                        return this.process(this.parseGS1Code(resultArray[0]));
+                this.settingsService.readSetting("scanditlicense", (err, scanditLicense) => {
+                    if (scanditLicense && window.ScanditSDK) {
+                        const scan = handler.importNativeAPI("scanditScan");
+                        scan([scanditLicense]).then((resultArray) => {
+                            if (resultArray && resultArray.length > 0) {
+                                const firstScanObj = {
+                                    symbology: resultArray[0],
+                                    data:  resultArray[1]
+                                }
+
+                                if (resultArray.length == 2) {
+                                    return this.processSingleCodeScan(firstScanObj)
+                                }
+
+                                if (resultArray.length == 4) {
+                                    const scanObjArray = [
+                                        firstScanObj,
+                                        {
+                                            symbology: resultArray[2],
+                                            data:  resultArray[3]
+                                        }
+                                    ]
+
+                                    return this.processCompositeCodeScan(scanObjArray)
+                                }
+                            }
+                            this.redirectToError("2dMatrix code scan process finished. No code scanned or process canceled.");
+                        }, (error) => {
+                            switch (error) {
+                                case "ERR_NO_CODE_FOUND":
+                                    this.redirectToError("No GS1 data matrix found.");
+                                    break;
+                                case "ERR_SCAN_NOT_SUPPORTED":
+                                    this.redirectToError("The code cannot be scanned.");
+                                    break;
+                                case "ERR_CAM_UNAVAILABLE":
+                                    this.redirectToError("No camera availcallbackable for scanning.");
+                                    break;
+                                case "ERR_USER_CANCELLED":
+                                    this.disposeOfBarcodePicker()
+                                    this.history.push(`${new URL(this.history.win.basePath).pathname}home`);
+                                    break;
+                                default:
+                                    this.redirectToError("Failed to scan GS1 data matrix.");
+                            }
+                        }).catch((err) => {
+                            this.redirectToError("Code scanning and processing finished with errors.");
+                        });
                     }
-                    this.redirectToError("2dMatrix code scan process finished. No code scanned or process canceled.");
-                }, (error) => {
-                    switch (error) {
-                        case "ERR_NO_CODE_FOUND":
-                            this.redirectToError("No GS1 data matrix found.");
-                            break;
-                        case "ERR_SCAN_NOT_SUPPORTED":
-                            this.redirectToError("The code cannot be scanned.");
-                            break;
-                        case "ERR_CAM_UNAVAILABLE":
-                            this.redirectToError("No camera availcallbackable for scanning.");
-                            break;
-                        case "ERR_USER_CANCELLED":
-                            this.disposeOfBarcodePicker()
-                            this.history.push(`${new URL(this.history.win.basePath).pathname}home`);
-                            break;
-                        default:
-                            this.redirectToError("Failed to scan GS1 data matrix.");
+                    else {
+                        const scan = handler.importNativeAPI("dataMatrixScan");
+                        scan().then((resultArray) => {
+                            if (resultArray && resultArray.length > 0) {
+                                return this.process(this.parseGS1Code(resultArray[0]));
+                            }
+                            this.redirectToError("2dMatrix code scan process finished. No code scanned or process canceled.");
+                        }, (error) => {
+                            switch (error) {
+                                case "ERR_NO_CODE_FOUND":
+                                    this.redirectToError("No GS1 data matrix found.");
+                                    break;
+                                case "ERR_SCAN_NOT_SUPPORTED":
+                                    this.redirectToError("The code cannot be scanned.");
+                                    break;
+                                case "ERR_CAM_UNAVAILABLE":
+                                    this.redirectToError("No camera availcallbackable for scanning.");
+                                    break;
+                                case "ERR_USER_CANCELLED":
+                                    this.disposeOfBarcodePicker()
+                                    this.history.push(`${new URL(this.history.win.basePath).pathname}home`);
+                                    break;
+                                default:
+                                    this.redirectToError("Failed to scan GS1 data matrix.");
+                            }
+                        }).catch((err) => {
+                            this.redirectToError("Code scanning and processing finished with errors.");
+                        });
                     }
-                }).catch((err) => {
-                    this.redirectToError("Code scanning and processing finished with errors.");
                 });
             } else {
                 this.settingsService.readSetting("scanditlicense", (err, scanditLicense) => {
@@ -202,7 +254,7 @@ export default class ScanController extends ContainerController {
 
                 if (scanResult.barcodes.length === 2 && firstBarcodeObj.symbology !== secondBarcodeObj.symbology) {
                     compositeOngoing = false
-                    return this.process(this.parseCompositeCodeScan(scanResult.barcodes));
+                    return this.processCompositeCodeScan(scanResult.barcodes);
                 }
 
                 if (firstBarcodeObj) {
@@ -210,28 +262,15 @@ export default class ScanController extends ContainerController {
                     if (firstBarcodeObj.compositeFlag < 2) {
                         compositeOngoing = false
 
-                        if (firstBarcodeObj.symbology === "data-matrix") {
-                            return this.process(this.parseGS1Code(firstBarcodeObj.data));
-                        }
-                        else if (firstBarcodeObj.symbology === "code128") {
-                            return this.process(this.parseGS1Code(firstBarcodeObj.data));
-                        }
-                        else if (firstBarcodeObj.symbology === "ean13") {
-                            return this.process(this.parseEAN13CodeScan(firstBarcodeObj.data))
-                        }
-                        else {
-                            console.error(`Incompatible barcode scan: `, firstBarcodeObj)
-                            throw new Error(`code symbology "${firstBarcodeObj.symbology}" not recognized.`)
-                        }
+                        return this.processSingleCodeScan(firstBarcodeObj)
                     }
                     // composite barcode
                     if (compositeOngoing) {
                         if (compositeMap[compositeOngoing.compositeFlag] === firstBarcodeObj.symbology) {
-
-                            this.process(this.parseCompositeCodeScan([
+                            this.processCompositeCodeScan([
                                 compositeOngoing,
                                 firstBarcodeObj
-                            ]));
+                            ]);
                             compositeOngoing = false
                         }
                     }
@@ -249,6 +288,26 @@ export default class ScanController extends ContainerController {
               return createNewBarcodePicker()
           })
           .then(newBarcodePickerCallback);
+    }
+
+    processSingleCodeScan(scanObj) {
+        if (scanObj.symbology === "data-matrix") {
+            return this.process(this.parseGS1Code(scanObj.data));
+        }
+        else if (scanObj.symbology === "code128") {
+            return this.process(this.parseGS1Code(scanObj.data));
+        }
+        else if (scanObj.symbology === "ean13") {
+            return this.process(this.parseEAN13CodeScan(scanObj.data))
+        }
+        else {
+            console.error(`Incompatible barcode scan: `, scanObj)
+            throw new Error(`code symbology "${scanObj.symbology}" not recognized.`)
+        }
+    }
+
+    processCompositeCodeScan(scanResultArray) {
+        return this.process(this.parseCompositeCodeScan(scanResultArray));
     }
 
     buildSSI(gs1Fields, callback) {
