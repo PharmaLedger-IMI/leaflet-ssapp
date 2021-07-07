@@ -8,7 +8,6 @@ export default class DSUDataRetrievalService {
         this.cache = {};
     }
 
-    
     setBasePath(basePath){
         this.basePath = basePath;
         this.cache = {};
@@ -38,25 +37,15 @@ export default class DSUDataRetrievalService {
         callback(undefined, this.cache.pathToProductDSU);
     }
 
-    getPathToProductVersion(callback) {
-        if (typeof this.cache.pathToProductVersion !== "undefined") {
-            return callback(undefined, this.cache.pathToProductVersion);
+    getPathToBatchDSU(callback) {
+        if (typeof this.cache.pathToBatchDSU !== "undefined") {
+            return callback(undefined, this.cache.pathToBatchDSU);
         }
-        this.getPathToProductDSU((err, pathToProductDSU) => {
-            if (err) {
-                return callback(err);
-            }
-            this.cache.pathToProductDSU = pathToProductDSU;
-            this.getProductVersion((err, version) => {
-                if (err) {
-                    return callback(err);
-                }
 
-                this.cache.pathToProductVersion = `${pathToProductDSU}${version}/`;
-                callback(undefined, this.cache.pathToProductVersion);
-            })
-        })
+        this.cache.pathToBatchDSU = `${this.basePath}/batch/`
+        callback(undefined, this.cache.pathToBatchDSU);
     }
+
 
     readProductData(callback) {
         if (typeof this.cache.productData !== "undefined") {
@@ -83,58 +72,4 @@ export default class DSUDataRetrievalService {
         })
     }
 
-    getLatestProductVersion(pathToProductDSU, callback) {
-        if (typeof this.cache.latestProductVersion !== "undefined") {
-            return callback(undefined, this.cache.latestProductVersion);
-        }
-        this.storage.call("listFolders", pathToProductDSU, (err, versions) => {
-            if (err) {
-                return callback(err);
-            }
-
-            versions.sort((v1, v2) => {
-                v1 = parseInt(v1);
-                v2 = parseInt(v2);
-                if (v1 < v2) {
-                    return -1;
-                }
-
-                if (v1 === v2) {
-                    return 0;
-                }
-
-                if (v1 > v2) {
-                    return 1;
-                }
-            });
-            this.cache.latestProductVersion = versions[versions.length - 1];
-            callback(undefined, this.cache.latestProductVersion);
-        });
-    }
-
-    getProductVersion(callback) {
-        if (typeof this.cache.productVersion !== "undefined") {
-            return callback(undefined, this.cache.productVersion);
-        }
-        this.readBatchData((err, batchData) => {
-            if (err || typeof batchData === "undefined" || batchData.version === 'latest') {
-                return this.getPathToProductDSU((err, pathToProductDSU) => {
-                    if (err) {
-                        return callback(err);
-                    }
-                    this.cache.pathToProductDSU = pathToProductDSU;
-                    this.getLatestProductVersion(pathToProductDSU, (err, latestProductVersion) => {
-                        if (err) {
-                            return callback(err);
-                        }
-
-                        this.cache.latestProductVersion = latestProductVersion;
-                        callback(undefined, latestProductVersion);
-                    });
-                });
-            }
-            this.cache.productVersion = batchData.version;
-            callback(undefined, batchData.version);
-        });
-    }
 }

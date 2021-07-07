@@ -131,13 +131,28 @@ export default class XmlDisplayService {
     }
 
     buildBasePath(callback) {
-        this.dsuDataRetrievalService.getPathToProductDSU((err, pathToProductDSU) => {
+        this.dsuDataRetrievalService.getPathToBatchDSU((err, pathToBatchDSU) => {
             if (err) {
                 return callback(err);
             }
-            let pathBase = `${pathToProductDSU}${this.xmlType}/`;
-            callback(undefined, pathBase);
-        });
+            let batchBasePath = `${pathToBatchDSU}${this.xmlType}/`;
+            this.DSUStorage.call("listFolders", batchBasePath, (err, files) => {
+                if (err) {
+                    return callback(err);
+                }
+                if (files.length > 0) {
+                    return callback(undefined, batchBasePath);
+                }
+                this.dsuDataRetrievalService.getPathToProductDSU((err, pathToProductDSU) => {
+                    if (err) {
+                        return callback(err);
+                    }
+                    let pathBase = `${pathToProductDSU}${this.xmlType}/`;
+                    callback(undefined, pathBase);
+                });
+
+            })
+        })
     }
 
     getErrorMessageElement(errorMessage) {
