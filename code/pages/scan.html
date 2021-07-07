@@ -5,24 +5,22 @@
             height: 100vh !important;
         }
     </style>
-    <psk-mobile disable-sidebar enable-back class="noPadding">
+    <psk-mobile class="noPadding" disable-sidebar enable-back>
         <psk-container controller-name="ScanController">
             <psk-condition condition="@hasError">
-                <psk-label slot="condition-true" class="products-does-not-exist"
-                           label="Product scanned does not exist."></psk-label>
+                <psk-label class="products-does-not-exist" label="Product scanned does not exist."
+                           slot="condition-true"></psk-label>
             </psk-condition>
             <psk-condition condition="@useScandit">
-                <div slot="condition-true" id="scandit-barcode-picker-wrapper">
+                <div id="scandit-barcode-picker-wrapper" slot="condition-true">
                     <div id="scandit-barcode-picker"></div>
                 </div>
-                <psk-condition slot="condition-false" condition="@hasCode">
+                <psk-condition condition="@hasCode" slot="condition-false">
                     <psk-condition condition="@nativeSupport" slot="condition-false">
-                        <psk-barcode-scanner slot="condition-false" data="@data" normal-size></psk-barcode-scanner>
-                        <div slot="condition-true">
-                            In a few seconds a native API will pop on you screen and guide you.
-                        </div>
+                        <psk-barcode-scanner data="@data" normal-size slot="condition-false"></psk-barcode-scanner>
+                        <psk-ui-loader should-be-rendered="true" slot="condition-true"></psk-ui-loader>
                     </psk-condition>
-                    <psk-ui-loader slot="condition-true" should-be-rendered="true"></psk-ui-loader>
+                    <psk-ui-loader should-be-rendered="true" slot="condition-true"></psk-ui-loader>
                 </psk-condition>
             </psk-condition>
         </psk-container>
