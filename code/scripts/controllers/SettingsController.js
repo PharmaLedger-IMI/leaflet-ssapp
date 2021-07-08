@@ -29,19 +29,26 @@ export default class SettingsController extends ContainerController {
         };
         this.initNetworkSettingsTab();
 
+        this.on("change-edit-mode", ()=>{
+            this.toggleEditMode("networkEditMode");
+        })
+
         this.on("change-network", ()=>{
             this.settingsService.writeSetting("networkname", this.model.networkNameSetting.value, (err)=>{
                 if(err){
                     console.log(err);
                 }
+                this.toggleEditMode("networkEditMode");
             });
         });
+
         this.on("change-default-network", ()=>{
             this.settingsService.writeSetting("networkname", undefined, (err)=>{
                 if(err){
                     console.log(err);
                 }
                 this.initNetworkSettingsTab();
+                this.toggleEditMode("networkEditMode");
             });
         });
 
@@ -83,6 +90,9 @@ export default class SettingsController extends ContainerController {
         });
     }
 
+    toggleEditMode(prop){
+        this.model[prop] = !this.model[prop]
+    }
     initNetworkSettingsTab(){
         this.settingsService.readSetting("networkname", (err, networkname)=>{
             if(err || typeof networkname === "undefined"){
