@@ -187,6 +187,7 @@ export default class DrugDetailsController extends ContainerController {
           this.model.productStatus = constants.PRODUCT_STATUS_FAIL_MESSAGE;
           this.model.PSCheckIcon = constants.PRODUCT_STATUS_FAIL_ICON;
           this.setColor('productStatusVerification', 'red');
+          return;
         }
 
         console.log(currentTime, expiryTime);
