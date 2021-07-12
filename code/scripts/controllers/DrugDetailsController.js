@@ -20,14 +20,14 @@ export default class DrugDetailsController extends ContainerController {
     });
 
     this.model.SNCheckIcon = ""
-      console.log(history.location.state);
+    console.log(history.location.state);
     if (typeof history.location.state !== "undefined") {
       this.gtinSSI = history.location.state.gtinSSI;
       this.gs1Fields = history.location.state.gs1Fields;
       this.model.serialNumber = this.gs1Fields.serialNumber === "0" ? "-" : this.gs1Fields.serialNumber;
       this.model.gtin = this.gs1Fields.gtin;
       this.model.batchNumber = this.gs1Fields.batchNumber;
-      this.model.expiryForDisplay = this.gs1Fields.expiry.slice(0,2) === "00" ? this.gs1Fields.expiry.slice(5) : this.gs1Fields.expiry;
+      this.model.expiryForDisplay = this.gs1Fields.expiry.slice(0, 2) === "00" ? this.gs1Fields.expiry.slice(5) : this.gs1Fields.expiry;
     }
 
     const basePath = utils.getMountPath(this.gtinSSI, this.gs1Fields);
@@ -108,7 +108,7 @@ export default class DrugDetailsController extends ContainerController {
       this.dsuDataRetrievalService.readBatchData((err, batchData) => {
         if (err || typeof batchData === "undefined") {
           this.updateUIInGTINOnlyCase();
-          if(this.model.product.gtin && this.model.product.showEPIOnUnknownBatchNumber){
+          if (this.model.product.gtin && this.model.product.showEPIOnUnknownBatchNumber) {
             this.model.showLeaflet = true;
           }
           return console.log(err);
@@ -156,14 +156,14 @@ export default class DrugDetailsController extends ContainerController {
         }
 
         batchData.expiryForDisplay = utils.convertFromGS1DateToYYYY_HM(batchData.expiry);
-        batchData.expiryForDisplay = batchData.expiryForDisplay.slice(0,2) === "00" ? batchData.expiryForDisplay.slice(5) : batchData.expiryForDisplay;
+        batchData.expiryForDisplay = batchData.expiryForDisplay.slice(0, 2) === "00" ? batchData.expiryForDisplay.slice(5) : batchData.expiryForDisplay;
         this.model.batch = batchData;
         let snCheck = checkSNCheck();
         let expiryCheck = this.model.expiryForDisplay === batchData.expiryForDisplay;
         let expiryTime;
-        try{
+        try {
           expiryTime = new Date(batchData.expiryForDisplay.replaceAll(' ', '')).getTime();
-        }catch(err){
+        } catch (err) {
           // do nothing
         }
         const currentTime = Date.now();
@@ -174,7 +174,9 @@ export default class DrugDetailsController extends ContainerController {
         }
 
         if (snCheck.recalledSerial) {
-          this.model.serialNumberLabel = "Batch";
+          if (batchData.recalled) {
+            this.model.serialNumberLabel = "Batch";
+          }
           showError(constants.SN_RECALLED_MESSAGE);
         }
 
