@@ -8,7 +8,7 @@ export default class SettingsController extends ContainerController {
     constructor(element, history) {
         super(element, history);
 
-        this.setModel({languageSelectorOpened: false, origin: window.location.origin});
+        this.setModel({languageSelectorOpened: false, origin: window.location.origin, networkEditMode: true, scanditLicenseEditMode: true});
         this.languageService = new LanguageService(this.DSUStorage);
         this.settingsService = new SettingsService(this.DSUStorage);
 
@@ -29,8 +29,8 @@ export default class SettingsController extends ContainerController {
         };
         this.initNetworkSettingsTab();
 
-        this.on("change-edit-mode", ()=>{
-            this.toggleEditMode("networkEditMode");
+        this.on("change-edit-mode", (event)=>{
+            this.toggleEditMode(event.target.getAttribute("data"));
         })
 
         this.on("change-network", ()=>{
@@ -86,6 +86,7 @@ export default class SettingsController extends ContainerController {
                 if(err){
                     console.log(err);
                 }
+                this.toggleEditMode("scanditLicenseEditMode");
             });
         });
     }

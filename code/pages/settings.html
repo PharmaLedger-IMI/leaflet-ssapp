@@ -42,7 +42,8 @@
                         </div>
                         <div class="d-flex flex-row" slot="condition-false">
                             <psk-input read-only="true" view-model="@networkNameSetting"></psk-input>
-                            <psk-button class="network-edit-button" event-name="change-edit-mode"> Edit <i
+                            <psk-button class="network-edit-button" data="networkEditMode"
+                                        event-name="change-edit-mode"> Edit <i
                                     class="fa fa-pencil-square-o"></i></psk-button>
                         </div>
                     </psk-condition>
@@ -50,8 +51,18 @@
                 </psk-accordion-item>
 
                 <psk-accordion-item title="Setup Scanning">
-                    <psk-input view-model="@useScanditLicense"></psk-input>
-                    <psk-button event-name="set-scandit-license" label="Set"></psk-button>
+                    <psk-condition condition="@scanditLicenseEditMode">
+                        <div slot="condition-true">
+                            <psk-input view-model="@useScanditLicense"></psk-input>
+                            <psk-button event-name="set-scandit-license" label="Set"></psk-button>
+                        </div>
+                        <div class="d-flex flex-row" slot="condition-false">
+                            <psk-input read-only="true" view-model="@useScanditLicense"></psk-input>
+                            <psk-button class="network-edit-button" data="scanditLicenseEditMode"
+                                        event-name="change-edit-mode"> Edit <i
+                                    class="fa fa-pencil-square-o"></i></psk-button>
+                        </div>
+                    </psk-condition>
                 </psk-accordion-item>
             </psk-accordion>
         </psk-container>
