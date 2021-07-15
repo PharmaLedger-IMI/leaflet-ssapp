@@ -27,7 +27,22 @@ export default class DrugDetailsController extends ContainerController {
       this.model.serialNumber = this.gs1Fields.serialNumber === "0" ? "-" : this.gs1Fields.serialNumber;
       this.model.gtin = this.gs1Fields.gtin;
       this.model.batchNumber = this.gs1Fields.batchNumber;
-      this.model.expiryForDisplay = this.gs1Fields.expiry.slice(0, 2) === "00" ? this.gs1Fields.expiry.slice(5) : this.gs1Fields.expiry;
+      // this.model.expiryForDisplay = this.gs1Fields.expiry.slice(0, 2) === "00" ? this.gs1Fields.expiry.slice(5) : this.gs1Fields.expiry;
+      let expireDateConverted;
+
+      if (this.gs1Fields.expiry.slice(0, 2) === "00") {
+        this.model.expiryForDisplay = this.gs1Fields.expiry.slice(5);
+        //convert date to last date of the month for 00 date
+        expireDateConverted = this.gs1Fields.expiry.replace("00", "01");
+        expireDateConverted = new Date(expireDateConverted.replaceAll(' ', ''));
+        expireDateConverted.setFullYear(expireDateConverted.getFullYear(), expireDateConverted.getMonth() + 1, 0);
+        expireDateConverted = expireDateConverted.getTime();
+      } else {
+        this.model.expiryForDisplay = this.gs1Fields.expiry;
+        expireDateConverted = this.model.expiryForDisplay.replaceAll(' ', '');
+      }
+
+      this.model.expireDateConverted = expireDateConverted;
     }
 
     const basePath = utils.getMountPath(this.gtinSSI, this.gs1Fields);
@@ -162,7 +177,7 @@ export default class DrugDetailsController extends ContainerController {
         let expiryCheck = this.model.expiryForDisplay === batchData.expiryForDisplay;
         let expiryTime;
         try {
-          expiryTime = new Date(batchData.expiryForDisplay.replaceAll(' ', '')).getTime();
+          expiryTime = new Date(this.model.expireDateConverted).getTime();
         } catch (err) {
           // do nothing
         }
