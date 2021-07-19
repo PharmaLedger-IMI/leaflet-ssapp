@@ -1,13 +1,13 @@
-import ContainerController from "../../cardinal/controllers/base-controllers/ContainerController.js";
+const {WebcController} = WebCardinal.controllers;
 import utils from "../../utils.js";
 import DSUDataRetrievalService from "../services/DSUDataRetrievalService/DSUDataRetrievalService.js";
 import constants from "../../constants.js";
 import XMLDisplayService from "../services/XMLDisplayService/XMLDisplayService.js";
 
-export default class DrugDetailsController extends ContainerController {
+export default class DrugDetailsController extends WebcController {
   constructor(element, history) {
     super(element, history);
-    this.setModel({
+    this.model = {
       serialNumberLabel: constants.SN_LABEL,
       serialNumberVerification: constants.SN_OK_MESSAGE,
       productStatus: constants.PRODUCT_STATUS_OK_MESSAGE,
@@ -16,8 +16,9 @@ export default class DrugDetailsController extends ContainerController {
       secondRowColumns: 3,
       showVerifyPackageButton: true,
       showReportButton: true,
-      showAddToCabinetButton: true
-    });
+      showAddToCabinetButton: true,
+      serialNumber: ""
+    };
 
     this.model.SNCheckIcon = ""
     console.log(history.location.state);
@@ -60,12 +61,17 @@ export default class DrugDetailsController extends ContainerController {
     smpcDisplayService.isXmlAvailable()
 
     this.on("view-leaflet", () => {
-      history.push({
-        pathname: `${new URL(history.win.basePath).pathname}leaflet`,
-        state: {
+      /*      history.push({
+              pathname: `${new URL(history.win.basePath).pathname}leaflet`,
+              state: {
+                gtinSSI: this.gtinSSI,
+                gs1Fields: this.gs1Fields
+              }
+            });*/
+
+      this.navigateToPageTag("leaflet", {
           gtinSSI: this.gtinSSI,
           gs1Fields: this.gs1Fields
-        }
       });
     });
 
@@ -77,22 +83,33 @@ export default class DrugDetailsController extends ContainerController {
     });
 
     this.on("view-smpc", () => {
-      history.push({
-        pathname: `${new URL(history.win.basePath).pathname}smpc`,
-        state: {
+      /*      history.push({
+              pathname: `${new URL(history.win.basePath).pathname}smpc`,
+              state: {
+                gtinSSI: this.gtinSSI,
+                gs1Fields: this.gs1Fields
+              }
+            });*/
+      this.navigateToPageTag("smpc", {
           gtinSSI: this.gtinSSI,
           gs1Fields: this.gs1Fields
-        }
       });
     });
 
     this.on("report", () => {
-      history.push({
-        pathname: `${new URL(history.win.basePath).pathname}report`,
-        state: {
+      /*
+            history.push({
+              pathname: `${new URL(history.win.basePath).pathname}report`,
+              state: {
+                gtinSSI: this.gtinSSI,
+                gs1Fields: this.gs1Fields
+              }
+            });
+      */
+
+      this.navigateToPageTag("report", {
           gtinSSI: this.gtinSSI,
           gs1Fields: this.gs1Fields
-        }
       });
     });
 
@@ -141,14 +158,16 @@ export default class DrugDetailsController extends ContainerController {
         }
 
         if (batchData.defaultMessage || batchData.recalled) {
-          this.displayConfigurableModal({
-            title: "Note",
-            modalName: "batchInfoModal",
-            modalContent: {
+
+          this.showModalFromTemplate('batch-info', () => {
+          }, () => {
+          }, {
+            model: {
+              title: "Note",
               recallMessage: batchData.recalled ? batchData.recalledMessage : "",
               defaultMessage: batchData.defaultMessage
-            }
-          })
+            }, disableExpanding: true
+          });
         }
 
         let checkSNCheck = () => {

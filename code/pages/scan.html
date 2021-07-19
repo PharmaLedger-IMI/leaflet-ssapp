@@ -6,23 +6,23 @@
         }
     </style>
     <psk-mobile class="noPadding" disable-sidebar enable-back>
-        <psk-container controller-name="ScanController">
-            <psk-condition condition="@hasError">
+        <webc-container controller="ScanController" class="h-100">
+            <div data-if="@hasError">
                 <psk-label class="products-does-not-exist" label="Product scanned does not exist."
-                           slot="condition-true"></psk-label>
-            </psk-condition>
-            <psk-condition condition="@useScandit">
-                <div id="scandit-barcode-picker-wrapper" slot="condition-true">
+                           slot="true"></psk-label>
+            </div>
+            <div class="h-100" data-if="@useScandit">
+                <div id="scandit-barcode-picker-wrapper" slot="true">
                     <div id="scandit-barcode-picker"></div>
                 </div>
-                <psk-condition condition="@hasCode" slot="condition-false">
-                    <psk-condition condition="@nativeSupport" slot="condition-false">
-                        <psk-barcode-scanner data="@data" normal-size slot="condition-false"></psk-barcode-scanner>
-                        <psk-ui-loader should-be-rendered="true" slot="condition-true"></psk-ui-loader>
-                    </psk-condition>
-                    <psk-ui-loader should-be-rendered="true" slot="condition-true"></psk-ui-loader>
-                </psk-condition>
-            </psk-condition>
-        </psk-container>
+                <div class="h-100" data-if="@hasCode" slot="false">
+                    <div data-if="@nativeSupport" slot="false" class="h-100">
+                        <psk-barcode-scanner data="@data" normal-size slot="false"></psk-barcode-scanner>
+                        <psk-ui-loader should-be-rendered="true" slot="true"></psk-ui-loader>
+                    </div>
+                    <psk-ui-loader should-be-rendered="true" slot="true"></psk-ui-loader>
+                </div>
+            </div>
+        </webc-container>
     </psk-mobile>
 </psk-example>
