@@ -7,5 +7,6 @@ export default class ScanErrorController extends ContainerController {
             ... history.location.state,
             title: 'Product not found'
         });
+        this.model.showSecondaryMessage = !!this.model.secondaryMessage;
     }
 }

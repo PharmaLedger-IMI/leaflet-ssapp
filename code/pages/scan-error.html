@@ -1,12 +1,19 @@
+<style>
+    @import url("../resources/css/bootstrap/css/bootstrap.min.css");
+
+    .secondaryMessage {
+        padding: 10px 20px;
+    }
+</style>
 <psk-example class="mobile-example">
     <psk-mobile>
         <psk-container controller-name="ScanErrorController">
             <div class="header-row">
-                <psk-button-link icon="arrow-left" class="go-back-link" page="scan"></psk-button-link>
+                <psk-button-link class="go-back-link" icon="arrow-left" page="scan"></psk-button-link>
                 <psk-label class="scan-error-title" label="@title"></psk-label>
             </div>
 
-            <psk-form template-columns="1fr" align-items="center" class="scan-error-form">
+            <psk-form align-items="center" class="scan-error-form" template-columns="1fr">
 
                 <div class="scan-error-message-label">
                     <psk-label class="scan-error-message" label="@message"></psk-label>
@@ -40,6 +47,16 @@
                     </strong>
                 </div>
             </psk-form>
+            <psk-condition condition="showSecondaryMessage">
+                <div class="secondaryMessage mt-4" slot="condition-true">
+                    <p class="text-secondary"><small>
+                        **
+                        <psk-echo value="@secondaryMessage"></psk-echo>
+                    </small>
+                    </p>
+                </div>
+            </psk-condition>
+
         </psk-container>
     </psk-mobile>
 </psk-example>

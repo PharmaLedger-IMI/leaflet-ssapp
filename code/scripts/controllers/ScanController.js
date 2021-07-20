@@ -144,7 +144,7 @@ export default class ScanController extends ContainerController {
         try {
             gs1FormatFields = interpretGS1scan.interpretScan(scannedBarcode);
         } catch (e) {
-            this.redirectToError("Barcode is not readable, please contact pharmacy / doctor who issued the medicine package.", this.parseGs1Fields(e.dlOrderedAIlist));
+            this.redirectToError("Barcode is not readable, please contact pharmacy / doctor who issued the medicine package.", this.parseGs1Fields(e.dlOrderedAIlist), e.message);
             return;
         }
 
@@ -463,13 +463,14 @@ export default class ScanController extends ContainerController {
         return true;
     }
 
-    redirectToError(message, fields) {
+    redirectToError(message, fields, secondaryMessage) {
         this.disposeOfBarcodePicker()
         this.history.push({
             pathname: `${new URL(this.history.win.basePath).pathname}scan-error`,
             state: {
                 message,
-                fields
+                fields,
+                secondaryMessage
             }
         })
     }
