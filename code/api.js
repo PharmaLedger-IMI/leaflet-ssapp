@@ -6,7 +6,6 @@ function mountDSU(path, keySSI, callback) {
             return callback(err);
         }
         mainDSU.getKeySSIAsString((err, _keySSI) => {
-            console.log("MAin DSU key SSI ===========================================", _keySSI);
             mainDSU.mount(path, keySSI, callback);
         })
 
@@ -14,14 +13,11 @@ function mountDSU(path, keySSI, callback) {
 }
 
 function listDSUs(path, callback) {
-    console.log("Listing dsus for path 111111111111111111111111111111111111111", path);
     securityContext.getMainDSU((err, mainDSU) => {
-        console.log("Got main DSU I hope .......................................", err, mainDSU);
         if (err) {
             return callback(err);
         }
         mainDSU.getKeySSIAsString((err, _keySSI) => {
-            console.log("MAin DSU key SSI ===========================================", err, _keySSI);
             mainDSU.listMountedDossiers(path, callback);
         });
     });
