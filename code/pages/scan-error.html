@@ -7,16 +7,16 @@
 </style>
 <psk-example class="mobile-example">
     <psk-mobile>
-        <psk-container controller-name="ScanErrorController">
-            <div class="header-row">
+        <webc-container controller="ScanErrorController">
+            <div class="header-row d-flex">
                 <psk-button-link class="go-back-link" icon="arrow-left" page="scan"></psk-button-link>
                 <psk-label class="scan-error-title" label="@title"></psk-label>
             </div>
 
             <psk-form align-items="center" class="scan-error-form" template-columns="1fr">
 
-                <div class="scan-error-message-label">
-                    <psk-label class="scan-error-message" label="@message"></psk-label>
+                <div class="scan-error-message-label test">
+                    <psk-label class="scan-error-message">{{@message}}</psk-label>
                 </div>
 
                 <div>
@@ -57,6 +57,6 @@
                 </div>
             </psk-condition>
 
-        </psk-container>
+        </webc-container>
     </psk-mobile>
 </psk-example>

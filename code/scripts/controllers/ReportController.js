@@ -1,9 +1,9 @@
-import ContainerController from "../../cardinal/controllers/base-controllers/ContainerController.js";
+const {WebcController} = WebCardinal.controllers;
 import utils from "../../utils.js";
 import DSUDataRetrievalService from "../services/DSUDataRetrievalService/DSUDataRetrievalService.js";
 import constants from "../../constants.js";
 
-export default class ReportController extends ContainerController {
+export default class ReportController extends WebcController {
     constructor(element, history) {
         super(element, history);
         this.setModel({});

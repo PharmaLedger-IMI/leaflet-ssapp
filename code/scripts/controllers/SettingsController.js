@@ -1,10 +1,10 @@
-import ContainerController from "../../cardinal/controllers/base-controllers/ContainerController.js";
+const {WebcController} = WebCardinal.controllers;
 import LanguageService from "../services/LanguageService/LanguageService.js";
 import languageServiceUtils from "../services/LanguageService/languageServiceUtils.js";
 import SettingsService from "../services/SettingsService.js";
 import constants from "../../constants.js";
 
-export default class SettingsController extends ContainerController {
+export default class SettingsController extends WebcController {
     constructor(element, history) {
         super(element, history);
 
@@ -60,11 +60,6 @@ export default class SettingsController extends ContainerController {
             this.model.languageSelectorOpened = true;
         });
 
-        this.on("go-back", (event) => {
-            history.push({
-                pathname: `${new URL(history.win.basePath).pathname}home`,
-            });
-        })
         this.model.onChange("languagesToAdd", () => {
             this.languageService.addWorkingLanguages(this.model.languagesToAdd.value, (err) => {
                 if (err) {

@@ -1,6 +1,6 @@
-import ContainerController from "../../cardinal/controllers/base-controllers/ContainerController.js";
+const {WebcController} = WebCardinal.controllers;
 
-export default class HomepageController extends ContainerController {
+export default class HomepageController extends WebcController {
     constructor(element, history) {
         super(element, history);
         let clickCounter = 0;
@@ -14,9 +14,10 @@ export default class HomepageController extends ContainerController {
             }
             if(clickCounter === 5){
                 clickCounter = 0;
-                history.push({
+/*                history.push({
                     pathname: `${new URL(history.win.basePath).pathname}settings`,
-                });
+                });*/
+                this.navigateToPageTag("settings");
             }
         });
     }

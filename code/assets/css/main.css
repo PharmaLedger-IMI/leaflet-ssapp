@@ -21,6 +21,15 @@ pre {
   color: #005cbf;
 }
 
+
+:host(webc-app-loader) .mobile-example webc-app-menu[mode=vertical] {
+  background: none !important;
+}
+
+:host(webc-app-loader) .mobile-example  webc-app-menu webc-app-identity {
+  display: none;
+}
+
 header {
   background: #7aa354;
 }

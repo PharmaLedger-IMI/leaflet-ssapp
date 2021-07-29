@@ -1,12 +1,11 @@
-import ContainerController from "../../cardinal/controllers/base-controllers/ContainerController.js";
+const {WebcController} = WebCardinal.controllers;
 import constants from "../../constants.js";
 import getStorageService from "../services/StorageService.js";
 
-export default class HistoryController extends ContainerController {
+export default class HistoryController extends WebcController {
   constructor(element, history) {
     super(element, history);
-    this.setModel({});
-    this.model.loadingStatusMessage = "Loading...";
+    this.model = {products: [], loadingStatusMessage: "Loading..."}
     this.dbStorage = getStorageService();
 
     this.on("view-details", (event) => {
@@ -16,13 +15,11 @@ export default class HistoryController extends ContainerController {
       let basePath = "/packages/" + this.model.products[index].pk;
       let gtinSSI = this.model.products[index].gtinSSI;
       this.dbStorage.getRecord(constants.HISTORY_TABLE, this.model.products[index].pk, (err, gs1Fields) => {
-        history.push({
-          pathname: `${new URL(history.win.basePath).pathname}drug-details`,
-          state: {
-            gtinSSI,
-            gs1Fields
-          }
-        });
+
+      this.navigateToPageTag("drug-details", {
+          gtinSSI,
+          gs1Fields
+        })
       });
     }, {capture: true});
 

@@ -7,80 +7,68 @@
             margin-top: 30px;
             margin-left: 10px;
         }
+        .header-row{
+            margin-left: 1em;
+        }
     </style>
 
-    <psk-mobile class="noPadding background">
-
-        <psk-container controller-name="SettingsController">
+    <psk-mobile class="noPadding background" disable-sidebar enable-back>
+        <webc-container controller="SettingsController">
             <div class="header-row">
-                <psk-button-link class="go-back-link" event-name="go-back" icon="arrow-left"></psk-button-link>
                 <psk-label class="scan-error-title smpc-error-title" label="User settings"></psk-label>
             </div>
 
             <psk-accordion multiple="true">
                 <psk-accordion-item opened="true" title="Product Information Language Priorities">
                     <psk-draggable-list view-model="@workingLanguages"></psk-draggable-list>
-                    <psk-condition condition="@languageSelectorOpened">
-                        <div slot="condition-true">
+                    <div data-if="@languageSelectorOpened">
+                        <div slot="true">
                             <psk-select view-model="@languagesToAdd">
                             </psk-select>
                         </div>
-                        <div slot="condition-false">
+                        <div slot="false">
                             <psk-button event-name="add-language" label="Add language"></psk-button>
                         </div>
-                    </psk-condition>
+                    </div>
                 </psk-accordion-item>
                 <psk-accordion-item title="Application Origin">
                     <psk-label label="@origin"></psk-label>
                 </psk-accordion-item>
                 <psk-accordion-item title="Setup Network">
-                    <psk-condition condition="@networkEditMode">
-                        <div slot="condition-true">
+                    <div data-if="@networkEditMode">
+                        <div slot="true">
                             <psk-input view-model="@networkNameSetting"></psk-input>
                             <psk-button event-name="change-network" label="Save"></psk-button>
                             <psk-button event-name="change-default-network" label="Reset"></psk-button>
                         </div>
-                        <div class="d-flex flex-row" slot="condition-false">
+                        <div class="d-flex flex-row" slot="false">
                             <psk-input read-only="true" view-model="@networkNameSetting"></psk-input>
                             <psk-button class="network-edit-button" data="networkEditMode"
                                         event-name="change-edit-mode"> Edit <i
                                     class="fa fa-pencil-square-o"></i></psk-button>
                         </div>
-                    </psk-condition>
+                    </div>
 
                 </psk-accordion-item>
 
                 <psk-accordion-item title="Setup Scanning">
-                    <psk-condition condition="@scanditLicenseEditMode">
-                        <div slot="condition-true">
+                    <div data-if="@scanditLicenseEditMode">
+                        <div slot="true">
                             <psk-input view-model="@useScanditLicense"></psk-input>
                             <psk-button event-name="set-scandit-license" label="Set"></psk-button>
                         </div>
-                        <div class="d-flex flex-row" slot="condition-false">
+                        <div class="d-flex flex-row" slot="false">
                             <psk-input read-only="true" view-model="@useScanditLicense"></psk-input>
                             <psk-button class="network-edit-button" data="scanditLicenseEditMode"
                                         event-name="change-edit-mode"> Edit <i
                                     class="fa fa-pencil-square-o"></i></psk-button>
                         </div>
-                    </psk-condition>
+                    </div>
                 </psk-accordion-item>
             </psk-accordion>
-        </psk-container>
+        </webc-container>
 
-        <div slot="footer">
-            <psk-link class='button-link alignBottom' page="scan">
-                <psk-img class="navbar-img" height='22' src="assets/images/footer/data.png"></psk-img>
-            </psk-link>
-            <psk-link class='button-link alignBottom' page="home">
-                <psk-img class="navbar-img" height='22' src="assets/images/footer/home.png"></psk-img>
-            </psk-link>
-            <psk-link class='button-link alignBottom' page="history">
-                <psk-img class="navbar-img" height='22' src="assets/images/footer/history.png"></psk-img>
-            </psk-link>
-            <psk-link class='button-link alignBottom' page="help">
-                <psk-img class="navbar-img" height='22' src="assets/images/footer/about.png"></psk-img>
-            </psk-link>
-        </div>
+        <div slot="footer"><page-footer class="w-100"></page-footer></div>
 
     </psk-mobile>
 </psk-example>

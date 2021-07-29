@@ -1,6 +1,6 @@
-import ContainerController from '../../cardinal/controllers/base-controllers/ContainerController.js';
+const {WebcController} = WebCardinal.controllers;
 
-export default class ScanErrorController extends ContainerController {
+export default class ScanErrorController extends WebcController {
     constructor(element, history) {
         super(element, history);
         this.setModel({

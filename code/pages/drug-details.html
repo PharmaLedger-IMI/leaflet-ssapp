@@ -1,6 +1,11 @@
+<style>
+    .topPadding {
+        margin-top: 50px;
+    }
+</style>
 <psk-example class="mobile-example">
     <psk-mobile class="noPadding">
-        <psk-container controller-name="DrugDetailsController">
+        <webc-container controller="DrugDetailsController">
             <psk-layout align-items="center" class="coloredBackground" template-columns="1fr">
                 <psk-layout-item>
                     <psk-label class="drugName" label="@product.name"></psk-label>
@@ -111,20 +116,11 @@
                 </psk-condition>
             </psk-layout>
 
-        </psk-container>
+        </webc-container>
+
         <div slot="footer">
-            <psk-link class='button-link alignBottom' page="scan">
-                <psk-img class="navbar-img" height='22' src="assets/images/footer/data.png"></psk-img>
-            </psk-link>
-            <psk-link class='button-link alignBottom' page="home">
-                <psk-img class="navbar-img" height='22' src="assets/images/footer/home.png"></psk-img>
-            </psk-link>
-            <psk-link class='button-link alignBottom' page="history">
-                <psk-img class="navbar-img" height='22' src="assets/images/footer/history.png"></psk-img>
-            </psk-link>
-            <psk-link class='button-link alignBottom' page="help">
-                <psk-img class="navbar-img" height='22' src="assets/images/footer/about.png"></psk-img>
-            </psk-link>
+            <page-footer class="w-100"></page-footer>
         </div>
+
     </psk-mobile>
 </psk-example>

@@ -1,9 +1,9 @@
 <psk-example class="mobile-example">
     <psk-mobile class="smpc-mobile">
-        <psk-container controller-name="SMPCController">
+        <webc-container controller="SMPCController">
             <psk-layout template-columns="7fr 1fr">
                 <psk-layout-item>
-                    <div class="header-row">
+                    <div class="header-row d-flex">
                         <psk-button-link icon="arrow-left" class="go-back-link" event-name="go-back"></psk-button-link>
                         <psk-label class="scan-error-title smpc-error-title" label="Summary of Product Characteristics"></psk-label>
                     </div>
@@ -19,24 +19,11 @@
             </psk-layout>
 
 
-            <psk-container id="content">
-            </psk-container>
-        </psk-container>
+            <webc-container id="content">
+            </webc-container>
+        </webc-container>
 
-        <div slot="footer">
-            <psk-link page="scan" class='button-link alignBottom'>
-                <psk-img class="navbar-img" src="assets/images/footer/data.png" height='22'></psk-img>
-            </psk-link>
-            <psk-link page="home" class='button-link alignBottom'>
-                <psk-img class="navbar-img" src="assets/images/footer/home.png" height='22'></psk-img>
-            </psk-link>
-            <psk-link page="history" class='button-link alignBottom'>
-                <psk-img class="navbar-img" src="assets/images/footer/history.png" height='22'></psk-img>
-            </psk-link>
-            <psk-link page="help" class='button-link alignBottom'>
-                <psk-img class="navbar-img" src="assets/images/footer/about.png" height='22'></psk-img>
-            </psk-link>
-        </div>
+        <div slot="footer"><page-footer class="w-100"></page-footer></div>
 
     </psk-mobile>
 </psk-example>

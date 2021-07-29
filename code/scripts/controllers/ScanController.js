@@ -1,4 +1,4 @@
-import ContainerController from '../../cardinal/controllers/base-controllers/ContainerController.js';
+const {WebcController} = WebCardinal.controllers;
 import SettingsService from "../services/SettingsService.js";
 import interpretGS1scan from "../gs1ScanInterpreter/interpretGS1scan/interpretGS1scan.js";
 import utils from "../../utils.js";
@@ -11,7 +11,7 @@ const gtinResolver = require("gtin-resolver");
 const opendsu = require("opendsu");
 const resolver = opendsu.loadApi("resolver");
 
-export default class ScanController extends ContainerController {
+export default class ScanController extends WebcController {
   constructor(element, history) {
     super(element, history);
 
@@ -77,7 +77,8 @@ export default class ScanController extends ContainerController {
                   break;
                 case "ERR_USER_CANCELLED":
                   this.disposeOfBarcodePicker()
-                  this.history.push(`${new URL(this.history.win.basePath).pathname}home`);
+                  this.navigateToPageTag("home");
+               //   this.history.push(`${new URL(this.history.win.basePath).pathname}home`);
                   break;
                 default:
                   this.redirectToError("Failed to scan GS1 data matrix.");
@@ -105,7 +106,8 @@ export default class ScanController extends ContainerController {
                   break;
                 case "ERR_USER_CANCELLED":
                   this.disposeOfBarcodePicker()
-                  this.history.push(`${new URL(this.history.win.basePath).pathname}home`);
+                  this.navigateToPageTag("home");
+                 // this.history.push(`${new URL(this.history.win.basePath).pathname}home`);
                   break;
                 default:
                   this.redirectToError("Failed to scan GS1 data matrix.");
@@ -454,19 +456,24 @@ export default class ScanController extends ContainerController {
 
   redirectToError(message, fields, secondaryMessage) {
     this.disposeOfBarcodePicker()
-    this.history.push({
+/*    this.history.push({
       pathname: `${new URL(this.history.win.basePath).pathname}scan-error`,
       state: {
         message,
         fields,
         secondaryMessage
       }
-    })
+    })*/
+    this.navigateToPageTag("scan-error", {
+        message,
+        fields
+    });
   }
 
   redirectToDrugDetails(state) {
-    this.disposeOfBarcodePicker()
-    this.history.push(`${new URL(this.history.win.basePath).pathname}drug-details`, state);
+    this.disposeOfBarcodePicker();
+    this.navigateToPageTag("drug-details", state);
+    /*this.history.push(`${new URL(this.history.win.basePath).pathname}drug-details`, state);*/
   }
 
   getNativeApiHandler(callback) {
