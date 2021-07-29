@@ -9,7 +9,7 @@
                     </psk-layout-item>
                     <psk-layout-item onclick="this.dispatchEvent(new Event('view-details'))" keySSI="@keySSI">
                         <div>
-                            <div>
+                            <div style="bottom: 5px; position: relative">
                                 <psk-label class="productItem_name" label="@name"></psk-label>
                             </div>
                             <div>
@@ -17,7 +17,11 @@
                             </div>
                             <div style="display: flex">
                                 <psk-label class="productItem_expiry" label="Expiry: &nbsp"></psk-label>
-                                <psk-label class="productItem_expiry" label="@expiry"></psk-label>
+                                <psk-label class="productItem_expiry" label="@expiryForDisplay"></psk-label>
+                            </div>
+                            <divs style="display: flex">
+                                <psk-label class="productItem_expiry" label="Batch number: &nbsp"></psk-label>
+                                <psk-label class="productItem_expiry" label="@batchNumber"></psk-label>
                             </div>
                         </div>
 
