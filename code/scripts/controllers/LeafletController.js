@@ -10,6 +10,7 @@ export default class LeafletController extends WebcController {
         if (typeof history.location.state !== "undefined") {
             this.gtinSSI = history.location.state.gtinSSI;
             this.gs1Fields = history.location.state.gs1Fields;
+            this.model.titleLabel = history.location.state.titleLabel;
         }
 
         this.on("go-back", (event) => {

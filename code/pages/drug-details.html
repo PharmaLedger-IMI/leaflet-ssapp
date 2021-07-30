@@ -77,22 +77,23 @@
                 </section>
             </psk-details>
 
-            <psk-condition condition="showLeaflet">
-                <psk-layout align-items="center" class="topPadding" columns="@leafletColumns" row-gap="30px"
-                            slot="condition-true">
-                    <psk-layout-item class="controlButton">
-                        <psk-button-link class="xxlIcon active" event-name="view-leaflet" icon="file-text"
-                                         name="@product.patientLeafletInfo"></psk-button-link>
-                    </psk-layout-item>
-                    <psk-condition condition="isSmpc">
-                        <psk-layout-item class="controlButton" slot="condition-true">
+            <div data-if="@showEPI">
+                <psk-layout align-items="center" class="topPadding" columns="@epiColumns" row-gap="30px"
+                            slot="true">
+                    <div class="ml-auto col text-center" data-if="@showLeaflet">
+                        <div class="controlButton" slot="true">
+                            <psk-button-link class="xxlIcon active" event-name="view-leaflet" icon="file-text"
+                                             name="@product.patientLeafletInfo"></psk-button-link>
+                        </div>
+                    </div>
+                    <div class="ml-auto mr-auto col text-center" data-if="@showSmpc">
+                        <div class="controlButton" slot="true">
                             <psk-button-link class="xxlIcon active" event-name="view-smpc" icon="book"
                                              name="@product.practitionerInfo"></psk-button-link>
-                        </psk-layout-item>
-                    </psk-condition>
+                        </div>
+                    </div>
                 </psk-layout>
-                <div slot="condition-false"></div>
-            </psk-condition>
+            </div>
             <psk-layout align-items="center" class="topPadding" columns="@secondRowColumns" row-gap="30px">
                 <psk-condition condition="showVerifyPackageButton">
                     <psk-layout-item class="controlButton" slot="condition-true">

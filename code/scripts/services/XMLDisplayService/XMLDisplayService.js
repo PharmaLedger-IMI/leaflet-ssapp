@@ -43,10 +43,17 @@ export default class XmlDisplayService {
 
     isXmlAvailable() {
         this.getAvailableLanguagesForXmlType((err, languages) => {
-            this.model.isSmpc = languages.length > 0;
-            this.model.leafletColumns = languages.length > 0 ? 2 : 1;
+            if (this.xmlType === "smpc" && languages.length > 0) {
+                this.model.showSmpc = true;
+                this.model.epiColumns++;
+            }
+            if (this.xmlType === "leaflet" && languages.length > 0) {
+                this.model.showLeaflet = true;
+                this.model.epiColumns++;
+            }
         });
     }
+
 
     populateModel() {
         this.getAvailableLanguagesForXmlType((err, languages) => {
@@ -154,6 +161,7 @@ export default class XmlDisplayService {
             })
         })
     }
+
 
     getErrorMessageElement(errorMessage) {
         let pskLabel = document.createElement("psk-label");

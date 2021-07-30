@@ -17,7 +17,10 @@ export default class DrugDetailsController extends WebcController {
       showVerifyPackageButton: true,
       showReportButton: true,
       showAddToCabinetButton: true,
-      serialNumber: ""
+      serialNumber: "",
+      showSmpc: false,
+      showLeaflet: false,
+      epiColumns: 0
     };
 
     this.model.SNCheckIcon = ""
@@ -58,20 +61,17 @@ export default class DrugDetailsController extends WebcController {
     this.setColor('packageVerification', 'orange');
 
     const smpcDisplayService = new XMLDisplayService(this.DSUStorage, element, this.gtinSSI, basePath, "smpc", "smpc.xml", this.model);
-    smpcDisplayService.isXmlAvailable()
+    const leafletDisplayService = new XMLDisplayService(this.DSUStorage, element, this.gtinSSI, basePath, "leaflet", "smpc.xml", this.model);
+
+    smpcDisplayService.isXmlAvailable();
+    leafletDisplayService.isXmlAvailable();
+
 
     this.on("view-leaflet", () => {
-      /*      history.push({
-              pathname: `${new URL(history.win.basePath).pathname}leaflet`,
-              state: {
-                gtinSSI: this.gtinSSI,
-                gs1Fields: this.gs1Fields
-              }
-            });*/
-
       this.navigateToPageTag("leaflet", {
           gtinSSI: this.gtinSSI,
-          gs1Fields: this.gs1Fields
+          gs1Fields: this.gs1Fields,
+          titleLabel: this.model.product.patientLeafletInfo
       });
     });
 
@@ -83,16 +83,10 @@ export default class DrugDetailsController extends WebcController {
     });
 
     this.on("view-smpc", () => {
-      /*      history.push({
-              pathname: `${new URL(history.win.basePath).pathname}smpc`,
-              state: {
-                gtinSSI: this.gtinSSI,
-                gs1Fields: this.gs1Fields
-              }
-            });*/
       this.navigateToPageTag("smpc", {
           gtinSSI: this.gtinSSI,
-          gs1Fields: this.gs1Fields
+          gs1Fields: this.gs1Fields,
+          titleLabel: this.model.product.practitionerInfo
       });
     });
 
@@ -141,7 +135,7 @@ export default class DrugDetailsController extends WebcController {
         if (err || typeof batchData === "undefined") {
           this.updateUIInGTINOnlyCase();
           if (this.model.product.gtin && this.model.product.showEPIOnUnknownBatchNumber) {
-            this.model.showLeaflet = true;
+            this.model.showEPI = true;
           }
           return console.log(err);
         }
@@ -201,7 +195,7 @@ export default class DrugDetailsController extends WebcController {
           // do nothing
         }
         const currentTime = Date.now();
-        this.model.showLeaflet = this.leafletShouldBeDisplayed(product, batchData, snCheck, expiryCheck, currentTime, expiryTime);
+        this.model.showEPI = this.leafletShouldBeDisplayed(product, batchData, snCheck, expiryCheck, currentTime, expiryTime);
 
         if (!snCheck.validSerial && batchData.serialCheck) {
           showError(constants.SN_FAIL_MESSAGE)
