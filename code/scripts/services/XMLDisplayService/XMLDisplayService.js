@@ -1,5 +1,4 @@
 import LanguageService from "../LanguageService/LanguageService.js";
-import DSUDataRetrievalService from "../DSUDataRetrievalService/DSUDataRetrievalService.js";
 import constants from "../../../constants.js";
 
 const pathToXsl = constants.XSL_PATH;
@@ -14,7 +13,7 @@ export default class XmlDisplayService {
         this.xmlType = xmlType;
         this.xmlFile = xmlFile;
         this.model = model;
-        this.dsuDataRetrievalService = new DSUDataRetrievalService(dsuStorage, gtinSSI, basePath);
+        this.basePath = basePath;
     }
 
     displayXml(language) {
@@ -138,10 +137,7 @@ export default class XmlDisplayService {
     }
 
     buildBasePath(callback) {
-        this.dsuDataRetrievalService.getPathToBatchDSU((err, pathToBatchDSU) => {
-            if (err) {
-                return callback(err);
-            }
+        const pathToBatchDSU = `${this.basePath}${constants.PATH_TO_BATCH_DSU}`;
             let batchBasePath = `${pathToBatchDSU}${this.xmlType}/`;
             this.DSUStorage.call("listFolders", batchBasePath, (err, files) => {
                 if (err) {
@@ -150,16 +146,12 @@ export default class XmlDisplayService {
                 if (files.length > 0) {
                     return callback(undefined, batchBasePath);
                 }
-                this.dsuDataRetrievalService.getPathToProductDSU((err, pathToProductDSU) => {
-                    if (err) {
-                        return callback(err);
-                    }
+
+                    const pathToProductDSU = `${this.basePath}${constants.PATH_TO_PRODUCT_DSU}`;
                     let pathBase = `${pathToProductDSU}${this.xmlType}/`;
                     callback(undefined, pathBase);
                 });
 
-            })
-        })
     }
 
 

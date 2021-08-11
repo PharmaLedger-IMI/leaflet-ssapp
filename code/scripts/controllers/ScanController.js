@@ -387,26 +387,34 @@ export default class ScanController extends WebcController {
         return callback(err);
       }
 
-      this.dsuDataRetrievalService = new DSUDataRetrievalService(this.DSUStorage, packageGTIN_SSI, utils.getMountPath(packageGTIN_SSI, gs1Fields));
-      this.dsuDataRetrievalService.readProductData((err, product) => {
-        product.expiryForDisplay = gs1Fields.expiry.slice(0, 2) === "00" ? gs1Fields.expiry.slice(5) : gs1Fields.expiry;
-        const pk = utils.getRecordPKey(packageGTIN_SSI, gs1Fields);
-        this.dbStorage.insertRecord(constants.HISTORY_TABLE, pk, {
-          ...gs1Fields,
-          gtinSSI: packageGTIN_SSI,
-          ...product
-        }, (err, result) => {
-          if (err) {
-            return callback(err);
-          }
-          callback(undefined);
+      resolver.loadDSU(packageGTIN_SSI, (err, dsu)=>{
+        if (err) {
+          return callback(err);
+        }
+        this.dsuDataRetrievalService = new DSUDataRetrievalService(packageGTIN_SSI);
+        this.dsuDataRetrievalService.readProductData((err, product) => {
+          product.expiryForDisplay = gs1Fields.expiry.slice(0, 2) === "00" ? gs1Fields.expiry.slice(5) : gs1Fields.expiry;
+          product.photo = utils.getFetchUrl(
+              `/download${utils.getMountPath(packageGTIN_SSI, gs1Fields)}/${constants.PATH_TO_PRODUCT_DSU}image.png`
+          );
+          const pk = utils.getRecordPKey(packageGTIN_SSI, gs1Fields);
+          this.dbStorage.insertRecord(constants.HISTORY_TABLE, pk, {
+            ...gs1Fields,
+            gtinSSI: packageGTIN_SSI,
+            ...product
+          }, (err, result) => {
+            if (err) {
+              return callback(err);
+            }
+            callback(undefined);
+          })
         })
       })
     });
   }
 
   constProductDSUExists(constProductDSU_SSI, callback) {
-    this.DSUStorage.call("loadDSU", constProductDSU_SSI.getIdentifier(), (err) => {
+    resolver.loadDSU(constProductDSU_SSI.getIdentifier(), (err) => {
       if (err) {
         return callback(undefined, false);
       }
@@ -416,7 +424,7 @@ export default class ScanController extends WebcController {
   }
 
   batchAnchorExists(packageGTIN_SSI, callback) {
-    this.DSUStorage.call("loadDSU", packageGTIN_SSI.getIdentifier(), (err, dsu) => {
+    resolver.loadDSU(packageGTIN_SSI.getIdentifier(),(err) => {
       if (err) {
         return callback(undefined, false);
       }

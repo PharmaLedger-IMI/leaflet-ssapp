@@ -50,7 +50,7 @@ export default class DrugDetailsController extends WebcController {
     }
 
     const basePath = utils.getMountPath(this.gtinSSI, this.gs1Fields);
-    this.dsuDataRetrievalService = new DSUDataRetrievalService(this.DSUStorage, this.gtinSSI, basePath);
+    this.dsuDataRetrievalService = new DSUDataRetrievalService(this.gtinSSI);
     this.model.SNCheckIcon = constants.SN_OK_ICON;
     this.setColor('serialNumberVerification', '#7eba7e');
 
