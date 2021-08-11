@@ -1,3 +1,8 @@
+<style>
+    .languages-select .form-control {
+        padding: 0px !important;
+    }
+</style>
 <psk-example class="mobile-example">
     <psk-mobile>
         <webc-container controller="LeafletController">
@@ -11,7 +16,7 @@
                 <psk-layout-item>
                     <psk-condition condition="twoOrMoreLanguages">
                         <div slot="condition-true">
-                            <psk-select view-model="@languages">
+                            <psk-select class="languages-select" view-model="@languages">
                             </psk-select>
                         </div>
                     </psk-condition>
