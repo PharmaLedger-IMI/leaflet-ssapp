@@ -23,5 +23,7 @@ export default {
   PACK_VERIFICATION_GRAY_ICON: "assets/icons/pack_verification/svg/PV_gray_icon.svg",
   PACK_VERIFICATION_ICON: "assets/icons/pack_verification/svg/PV_icon.svg",
   PACK_VERIFICATION_UNABLE_TO_VERIFY_MESSAGE: "Unable to verify",
-  HISTORY_TABLE : "history_table"
+  HISTORY_TABLE : "history_table",
+  PATH_TO_PRODUCT_DSU: "/product/",
+  PATH_TO_BATCH_DSU: "/batch/"
 }
