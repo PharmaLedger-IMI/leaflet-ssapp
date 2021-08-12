@@ -165,17 +165,28 @@ export default class DrugDetailsController extends WebcController {
         }
 
         let checkSNCheck = () => {
-          let res;
-          try {
-            res = {
-              validSerial: this.serialNumberIsInBloomFilter(this.model.serialNumber, batchData.bloomFilterSerialisations),
-              recalledSerial: this.serialNumberIsInBloomFilter(this.model.serialNumber, batchData.bloomFilterRecalledSerialisations) || batchData.recalled,
-              decommissionedSerial: this.serialNumberIsInBloomFilter(this.model.serialNumber, batchData.bloomFilterDecommissionedSerialisations),
-            };
-          } catch (err) {
-            return alert(err.message);
+          let res = {
+            validSerial: false,
+            recalledSerial: false,
+            decommissionedSerial: false
+          };
+          const serialNumberType = this.getSerialNumberType(this.model.serialNumber, batchData.bloomFilterSerialisations);
+          switch (serialNumberType){
+            case "valid":
+              res.validSerial = true;
+              return res;
+            case "recalled":
+              res.recalledSerial = true;
+              return res;
+            case "decommissioned":
+              res.decommissionedSerial = true;
+              return res;
+            default:
+              if (batchData.recalled) {
+                res.recalledSerial = true;
+              }
+              return res;
           }
-          return res;
         };
         const showError = (message) => {
           this.model.serialNumberVerification = message;
@@ -250,7 +261,7 @@ export default class DrugDetailsController extends WebcController {
     el.style.color = color;
   }
 
-  serialNumberIsInBloomFilter(serialNumber, bloomFilterSerialisations) {
+  getSerialNumberType(serialNumber, bloomFilterSerialisations) {
     if (typeof serialNumber === "undefined" || typeof bloomFilterSerialisations === "undefined" || bloomFilterSerialisations.length === 0) {
       return false;
     }
@@ -261,14 +272,14 @@ export default class DrugDetailsController extends WebcController {
       return alert(err.message);
     }
 
-    for (let i = 0; i < bloomFilterSerialisations.length; i++) {
-      let bf = createBloomFilter(bloomFilterSerialisations[i]);
+    for (let i = bloomFilterSerialisations.length - 1; i >= 0; i--) {
+      let bf = createBloomFilter(bloomFilterSerialisations[i].serialisation);
       if (bf.test(serialNumber)) {
-        return true;
+        return bloomFilterSerialisations[i].type;
       }
     }
 
-    return false;
+    return undefined;
   }
 
   leafletShouldBeDisplayed(product, batchData, snCheck, expiryCheck, currentTime, expiryTime) {
