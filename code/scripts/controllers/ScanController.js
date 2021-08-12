@@ -231,7 +231,7 @@ export default class ScanController extends WebcController {
       const scanningSettings = new window.ScanditSDK.ScanSettings(scanSettings)
       scanningSettings.getSymbologySettings('micropdf417').setColorInvertedEnabled(true)
       scanningSettings.getSymbologySettings('databar-limited').setColorInvertedEnabled(true)
-
+      scanningSettings.getSymbologySettings('data-matrix').setColorInvertedEnabled(true)
       return new Promise((resolve, reject) => {
         this.callAfterElementLoad("#scandit-barcode-picker", (element) => {
           return resolve(window.ScanditSDK.BarcodePicker.create(element, {
