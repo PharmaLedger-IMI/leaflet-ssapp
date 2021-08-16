@@ -470,24 +470,16 @@ export default class ScanController extends WebcController {
 
   redirectToError(message, fields, secondaryMessage) {
     this.disposeOfBarcodePicker()
-/*    this.history.push({
-      pathname: `${new URL(this.history.win.basePath).pathname}scan-error`,
-      state: {
-        message,
-        fields,
-        secondaryMessage
-      }
-    })*/
     this.navigateToPageTag("scan-error", {
-        message,
-        fields
+      message,
+      fields,
+      secondaryMessage
     });
   }
 
   redirectToDrugDetails(state) {
     this.disposeOfBarcodePicker();
     this.navigateToPageTag("drug-details", state);
-    /*this.history.push(`${new URL(this.history.win.basePath).pathname}drug-details`, state);*/
   }
 
   getNativeApiHandler(callback) {
