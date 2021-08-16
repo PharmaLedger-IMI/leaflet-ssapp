@@ -224,18 +224,24 @@ export default class ScanController extends WebcController {
 
 
     const defaultScanSettings = {
-      enabledSymbologies: ["databar-limited", "micropdf417", "data-matrix", "code128", "ean13"],
+      enabledSymbologies: [
+          window.ScanditSDK.Barcode.Symbology.CODE128,
+          window.ScanditSDK.Barcode.Symbology.DATA_MATRIX,
+          window.ScanditSDK.Barcode.Symbology.DOTCODE,
+          window.ScanditSDK.Barcode.Symbology.GS1_DATABAR_LIMITED,
+          window.ScanditSDK.Barcode.Symbology.EAN13
+      ],
       maxNumberOfCodesPerFrame: 2
     }
     const createNewBarcodePicker = (scanSettings = defaultScanSettings) => {
       const scanningSettings = new window.ScanditSDK.ScanSettings(scanSettings)
-      scanningSettings.getSymbologySettings('micropdf417').setColorInvertedEnabled(true)
-      scanningSettings.getSymbologySettings('databar-limited').setColorInvertedEnabled(true)
-      scanningSettings.getSymbologySettings('data-matrix').setColorInvertedEnabled(true)
+      scanningSettings.getSymbologySettings(window.ScanditSDK.Barcode.Symbology.GS1_DATABAR_LIMITED).setColorInvertedEnabled(true)
+      scanningSettings.getSymbologySettings(window.ScanditSDK.Barcode.Symbology.DATA_MATRIX).setColorInvertedEnabled(true);
+      scanningSettings.getSymbologySettings(window.ScanditSDK.Barcode.Symbology.DOTCODE).setColorInvertedEnabled(true);
       return new Promise((resolve, reject) => {
         this.callAfterElementLoad("#scandit-barcode-picker", (element) => {
           return resolve(window.ScanditSDK.BarcodePicker.create(element, {
-            scanSettings: new window.ScanditSDK.ScanSettings(scanSettings),
+            scanSettings: scanningSettings,
             cameraSettings: {resolutionPreference: "full-hd"},
             guiStyle: "none",
             videoFit: "cover"
