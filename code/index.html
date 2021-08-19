@@ -14,7 +14,7 @@
     <script src="scripts/bundles/pskruntime.js"></script>
     <script src="scripts/bundles/gtinResolver.js"></script>
     <script src="../../nativeBridge.js"></script>
-
+    <script src="scripts/scandit.js" id="scandit-injector"></script>
     <script type="module" src="webcardinal/webcardinal.js"></script>
     <link rel="stylesheet" href="webcardinal/webcardinal.css">
     <script>
@@ -30,15 +30,12 @@
             }
         }
     </script>
-    <script src="https://cdn.jsdelivr.net/npm/scandit-sdk@5.x"></script>
 </head>
 
 <body>
-<webc-app-root preload="scripts/config.js">
-
+    <webc-app-root preload="scripts/config.js">
         <webc-app-router></webc-app-router>
-
-</webc-app-root>
+    </webc-app-root>
 </body>
 
 </html>

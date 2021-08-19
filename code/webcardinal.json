@@ -1,20 +1,11 @@
 {
   "theme": "epi-theme",
-  "appVersion": "1.0.0",
-  "basePagesUrl": "/pages/",
   "pagesFallback": {
     "name": "home",
     "src": "./home.html"
   },
-  "defaultMenuConfig": {
-    "icon": "fa-bars",
-    "type": "route",
-    "component": "psk-page-loader",
-    "exact": true,
-    "404": "/pages/404.html"
-  },
-  "profile": {
-    "username": "Consumer",
+  "identity": {
+    "name": "Consumer",
     "email": "",
     "avatar": "resources/images/person.png"
   },
@@ -89,5 +80,6 @@
       "tag": "scan-error",
       "path": "./scan-error"
     }
-  ]
+  ],
+  "logLevel": "none"
 }
