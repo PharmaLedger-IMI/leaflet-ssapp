@@ -4,8 +4,16 @@
             <psk-layout template-columns="7fr 1fr">
                 <psk-layout-item>
                     <div class="header-row d-flex">
-                        <psk-button-link icon="arrow-left" class="go-back-link" event-name="go-back"></psk-button-link>
+                        <psk-button-link class="go-back-link" event-name="go-back" icon="arrow-left"></psk-button-link>
                         <psk-label class="scan-error-title smpc-error-title" label="@titleLabel"></psk-label>
+                    </div>
+                    <div data-if="@showArtWorkLabel">
+                        <div class="d-flex flex-row" slot="true">
+                            <psk-label class="productItem_name small-text ml-3 font-italic"
+                                       label="Artwork identifier:"></psk-label>
+                            <span>&nbsp;</span>
+                            <psk-label class="productItem_name small-text font-italic" label="@artworkId"></psk-label>
+                        </div>
                     </div>
                 </psk-layout-item>
                 <psk-layout-item>
@@ -23,7 +31,9 @@
             </div>
         </webc-container>
 
-        <div slot="footer"><page-footer class="w-100"></page-footer></div>
+        <div slot="footer">
+            <page-footer class="w-100"></page-footer>
+        </div>
 
     </psk-mobile>
 </psk-example>

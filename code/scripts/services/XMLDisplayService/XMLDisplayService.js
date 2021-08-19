@@ -93,16 +93,33 @@ export default class XmlDisplayService {
     }
 
     readXmlFile(language, callback) {
-        this.buildBasePath((err, pathBase) => {
+        this.buildBasePath(async (err, pathBase) => {
             const pathToLeafletLanguage = `${pathBase}${language}/`;
             const pathToXml = pathToLeafletLanguage + this.xmlFile;
-
-            this.readFileAndDecodeContent(pathToXml, (err, xmlContent) => {
-                if (err) {
-                    return callback(err);
+            const pathArr = pathToLeafletLanguage.split("/");
+            const artWorkPath = `${pathArr.slice(-4).join().replaceAll(",","/")}artworkId.json`;
+            const resolver = require("opendsu").loadApi("resolver");
+            try {
+                let DSU = await $$.promisify(resolver.loadDSU)(this.gtinSSI);
+                let artworkValue = "";
+                try {
+                    let artWorkData = await $$.promisify(DSU.readFile)(artWorkPath);
+                    artworkValue = JSON.parse(artWorkData).value
+                } catch (e) {
+                    artworkValue = "";
                 }
-                callback(undefined, xmlContent, pathToLeafletLanguage);
-            })
+                this.model.artworkId = artworkValue;
+                this.model.showArtWorkLabel = !!artworkValue;
+                this.readFileAndDecodeContent(pathToXml, (err, xmlContent) => {
+                    if (err) {
+                        return callback(err);
+                    }
+                    callback(undefined, xmlContent, pathToLeafletLanguage);
+                })
+
+            } catch (err) {
+                return callback(err);
+            }
         })
     }
 
