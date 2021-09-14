@@ -5,7 +5,7 @@ class StorageService {
   constructor() {
     let openDSU = require("opendsu");
     let sc = openDSU.loadAPI("sc").getSecurityContext();
-    sc.getDb((err, db) => {
+    sc.getDB((err, db) => {
       if (err) {
         return console.log('Error init security context db ', err);
       }
