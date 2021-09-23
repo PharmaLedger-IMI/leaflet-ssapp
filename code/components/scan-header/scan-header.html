@@ -1,0 +1,26 @@
+<link href="components/scan-header/scan-header.css" rel="stylesheet">
+
+<webc-container controller="components/ScanHeaderController">
+    <ion-grid>
+
+        <ion-row class="header-row">
+            <ion-col class="cancel-action" size="2">
+                <ion-row class="label" data-tag="cancel-scan">
+                    Cancel
+                </ion-row>
+            </ion-col>
+            <ion-col size="8">
+                <ion-row class="rotate-camera" data-tag="switch-camera">
+                    <img src="../../assets/icons/rotate-camera-light.svg">
+                </ion-row>
+            </ion-col>
+            <ion-col class="guide-action" size="2">
+                <ion-row class="label">
+                    Guide
+                </ion-row>
+
+            </ion-col>
+        </ion-row>
+
+    </ion-grid>
+</webc-container>

@@ -1,11 +1,80 @@
-<psk-example class="mobile-example">
-    <psk-mobile class="noPadding background" controller="HomepageController">
-        <webc-container>
-            <psk-slideshow images="assets/images/Favorite.png, assets/images/home.jpg" visible-seconds="5">
-            </psk-slideshow>
+<style>
+    .history-list {
+        padding-bottom: 56px;
+    }
+
+    .section-label {
+        font-size: 16px;
+        font-family: 'DM Sans regular';
+        font-weight: bold;
+        line-height: 150%;
+        letter-spacing: 0.3px;
+        font-style: normal;
+        padding-bottom: 24px;
+    }
+
+    .last-scanned-container {
+        padding: 20px 0px;
+    }
+
+    .previous-scanned-container {
+        padding: 0px;
+    }
+
+</style>
+<div class="mobile-container">
+
+    <page-template id="home-page-template" roundShape="true" shadow>
+        <landing-header slot="header-slot" homePage="true"></landing-header>
+        <webc-container controller="HistoryController" slot="content-slot">
+            <div class="content-slot-container">
+                <div class="history-list">
+                    <div class="content" data-if="@historyIsEmpty" hidden="true">
+                        <div slot="true">
+                            <div class="title"></div>
+                            <img class="app-image" src="">
+                            <div class="welcome-text">
+                                You have not scanned any valid products previously. Kindly click on the scan button
+                                below to
+                                scan.
+                            </div>
+                        </div>
+                        <div slot="false">
+                            <div class="last-scanned-container">
+                                <div class="section-label">
+                                    <ion-label>Last Scan</ion-label>
+                                </div>
+
+                                <history-item controller="HistoryController"
+                                              data-view-model="@lastScannedProduct"
+                                              item-type="last-scanned"
+                                              shadow></history-item>
+                            </div>
+                            <div class="previous-scanned-container">
+                                <div class="section-label">
+                                    <ion-label>Previous Scans</ion-label>
+                                </div>
+                                <div data-for="@products">
+                                    <history-item controller="HistoryController"
+                                                  data-view-model="@"
+                                                  item-type="history-list-item"
+                                                  shadow></history-item>
+                                    <div slot="no-data">
+                                        The scan list does not currently contain any items. It will be completed when
+                                        you
+                                        have more than one item scanned
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
         </webc-container>
-        <div slot="footer">
-            <page-footer class="w-100"></page-footer>
-        </div>
-    </psk-mobile>
-</psk-example>
+    </page-template>
+    <menu-popover></menu-popover>
+    <scan-button></scan-button>
+
+
+</div>

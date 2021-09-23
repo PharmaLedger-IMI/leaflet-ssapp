@@ -1,0 +1,44 @@
+ion-item img {
+    margin-right: 24px;
+}
+
+ion-item {
+    height: 66px;
+    border-bottom: 1px solid #E5EAEB;
+    --inner-border-width: 0px;
+    display: flex;
+    justify-content: center;
+}
+ion-item.no-border {
+    border: none;
+}
+.overlay {
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: rgba(0, 0, 0, 0.7);
+    transition: opacity 500ms;
+    visibility: hidden;
+    opacity: 0;
+}
+
+.popup {
+    margin: 111px 28px 0px 0px;
+    padding: 20px;
+    background: #fff;
+    border-radius: 5px;
+    position: relative;
+    border-radius: 40px;
+    left: 14px;
+    padding: 0px;
+}
+
+@media screen and (min-width: 500px) {
+    .popup {
+        margin: 111px auto;
+        max-width: 380px;
+        left: 0px;
+    }
+}

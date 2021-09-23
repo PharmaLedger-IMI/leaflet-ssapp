@@ -1,0 +1,15 @@
+<link href="components/page-template/page-template.css" rel="stylesheet">
+
+<ion-header id="header-template">
+    <ion-toolbar>
+        <slot name="header-slot"></slot>
+    </ion-toolbar>
+</ion-header>
+<div class="page-content-container" roundShape="@roundShape" pageName="@pageName">
+    <ion-content fullscreen="true" id="page-ion-content">
+        <div class="content-slot-wrapper">
+            <slot name="content-slot">
+            </slot>
+        </div>
+    </ion-content>
+</div>

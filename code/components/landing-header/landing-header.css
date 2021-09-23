@@ -1,0 +1,15 @@
+
+.header-row {
+    align-items: center;
+    display: flex;
+}
+
+.menu-icon {
+    display: flex;
+    justify-content: right;
+}
+
+.title {
+    font-size: 18px;
+    justify-content: center;
+}

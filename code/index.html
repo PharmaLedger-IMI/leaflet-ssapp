@@ -14,6 +14,13 @@
     <script src="scripts/bundles/gtinResolver.js"></script>
     <script src="../../nativeBridge.js"></script>
     <script src="scripts/scandit.js" id="scandit-injector"></script>
+    <!-- Ionic dist -->
+    <script type="module" src="ionic/dist/ionic.esm.js"></script>
+    <link rel="stylesheet" href="ionic/css/ionic.bundle.css">
+
+    <!-- Ionicons dist -->
+    <script type="module" src="ionic/icons/ionicons.esm.js"></script>
+
     <script type="module" src="webcardinal/webcardinal.js"></script>
     <link rel="stylesheet" href="webcardinal/webcardinal.css">
     <script>
@@ -32,9 +39,11 @@
 </head>
 
 <body>
+<ion-app>
     <webc-app-root preload="scripts/config.js">
         <webc-app-router></webc-app-router>
     </webc-app-root>
+</ion-app>
 </body>
 
 </html>

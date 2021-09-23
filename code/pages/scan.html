@@ -1,28 +1,59 @@
-<psk-example class="mobile-example">
-    <style>
-        #scandit-barcode-picker video {
-            width: 100% !important;
-            height: 100vh !important;
-        }
-    </style>
-    <psk-mobile class="noPadding" disable-sidebar enable-back>
-        <webc-container controller="ScanController" class="h-100">
-            <div data-if="@hasError">
-                <psk-label class="products-does-not-exist" label="Product scanned does not exist."
-                           slot="true"></psk-label>
-            </div>
-            <div class="h-100" data-if="@useScandit">
-                <div id="scandit-barcode-picker-wrapper" slot="true">
-                    <div id="scandit-barcode-picker"></div>
-                </div>
-                <div class="h-100" data-if="@hasCode" slot="false">
-                    <div data-if="@nativeSupport" slot="false" class="h-100">
-                        <psk-barcode-scanner data="@data" normal-size slot="false"></psk-barcode-scanner>
-                        <psk-ui-loader should-be-rendered="true" slot="true"></psk-ui-loader>
+<style>
+    .barcode-scanner-container {
+        height: calc(100vh - 97px);
+    }
+
+    .scan-shape {
+        position: absolute;
+        background-image: url(../assets/icons/barcode-scanner.svg);
+        background-size: contain;
+        background-repeat: no-repeat;
+        height: 372px;
+        top: calc(50% - 186px);
+        left: 49px;
+        right: 49px;
+        background-position: center;
+    }
+
+    psk-barcode-scanner .scan-status {
+        position: fixed;
+        bottom: 26px;
+        left: calc(50% - 31px);
+    }
+    psk-barcode-scanner .scan-status #first{
+        animation: load 1s infinite;
+    }
+    psk-barcode-scanner .scan-status #second{
+        animation: load 1s infinite;
+    }
+</style>
+
+<div class="mobile-container">
+    <webc-container controller="ScanController">
+        <page-template roundShape="false" shadow>
+            <scan-header slot="header-slot"></scan-header>
+            <div slot="content-slot">
+                <div data-if="@useScandit">
+                    <div id="scandit-barcode-picker-wrapper" slot="true">
+                        <div id="scandit-barcode-picker"></div>
                     </div>
-                    <psk-ui-loader should-be-rendered="true" slot="true"></psk-ui-loader>
+                    <div data-if="@hasCode" slot="false">
+                        <div class="barcode-scanner-container" data-if="@nativeSupport" slot="false">
+                            <psk-barcode-scanner data="@data" hide-drawing
+                                                 normal-size slot="false" snap-video>
+                                <div slot="init"><img class="scan-status" src="../assets/icons/scan-in-progress.svg"/>
+                                </div>
+                                <div slot="done"><img class="scan-status" src="../assets/icons/scan-done.svg"/></div>
+                                <div class="scan-shape" slot="active">
+                                    <img class="scan-status" src="../assets/icons/scan-in-progress.svg"/>
+                                </div>
+                            </psk-barcode-scanner>
+                        </div>
+                    </div>
                 </div>
             </div>
-        </webc-container>
-    </psk-mobile>
-</psk-example>
+        </page-template>
+
+        <scan-status-button></scan-status-button>
+    </webc-container>
+</div>

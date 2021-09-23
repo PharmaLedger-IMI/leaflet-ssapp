@@ -1,2 +1,82 @@
-webc-app-root { --mode: none; }
+webc-app-root {
+    --mode: none;
+}
 
+:root {
+    --primary-backgtound-color: #02272F;
+    --secondary-background-color: #FAFAFA;
+    --ion-background-color: transparent;
+    --ion-font-family: "DM Sans regular";
+    --ion-backdrop-opacity: 0.6;
+}
+
+ion-button {
+    --border-radius: 10px;
+}
+
+@font-face {
+    font-family: "DM Sans regular";
+    src: url("./css/fonts/DM_Sans/DMSans-Regular.ttf");
+}
+
+
+.mobile-container {
+    margin: 0 auto;
+    padding: 0;
+    width: 100%;
+    height: 100%;
+    max-width: 414px;
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.25);
+}
+
+.section-title {
+    font-size: 24px;
+    font-weight: bold;
+    margin-top: 24px;
+}
+
+.align-center {
+    display: flex;
+    align-items: center;
+}
+
+.scan-button-text {
+    font-family: "DM Sans regular";
+    font-style: normal;
+    font-weight: bold;
+    font-size: 18px;
+    text-align: center;
+    letter-spacing: 0.3px;
+}
+
+ion-select {
+    height: 56px;
+    background: #fff;
+    border-radius: 16px;
+    padding: 16px;
+    color: black;
+    font-size: 16px;
+    font-weight: bold;
+}
+
+ion-select::part(icon) {
+    display: none;
+}
+
+
+ion-select::after {
+    width: 24px;
+    height: 24px;
+    background: url(../assets/icons/select-arrow.svg) no-repeat;
+    content: "";
+    position: relative;
+    top: 9px;
+}
+
+.action-sheet-container .action-sheet-group {
+    background: #fff;
+    max-width: 414px;
+    margin-left: auto;
+    margin-right: auto;
+    width: 100%;
+}
