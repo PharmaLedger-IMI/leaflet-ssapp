@@ -1,0 +1,23 @@
+.scan-button {
+    display: flex;
+    justify-content: center;
+    width: 100%;
+    position: relative;
+    bottom: 90px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.scan-button ion-button::part(native) {
+    background: #02272F;
+    border-radius: 60px;
+    text-transform: capitalize;
+    padding: 8px;
+    width: 264px;
+    height: 62px;
+    font-size: 18px;
+}
+
+.scan-image {
+    margin-right: 5px;
+}

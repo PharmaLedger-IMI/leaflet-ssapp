@@ -1,0 +1,14 @@
+
+.header-row {
+    align-items: center;
+    display: flex;
+}
+
+.menu-icon {
+    left: 24px
+}
+
+.title {
+    font-size: 18px;
+    justify-content: center;
+}

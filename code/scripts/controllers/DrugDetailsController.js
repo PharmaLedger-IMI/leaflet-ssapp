@@ -20,7 +20,9 @@ export default class DrugDetailsController extends WebcController {
       serialNumber: "",
       showSmpc: false,
       showLeaflet: false,
-      epiColumns: 0
+      epiColumns: 0,
+      displaySerialNumberStatus: false,
+      displayProductStatus: false,
     };
 
     this.model.SNCheckIcon = ""
@@ -66,27 +68,42 @@ export default class DrugDetailsController extends WebcController {
     smpcDisplayService.isXmlAvailable();
     leafletDisplayService.isXmlAvailable();
 
+    this.onTagClick("click-verified", () => {
+      this.showModalFromTemplate('batch-info', () => {
+      }, () => {
+      }, {
+        model: {
+          title: "Batch Info",
+          expiryForDisplay: this.model.expiryForDisplay,
+          serialNumber: this.model.serialNumber,
+          gtin: this.model.gtin,
+          batchNumber: this.model.batchNumber
+        },
+        disableExpanding: true,
+        disableFooter: true
+      });
+    })
 
     this.on("view-leaflet", () => {
       this.navigateToPageTag("leaflet", {
-          gtinSSI: this.gtinSSI,
-          gs1Fields: this.gs1Fields,
-          titleLabel: this.model.product.patientLeafletInfo
+        gtinSSI: this.gtinSSI,
+        gs1Fields: this.gs1Fields,
+        titleLabel: this.model.product.patientLeafletInfo
       });
     });
 
-    element.querySelectorAll("[disabled]").forEach(node => {
-      node.addEventListener("click", (event) => {
-        event.preventDefault();
-        event.stopImmediatePropagation();
-      }, true)
-    });
+    /*    element.querySelectorAll("[disabled]").forEach(node => {
+          node.addEventListener("click", (event) => {
+            event.preventDefault();
+            event.stopImmediatePropagation();
+          }, true)
+        });*/
 
     this.on("view-smpc", () => {
       this.navigateToPageTag("smpc", {
-          gtinSSI: this.gtinSSI,
-          gs1Fields: this.gs1Fields,
-          titleLabel: this.model.product.practitionerInfo
+        gtinSSI: this.gtinSSI,
+        gs1Fields: this.gs1Fields,
+        titleLabel: this.model.product.practitionerInfo
       });
     });
 
@@ -102,8 +119,8 @@ export default class DrugDetailsController extends WebcController {
       */
 
       this.navigateToPageTag("report", {
-          gtinSSI: this.gtinSSI,
-          gs1Fields: this.gs1Fields
+        gtinSSI: this.gtinSSI,
+        gs1Fields: this.gs1Fields
       });
     });
 
@@ -119,15 +136,15 @@ export default class DrugDetailsController extends WebcController {
       if (!product.antiCounterfeitingEnabled) {
         this.model.displayItems--;
         this.model.secondRowColumns--;
-        this.element.querySelector("#package-verification-item").hidden = true;
+        //   this.element.querySelector("#package-verification-item").hidden = true;
         this.model.showVerifyPackageButton = false;
-        this.element.querySelector("[condition=showVerifyPackageButton]").hidden = true;
+        //    this.element.querySelector("[condition=showVerifyPackageButton]").hidden = true;
       }
 
       if (!product.adverseEventsReportingEnabled) {
         this.model.secondRowColumns--;
         this.model.showReportButton = false;
-        this.element.querySelector("[condition=showReportButton]").hidden = true;
+        //       this.element.querySelector("[condition=showReportButton]").hidden = true;
       }
 
       this.model.product = product;
@@ -143,24 +160,26 @@ export default class DrugDetailsController extends WebcController {
         //serial number data validation item is not displayed
         if (!batchData.serialCheck) {
           this.model.displayItems--;
-          this.element.querySelector("#serial-number-validation-item").hidden = true;
+          //       this.element.querySelector("#serial-number-validation-item").hidden = true;
         }
         //expiration date validation item is not displayed
         if (!batchData.incorrectDateCheck || !batchData.expiredDateCheck) {
           this.model.displayItems--;
-          this.element.querySelector("#date-validation-item").hidden = true;
+          //        this.element.querySelector("#date-validation-item").hidden = true;
         }
 
         if (batchData.defaultMessage || batchData.recalled) {
 
-          this.showModalFromTemplate('batch-info', () => {
+          this.showModalFromTemplate('batch-info-message', () => {
           }, () => {
           }, {
             model: {
               title: "Note",
               recallMessage: batchData.recalled ? batchData.recalledMessage : "",
               defaultMessage: batchData.defaultMessage
-            }, disableExpanding: true
+            },
+            disableExpanding: true,
+            disableFooter: true
           });
         }
 
@@ -171,7 +190,7 @@ export default class DrugDetailsController extends WebcController {
             decommissionedSerial: false
           };
           const serialNumberType = this.getSerialNumberType(this.model.serialNumber, batchData.bloomFilterSerialisations);
-          switch (serialNumberType){
+          switch (serialNumberType) {
             case "valid":
               res.validSerial = true;
               return res;
@@ -209,6 +228,7 @@ export default class DrugDetailsController extends WebcController {
         this.model.showEPI = this.leafletShouldBeDisplayed(product, batchData, snCheck, expiryCheck, currentTime, expiryTime);
 
         if (!snCheck.validSerial && batchData.serialCheck) {
+          this.model.serialNumberStatusType = "error";
           showError(constants.SN_FAIL_MESSAGE)
         }
 
@@ -216,16 +236,19 @@ export default class DrugDetailsController extends WebcController {
           if (batchData.recalled) {
             this.model.serialNumberLabel = "Batch";
           }
+          this.model.serialNumberStatusType = "warning";
           showError(constants.SN_RECALLED_MESSAGE);
         }
 
         if (snCheck.decommissionedSerial) {
           const reasonMsg = batchData.decommissionReason ? ' reason: ' + batchData.decommissionReason : "";
+          this.model.serialNumberStatusType = "warning";
           showError(constants.SN_DECOMMISSIONED_MESSAGE + reasonMsg);
         }
 
         if (!expiryCheck && batchData.incorrectDateCheck) {
           this.model.productStatus = constants.PRODUCT_STATUS_FAIL_MESSAGE;
+          this.model.productStatusType = "error";
           this.model.PSCheckIcon = constants.PRODUCT_STATUS_FAIL_ICON;
           this.setColor('productStatusVerification', 'red');
           return;
@@ -234,8 +257,21 @@ export default class DrugDetailsController extends WebcController {
         console.log(currentTime, expiryTime);
         if (expiryTime && expiryTime < currentTime && batchData.expiredDateCheck) {
           this.model.productStatus = constants.PRODUCT_EXPIRED_MESSAGE;
+          this.model.productStatusType = "error";
           this.model.PSCheckIcon = constants.PRODUCT_STATUS_FAIL_ICON;
           this.setColor('productStatusVerification', 'red');
+        }
+
+        if (this.model.serialNumberVerification !== constants.SN_OK_MESSAGE) {
+          this.model.displaySerialNumberStatus = true;
+        } else {
+          this.model.displaySerialNumberStatus = false;
+        }
+
+        if (this.model.productStatus !== constants.PRODUCT_STATUS_OK_MESSAGE) {
+          this.model.displayProductStatus = true;
+        } else {
+          this.model.displayProductStatus = false;
         }
       });
     });
@@ -245,8 +281,10 @@ export default class DrugDetailsController extends WebcController {
     const message = "The batch number in the barcode could not be found";
     this.displayModal(message, " ");
     this.model.serialNumberVerification = constants.SN_UNABLE_TO_VERIFY_MESSAGE;
+    this.model.serialNumberStatusType = "error";
     this.model.SNCheckIcon = constants.SN_GRAY_ICON
     this.model.productStatus = constants.PRODUCT_STATUS_UNABLE_TO_VALIDATE_MESSAGE;
+    this.model.productStatusType = "error";
     this.model.PSCheckIcon = constants.PRODUCT_STATUS_GRAY_ICON;
     this.model.packageVerification = constants.PACK_VERIFICATION_UNABLE_TO_VERIFY_MESSAGE;
     this.model.PVIcon = constants.PACK_VERIFICATION_GRAY_ICON;
@@ -257,8 +295,9 @@ export default class DrugDetailsController extends WebcController {
   }
 
   setColor(id, color) {
-    let el = this.element.querySelector('#' + id);
-    el.style.color = color;
+    return;
+    //   let el = this.element.querySelector('#' + id);
+    //   el.style.color = color;
   }
 
   getSerialNumberType(serialNumber, bloomFilterSerialisations) {

@@ -67,6 +67,26 @@
           }
         }
       ]
+    },
+    {
+      "name": "Ionic dependencies",
+      "actions": [
+        {
+          "type": "copy",
+          "src": "./node_modules/@ionic/core/dist/ionic",
+          "target": "./code/ionic/dist"
+        },
+        {
+          "type": "copy",
+          "src": "./node_modules/@ionic/core/css",
+          "target": "./code/ionic/css"
+        },
+        {
+          "type": "copy",
+          "src": "./node_modules/ionicons/dist/ionicons",
+          "target": "./code/ionic/icons"
+        }
+      ]
     }
   ],
   "postbuild": [

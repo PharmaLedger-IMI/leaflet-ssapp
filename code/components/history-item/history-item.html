@@ -1,0 +1,32 @@
+<link href="components/history-item/history-item.css" rel="stylesheet">
+<div class="history-item-container" data-tag="view-details" item-type="@item-type">
+    <div class="item-row-container">
+        <div class="product-image">
+            <img src="@photo"/>
+        </div>
+        <div class="product-info">
+            <div class="product-info-row">
+                <ion-label class="productItem_name">{{@name}}</ion-label>
+            </div>
+            <div class="product-info-row">
+                <ion-label class="productItem_description">{{@description}}</ion-label>
+            </div>
+            <div class="product-info-row" data-if="@advancedView">
+                <ion-label class="productItem_expiry">Expiry:</ion-label>
+                <ion-label class="productItem_expiry">{{@expiryForDisplay}}</ion-label>
+            </div>
+            <div class="product-info-row" data-if="@advancedView">
+                <ion-label class="productItem_expiry">Batch number:</ion-label>
+                <ion-label class="productItem_expiry">{{@batchNumber}}</ion-label>
+            </div>
+            <div class="product-info-row" status="@status">
+                <div class="status-icon"></div>
+                <ion-label class="productItem_status">{{@status}}</ion-label>
+            </div>
+        </div>
+        <div class="arrow">
+        </div>
+    </div>
+</div>
+
+

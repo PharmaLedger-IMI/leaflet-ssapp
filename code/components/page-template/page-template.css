@@ -1,0 +1,53 @@
+
+#header-template ion-toolbar {
+    --background: var(--primary-backgtound-color);
+    color: white;
+    height: 97px;
+    display: flex;
+    justify-content: center;
+}
+
+#page-ion-content #background-content {
+    --background: transparent;
+}
+
+.page-content-container {
+    background: var(--primary-backgtound-color);
+    height: calc(100% - 97px);
+    max-height: 100%;
+}
+
+.page-content-container ion-content {
+    top: 0px;
+    background: var(--secondary-background-color);
+}
+
+.empty-history.page-content-container ion-content::part(scroll) {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    text-align: center
+}
+
+.page-content-container[pageName="about"] ion-content .content-slot-wrapper {
+    height: 100%;
+}
+
+.page-content-container[roundShape=true] ion-content .content-slot-wrapper {
+    padding: 20px 25px 0px 25px;
+}
+
+.page-content-container[roundShape=true] ion-content {
+    border-top-right-radius: 40px;
+    border-top-left-radius: 40px;
+}
+
+.page-content-container[roundShape=false] ion-content .content-slot-wrapper {
+    padding: 0px;
+}
+
+.page-content-container[roundShape=false] ion-content .content-slot-wrapper {
+    padding: 0px;
+}
+

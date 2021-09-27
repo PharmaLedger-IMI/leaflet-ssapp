@@ -1,0 +1,11 @@
+<link href="components/scan-status-button/scan-status-button.css" rel="stylesheet">
+<webc-container controller="ScanButtonController">
+    <div data-if="@scanInProgress">
+        <ion-button class="scan-status-button" slot="true">
+            <img src="../../assets/icons/scan-in-progress.svg"/>
+        </ion-button>
+        <ion-button class="scan-status-button" slot="false">
+            <img src="../../assets/icons/scan-done.svg"/>
+        </ion-button>
+    </div>
+</webc-container>
