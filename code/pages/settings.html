@@ -2,22 +2,24 @@
     .network-edit-button i {
         padding-left: 10px;
     }
-    .checkbox-label{
+
+    .checkbox-label {
         padding-right: 10px;
     }
 
 </style>
 <div class="mobile-container">
     <page-template id="home-page-template" roundShape="true" shadow>
-        <landing-header slot="header-slot" goBack="true" ></landing-header>
+        <landing-header goBack="true" slot="header-slot"></landing-header>
         <webc-container controller="SettingsController" slot="content-slot">
             <div class="section-title">General Settings</div>
             <div class="accordion">
                 <accordion-item shadow subtitle="Product Language Priorities" title="Language">
                     <div class="accordion-item-content" slot="item-content">
-                        <ion-select class="select-options" data-for="@languagesToAdd.options" interface="action-sheet"
-                                    value="@selectedLanguage">
-                            <ion-select-option value="@value">{{@label}}</ion-select-option>
+                        <ion-select class="select-options" interface="action-sheet" placeholder="Select a language">
+                            <ion-select-option value="en">English</ion-select-option>
+                            <ion-select-option value="de">German</ion-select-option>
+
                         </ion-select>
                     </div>
                 </accordion-item>

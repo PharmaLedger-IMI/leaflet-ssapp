@@ -22,15 +22,15 @@
 .accordion-item-icon {
     width: 22px;
     height: 22px;
-    background-repeat: no-repeat;
+    flex-basis: 30px;
 }
 
 .accordion-item .accordion-item-icon {
-    background: url("../../assets/icons/accordion-closed-item.svg");
+    background: url("../../assets/icons/accordion-closed-item.svg") no-repeat right;
 }
 
 .accordion-item.opened .accordion-item-icon {
-    background: url("../../assets/icons/accordion-opened-item.svg");
+    background: url("../../assets/icons/accordion-opened-item.svg") no-repeat right;
 }
 
 .item-title-container {
@@ -41,6 +41,7 @@
 
 .item-title-container .title-section {
     padding-right: 40px;
+    flex-grow: 1;
 }
 
 .subtitle {

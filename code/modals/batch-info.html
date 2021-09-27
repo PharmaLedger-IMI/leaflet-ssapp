@@ -1,13 +1,59 @@
+<style>
+    .custom-modal-header {
+        display: flex;
+        justify-content: center;
+        flex-direction: column;
+        width: 100%;
+    }
+
+    main {
+        display: flex;
+        flex-direction: column;
+    }
+
+    .content-row {
+        display: flex;
+        flex-direction: row;
+        font-size: 16px;
+        padding-bottom: 8px;
+    }
+
+    span.label {
+        font-weight: bold;
+        padding-right: 8px;
+    }
+
+    webc-modal::part(header) {
+        background: linear-gradient(
+                0deg, rgba(90, 89, 253, 0.1), rgba(90, 89, 253, 0.1)), #FFFFFF;
+    }
+
+</style>
 <div class="custom-modal-header header-color" slot="header">
+    <div>
+        <img src="../assets/icons/leaflet-verified-blue.svg">
+    </div>
     <h5>{{@title}}</h5>
 </div>
 <main>
-    <div class="col">
-        <p class="description">{{@recallMessage}}</p>
-        <p class="description">{{@defaultMessage}}</p>
+
+    <div class="content-row">
+        <span class="label">Expiry: </span>
+        <span class="text-value">{{@expiryForDisplay}}</span>
     </div>
 
+    <div class="content-row">
+        <span class="label">Serial number: </span>
+        <span class="text-value">{{@serialNumber}}</span>
+    </div>
+    <div class="content-row">
+        <span class="label">Product Code (GTIN/ NTIN): </span>
+        <span class="text-value">{{@gtin}}</span>
+    </div>
+
+    <div class="content-row">
+        <span class="label">Batch: </span>
+        <span class="text-value">{{@batchNumber}}</span>
+    </div>
 </main>
-<footer class="modal-action-menu" slot="footer">
-    <psk-button class="epi-button" data-close label="Ok"></psk-button>
-</footer>
+

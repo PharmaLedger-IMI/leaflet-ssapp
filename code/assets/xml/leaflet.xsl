@@ -14,9 +14,9 @@
     </xsl:template>
 
     <xsl:template match="xs:document">
-        <psk-accordion>
+        <div class="accordion">
             <xsl:apply-templates select="@*|node()"/>
-        </psk-accordion>
+        </div>
     </xsl:template>
 
     <xsl:template match="xs:document/xs:component">
@@ -61,7 +61,11 @@
     <xsl:template match="xs:section">
         <xsl:choose>
             <xsl:when test="xs:code/@displayName != 'SPL LISTING DATA ELEMENTS SECTION'">
-                <psk-accordion-item>
+                <accordion-item>
+                    <xsl:attribute name="shadow"/>
+                    <xsl:attribute name="class">
+                        <xsl:value-of select="xs:code/@displayName"/>
+                    </xsl:attribute>
                     <xsl:attribute name="title">
                         <!--<xsl:value-of select="xs:code/@displayName"/>-->
                         <xsl:variable name="partialTitle" select="substring(xs:code/@displayName,2)"/>
@@ -71,8 +75,10 @@
                         </xsl:variable>
                         <xsl:value-of select="$modifiedTitle"/>
                     </xsl:attribute>
-                    <xsl:apply-templates select="@*|node()"/>
-                </psk-accordion-item>
+                    <div class="accordion-item-content" slot="item-content">
+                        <xsl:apply-templates select="@*|node()"/>
+                    </div>
+                </accordion-item>
             </xsl:when>
             <xsl:otherwise></xsl:otherwise>
         </xsl:choose>
@@ -129,17 +135,18 @@
     </xsl:template>
 
     <xsl:template match="xs:document/xs:title">
-        <psk-accordion-item>
+        <accordion-item>
+            <xsl:attribute name="shadow"/>
             <xsl:attribute name="title">
                 Highlights of prescribing information
             </xsl:attribute>
             <!-- <xsl:attribute name="opened">
                 opened
             </xsl:attribute> -->
-            <div>
+            <div class="accordion-item-content" slot="item-content">
                 <xsl:apply-templates select="@*|node()"/>
             </div>
-        </psk-accordion-item>
+        </accordion-item>
     </xsl:template>
 
     <!--nodes or attributes that we need to hide for a cleaner output-->

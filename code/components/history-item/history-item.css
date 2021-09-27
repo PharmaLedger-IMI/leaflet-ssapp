@@ -53,6 +53,8 @@
     width: 16px;
     height: 16px;
     background-repeat: no-repeat;
+    background-position-x: right;
+    margin-right: 16px;
 }
 
 .product-image {
@@ -85,11 +87,11 @@
 }
 
 .product-info-row[status="recalled"] {
-    color: #FFA51E;
+    color: #FFCB45;
 }
 
 .product-info-row[status="expired"] .status-icon {
-    background: url("../../assets/icons/expired.svg") no-repeat;
+    background: url("../../assets/icons/error.svg") no-repeat;
 }
 
 .product-info-row[status="recalled"] .status-icon {

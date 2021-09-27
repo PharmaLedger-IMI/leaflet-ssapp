@@ -9,7 +9,7 @@ export default class HistoryController extends WebcController {
     this.settingsService = new SettingsService(this.DSUStorage);
     let dbApi = require("opendsu").loadApi("db");
     dbApi.getMainEnclaveDB((err, enclaveDB) => {
-      if(err){
+      if (err) {
         console.log('Error on getting enclave DB');
         return;
       }
@@ -37,7 +37,6 @@ export default class HistoryController extends WebcController {
           } else {
             results.map(result => {
               result.advancedView = this.model.advancedUser;
-              result.status = Math.floor(Math.random() * 10) > 5 ? "expired" : "recalled";
             });
             this.model.historyIsEmpty = false;
             this.model.lastScannedProduct = results.pop();

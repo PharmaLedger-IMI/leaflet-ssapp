@@ -17,6 +17,7 @@ export default class ScanController extends WebcController {
 
     this.setModel({data: '', hasCode: false, hasError: false, nativeSupport: false, useScandit: false});
     this.settingsService = new SettingsService(this.DSUStorage);
+    const dbApi = opendsu.loadApi("db");
     dbApi.getMainEnclaveDB((err, enclaveDB) => {
       if (err) {
         console.log('Error on getting enclave DB');
@@ -487,8 +488,7 @@ export default class ScanController extends WebcController {
 
   redirectToDrugDetails(state) {
     this.disposeOfBarcodePicker();
-    this.navigateToPageTag("home");
-    //this.navigateToPageTag("drug-details", state);
+    this.navigateToPageTag("drug-details", state);
   }
 
   getNativeApiHandler(callback) {

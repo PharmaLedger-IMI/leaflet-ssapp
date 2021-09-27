@@ -52,15 +52,11 @@ export default class SettingsController extends WebcController {
       });
     });
 
-    this.model.languagesToAdd = {
-      placeholder: "Select a language",
-      options: [{label: "English", value: "en"}, {label: "German", value: "de"}]
-    }
+    this.model.languagesToAdd = [{label: "English", value: "en"}, {label: "German", value: "de"}];
 
     this.querySelector("ion-select").addEventListener("ionChange", (ev) => {
-      console.log('------------------>>>>>>> ion-select', ev);
-      this.model.selectedLanguage = this.model.languagesToAdd.options.find((language) => language.value === ev.detail.value);
-      this.DSUStorage.setObject(constants.LANGUAGES_STORAGE_PATH, [this.model.selectedLanguage], (err) => {
+      this.model.selectedLanguage = ev.detail.value;
+      this.DSUStorage.setObject(constants.LANGUAGES_STORAGE_PATH, [ev.detail.value], (err) => {
         if (err) {
           console.log("Couldn't update working language");
         }

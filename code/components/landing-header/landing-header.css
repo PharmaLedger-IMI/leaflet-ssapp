@@ -5,8 +5,7 @@
 }
 
 .menu-icon {
-    display: flex;
-    justify-content: right;
+    left: 24px
 }
 
 .title {

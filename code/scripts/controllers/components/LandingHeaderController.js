@@ -3,7 +3,7 @@ const {WebcController} = WebCardinal.controllers;
 export default class LandingHeaderController extends WebcController {
   constructor(...props) {
     super(...props);
-    this.setModel({currentPopover: null});
+    this.setModel({});
     this.onTagClick("open-menu", async () => {
       this.querySelector(".initial-state").classList.toggle("ion-hide");
       this.querySelector(".open-state").classList.toggle("ion-hide");
