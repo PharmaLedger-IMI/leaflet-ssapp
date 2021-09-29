@@ -5,10 +5,10 @@
 }
 
 .menu-icon {
-    left: 24px
+    left: var(--l-space);
 }
 
 .title {
-    font-size: 18px;
+    font-size: var(--m-text-size);
     justify-content: center;
 }

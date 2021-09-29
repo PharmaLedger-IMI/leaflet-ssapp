@@ -8,6 +8,30 @@ webc-app-root {
     --ion-background-color: transparent;
     --ion-font-family: "DM Sans regular";
     --ion-backdrop-opacity: 0.6;
+    --app-max-width: 414px;
+    --xxxl-text-size: 40px;
+    --xxl-text-size: 32px;
+    --xl-text-size: 24px;
+    --l-text-size: 20px;
+    --m-text-size: 18px;
+    --s-text-size: 16px;
+    --xs-text-size: 14px;
+    --xxs-text-size: 12px;
+    --bold-font-weight: 700;
+    --medium-font-weight: 500;
+    --regular-font-weight: 400;
+    --xxl-border-radius: 60px;
+    --xl-border-radius: 40px;
+    --l-border-radius: 20px;
+    --m-border-radius: 16px;
+    --s-border-radius: 10px;
+    --xs-border-radius: 8px;
+    --xxs-border-radius: 6px;
+    --xl-space: 40px;
+    --l-space: 24px;
+    --m-space: 14px;
+    --s-space: 8px;
+
 
     --ion-color-gray-one: #F4F6F6;
     --ion-color-gray-one-rgb: 244, 246, 246;

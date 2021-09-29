@@ -9,15 +9,15 @@
 }
 
 .scan-button ion-button::part(native) {
-    background: #02272F;
-    border-radius: 60px;
+    background: var(--primary-backgtound-color);
+    border-radius: var(--xxl-border-radius);
     text-transform: capitalize;
     padding: 8px;
     width: 264px;
     height: 62px;
-    font-size: 18px;
+    font-size: var(--m-text-size);
 }
 
 .scan-image {
-    margin-right: 5px;
+    margin-right: var(--s-space);
 }

@@ -79,7 +79,7 @@ export default class ScanController extends WebcController {
                     this.redirectToError("The code cannot be scanned.");
                     break;
                   case "ERR_CAM_UNAVAILABLE":
-                    this.redirectToError("No camera availcallbackable for scanning.");
+                    this.redirectToError("No camera available for scanning.");
                     break;
                   case "ERR_USER_CANCELLED":
                     this.disposeOfBarcodePicker()

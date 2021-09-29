@@ -1,7 +1,8 @@
 .header-row ion-row {
     justify-content: center;
 }
-.header-row ion-row.label{
-    font-size: 14px;
+
+.header-row ion-row.label {
+    font-size: var(--xs-text-size);
 }
 

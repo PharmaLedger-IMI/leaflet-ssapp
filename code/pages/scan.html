@@ -20,10 +20,12 @@
         bottom: 26px;
         left: calc(50% - 31px);
     }
-    psk-barcode-scanner .scan-status #first{
+
+    psk-barcode-scanner .scan-status #first {
         animation: load 1s infinite;
     }
-    psk-barcode-scanner .scan-status #second{
+
+    psk-barcode-scanner .scan-status #second {
         animation: load 1s infinite;
     }
 </style>
@@ -39,9 +41,9 @@
                     </div>
                     <div data-if="@hasCode" slot="false">
                         <div class="barcode-scanner-container" data-if="@nativeSupport" slot="false">
-                            <psk-barcode-scanner data="@data" hide-drawing
-                                                 normal-size slot="false" snap-video>
-                                <div slot="init"><img class="scan-status" src="../assets/icons/scan-in-progress.svg"/>
+                            <psk-barcode-scanner data="@data" slot="false" snap-video>
+                                <div slot="init">
+                                    <img class="scan-status" src="../assets/icons/scan-in-progress.svg"/>
                                 </div>
                                 <div slot="done"><img class="scan-status" src="../assets/icons/scan-done.svg"/></div>
                                 <div class="scan-shape" slot="active">

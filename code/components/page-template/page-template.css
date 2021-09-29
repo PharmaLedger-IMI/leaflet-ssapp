@@ -39,11 +39,12 @@
 }
 
 .page-content-container[roundShape=true] ion-content {
-    border-top-right-radius: 40px;
-    border-top-left-radius: 40px;
+    border-top-right-radius: var(--xl-border-radius);
+    border-top-left-radius: var(--xl-border-radius);
 }
 
-.page-content-container[roundShape=false] ion-content .content-slot-wrapper {
+.page-content-container[roundShape=false] ion-content .content-slot-wrapper,
+.page-content-container[roundShape=true] ion-content .content-slot-wrapper[no-padding=true] {
     padding: 0px;
 }
 

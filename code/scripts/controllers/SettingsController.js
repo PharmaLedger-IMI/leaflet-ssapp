@@ -11,14 +11,18 @@ export default class SettingsController extends WebcController {
       languageSelectorOpened: false,
       origin: window.location.origin,
       networkEditMode: true,
-      scanditLicenseEditMode: true,
-      selectedLanguage: "en"
+      scanditLicenseEditMode: true
     });
+
 
     this.settingsService = new SettingsService(this.DSUStorage);
     this.settingsService.readSetting("advancedUser", (err, advancedUser) => {
       this.model.advancedUser = !!advancedUser;
-    })
+    });
+
+    this.settingsService.readSetting("preferredLanguage", (err, preferredLanguage) => {
+      this.model.preferredLanguage = preferredLanguage;
+    });
 
     this.model.networkNameSetting = {
       label: "",
@@ -55,12 +59,12 @@ export default class SettingsController extends WebcController {
     this.model.languagesToAdd = [{label: "English", value: "en"}, {label: "German", value: "de"}];
 
     this.querySelector("ion-select").addEventListener("ionChange", (ev) => {
-      this.model.selectedLanguage = ev.detail.value;
-      this.DSUStorage.setObject(constants.LANGUAGES_STORAGE_PATH, [ev.detail.value], (err) => {
+      this.model.preferredLanguage = ev.detail.value;
+      this.settingsService.writeSetting("preferredLanguage",ev.detail.value, (err) => {
         if (err) {
-          console.log("Couldn't update working language");
+          console.log(err);
         }
-      });
+      })
     })
     this.querySelector("ion-checkbox").addEventListener("ionChange", (ev) => {
       this.model.advancedUser = ev.detail.checked;
