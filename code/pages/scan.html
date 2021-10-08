@@ -28,6 +28,17 @@
     psk-barcode-scanner .scan-status #second {
         animation: load 1s infinite;
     }
+
+    .camera-error {
+        position: fixed;
+        top: 50%;
+        padding-left: var(--l-space);
+        padding-right: var(--l-space);
+        display: flex;
+        flex-direction: column;
+        text-align: center;
+        max-width: var(--app-max-width);
+    }
 </style>
 
 <div class="mobile-container">
@@ -44,6 +55,15 @@
                             <psk-barcode-scanner data="@data" slot="false" snap-video>
                                 <div slot="init">
                                     <img class="scan-status" src="../assets/icons/scan-in-progress.svg"/>
+                                </div>
+                                <div class="camera-error" slot="access_denied">
+                                    <span>Access to your camera was denied.</span>
+                                    <span>Please check camera settings and allow access to
+                                        the camera in order to use the application</span>
+                                </div>
+                                <div class="camera-error" slot="error">
+                                    <span>Couldn't detect camera.</span>
+                                    <span> Please check if you have camera on your device or if the camera settings allow access to it </span>
                                 </div>
                                 <div slot="done"><img class="scan-status" src="../assets/icons/scan-done.svg"/></div>
                                 <div class="scan-shape" slot="active">

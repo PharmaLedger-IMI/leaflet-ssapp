@@ -236,7 +236,7 @@ ion-button {
     padding: 0;
     width: 100%;
     height: 100%;
-    max-width: 414px;
+    max-width: var(--app-max-width);
     box-shadow: 0 0 5px rgba(0, 0, 0, 0.25);
 }
 
@@ -286,14 +286,14 @@ ion-select::after {
 
 .action-sheet-container .action-sheet-group {
     background: #fff;
-    max-width: 414px;
+    max-width: var(--app-max-width);
     margin-left: auto;
     margin-right: auto;
     width: 100%;
 }
 
 webc-modal::part(dialog) {
-    max-width: 414px;
+    max-width: var(--app-max-width);
     height: 100%;
 }
 
@@ -320,7 +320,7 @@ webc-modal::part(close) {
     right: 24px;
 }
 
-psk-input .form-control{
+psk-input .form-control {
     display: block;
     width: 100%;
     height: calc(1.5em + .75rem + 2px);
@@ -333,7 +333,7 @@ psk-input .form-control{
     background-clip: padding-box;
     border: 1px solid #ced4da;
     border-radius: .25rem;
-    transition: border-color .15s ease-in-out,box-shadow .15s ease-in-out;
+    transition: border-color .15s ease-in-out, box-shadow .15s ease-in-out;
     margin-bottom: 10px;
 }
 
