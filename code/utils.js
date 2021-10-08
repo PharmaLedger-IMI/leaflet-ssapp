@@ -105,6 +105,22 @@ function convertFromGS1DateToYYYY_HM(gs1DateString) {
   return `${day} - ${monthNames[month - 1].slice(0, 3)} - ${year}`
 }
 
+function getDateForDisplay(date) {
+  if (date.slice(0, 2) === "00") {
+    return date.slice(5);
+  }
+  return date;
+}
+
+//convert date to last date of the month for 00 date
+function convertToLastMonthDay(date) {
+  let expireDateConverted = date.replace("00", "01");
+  expireDateConverted = new Date(expireDateConverted.replaceAll(' ', ''));
+  expireDateConverted.setFullYear(expireDateConverted.getFullYear(), expireDateConverted.getMonth() + 1, 0);
+  expireDateConverted = expireDateConverted.getTime();
+  return expireDateConverted;
+}
+
 function getFetchUrl(relativePath) {
   if (window["$$"] && $$.SSAPP_CONTEXT && $$.SSAPP_CONTEXT.BASE_URL && $$.SSAPP_CONTEXT.SEED) {
     // if we have a BASE_URL then we prefix the fetch url with BASE_URL
@@ -172,5 +188,7 @@ export default {
   refreshProductDSU,
   refreshBatchDSU,
   refreshMountedDSUs,
-  getRecordPKey
+  getRecordPKey,
+  getDateForDisplay,
+  convertToLastMonthDay
 };

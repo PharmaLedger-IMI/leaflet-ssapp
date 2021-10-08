@@ -20,6 +20,30 @@
         padding: 0px;
     }
 
+    .empty-history-list {
+        margin-top: 67px;
+    }
+
+    .empty-history-list .app-image {
+        content: url("../assets/icons/app_icon.svg");
+        margin: auto;
+    }
+
+    .empty-history-list .title {
+        font-size: var(--xl-text-size);
+        font-weight: var(--bold-font-weight);
+        margin-top: var(--l-space);
+    }
+
+    .empty-history-list .welcome-text {
+        margin-top: var(--s-space);
+    }
+
+    .empty-history-list .wizard-steps {
+        content: url("../assets/icons/steps.svg");
+        width: 100%;
+        margin-top: 97px;
+    }
 </style>
 <div class="mobile-container">
     <menu-popover></menu-popover>
@@ -29,13 +53,14 @@
             <div class="content-slot-container">
                 <div class="history-list">
                     <div class="content" data-if="@historyIsEmpty" hidden="true">
-                        <div slot="true">
-                            <div class="title"></div>
-                            <img class="app-image" src="">
+                        <div class="empty-history-list" slot="true">
+                            <div class="app-image"></div>
+                            <div class="title">Welcome to Pharmaledger</div>
                             <div class="welcome-text">
-                                You have not scanned any valid products previously. Kindly click on the scan button
-                                below to
-                                scan.
+                                An app created to help you inquire about new or prescribed medications.
+                            </div>
+                            <div class="wizard-steps">
+
                             </div>
                         </div>
                         <div slot="false">
@@ -46,33 +71,33 @@
 
                                 <history-item controller="HistoryController"
                                               data-view-model="@lastScannedProduct"
-                                        item-type="last-scanned"
-                                        shadow></history-item>
-                            </div>
-                        <div class="previous-scanned-container">
-                            <div class="section-label">
-                                <ion-label>Previous Scans</ion-label>
-                            </div>
-                            <div data-for="@products">
-                                    <history-item controller="HistoryController"
-                                              data-view-model="@"
-                                              item-type="history-list-item"
+                                              item-type="last-scanned"
                                               shadow></history-item>
+                            </div>
+                            <div class="previous-scanned-container">
+                                <div class="section-label">
+                                    <ion-label>Previous Scans</ion-label>
+                                </div>
+                                <div data-for="@products">
+                                    <history-item controller="HistoryController"
+                                                  data-view-model="@"
+                                                  item-type="history-list-item"
+                                                  shadow></history-item>
 
 
-                                <div slot="no-data">
-                                    The scan list does not currently contain any items. It will be completed when
-                                    you
-                                    have more than one item scanned
+                                    <div slot="no-data">
+                                        The scan list does not currently contain any items. It will be completed when
+                                        you
+                                        have more than one item scanned
+                                    </div>
                                 </div>
                             </div>
                         </div>
                     </div>
-                </div>
 
+                </div>
             </div>
-</div>
-</webc-container>
-</page-template>
-<scan-button></scan-button>
+        </webc-container>
+    </page-template>
+    <scan-button></scan-button>
 </div>

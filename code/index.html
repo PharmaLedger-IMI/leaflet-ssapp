@@ -5,36 +5,35 @@
     <meta charset="UTF-8">
     <title>PSK App Core</title>
     PLACEHOLDER_THAT_WILL_BE_REPLACED_BY_SW_OR_SERVER_WITH_BASE_TAG
-    <link href="resources/css/main.css" rel="stylesheet" type="text/css">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=5.0">
-    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=5.0" name="viewport">
+    <meta content="yes" name="apple-mobile-web-app-capable">
     <script src="scripts/bundles/iframeBoot.js"></script>
     <script src="scripts/bundles/webshims.js"></script>
     <script src="scripts/bundles/pskruntime.js"></script>
     <script src="scripts/bundles/gtinResolver.js"></script>
     <script src="../../nativeBridge.js"></script>
-    <script src="scripts/scandit.js" id="scandit-injector"></script>
+    <script id="scandit-injector" src="scripts/scandit.js"></script>
     <!-- Ionic dist -->
-    <script type="module" src="ionic/dist/ionic.esm.js"></script>
-    <link rel="stylesheet" href="ionic/css/ionic.bundle.css">
+    <script src="ionic/dist/ionic.esm.js" type="module"></script>
+    <link href="ionic/css/ionic.bundle.css" rel="stylesheet">
 
     <!-- Ionicons dist -->
-    <script type="module" src="ionic/icons/ionicons.esm.js"></script>
+    <script src="ionic/icons/ionicons.esm.js" type="module"></script>
 
-    <script type="module" src="webcardinal/webcardinal.js"></script>
-    <link rel="stylesheet" href="webcardinal/webcardinal.css">
+    <script src="webcardinal/webcardinal.js" type="module"></script>
+    <link href="webcardinal/webcardinal.css" rel="stylesheet">
     <script>
-        if (window.frameElement) {
-            const iframeIdentity = window.frameElement.getAttribute('identity');
+      if (window.frameElement) {
+        const iframeIdentity = window.frameElement.getAttribute('identity');
 
-            if (iframeIdentity) {
-                window.parent.document.dispatchEvent(new CustomEvent(iframeIdentity, {
-                    detail: {
-                        status: 'completed'
-                    }
-                }));
+        if (iframeIdentity) {
+          window.parent.document.dispatchEvent(new CustomEvent(iframeIdentity, {
+            detail: {
+              status: 'completed'
             }
+          }));
         }
+      }
     </script>
 </head>
 

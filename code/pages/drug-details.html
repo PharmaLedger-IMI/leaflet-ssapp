@@ -7,19 +7,28 @@
         position: relative;
     }
 
-    .black-subheader {
-        background: var(--primary-backgtound-color);
+    .subheader-container.showEpi .black-subheader {
         border-bottom-right-radius: 40px;
         border-bottom-left-radius: 40px;
         color: #fff;
+        padding-bottom: 134px;
+    }
+
+    .subheader-container .grey-subheader {
+        display: none;
+    }
+
+    .subheader-container .black-subheader {
+        padding-bottom: 0px;
+        background: var(--primary-backgtound-color);
         display: flex;
         flex-direction: column;
         align-items: center;
         width: 100%;
-        padding-bottom: 134px;
     }
 
-    .grey-subheader {
+    .subheader-container.showEpi .grey-subheader {
+        display: block;
         width: 100%;
     }
 
@@ -40,7 +49,7 @@
     .verified-icon {
         margin-left: 11px;
         margin-bottom: 8px;
-        top: -3px;
+        top: 3px;
         position: relative;
     }
 
@@ -51,7 +60,7 @@
         margin: 24px;
         width: calc(100% - 48px);
         position: absolute;
-        height: 220px;
+        height: 230px;
     }
 
     .sections-container ion-col {
@@ -125,17 +134,10 @@
         <landing-header goBack="true" slot="header-slot"></landing-header>
 
         <webc-container controller="DrugDetailsController" slot="content-slot">
-            <div data-if="@displaySerialNumberStatus">
-                <div class="status-container" slot="true" status-type="@serialNumberStatusType">
+            <div data-if="@displayStatus">
+                <div class="status-container" slot="true" status-type="@statusType">
                     <div class="icon-container"></div>
-                    <span>{{@serialNumberVerification}}</span>
-                </div>
-                <div class="padding-item" slot="true"></div>
-            </div>
-            <div data-if="@displayProductStatus">
-                <div class="status-container" slot="true" status-type="@productStatusType">
-                    <div class="icon-container"></div>
-                    <span>{{@productStatus}}</span>
+                    <span>{{@statusMessage}}</span>
                 </div>
                 <div class="padding-item" slot="true"></div>
             </div>
@@ -210,11 +212,16 @@
                         </div>
                     </div>
                 </div>
-                <div class="accordion">
-                    <webc-container controller="LeafletController">
-                        <div id="content">
-                        </div>
-                    </webc-container>
+                <div data-if="@showEPI">
+                    <div class="accordion" slot="true">
+                        <webc-container controller="LeafletController">
+                            <div id="content">
+                            </div>
+                        </webc-container>
+                    </div>
+                    <div class="no-leaflet-text" slot="false">
+                        Leaflet for this product can not be displayed due to validation settings.
+                    </div>
                 </div>
             </div>
         </webc-container>

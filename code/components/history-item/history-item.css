@@ -82,18 +82,32 @@
     padding-right: 5px;
 }
 
-.product-info-row[status="expired"] {
+.product-info-row[status="verified"] {
+    display: none
+}
+
+.product-info-row[status="invalid_sn"],
+.product-info-row[status="incorrect_date"],
+.product-info-row[status="expired_date"],
+.product-info-row[status="invalid_data"] {
     color: #F86458;
 }
 
-.product-info-row[status="recalled"] {
+.product-info-row[status="recalled_batch"],
+.product-info-row[status="recalled_sn"],
+.product-info-row[status="decommissioned_sn"] {
     color: #FFCB45;
 }
 
-.product-info-row[status="expired"] .status-icon {
+.product-info-row[status="invalid_sn"] .status-icon,
+.product-info-row[status="incorrect_date"] .status-icon,
+.product-info-row[status="expired_date"] .status-icon,
+.product-info-row[status="invalid_data"] .status-icon {
     background: url("../../assets/icons/error.svg") no-repeat;
 }
 
-.product-info-row[status="recalled"] .status-icon {
+.product-info-row[status="recalled_batch"] .status-icon,
+.product-info-row[status="recalled_sn"] .status-icon,
+.product-info-row[status="decommissioned_sn"] .status-icon {
     background: url("../../assets/icons/recalled.svg") no-repeat;
 }
