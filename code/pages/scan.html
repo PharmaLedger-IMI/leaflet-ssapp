@@ -5,7 +5,7 @@
 
     .scan-shape {
         position: absolute;
-        background-image: url(../assets/icons/barcode-scanner.svg);
+        background-image: url(./assets/icons/barcode-scanner.svg);
         background-size: contain;
         background-repeat: no-repeat;
         height: 372px;
@@ -54,7 +54,7 @@
                         <div class="barcode-scanner-container" data-if="@nativeSupport" slot="false">
                             <psk-barcode-scanner data="@data" slot="false" snap-video>
                                 <div slot="init">
-                                    <img class="scan-status" src="../assets/icons/scan-in-progress.svg"/>
+                                    <img class="scan-status" src="./assets/icons/scan-in-progress.svg"/>
                                 </div>
                                 <div class="camera-error" slot="access_denied">
                                     <span>Access to your camera was denied.</span>
@@ -65,9 +65,9 @@
                                     <span>Couldn't detect camera.</span>
                                     <span> Please check if you have camera on your device or if the camera settings allow access to it </span>
                                 </div>
-                                <div slot="done"><img class="scan-status" src="../assets/icons/scan-done.svg"/></div>
+                                <div slot="done"><img class="scan-status" src="./assets/icons/scan-done.svg"/></div>
                                 <div class="scan-shape" slot="active">
-                                    <img class="scan-status" src="../assets/icons/scan-in-progress.svg"/>
+                                    <img class="scan-status" src="./assets/icons/scan-in-progress.svg"/>
                                 </div>
                             </psk-barcode-scanner>
                         </div>

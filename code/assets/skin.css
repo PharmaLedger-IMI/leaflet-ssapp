@@ -8,7 +8,11 @@ webc-app-root {
     font-style: normal;
     src: url('../assets/css/fonts/DM_Sans/dm-sans-v6-latin-ext_latin-regular.eot'); /* IE9 Compat Modes */
     src: local(''),
-    url('../assets/css/fonts/DM_Sans/dm-sans-v6-latin-ext_latin-regular.eot?#iefix') format('embedded-opentype'), /* IE6-IE8 */ url('../assets/css/fonts/DM_Sans/dm-sans-v6-latin-ext_latin-regular.woff2') format('woff2'), /* Super Modern Browsers */ url('../assets/css/fonts/DM_Sans/dm-sans-v6-latin-ext_latin-regular.woff') format('woff'), /* Modern Browsers */ url('../assets/css/fonts/DM_Sans/dm-sans-v6-latin-ext_latin-regular.ttf') format('truetype'), /* Safari, Android, iOS */ url('../assets/css/fonts/DM_Sans/dm-sans-v6-latin-ext_latin-regular.svg#DMSans') format('svg'); /* Legacy iOS */
+    url('../assets/css/fonts/DM_Sans/dm-sans-v6-latin-ext_latin-regular.eot?#iefix') format('embedded-opentype'),
+        /* IE6-IE8 */ url('../assets/css/fonts/DM_Sans/dm-sans-v6-latin-ext_latin-regular.woff2') format('woff2'),
+        /* Super Modern Browsers */ url('../assets/css/fonts/DM_Sans/dm-sans-v6-latin-ext_latin-regular.woff') format('woff'),
+        /* Modern Browsers */ url('../assets/css/fonts/DM_Sans/dm-sans-v6-latin-ext_latin-regular.ttf') format('truetype'),
+        /* Safari, Android, iOS */ url('../assets/css/fonts/DM_Sans/dm-sans-v6-latin-ext_latin-regular.svg#DMSans') format('svg'); /* Legacy iOS */
 }
 
 :root {
@@ -224,12 +228,6 @@ webc-app-root {
 ion-button {
     --border-radius: 10px;
 }
-
-@font-face {
-    font-family: "DM Sans regular";
-    src: url("./css/fonts/DM_Sans/DMSans-Regular.ttf");
-}
-
 
 .mobile-container {
     margin: 0 auto;
