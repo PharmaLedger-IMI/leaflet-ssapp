@@ -127,13 +127,80 @@ export default class XmlDisplayService {
         let parser = new DOMParser();
 
         let xmlDoc = parser.parseFromString(xmlContent, "text/xml");
+
         let xslDoc = parser.parseFromString(xslContent, "text/xml");
 
         xsltProcessor.importStylesheet(xslDoc);
 
         let resultDocument = xsltProcessor.transformToFragment(xmlDoc, document);
         this.element.querySelector("#content").innerHTML = '';
-        this.element.querySelector("#content").appendChild(resultDocument)
+        let mainDiv = document.createElement("div");
+        let sectionsElements = resultDocument.querySelectorAll(".accordion-item");
+        let aboutContent = "";
+        let beforeContent = "";
+        let howToContent = "";
+        let sideEffectsContent = "";
+        let storingContent = "";
+        let moreContent = "";
+        sectionsElements.forEach(section=>{
+            let xmlCodeValue = section.getAttribute("sectionCode");
+            switch (xmlCodeValue) {
+                case '48780-1':
+                case '34089-3':
+                case '34076-0':
+                case '60559-2':
+                    aboutContent = aboutContent + section.innerHTML;
+                    break;
+                case '34070-3':
+                case '34084-4':
+                case '34086-9':
+                case '69759-9':
+                    beforeContent = beforeContent + section.innerHTML;
+                    break;
+                case '34068-7':
+                case '43678-2':
+                case '34072-9':
+                case '34067-9':
+                case '59845-8':
+                    howToContent = howToContent + section.innerHTML;
+                    break;
+                case '34071-1':
+                case '43685-7':
+                case '54433-8':
+                case '69762-3':
+                case '34077-8':
+                case '60563-4':
+                case '34078-6':
+                    sideEffectsContent = sideEffectsContent + section.innerHTML;
+                    break;
+                case '44425-7':
+                    storingContent = storingContent + section.innerHTML;
+                    break;
+                default:
+                    moreContent = moreContent + section.innerHTML;
+
+            }
+        });
+
+        let htmlFragment = ` <accordion-item shadow title="About">
+                                 <div class="accordion-item-content" slot="item-content">${aboutContent}</div>
+                             </accordion-item>
+                             <accordion-item shadow title="Before Taking">
+                                 <div class="accordion-item-content" slot="item-content">${beforeContent}</div>
+                             </accordion-item>
+                             <accordion-item shadow title="How To Take">
+                                 <div class="accordion-item-content" slot="item-content">${howToContent}</div>
+                             </accordion-item>
+                             <accordion-item shadow title="Side Effects">
+                                 <div class="accordion-item-content" slot="item-content">${sideEffectsContent}</div>
+                             </accordion-item>
+                             <accordion-item shadow title="Storing">
+                                 <div class="accordion-item-content" slot="item-content">${storingContent}</div>
+                             </accordion-item>
+                             <accordion-item shadow title="More">
+                                 <div class="accordion-item-content" slot="item-content">${moreContent}</div>
+                             </accordion-item>`
+        this.element.querySelector("#content").innerHTML = htmlFragment;
     }
 
     buildBasePath(callback) {

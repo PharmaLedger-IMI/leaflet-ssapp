@@ -61,10 +61,9 @@
     <xsl:template match="xs:section">
         <xsl:choose>
             <xsl:when test="xs:code/@displayName != 'SPL LISTING DATA ELEMENTS SECTION'">
-                <accordion-item>
-                    <xsl:attribute name="shadow"/>
-                    <xsl:attribute name="class">
-                        <xsl:value-of select="xs:code/@displayName"/>
+                <div class="accordion-item">
+                    <xsl:attribute name="sectionCode">
+                        <xsl:value-of select="xs:code/@code"/>
                     </xsl:attribute>
                     <xsl:attribute name="title">
                         <!--<xsl:value-of select="xs:code/@displayName"/>-->
@@ -78,7 +77,7 @@
                     <div class="accordion-item-content" slot="item-content">
                         <xsl:apply-templates select="@*|node()"/>
                     </div>
-                </accordion-item>
+                </div>
             </xsl:when>
             <xsl:otherwise></xsl:otherwise>
         </xsl:choose>
