@@ -4,7 +4,7 @@ import interpretGS1scan from "../gs1ScanInterpreter/interpretGS1scan/interpretGS
 import utils from "../../utils.js";
 import constants from "../../constants.js";
 import DSUDataRetrievalService from "../services/DSUDataRetrievalService/DSUDataRetrievalService.js";
-import getStorageService from "../services/StorageService.js";
+import BatchStatusService from "../services/BatchStatusService.js";
 
 const gtinResolver = require("gtin-resolver");
 
@@ -15,8 +15,15 @@ export default class ScanController extends WebcController {
   constructor(element, history) {
     super(element, history);
 
-    this.setModel({data: '', hasCode: false, hasError: false, nativeSupport: false, useScandit: false});
+    this.model = {
+      data: '',
+      hasCode: false,
+      hasError: false,
+      nativeSupport: false,
+      useScandit: false
+    };
     this.settingsService = new SettingsService(this.DSUStorage);
+    this.batchStatusService = new BatchStatusService();
     const dbApi = opendsu.loadApi("db");
     dbApi.getMainEnclaveDB((err, enclaveDB) => {
       if (err) {
@@ -108,7 +115,7 @@ export default class ScanController extends WebcController {
                     this.redirectToError("The code cannot be scanned.");
                     break;
                   case "ERR_CAM_UNAVAILABLE":
-                    this.redirectToError("No camera availcallbackable for scanning.");
+                    this.redirectToError("No camera available for scanning.");
                     break;
                   case "ERR_USER_CANCELLED":
                     this.disposeOfBarcodePicker()
@@ -189,11 +196,11 @@ export default class ScanController extends WebcController {
     }
 
     this.buildSSI(gs1Fields, (err, gtinSSI) => {
-      this.packageAlreadyScanned(gtinSSI, gs1Fields, (err, status) => {
+      this.packageAlreadyScanned(gtinSSI, gs1Fields, (err, result) => {
         if (err) {
           return this.redirectToError("Product code combination could not be resolved.", gs1Fields);
         }
-        if (status === false) {
+        if (result.status === false) {
           this.batchAnchorExists(gtinSSI, (err, status) => {
             if (status) {
               this.addPackageToHistoryAndRedirect(gtinSSI, gs1Fields, (err) => {
@@ -206,7 +213,7 @@ export default class ScanController extends WebcController {
             }
           });
         } else {
-          this.redirectToDrugDetails({gtinSSI: gtinSSI.getIdentifier(), gs1Fields});
+          this.redirectToDrugDetails({productData: result.record});
         }
       });
     });
@@ -355,20 +362,20 @@ export default class ScanController extends WebcController {
   }
 
   addPackageToHistoryAndRedirect(gtinSSI, gs1Fields, callback) {
-    this.packageAlreadyScanned(gtinSSI, gs1Fields, (err, status) => {
+    this.packageAlreadyScanned(gtinSSI, gs1Fields, (err, result) => {
       if (err) {
         return console.log("Failed to verify if package was already scanned", err);
       }
 
-      if (!status) {
-        this.addPackageToScannedPackagesList(gtinSSI, gs1Fields, (err) => {
+      if (!result.status) {
+        this.addPackageToScannedPackagesList(gtinSSI, gs1Fields, (err, record) => {
           if (err) {
             return callback(err);
           }
-          this.redirectToDrugDetails({gtinSSI: gtinSSI.getIdentifier(), gs1Fields});
+          this.redirectToDrugDetails({productData: record});
         });
       } else {
-        this.redirectToDrugDetails({gtinSSI: gtinSSI.getIdentifier(), gs1Fields});
+        this.redirectToDrugDetails({productData: result.record});
       }
     });
 
@@ -385,11 +392,11 @@ export default class ScanController extends WebcController {
 
   packageAlreadyScanned(packageGTIN_SSI, gs1Fields, callback) {
     this.dbStorage.getRecord(constants.HISTORY_TABLE, utils.getRecordPKey(packageGTIN_SSI, gs1Fields), (err, result) => {
-      if (err) {
-        callback(undefined, false);
+      if (err || !result) {
+        callback(undefined, {status: false, record: null});
       } else {
         console.log("Found in db ", result);
-        callback(undefined, true);
+        callback(undefined, {status: false, record: result});
       }
 
     })
@@ -407,21 +414,55 @@ export default class ScanController extends WebcController {
           return callback(err);
         }
         this.dsuDataRetrievalService = new DSUDataRetrievalService(packageGTIN_SSI);
-        this.dsuDataRetrievalService.readProductData((err, product) => {
-          product.expiryForDisplay = gs1Fields.expiry.slice(0, 2) === "00" ? gs1Fields.expiry.slice(5) : gs1Fields.expiry;
+        this.dsuDataRetrievalService.readProductData(async (err, product) => {
+          if (err) {
+            return callback(err);
+          }
+          let batchData;
+          try {
+            batchData = await this.dsuDataRetrievalService.readAsyncBatchData();
+            batchData.expiryForDisplay = utils.getDateForDisplay(utils.convertFromGS1DateToYYYY_HM(batchData.expiry));
+
+            product.snCheck = this.batchStatusService.checkSNCheck(gs1Fields.serialNumber, batchData);
+
+            let expiryTime;
+            let expireDateConverted;
+            if (gs1Fields.expiry.slice(0, 2) === "00") {
+              expireDateConverted = utils.convertToLastMonthDay(gs1Fields.expiry);
+            } else {
+              expireDateConverted = batchData.expiryForDisplay.replaceAll(' ', '');
+            }
+            try {
+              expiryTime = new Date(expireDateConverted).getTime();
+            } catch (err) {
+              // do nothing
+            }
+            this.batchStatusService.getProductStatus(batchData, expiryTime);
+
+          } catch (e) {
+            this.batchStatusService.unableToVerify();
+          }
+          product.expiryForDisplay = utils.getDateForDisplay(gs1Fields.expiry);
+          product.statusType = this.batchStatusService.statusType;
+          product.statusMessage = this.batchStatusService.statusMessage;
           product.photo = utils.getFetchUrl(
             `/download${utils.getMountPath(packageGTIN_SSI, gs1Fields)}/${constants.PATH_TO_PRODUCT_DSU}image.png`
           );
           const pk = utils.getRecordPKey(packageGTIN_SSI, gs1Fields);
           this.dbStorage.insertRecord(constants.HISTORY_TABLE, pk, {
-            ...gs1Fields,
+            gs1Fields: gs1Fields,
             gtinSSI: packageGTIN_SSI,
-            ...product
+            status: this.batchStatusService.status,
+            statusMessage: this.batchStatusService.statusMessage,
+            statusType: this.batchStatusService.statusType,
+            createdAt: Date.now(),
+            batchData: batchData,
+            product: product
           }, (err, result) => {
             if (err) {
               return callback(err);
             }
-            callback(undefined);
+            callback(undefined, result);
           })
         })
       })
@@ -488,7 +529,7 @@ export default class ScanController extends WebcController {
 
   redirectToDrugDetails(state) {
     this.disposeOfBarcodePicker();
-    this.navigateToPageTag("drug-details", state);
+    this.navigateToPageTag("drug-details", JSON.parse(JSON.stringify(state)));
   }
 
   getNativeApiHandler(callback) {

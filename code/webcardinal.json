@@ -1,5 +1,9 @@
 {
   "theme": "epi-theme",
+  "pagesFallback": {
+    "name": "home",
+    "src": "./homePage/home.html"
+  },
   "identity": {
     "name": "Consumer",
     "email": "",
@@ -9,11 +13,13 @@
     {
       "name": "Home",
       "tag": "home",
+      "src": "./homePage/home.html",
       "path": "./"
     },
     {
       "name": "Scan",
       "tag": "scan",
+      "src": "./scanPage/scan.html",
       "path": "./scan"
     },
     {
@@ -24,11 +30,13 @@
     {
       "name": "About",
       "tag": "about",
+      "src": "./aboutPage/about.html",
       "path": "./about"
     },
     {
       "name": "Help",
       "tag": "help",
+      "src": "./helpPage/help.html",
       "path": "./help"
     },
     {
@@ -44,17 +52,20 @@
     {
       "name": "Settings",
       "tag": "settings",
+      "src": "./settingsPage/settings.html",
       "path": "./settings"
     },
     {
       "name": "Drug details",
       "indexed": false,
       "tag": "drug-details",
+      "src": "./drugDetailsPage/drug-details.html",
       "path": "./drug-details"
     },
     {
       "name": "Leaflet",
       "tag": "leaflet",
+      "src": "./leaflet/leaflet.html",
       "indexed": false,
       "path": "./leaflet"
     },
@@ -74,6 +85,7 @@
       "name": "Scan error",
       "indexed": false,
       "tag": "scan-error",
+      "src": "./scanErrorPage/scan-error.html",
       "path": "./scan-error"
     }
   ],

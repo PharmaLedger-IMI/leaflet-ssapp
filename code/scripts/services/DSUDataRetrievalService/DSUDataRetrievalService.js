@@ -1,4 +1,5 @@
 import constants from "../../../constants.js";
+
 const openDSU = require("opendsu");
 const resolver = openDSU.loadAPI("resolver");
 export default class DSUDataRetrievalService {
@@ -28,6 +29,22 @@ export default class DSUDataRetrievalService {
         callback(undefined, batchData);
       });
     });
+  }
+
+
+  async readAsyncBatchData() {
+    let self = this;
+    return new Promise(function (resolve, reject) {
+      self.readBatchData((err, batchData) => {
+        if (err) {
+          return reject(err);
+        }
+        if (typeof batchData === "undefined") {
+          return reject(new Error("Could not find batch"));
+        }
+        return resolve(batchData)
+      })
+    })
   }
 
   readProductData(callback) {

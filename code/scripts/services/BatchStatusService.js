@@ -74,12 +74,12 @@ export default class BatchStatusService{
     return undefined;
   }
 
-  getProductStatus(batchData) {
-    if (batchData.incorrectDateCheck) {
+  getProductStatus(batchData, expiryTime) {
+    if (batchData.incorrectDateCheck && !expiryTime) {
       this.statusMessage = constants.PRODUCT_STATUS_FAIL_MESSAGE;
       this.statusType = "error";
       this.status = "incorrect_date";
-    } else if (batchData.expiredDateCheck) {
+    } else if (batchData.expiredDateCheck && (!expiryTime || expiryTime< Date.now())) {
       this.statusMessage = constants.PRODUCT_EXPIRED_MESSAGE;
       this.statusType = "error";
       this.status = "expired_date";

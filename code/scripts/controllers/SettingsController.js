@@ -11,7 +11,8 @@ export default class SettingsController extends WebcController {
       languageSelectorOpened: false,
       origin: window.location.origin,
       networkEditMode: true,
-      scanditLicenseEditMode: true
+      scanditLicenseEditMode: true,
+      refreshPeriodEditMode: true
     });
 
 
@@ -24,19 +25,17 @@ export default class SettingsController extends WebcController {
       this.model.preferredLanguage = preferredLanguage;
     });
 
-    this.model.networkNameSetting = {
-      label: "",
-      value: ""
-    };
-
+    this.model.networkNameSetting = {label: ""};
+    this.model.refreshPeriodValue = {label: ""};
     this.initNetworkSettingsTab();
+    this.initRefreshPeriodSettingsTab();
 
     this.onTagClick("change-edit-mode", (model, target, event) => {
       this.toggleEditMode(target.getAttribute("data"));
     })
 
     this.onTagClick("change-network", (model, target, event) => {
-      let newValue = target.parentElement.querySelector("psk-input").value;
+      let newValue = target.parentElement.querySelector("input").value;
       this.model.networkNameSetting.value = newValue
       this.settingsService.writeSetting("networkname", newValue, (err) => {
         if (err) {
@@ -56,11 +55,33 @@ export default class SettingsController extends WebcController {
       });
     });
 
+
+    this.onTagClick("change-refresh-period", (model, target, event) => {
+      let newValue = target.parentElement.querySelector("input").value;
+      this.model.refreshPeriodValue.value = newValue
+      this.settingsService.writeSetting("refreshPeriod", newValue, (err) => {
+        if (err) {
+          console.log(err);
+        }
+        this.toggleEditMode("refreshPeriodEditMode");
+      });
+    });
+
+    this.onTagClick("change-default-refresh-period", (model, target, event) => {
+      this.settingsService.writeSetting("refreshPeriod", undefined, (err) => {
+        if (err) {
+          console.log(err);
+        }
+        this.initRefreshPeriodSettingsTab();
+        this.toggleEditMode("refreshPeriodEditMode");
+      });
+    });
+
     this.model.languagesToAdd = [{label: "English", value: "en"}, {label: "German", value: "de"}];
 
     this.querySelector("ion-select").addEventListener("ionChange", (ev) => {
       this.model.preferredLanguage = ev.detail.value;
-      this.settingsService.writeSetting("preferredLanguage",ev.detail.value, (err) => {
+      this.settingsService.writeSetting("preferredLanguage", ev.detail.value, (err) => {
         if (err) {
           console.log(err);
         }
@@ -79,7 +100,7 @@ export default class SettingsController extends WebcController {
     this.initScanningSettingsTab();
 
     this.onTagClick("set-scandit-license", (model, target, event) => {
-      let newValue = target.parentElement.querySelector("psk-input").value;
+      let newValue = target.parentElement.querySelector("input").value;
       this.model.useScanditLicense.value = newValue;
       this.settingsService.writeSetting("scanditlicense", newValue, (err) => {
         if (err) {
@@ -106,6 +127,21 @@ export default class SettingsController extends WebcController {
       }
 
       this.model.networkNameSetting.value = networkname;
+    });
+  }
+
+  initRefreshPeriodSettingsTab() {
+    this.settingsService.readSetting("refreshPeriod", (err, refreshPeriod) => {
+      if (err || typeof refreshPeriod === "undefined") {
+        this.settingsService.writeSetting("refreshPeriod", constants.DEFAULT_REFRESH_PERIOD, (err) => {
+          if (err) {
+            return console.log("Unable to write setting refreshPeriod");
+          }
+          this.model.refreshPeriodValue.value = constants.DEFAULT_REFRESH_PERIOD;
+        });
+      }
+
+      this.model.refreshPeriodValue.value = refreshPeriod;
     });
   }
 

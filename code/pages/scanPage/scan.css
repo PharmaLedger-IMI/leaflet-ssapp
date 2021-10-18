@@ -1,0 +1,40 @@
+.barcode-scanner-container {
+    height: calc(100vh - 97px);
+}
+
+.scan-shape {
+    position: absolute;
+    background-image: url(../../assets/icons/barcode-scanner.svg);
+    background-size: contain;
+    background-repeat: no-repeat;
+    height: 372px;
+    top: calc(50% - 186px);
+    left: 49px;
+    right: 49px;
+    background-position: center;
+}
+
+psk-barcode-scanner .scan-status {
+    position: fixed;
+    bottom: 26px;
+    left: calc(50% - 31px);
+}
+
+psk-barcode-scanner .scan-status #first {
+    animation: load 1s infinite;
+}
+
+psk-barcode-scanner .scan-status #second {
+    animation: load 1s infinite;
+}
+
+.camera-error {
+    position: fixed;
+    top: 50%;
+    padding-left: var(--l-space);
+    padding-right: var(--l-space);
+    display: flex;
+    flex-direction: column;
+    text-align: center;
+    max-width: var(--app-max-width);
+}

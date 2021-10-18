@@ -7,6 +7,15 @@
         padding-right: 10px;
     }
 
+    .settings-input {
+        width: 100%;
+        padding: var(--s-space);
+        border-radius: var(--xxs-border-radius);
+        border: 1px solid var(--ion-color-gray-three);
+        margin-bottom: var(--l-space);
+        font-size: var(--s-text-size);;
+    }
+
 </style>
 <div class="mobile-container">
     <page-template id="home-page-template" roundShape="true" shadow>
@@ -16,7 +25,8 @@
             <div class="accordion">
                 <accordion-item shadow subtitle="Product Language Priorities" title="Language">
                     <div class="accordion-item-content" slot="item-content">
-                        <ion-select class="select-options" interface="action-sheet" placeholder="Select a language" value="@preferredLanguage">
+                        <ion-select class="select-options" interface="action-sheet" placeholder="Select a language"
+                                    value="@preferredLanguage">
                             <ion-select-option value="en">English</ion-select-option>
                             <ion-select-option value="de">German</ion-select-option>
 
@@ -33,13 +43,13 @@
                     <div class="accordion-item-content" slot="item-content">
                         <div data-if="@networkEditMode">
                             <div slot="true">
-                                <psk-input data-view-model="@networkNameSetting" type="text"></psk-input>
+                                <input class="settings-input" data-view-model="@networkNameSetting" type="text"></input>
                                 <ion-button data-tag="change-network">Save</ion-button>
                                 <ion-button data-tag="change-default-network">Reset</ion-button>
                             </div>
                             <div slot="false">
-                                <psk-input data-view-model="@networkNameSetting" read-only="true"
-                                           type="text"></psk-input>
+                                <input class="settings-input" data-view-model="@networkNameSetting"
+                                       readonly type="text"></input>
                                 <ion-button class="network-edit-button" data="networkEditMode"
                                             data-tag="change-edit-mode"> Edit <i
                                         class="fa fa-pencil-square-o"></i></ion-button>
@@ -51,12 +61,12 @@
                     <div class="accordion-item-content" slot="item-content">
                         <div data-if="@scanditLicenseEditMode">
                             <div slot="true">
-                                <psk-input data-view-model="@useScanditLicense" type="text"></psk-input>
+                                <input class="settings-input" data-view-model="@useScanditLicense" type="text"></input>
                                 <ion-button data-tag="set-scandit-license">Set</ion-button>
                             </div>
                             <div slot="false">
-                                <psk-input data-view-model="@useScanditLicense" read-only="true"
-                                           type="text"></psk-input>
+                                <input class="settings-input" data-view-model="@useScanditLicense" readonly
+                                       type="text"></input>
                                 <ion-button class="network-edit-button" data="scanditLicenseEditMode"
                                             data-tag="change-edit-mode"> Edit <i
                                         class="fa fa-pencil-square-o"></i></ion-button>
@@ -68,6 +78,24 @@
                     <div class="accordion-item-content align-center" slot="item-content">
                         <span class="checkbox-label">Use app as advanced user</span>
                         <ion-checkbox checked="@advancedUser" slot="end"></ion-checkbox>
+                    </div>
+                </accordion-item>
+                <accordion-item shadow subtitle="Application refresh period for status update" title="Setup refresh period">
+                    <div class="accordion-item-content" slot="item-content">
+                        <div data-if="@refreshPeriodEditMode">
+                            <div slot="true">
+                                <input class="settings-input" data-view-model="@refreshPeriodValue" type="text"></input>
+                                <ion-button data-tag="change-refresh-period">Save</ion-button>
+                                <ion-button data-tag="change-default-refresh-period">Reset</ion-button>
+                            </div>
+                            <div slot="false">
+                                <input class="settings-input" data-view-model="@refreshPeriodValue"
+                                       readonly type="text"></input>
+                                <ion-button class="network-edit-button" data="refreshPeriodEditMode"
+                                            data-tag="change-edit-mode"> Edit <i
+                                        class="fa fa-pencil-square-o"></i></ion-button>
+                            </div>
+                        </div>
                     </div>
                 </accordion-item>
             </div>

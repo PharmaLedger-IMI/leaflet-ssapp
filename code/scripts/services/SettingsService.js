@@ -38,6 +38,17 @@ export default class SettingsService {
 		});
 	}
 
+	asyncReadSetting(chain){
+		return new Promise((resolve, reject)=>{
+			this.readSetting(chain, (err, result)=> {
+				if (err) {
+					return reject(err)
+				}
+				resolve(result);
+			})
+		})
+	}
+
 	writeSetting(chain, value, callback){
 		let settingsChain = chain.split(".");
 		if(settingsChain === 0){

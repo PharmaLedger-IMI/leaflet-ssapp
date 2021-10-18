@@ -25,21 +25,19 @@ export default class DrugDetailsController extends WebcController {
     this.model.SNCheckIcon = ""
     console.log(history.location.state);
     if (typeof history.location.state !== "undefined") {
-      this.gtinSSI = history.location.state.gtinSSI;
-      this.gs1Fields = history.location.state.gs1Fields;
+      this.gtinSSI = history.location.state.productData.gtinSSI;
+      this.gs1Fields = history.location.state.productData.gs1Fields;
       this.model.serialNumber = this.gs1Fields.serialNumber === "0" ? "-" : this.gs1Fields.serialNumber;
       this.model.gtin = this.gs1Fields.gtin;
       this.model.batchNumber = this.gs1Fields.batchNumber;
       // this.model.expiryForDisplay = this.gs1Fields.expiry.slice(0, 2) === "00" ? this.gs1Fields.expiry.slice(5) : this.gs1Fields.expiry;
       let expireDateConverted;
-      this.model.expiryForDisplay = utils.getDateForDisplay(this.gs1Fields.expiry);
-      if (this.gs1Fields.expiry.slice(0, 2) === "00") {
-        expireDateConverted = utils.convertToLastMonthDay(this.gs1Fields.expiry);
-      } else {
-        expireDateConverted = this.model.expiryForDisplay.replaceAll(' ', '');
-      }
-
-      this.model.expireDateConverted = expireDateConverted;
+      this.model.expiryForDisplay = history.location.state.productData.expiryForDisplay
+      this.model.expireDateConverted = history.location.state.productData.expireDateConverted;
+      this.model.product = history.location.state.productData.product;
+    } else {
+      console.log("Product data is undefined ");
+      return
     }
 
     const basePath = utils.getMountPath(this.gtinSSI, this.gs1Fields);
@@ -67,74 +65,56 @@ export default class DrugDetailsController extends WebcController {
       });
     })
 
-    this.dsuDataRetrievalService.readProductData((err, product) => {
-      if (err) {
-        return console.log(err);
+    let batchData = history.location.state.productData.batchData;
+    if (typeof batchData === "undefined") {
+      this.updateUIInGTINOnlyCase();
+      if (this.model.product.gtin && this.model.product.showEPIOnUnknownBatchNumber) {
+        this.model.showEPI = true;
+        this.querySelector(".subheader-container").classList.add("showEpi");
       }
+    }
 
-      if (typeof product === "undefined") {
-        return;
-      }
+    if (batchData.defaultMessage || batchData.recalled) {
 
-      this.model.product = product;
-      this.dsuDataRetrievalService.readBatchData((err, batchData) => {
-        if (err || typeof batchData === "undefined") {
-          this.updateUIInGTINOnlyCase();
-          if (this.model.product.gtin && this.model.product.showEPIOnUnknownBatchNumber) {
-            this.model.showEPI = true;
-            this.querySelector(".subheader-container").classList.add("showEpi");
-          }
-          return console.log(err);
-        }
-
-        if (batchData.defaultMessage || batchData.recalled) {
-
-          this.showModalFromTemplate('batch-info-message', () => {
-          }, () => {
-          }, {
-            model: {
-              title: "Note",
-              recallMessage: batchData.recalled ? batchData.recalledMessage : "",
-              defaultMessage: batchData.defaultMessage
-            },
-            disableExpanding: true,
-            disableFooter: true
-          });
-        }
-
-        batchData.expiryForDisplay = utils.convertFromGS1DateToYYYY_HM(batchData.expiry);
-        batchData.expiryForDisplay = batchData.expiryForDisplay.slice(0, 2) === "00" ? batchData.expiryForDisplay.slice(5) : batchData.expiryForDisplay;
-        this.model.batch = batchData;
-        let snCheck = this.batchStatusService.checkSNCheck(this.model.serialNumber, batchData)//checkSNCheck();
-        let expiryCheck = this.model.expiryForDisplay === batchData.expiryForDisplay;
-        let expiryTime;
-        try {
-          expiryTime = new Date(this.model.expireDateConverted).getTime();
-        } catch (err) {
-          // do nothing
-        }
-        const currentTime = Date.now();
-        this.model.showEPI = this.leafletShouldBeDisplayed(product, batchData, snCheck, expiryCheck, currentTime, expiryTime);
-        if (this.model.showEPI) {
-          this.querySelector(".subheader-container").classList.add("showEpi");
-        }
-
-        this.model.statusType = this.batchStatusService.statusType;
-        this.model.statusMessage = this.batchStatusService.statusMessage;
-
-        if (!expiryCheck || (expiryTime && expiryTime < currentTime)) {
-          this.batchStatusService.getProductStatus(batchData);
-          this.model.statusMessage = this.batchStatusService.statusMessage;
-          this.model.statusType = this.batchStatusService.statusType;
-        }
-
-        if (this.model.statusMessage !== constants.SN_OK_MESSAGE) {
-          this.model.displayStatus = true;
-        } else {
-          this.model.displayStatus = false;
-        }
+      this.showModalFromTemplate('batch-info-message', () => {
+      }, () => {
+      }, {
+        model: {
+          title: "Note",
+          recallMessage: batchData.recalled ? batchData.recalledMessage : "",
+          defaultMessage: batchData.defaultMessage
+        },
+        disableExpanding: true,
+        disableFooter: true
       });
-    });
+    }
+
+
+    this.model.batch = batchData;
+    let snCheck = history.location.state.productData.product.snCheck;
+    let expiryCheck = this.model.expiryForDisplay === batchData.expiryForDisplay;
+    let expiryTime;
+    try {
+      expiryTime = new Date(this.model.expireDateConverted).getTime();
+    } catch (err) {
+      // do nothing
+    }
+    const currentTime = Date.now();
+    this.model.showEPI = this.leafletShouldBeDisplayed(this.model.product, batchData, snCheck, expiryCheck, currentTime, expiryTime);
+    if (this.model.showEPI) {
+      this.querySelector(".subheader-container").classList.add("showEpi");
+    }
+
+    this.model.statusType = history.location.state.productData.product.statusType;
+    this.model.statusMessage = history.location.state.productData.product.statusMessage;
+
+    if (this.model.statusMessage !== constants.SN_OK_MESSAGE) {
+      this.model.displayStatus = true;
+    } else {
+      this.model.displayStatus = false;
+    }
+
+
   }
 
   updateUIInGTINOnlyCase() {
