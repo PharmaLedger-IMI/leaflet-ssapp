@@ -404,10 +404,6 @@ export default class ScanController extends WebcController {
 
   addPackageToScannedPackagesList(packageGTIN_SSI, gs1Fields, callback) {
     const gtinSSIIdentifier = packageGTIN_SSI.getIdentifier();
-    this.DSUStorage.call("mountDSU", utils.getMountPath(packageGTIN_SSI, gs1Fields), gtinSSIIdentifier, (err) => {
-      if (err) {
-        return callback(err);
-      }
 
       resolver.loadDSU(packageGTIN_SSI, (err, dsu) => {
         if (err) {
@@ -466,7 +462,7 @@ export default class ScanController extends WebcController {
           })
         })
       })
-    });
+
   }
 
   constProductDSUExists(constProductDSU_SSI, callback) {

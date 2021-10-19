@@ -94,7 +94,7 @@ export default class XmlDisplayService {
 
     readXmlFile(language, callback) {
         this.buildBasePath((err, pathBase) => {
-            const pathToLeafletLanguage = `${pathBase}${language}/`;
+            const pathToLeafletLanguage = `${pathBase}/${language}/`;
             const pathToXml = pathToLeafletLanguage + this.xmlFile;
 
             this.readFileAndDecodeContent(pathToXml, (err, xmlContent) => {
@@ -107,7 +107,7 @@ export default class XmlDisplayService {
     }
 
     applyStylesheetAndDisplayXml(pathBase, xmlContent) {
-        this.readFileAndDecodeContent(pathToXsl, (err, xslContent) => {
+        this.readXSLTFile((err, xslContent) => {
             if (err) {
                 this.displayError();
                 return;
@@ -204,33 +204,54 @@ export default class XmlDisplayService {
     }
 
     buildBasePath(callback) {
-        const pathToBatchDSU = `${this.basePath}${constants.PATH_TO_BATCH_DSU}`;
-            let batchBasePath = `${pathToBatchDSU}${this.xmlType}/`;
-            this.DSUStorage.call("listFolders", batchBasePath, (err, files) => {
-                if (err) {
-                    return callback(err);
-                }
-                if (files.length > 0) {
-                    return callback(undefined, batchBasePath);
-                }
-
-                    const pathToProductDSU = `${this.basePath}${constants.PATH_TO_PRODUCT_DSU}`;
-                    let pathBase = `${pathToProductDSU}${this.xmlType}/`;
-                    callback(undefined, pathBase);
-                });
-
+      let batchBasePath = `${constants.PATH_TO_BATCH_DSU}${this.xmlType}`;
+      const openDSU = require("opendsu");
+      const resolver = openDSU.loadAPI("resolver");
+      resolver.loadDSU(this.gtinSSI, (err, dsu) => {
+        if (err) {
+          return callback(err);
+        }
+        dsu.listFolders(batchBasePath, (err, files) => {
+          if (err) {
+            return callback(err);
+          }
+          if (files.length > 0) {
+            return callback(undefined, batchBasePath);
+          }
+          let pathBase = `${constants.PATH_TO_PRODUCT_DSU}${this.xmlType}`;
+          callback(undefined, pathBase);
+        })
+      })
     }
 
 
     getErrorMessageElement(errorMessage) {
-        let pskLabel = document.createElement("psk-label");
-        pskLabel.className = "scan-error-message";
-        pskLabel.label = errorMessage;
-        return pskLabel;
+      let pskLabel = document.createElement("psk-label");
+      pskLabel.className = "scan-error-message";
+      pskLabel.label = errorMessage;
+      return pskLabel;
     }
 
     readFileAndDecodeContent(path, callback) {
-        this.DSUStorage.getItem(path, (err, content) => {
+        const openDSU = require("opendsu");
+        const resolver = openDSU.loadAPI("resolver");
+        resolver.loadDSU(this.gtinSSI, (err, dsu) => {
+            if (err) {
+                return callback(err);
+            }
+            dsu.readFile(path, (err, content) => {
+                if (err) {
+                    return callback(err);
+                }
+                let textDecoder = new TextDecoder("utf-8");
+                callback(undefined, textDecoder.decode(content));
+            })
+        })
+
+    }
+
+    readXSLTFile(callback) {
+        this.DSUStorage.getItem(constants.XSL_PATH, (err, content) => {
             if (err) {
                 return callback(err);
             }
@@ -238,17 +259,22 @@ export default class XmlDisplayService {
             callback(undefined, textDecoder.decode(content));
         })
     }
-
     getAvailableLanguagesForXmlType(callback) {
-        this.buildBasePath((err, pathBase) => {
-            this.DSUStorage.call("listFolders", pathBase, (err, languages) => {
-                if (err) {
-                    return callback(err);
-                }
-
-                callback(undefined, this.languageService.normalizeLanguages(languages));
-            })
-        });
+      this.buildBasePath((err, pathBase) => {
+        const openDSU = require("opendsu");
+        const resolver = openDSU.loadAPI("resolver");
+        resolver.loadDSU(this.gtinSSI, (err, dsu) => {
+          if (err) {
+            return callback(err);
+          }
+          dsu.listFolders(pathBase, (err, languages) => {
+            if (err) {
+              return callback(err);
+            }
+            callback(undefined, this.languageService.normalizeLanguages(languages));
+          })
+        })
+      });
     }
 
     registerLanguages(languages, callback) {
