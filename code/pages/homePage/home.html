@@ -12,7 +12,7 @@
                 <div class="history-item-container" data-tag="view-details" item-type="history-list-item">
                     <div class="item-row-container">
                         <div class="product-image">
-                            <img src="@photo"  onerror="this.onerror=null; this.src='./assets/icons/product_image_placeholder.svg'"/>
+                            <img src="@product.productPhoto"/>
                         </div>
                         <div class="product-info">
                             <div class="product-info-row">
@@ -23,7 +23,7 @@
                             </div>
                             <div class="product-info-row" data-if="@advancedView">
                                 <ion-label class="productItem_expiry">Expiry:</ion-label>
-                                <ion-label class="productItem_expiry">{{@product.expiryForDisplay}}</ion-label>
+                                <ion-label class="productItem_expiry">{{@expiryForDisplay}}</ion-label>
                             </div>
                             <div class="product-info-row" data-if="@advancedView">
                                 <ion-label class="productItem_expiry">Batch number:</ion-label>
@@ -31,7 +31,7 @@
                             </div>
                             <div class="product-info-row" status="@status">
                                 <div class="status-icon"></div>
-                                <ion-label class="productItem_status">{{@product.statusMessage}}</ion-label>
+                                <ion-label class="productItem_status">{{@statusMessage}}</ion-label>
                             </div>
                         </div>
                         <div class="arrow">

@@ -3,7 +3,6 @@ const {DataSource} = WebCardinal.dataSources;
 import constants from "../../constants.js";
 import SettingsService from "../services/SettingsService.js";
 import BatchStatusService from "../services/BatchStatusService.js";
-import utils from "../../utils.js";
 import DSUDataRetrievalService from "../services/DSUDataRetrievalService/DSUDataRetrievalService.js";
 
 class HistoryDataSource extends DataSource {
@@ -35,43 +34,26 @@ class HistoryDataSource extends DataSource {
         for (let result of results) {
           if (Date.now() - result['__timestamp'] > this.secondsToUpdate * 1000) {
             let batchData;
+            let product;
             let batchStatusService = new BatchStatusService();
             try {
               let dsuDataRetrievalService = new DSUDataRetrievalService(result.gtinSSI);
-              batchData = await dsuDataRetrievalService.readAsyncBatchData();
-
-              batchStatusService.checkSNCheck(result.gs1Fields.serialNumber, batchData);
-              batchData.expiryForDisplay = utils.convertFromGS1DateToYYYY_HM(batchData.expiry);
-              batchData.expiryForDisplay = batchData.expiryForDisplay.slice(0, 2) === "00" ? batchData.expiryForDisplay.slice(5) : batchData.expiryForDisplay;
-              let expiryCheck = result.expiryForDisplay === batchData.expiryForDisplay;
-              let expiryTime;
-              let expireDateConverted;
-              let expiryForDisplay = utils.getDateForDisplay(result.gs1Fields.expiry);
-              if (result.gs1Fields.expiry.slice(0, 2) === "00") {
-                expireDateConverted = utils.convertToLastMonthDay(result.gs1Fields.expiry);
-              } else {
-                expireDateConverted = expiryForDisplay.replaceAll(' ', '');
-              }
-
-              try {
-                expiryTime = new Date(expireDateConverted).getTime();
-              } catch (err) {
-                // do nothing
-              }
-              const currentTime = Date.now();
-              if (!expiryCheck || (expiryTime && expiryTime < currentTime)) {
-                batchStatusService.getProductStatus(batchData);
-              }
+              product = await dsuDataRetrievalService.asyncReadProductData();
+              batchData = await dsuDataRetrievalService.asyncReadBatchData();
+              batchStatusService.getProductStatus(batchData, result.gs1Fields);
             } catch (e) {
               batchStatusService.unableToVerify();
             }
 
             result.status = batchStatusService.status;
             result.statusMessage = batchStatusService.statusMessage;
-            const pk = utils.getRecordPKey(result.gtinSSI, result.gs1Fields);
-            this.dbStorage.updateRecord(constants.HISTORY_TABLE, pk, result, (err, record) => {
-
-            });
+            result.statusType = batchStatusService.statusType;
+            result.expiryForDisplay = batchStatusService.expiryForDisplay;
+            result.expiryTime = batchStatusService.expiryTime;
+            result.snCheck = batchStatusService.snCheck;
+            result.product = product;
+            result.batchData = batchData;
+            result = await $$.promisify(this.dbStorage.updateRecord)(constants.HISTORY_TABLE, result.pk, result)
           }
           result.advancedView = this.advancedUser;
         }
@@ -80,7 +62,6 @@ class HistoryDataSource extends DataSource {
     } catch (e) {
       console.log('Error on getting async page data: ', e);
     }
-
     return products;
   }
 }
@@ -128,8 +109,6 @@ export default class HistoryController extends WebcController {
     this.onTagClick("view-details", (model, target, event) => {
       viewDetails(model.pk);
     });
-    //get all records from history table
-
 
   }
 }

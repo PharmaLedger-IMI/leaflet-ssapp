@@ -1,11 +1,15 @@
 import constants from "../../constants.js";
+import utils from "../../utils.js";
 
-export default class BatchStatusService{
+export default class BatchStatusService {
   statusMessage = constants.SN_OK_MESSAGE;
   statusType = "";
   status = "verified";
+  expiryForDisplay;
+  snCheck;
+  expiryTime;
 
-  checkSNCheck(serialNumber, batchData) {
+  checkSNCheck(batchData, serialNumber) {
     let res = {
       validSerial: false,
       recalledSerial: false,
@@ -49,8 +53,7 @@ export default class BatchStatusService{
       this.statusMessage = constants.SN_DECOMMISSIONED_MESSAGE;
       this.status = "decommissioned_sn";
     }
-
-    return res;
+    this.snCheck = res;
   };
 
   getStatusType(serialNumber, bloomFilterSerialisations) {
@@ -61,7 +64,8 @@ export default class BatchStatusService{
     try {
       createBloomFilter = require("opendsu").loadAPI("crypto").createBloomFilter;
     } catch (err) {
-      return alert(err.message);
+      console.log("Could not create bloomfilter ", err);
+      return false;
     }
 
     for (let i = bloomFilterSerialisations.length - 1; i >= 0; i--) {
@@ -74,12 +78,25 @@ export default class BatchStatusService{
     return undefined;
   }
 
-  getProductStatus(batchData, expiryTime) {
-    if (batchData.incorrectDateCheck && !expiryTime) {
+  getProductStatus(batchData, gs1Fields) {
+    this.checkSNCheck(batchData, gs1Fields.serialNumber);
+    this.expiryForDisplay = utils.getDateForDisplay(utils.convertFromGS1DateToYYYY_HM(batchData.expiry));
+
+    if (gs1Fields.expiry.slice(0, 2) === "00") {
+      this.normalizedExpiryDate = utils.convertToLastMonthDay(gs1Fields.expiry);
+    } else {
+      this.normalizedExpiryDate = this.expiryForDisplay.replaceAll(' ', '');
+    }
+    try {
+      this.expiryTime = new Date(this.normalizedExpiryDate).getTime();
+    } catch (err) {
+      // do nothing
+    }
+    if (batchData.incorrectDateCheck && !this.expiryTime) {
       this.statusMessage = constants.PRODUCT_STATUS_FAIL_MESSAGE;
       this.statusType = "error";
       this.status = "incorrect_date";
-    } else if (batchData.expiredDateCheck && (!expiryTime || expiryTime< Date.now())) {
+    } else if (batchData.expiredDateCheck && (!this.expiryTime || this.expiryTime < Date.now())) {
       this.statusMessage = constants.PRODUCT_EXPIRED_MESSAGE;
       this.statusType = "error";
       this.status = "expired_date";

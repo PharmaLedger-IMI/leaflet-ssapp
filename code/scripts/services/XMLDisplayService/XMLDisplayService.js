@@ -5,7 +5,7 @@ const pathToXsl = constants.XSL_PATH;
 let errorMessage = "This is a valid product. However, more information about this product has not been published by the Pharmaceutical Company. Please check back later.";
 
 export default class XmlDisplayService {
-    constructor(dsuStorage, element, gtinSSI, basePath, xmlType, xmlFile, model) {
+    constructor(dsuStorage, element, gtinSSI, xmlType, xmlFile, model) {
         this.languageService = new LanguageService(dsuStorage);
         this.DSUStorage = dsuStorage;
         this.element = element;
@@ -13,7 +13,6 @@ export default class XmlDisplayService {
         this.xmlType = xmlType;
         this.xmlFile = xmlFile;
         this.model = model;
-        this.basePath = basePath;
     }
 
     displayXml(language) {
@@ -41,20 +40,18 @@ export default class XmlDisplayService {
     }
 
     isXmlAvailable() {
-        this.getAvailableLanguagesForXmlType((err, languages) => {
+      this.getAvailableLanguagesForXmlType((err, languages) => {
             if (this.xmlType === "smpc" && languages.length > 0) {
-                this.model.showSmpc = true;
-                this.model.epiColumns++;
+                       this.model.showSmpc = true;
+                   }
+                   if (this.xmlType === "leaflet" && languages.length > 0) {
+                       this.model.showLeaflet = true;
             }
-            if (this.xmlType === "leaflet" && languages.length > 0) {
-                this.model.showLeaflet = true;
-                this.model.epiColumns++;
-            }
-        });
+      });
     }
 
 
-    populateModel() {
+  populateModel() {
         this.getAvailableLanguagesForXmlType((err, languages) => {
             this.languageService.addWorkingLanguages(languages, (err) => {
                 if (languages.length >= 2) {

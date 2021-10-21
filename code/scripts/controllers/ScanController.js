@@ -23,7 +23,6 @@ export default class ScanController extends WebcController {
       useScandit: false
     };
     this.settingsService = new SettingsService(this.DSUStorage);
-    this.batchStatusService = new BatchStatusService();
     const dbApi = opendsu.loadApi("db");
     dbApi.getMainEnclaveDB((err, enclaveDB) => {
       if (err) {
@@ -396,72 +395,48 @@ export default class ScanController extends WebcController {
         callback(undefined, {status: false, record: null});
       } else {
         console.log("Found in db ", result);
-        callback(undefined, {status: false, record: result});
+        callback(undefined, {status: true, record: result});
       }
 
     })
   }
 
   addPackageToScannedPackagesList(packageGTIN_SSI, gs1Fields, callback) {
-    const gtinSSIIdentifier = packageGTIN_SSI.getIdentifier();
+    this.dsuDataRetrievalService = new DSUDataRetrievalService(packageGTIN_SSI);
+    let batchStatusService = new BatchStatusService();
+    this.dsuDataRetrievalService.readProductData(async (err, product) => {
+      if (err) {
+        return callback(err);
+      }
+      let batchData;
+      try {
+        batchData = await this.dsuDataRetrievalService.asyncReadBatchData();
+        batchStatusService.getProductStatus(batchData, gs1Fields);
+      } catch (e) {
+        batchStatusService.unableToVerify();
+      }
 
-      resolver.loadDSU(packageGTIN_SSI, (err, dsu) => {
+      const pk = utils.getRecordPKey(packageGTIN_SSI, gs1Fields);
+      this.dbStorage.insertRecord(constants.HISTORY_TABLE, pk, {
+        gs1Fields: gs1Fields,
+        gtinSSI: packageGTIN_SSI,
+        status: batchStatusService.status,
+        statusMessage: batchStatusService.statusMessage,
+        statusType: batchStatusService.statusType,
+        expiryForDisplay: batchStatusService.expiryForDisplay,
+        expiryTime: batchStatusService.expiryTime,
+        snCheck: batchStatusService.snCheck,
+        product: product,
+        batch: batchData,
+        createdAt: Date.now(),
+      }, (err, result) => {
         if (err) {
           return callback(err);
         }
-        this.dsuDataRetrievalService = new DSUDataRetrievalService(packageGTIN_SSI);
-        this.dsuDataRetrievalService.readProductData(async (err, product) => {
-          if (err) {
-            return callback(err);
-          }
-          let batchData;
-          try {
-            batchData = await this.dsuDataRetrievalService.readAsyncBatchData();
-            batchData.expiryForDisplay = utils.getDateForDisplay(utils.convertFromGS1DateToYYYY_HM(batchData.expiry));
-
-            product.snCheck = this.batchStatusService.checkSNCheck(gs1Fields.serialNumber, batchData);
-
-            let expiryTime;
-            let expireDateConverted;
-            if (gs1Fields.expiry.slice(0, 2) === "00") {
-              expireDateConverted = utils.convertToLastMonthDay(gs1Fields.expiry);
-            } else {
-              expireDateConverted = batchData.expiryForDisplay.replaceAll(' ', '');
-            }
-            try {
-              expiryTime = new Date(expireDateConverted).getTime();
-            } catch (err) {
-              // do nothing
-            }
-            this.batchStatusService.getProductStatus(batchData, expiryTime);
-
-          } catch (e) {
-            this.batchStatusService.unableToVerify();
-          }
-          product.expiryForDisplay = utils.getDateForDisplay(gs1Fields.expiry);
-          product.statusType = this.batchStatusService.statusType;
-          product.statusMessage = this.batchStatusService.statusMessage;
-          product.photo = utils.getFetchUrl(
-            `/download${utils.getMountPath(packageGTIN_SSI, gs1Fields)}/${constants.PATH_TO_PRODUCT_DSU}image.png`
-          );
-          const pk = utils.getRecordPKey(packageGTIN_SSI, gs1Fields);
-          this.dbStorage.insertRecord(constants.HISTORY_TABLE, pk, {
-            gs1Fields: gs1Fields,
-            gtinSSI: packageGTIN_SSI,
-            status: this.batchStatusService.status,
-            statusMessage: this.batchStatusService.statusMessage,
-            statusType: this.batchStatusService.statusType,
-            createdAt: Date.now(),
-            batchData: batchData,
-            product: product
-          }, (err, result) => {
-            if (err) {
-              return callback(err);
-            }
-            callback(undefined, result);
-          })
-        })
+        callback(undefined, result);
       })
+    })
+
 
   }
 

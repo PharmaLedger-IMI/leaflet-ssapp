@@ -26,5 +26,6 @@ export default {
   PACK_VERIFICATION_UNABLE_TO_VERIFY_MESSAGE: "Unable to verify",
   HISTORY_TABLE : "history_table",
   PATH_TO_PRODUCT_DSU: "/product/",
-  PATH_TO_BATCH_DSU: "/batch/"
+  PATH_TO_BATCH_DSU: "/batch/",
+  HISTORY_ITEM_DEFAULT_ICON: "./assets/icons/product_image_placeholder.svg"
 }

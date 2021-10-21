@@ -131,13 +131,6 @@ function getFetchUrl(relativePath) {
   return relativePath;
 }
 
-function getMountPath(gtinSSI, gs1Fields) {
-  if (typeof gtinSSI !== "string") {
-    gtinSSI = gtinSSI.getIdentifier();
-  }
-  return `/packages/${gtinSSI}${gs1Fields.serialNumber}|${gs1Fields.expiry}`;
-}
-
 function getRecordPKey(gtinSSI, gs1Fields) {
   if (typeof gtinSSI !== "string") {
     gtinSSI = gtinSSI.getIdentifier();
@@ -145,50 +138,55 @@ function getRecordPKey(gtinSSI, gs1Fields) {
   return `${gtinSSI}${gs1Fields.serialNumber}|${gs1Fields.expiry}`;
 }
 
-function refreshProductDSU(dsuDataRetrievalService, storage, callback) {
-  dsuDataRetrievalService.getPathToProductDSU((err, pathToProductDSU) => {
-    if (err) {
-      return callback(err);
-    }
-    storage.call("refreshDSUMountedAtPath", pathToProductDSU, (err) => {
-      if (err) {
-        return callback(err);
-      }
 
-      callback(undefined, true);
-    });
-  });
+const bytesToBase64 = (bytes) => {
+  const base64abc = [
+    "A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M",
+    "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z",
+    "a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m",
+    "n", "o", "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z",
+    "0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "+", "/"
+  ];
+
+  let result = '', i, l = bytes.length;
+  for (i = 2; i < l; i += 3) {
+    result += base64abc[bytes[i - 2] >> 2];
+    result += base64abc[((bytes[i - 2] & 0x03) << 4) | (bytes[i - 1] >> 4)];
+    result += base64abc[((bytes[i - 1] & 0x0F) << 2) | (bytes[i] >> 6)];
+    result += base64abc[bytes[i] & 0x3F];
+  }
+  if (i === l + 1) { // 1 octet yet to write
+    result += base64abc[bytes[i - 2] >> 2];
+    result += base64abc[(bytes[i - 2] & 0x03) << 4];
+    result += "==";
+  }
+  if (i === l) { // 2 octets yet to write
+    result += base64abc[bytes[i - 2] >> 2];
+    result += base64abc[((bytes[i - 2] & 0x03) << 4) | (bytes[i - 1] >> 4)];
+    result += base64abc[(bytes[i - 1] & 0x0F) << 2];
+    result += "=";
+  }
+  return result;
 }
 
-function refreshBatchDSU(storage, basePath, callback) {
-  storage.call("refreshDSUMountedAtPath", `${basePath}/batch`, (err) => {
-    if (err) {
-      return callback(err);
-    }
-
-    callback(undefined, true);
-  });
-}
-
-function refreshMountedDSUs(dsuDataRetrievalService, storage, basePath, callback) {
-  refreshBatchDSU(storage, basePath, (err) => {
-    if (err) {
-      return callback(err);
-    }
-
-    refreshProductDSU(dsuDataRetrievalService, storage, callback);
-  });
+function getImageAsBase64(imageData) {
+  if (typeof imageData === "string") {
+    return imageData;
+  }
+  if (!(imageData instanceof Uint8Array)) {
+    imageData = new Uint8Array(imageData);
+  }
+  let base64Image = bytesToBase64(imageData);
+  base64Image = `data:image/png;base64, ${base64Image}`;
+  return base64Image;
 }
 
 export default {
   convertFromISOtoYYYY_HM,
   convertFromGS1DateToYYYY_HM,
   getFetchUrl,
-  getMountPath,
-  refreshProductDSU,
-  refreshBatchDSU,
-  refreshMountedDSUs,
   getRecordPKey,
   getDateForDisplay,
-  convertToLastMonthDay
+  convertToLastMonthDay,
+  getImageAsBase64
 };

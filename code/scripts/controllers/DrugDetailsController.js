@@ -22,32 +22,72 @@ export default class DrugDetailsController extends WebcController {
       displayStatus: false,
     };
 
-    this.model.SNCheckIcon = ""
-    console.log(history.location.state);
     if (typeof history.location.state !== "undefined") {
       this.gtinSSI = history.location.state.productData.gtinSSI;
       this.gs1Fields = history.location.state.productData.gs1Fields;
       this.model.serialNumber = this.gs1Fields.serialNumber === "0" ? "-" : this.gs1Fields.serialNumber;
       this.model.gtin = this.gs1Fields.gtin;
       this.model.batchNumber = this.gs1Fields.batchNumber;
-      // this.model.expiryForDisplay = this.gs1Fields.expiry.slice(0, 2) === "00" ? this.gs1Fields.expiry.slice(5) : this.gs1Fields.expiry;
-      let expireDateConverted;
       this.model.expiryForDisplay = history.location.state.productData.expiryForDisplay
-      this.model.expireDateConverted = history.location.state.productData.expireDateConverted;
+      this.model.expiryTime = history.location.state.productData.expiryTime;
       this.model.product = history.location.state.productData.product;
+      this.model.batch = history.location.state.productData.batch;
+      this.model.statusType = history.location.state.productData.statusType;
+      this.model.statusMessage = history.location.state.productData.statusMessage;
+      this.model.snCheck = history.location.state.productData.snCheck;
     } else {
-      console.log("Product data is undefined ");
+      console.log("Undefined product data");
+      this.updateUIInGTINOnlyCase("Undefined product data")
       return
     }
 
-    const basePath = utils.getMountPath(this.gtinSSI, this.gs1Fields);
     this.dsuDataRetrievalService = new DSUDataRetrievalService(this.gtinSSI);
     this.batchStatusService = new BatchStatusService();
-    const smpcDisplayService = new XMLDisplayService(this.DSUStorage, element, this.gtinSSI, basePath, "smpc", "smpc.xml", this.model);
-    const leafletDisplayService = new XMLDisplayService(this.DSUStorage, element, this.gtinSSI, basePath, "leaflet", "smpc.xml", this.model);
+    const smpcDisplayService = new XMLDisplayService(this.DSUStorage, element, this.gtinSSI, "smpc", "smpc.xml", this.model);
+    const leafletDisplayService = new XMLDisplayService(this.DSUStorage, element, this.gtinSSI, "leaflet", "smpc.xml", this.model);
 
     smpcDisplayService.isXmlAvailable();
     leafletDisplayService.isXmlAvailable();
+
+    if (typeof this.model.batch === "undefined") {
+      this.updateUIInGTINOnlyCase();
+      if (this.model.product.gtin && this.model.product.showEPIOnUnknownBatchNumber) {
+        this.model.showEPI = true;
+        this.querySelector(".subheader-container").classList.add("showEpi");
+      }
+    }
+
+    if (this.model.batch.defaultMessage || this.model.batch.recalled) {
+      this.showModalFromTemplate('batch-info-message', () => {
+      }, () => {
+      }, {
+        model: {
+          title: "Note",
+          recallMessage: this.model.batch.recalled ? this.model.batch.recalledMessage : "",
+          defaultMessage: this.model.batch.defaultMessage
+        },
+        disableExpanding: true,
+        disableFooter: true
+      });
+    }
+    let expiryForDisplay = utils.convertFromGS1DateToYYYY_HM(this.model.batch.expiry);
+    if (expiryForDisplay.slice(0, 2) === "00") {
+      expiryForDisplay = expiryForDisplay.slice(5);
+    }
+    let expiryCheck = this.model.expiryForDisplay === expiryForDisplay;
+
+    const currentTime = Date.now();
+    this.model.showEPI = this.leafletShouldBeDisplayed(this.model.product, this.model.batch, this.model.snCheck, expiryCheck, currentTime, this.model.expiryTime);
+    if (this.model.showEPI) {
+      this.querySelector(".subheader-container").classList.add("showEpi");
+    }
+
+
+    if (this.model.statusMessage !== constants.SN_OK_MESSAGE) {
+      this.model.displayStatus = true;
+    } else {
+      this.model.displayStatus = false;
+    }
 
     this.onTagClick("click-verified", () => {
       this.showModalFromTemplate('batch-info', () => {
@@ -64,62 +104,11 @@ export default class DrugDetailsController extends WebcController {
         disableFooter: true
       });
     })
-
-    let batchData = history.location.state.productData.batchData;
-    if (typeof batchData === "undefined") {
-      this.updateUIInGTINOnlyCase();
-      if (this.model.product.gtin && this.model.product.showEPIOnUnknownBatchNumber) {
-        this.model.showEPI = true;
-        this.querySelector(".subheader-container").classList.add("showEpi");
-      }
-    }
-
-    if (batchData.defaultMessage || batchData.recalled) {
-
-      this.showModalFromTemplate('batch-info-message', () => {
-      }, () => {
-      }, {
-        model: {
-          title: "Note",
-          recallMessage: batchData.recalled ? batchData.recalledMessage : "",
-          defaultMessage: batchData.defaultMessage
-        },
-        disableExpanding: true,
-        disableFooter: true
-      });
-    }
-
-
-    this.model.batch = batchData;
-    let snCheck = history.location.state.productData.product.snCheck;
-    let expiryCheck = this.model.expiryForDisplay === batchData.expiryForDisplay;
-    let expiryTime;
-    try {
-      expiryTime = new Date(this.model.expireDateConverted).getTime();
-    } catch (err) {
-      // do nothing
-    }
-    const currentTime = Date.now();
-    this.model.showEPI = this.leafletShouldBeDisplayed(this.model.product, batchData, snCheck, expiryCheck, currentTime, expiryTime);
-    if (this.model.showEPI) {
-      this.querySelector(".subheader-container").classList.add("showEpi");
-    }
-
-    this.model.statusType = history.location.state.productData.product.statusType;
-    this.model.statusMessage = history.location.state.productData.product.statusMessage;
-
-    if (this.model.statusMessage !== constants.SN_OK_MESSAGE) {
-      this.model.displayStatus = true;
-    } else {
-      this.model.displayStatus = false;
-    }
-
-
   }
 
-  updateUIInGTINOnlyCase() {
-    const message = "The batch number in the barcode could not be found";
-    this.displayModal(message, " ");
+  updateUIInGTINOnlyCase(message) {
+    let msg = message || "The batch number in the barcode could not be found";
+    this.displayModal(msg, " ");
     this.batchStatusService.unableToVerify();
     this.model.statusMessage = this.batchStatusService.statusMessage;
     this.model.statusType = this.batchStatusService.statusType;

@@ -16,8 +16,7 @@ export default class ReportController extends WebcController {
             this.model.expiryForDisplay = this.gs1Fields.expiry;
         }
 
-        const basePath = utils.getMountPath(this.gtinSSI, this.gs1Fields);
-        this.dsuDataRetrievalService = new DSUDataRetrievalService(this.DSUStorage, this.gtinSSI, basePath);
+        this.dsuDataRetrievalService = new DSUDataRetrievalService(this.DSUStorage, this.gtinSSI);
         this.dsuDataRetrievalService.readProductData((err, product) => {
             let iframe = document.createElement("iframe");
             iframe.src = `${product.reportURL}#x-blockchain-domain-request`;
