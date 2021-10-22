@@ -58,6 +58,29 @@
 .status-container[status-type="error"] {
     background: linear-gradient(0deg, rgba(248, 100, 88, 0.1), rgba(248, 100, 88, 0.1)), #FFFFFF;
 }
-.leaflet-accordion-item-content{
+
+.leaflet-accordion-item-content {
     font-size: var(--xs-text-size);
+}
+
+.no-leaflet-container {
+    margin-top: calc(20vh - 65px);
+    text-align: center;
+    margin-left: var(--l-space);
+    margin-right: var(--l-space);
+}
+
+.no-leaflet-container .no-leaflet-image {
+    content: url("../../assets/icons/wizard_step1.svg");
+    margin: auto;
+}
+
+.no-leaflet-container .no-leaflet-title {
+    font-size: var(--xl-text-size);
+    font-weight: var(--bold-font-weight);
+    margin-top: var(--l-space);
+}
+
+.no-leaflet-container .no-leaflet-text {
+    margin-top: var(--s-space);
 }

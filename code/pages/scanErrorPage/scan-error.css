@@ -1,0 +1,47 @@
+.no-product-container {
+    margin-top: calc(20vh - 65px);
+    text-align: center;
+    margin-left: var(--l-space);
+    margin-right: var(--l-space);
+    padding-bottom: 97px;
+}
+
+.no-product-container .no-product-image {
+    content: url("../../assets/icons/wizard_step1.svg");
+    margin: auto;
+}
+
+.no-product-container .no-product-title {
+    font-size: var(--l-text-size);
+    font-weight: var(--bold-font-weight);
+    margin-top: var(--l-space);
+}
+
+.no-product-container .no-product-text {
+    margin-top: var(--s-space);
+    font-size: var(--xs-text-size);
+}
+
+.scan-data {
+    margin-top: var(--l-space);
+    background: #FFFFFF;
+    text-align: left;
+    padding: var(--l-space);
+    font-size: var(--s-text-size);
+}
+
+.scan-data .scan-data-row {
+    display: flex;
+    margin-top: var(--s-space);
+}
+
+.scan-data-row .label {
+    font-weight: var(--bold-font-weight);
+    margin-right: var(--xs-space);
+}
+
+.secondaryMessage {
+    text-align: left;
+    margin-top: var(--l-space);
+    font-size: var(--xxs-text-size);
+}
