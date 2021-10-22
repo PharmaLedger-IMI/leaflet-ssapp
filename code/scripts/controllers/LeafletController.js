@@ -27,7 +27,7 @@ export default class LeafletController extends WebcController {
                 })
         })
 
-        // const xmlDisplayService = new XMLDisplayService(this.DSUStorage, element, this.gtinSSI, "leaflet", "leaflet.xml", this.model);
-        // xmlDisplayService.populateModel();
+         const xmlDisplayService = new XMLDisplayService(this.DSUStorage, element, this.gtinSSI, "leaflet", "leaflet.xml", this.model);
+         xmlDisplayService.populateModel();
     }
 }

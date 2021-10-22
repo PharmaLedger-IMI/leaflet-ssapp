@@ -92,10 +92,17 @@ const monthNames = ["January", "February", "March", "April", "May", "June",
  * converts date from ISO (YYYY-MM-DD) to YYYY-HM, where HM comes from human name for the month, i.e. 2021-DECEMBER
  * @param {string} dateString
  */
-function convertFromISOtoYYYY_HM(dateString) {
+function convertFromISOtoYYYY_HM(dateString, useFullMonthName, separator) {
   const splitDate = dateString.split('-');
   const month = parseInt(splitDate[1]);
-  return `${splitDate[2]} - ${monthNames[month - 1].slice(0, 3)} - ${splitDate[0]}`;
+  let separatorString = "-";
+  if (typeof separator !== "undefined") {
+    separatorString = separator;
+  }
+  if (useFullMonthName) {
+    return `${splitDate[2]} ${separatorString} ${monthNames[month - 1]} ${separatorString} ${splitDate[0]}`;
+  }
+  return `${splitDate[2]} ${separatorString} ${monthNames[month - 1].slice(0, 3)} ${separatorString} ${splitDate[0]}`;
 }
 
 function convertFromGS1DateToYYYY_HM(gs1DateString) {
@@ -103,6 +110,36 @@ function convertFromGS1DateToYYYY_HM(gs1DateString) {
   let month = gs1DateString.slice(2, 4);
   let day = gs1DateString.slice(4);
   return `${day} - ${monthNames[month - 1].slice(0, 3)} - ${year}`
+}
+
+function getTimeSince(date) {
+
+  let seconds = Math.floor((new Date() - new Date(date)) / 1000);
+  let month = new Date(date).getMonth() + 1;
+  let monthSeconds = 31 * 24 + 60;
+  if (month === 2) {
+    monthSeconds = 28 * 24 * 60;
+  }
+  if ([4, 6, 9, 11].includes(month)) {
+    monthSeconds = 30 * 24 * 60;
+  }
+
+  if (seconds > monthSeconds) {
+    return
+  }
+  let interval = seconds / monthSeconds;
+  if (interval > 1) {
+    return Math.floor(interval) + " days";
+  }
+  interval = seconds / 3600;
+  if (interval > 1) {
+    return Math.floor(interval) + " hours";
+  }
+  interval = seconds / 60;
+  if (interval > 1) {
+    return Math.floor(interval) + " minutes";
+  }
+  return seconds + (seconds > 1 ? " seconds" : " second");
 }
 
 function getDateForDisplay(date) {
@@ -188,5 +225,6 @@ export default {
   getRecordPKey,
   getDateForDisplay,
   convertToLastMonthDay,
-  getImageAsBase64
+  getImageAsBase64,
+  getTimeSince
 };

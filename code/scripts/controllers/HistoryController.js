@@ -4,6 +4,7 @@ import constants from "../../constants.js";
 import SettingsService from "../services/SettingsService.js";
 import BatchStatusService from "../services/BatchStatusService.js";
 import DSUDataRetrievalService from "../services/DSUDataRetrievalService/DSUDataRetrievalService.js";
+import utils from "../../utils.js";
 
 class HistoryDataSource extends DataSource {
   constructor(...props) {
@@ -58,9 +59,30 @@ class HistoryDataSource extends DataSource {
           result.advancedView = this.advancedUser;
         }
         products = results;
+      } else {
+        if (document.querySelector(".datatable-title") && document.querySelector(".datatable-title").hidden) {
+          document.querySelector(".datatable-title").hidden = true;
+        }
       }
     } catch (e) {
       console.log('Error on getting async page data: ', e);
+    }
+    //group by month and year
+    let groups = {};
+    for (let product of products) {
+      let date = product.createdAt.slice(0, 7);
+      if (!groups[date]) {
+        groups[date] = [];
+        product.firstGroupItem = true;
+      } else {
+        product.firstGroupItem = false;
+      }
+      let humanDate = utils.convertFromISOtoYYYY_HM(product.createdAt.split('T')[0], true, "");
+      product.groupDate = humanDate.slice(4);
+      let timeLabel = "ago";
+      product.timeFrameOrDate = `${utils.getTimeSince(product.createdAt)} ${timeLabel}` || humanDate;
+
+      groups[date].push(product);
     }
     return products;
   }

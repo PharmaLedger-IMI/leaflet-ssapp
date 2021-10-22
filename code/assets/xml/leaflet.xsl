@@ -61,11 +61,11 @@
     <xsl:template match="xs:section">
         <xsl:choose>
             <xsl:when test="xs:code/@displayName != 'SPL LISTING DATA ELEMENTS SECTION'">
-                <div class="accordion-item">
+                <div class="leaflet-accordion-item">
                     <xsl:attribute name="sectionCode">
                         <xsl:value-of select="xs:code/@code"/>
                     </xsl:attribute>
-                    <xsl:attribute name="title">
+                    <h5>
                         <!--<xsl:value-of select="xs:code/@displayName"/>-->
                         <xsl:variable name="partialTitle" select="substring(xs:code/@displayName,2)"/>
                         <xsl:variable name="firstLetter" select="substring(xs:code/@displayName,1,1)"/>
@@ -73,8 +73,8 @@
                             <xsl:value-of select="concat($firstLetter,translate($partialTitle,'ABCDEFGHIJKLMNOPQRSTUVWXYZ','abcdefghijklmnopqrstuvwxyz'))"/>
                         </xsl:variable>
                         <xsl:value-of select="$modifiedTitle"/>
-                    </xsl:attribute>
-                    <div class="accordion-item-content" slot="item-content">
+                    </h5>
+                    <div class="leaflet-accordion-item-content">
                         <xsl:apply-templates select="@*|node()"/>
                     </div>
                 </div>

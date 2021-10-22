@@ -58,3 +58,6 @@
 .status-container[status-type="error"] {
     background: linear-gradient(0deg, rgba(248, 100, 88, 0.1), rgba(248, 100, 88, 0.1)), #FFFFFF;
 }
+.leaflet-accordion-item-content{
+    font-size: var(--xs-text-size);
+}

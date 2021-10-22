@@ -130,9 +130,9 @@ export default class XmlDisplayService {
         xsltProcessor.importStylesheet(xslDoc);
 
         let resultDocument = xsltProcessor.transformToFragment(xmlDoc, document);
-        this.element.querySelector("#content").innerHTML = '';
+        this.element.querySelector("#leaflet-content").innerHTML = '';
         let mainDiv = document.createElement("div");
-        let sectionsElements = resultDocument.querySelectorAll(".accordion-item");
+        let sectionsElements = resultDocument.querySelectorAll(".leaflet-accordion-item");
         let aboutContent = "";
         let beforeContent = "";
         let howToContent = "";
@@ -179,25 +179,20 @@ export default class XmlDisplayService {
             }
         });
 
-        let htmlFragment = ` <accordion-item shadow title="About">
-                                 <div class="accordion-item-content" slot="item-content">${aboutContent}</div>
-                             </accordion-item>
-                             <accordion-item shadow title="Before Taking">
-                                 <div class="accordion-item-content" slot="item-content">${beforeContent}</div>
-                             </accordion-item>
-                             <accordion-item shadow title="How To Take">
-                                 <div class="accordion-item-content" slot="item-content">${howToContent}</div>
-                             </accordion-item>
-                             <accordion-item shadow title="Side Effects">
-                                 <div class="accordion-item-content" slot="item-content">${sideEffectsContent}</div>
-                             </accordion-item>
-                             <accordion-item shadow title="Storing">
-                                 <div class="accordion-item-content" slot="item-content">${storingContent}</div>
-                             </accordion-item>
-                             <accordion-item shadow title="More">
-                                 <div class="accordion-item-content" slot="item-content">${moreContent}</div>
-                             </accordion-item>`
-        this.element.querySelector("#content").innerHTML = htmlFragment;
+        let htmlFragment = ` 
+                <leaflet-section active label="About" ref="about" icon="./assets/icons/leaflet-about.svg">${aboutContent}
+                </leaflet-section>
+                <leaflet-section active label="Before Taking" ref="before-taking" icon="./assets/icons/leaflet-before-taking.svg">${beforeContent}
+                </leaflet-section>
+                <leaflet-section active label="How to take" ref="how-to-take" icon="./assets/icons/leaflet-how-to-take.svg">${howToContent}
+                </leaflet-section>
+                <leaflet-section active label="Side Effects" ref="side-effects" icon="./assets/icons/leaflet-side-effects.svg">${sideEffectsContent}
+                </leaflet-section>
+                <leaflet-section active label="Storing" ref="storing" icon="./assets/icons/leaflet-storing.svg">${storingContent}
+                </leaflet-section>
+                <leaflet-section active label="More" ref="more" icon="./assets/icons/leaflet-more.svg">${moreContent}
+                </leaflet-section>`
+        this.element.querySelector("#leaflet-content").innerHTML = htmlFragment;
     }
 
     buildBasePath(callback) {

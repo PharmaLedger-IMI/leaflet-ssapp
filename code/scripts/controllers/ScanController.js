@@ -428,7 +428,7 @@ export default class ScanController extends WebcController {
         snCheck: batchStatusService.snCheck,
         product: product,
         batch: batchData,
-        createdAt: Date.now(),
+        createdAt: new Date().toISOString(),
       }, (err, result) => {
         if (err) {
           return callback(err);

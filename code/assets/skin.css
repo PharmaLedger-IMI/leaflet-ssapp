@@ -127,6 +127,37 @@ webc-app-root {
     --ion-color-cornflower-tint: #6b6afd;
 }
 
+
+h1 {
+    font-size: var(--xxxl-text-size);
+    font-weight: var(--bold-font-weight);
+}
+
+h2 {
+    font-size: var(--xxl-text-size);
+    font-weight: var(--bold-font-weight);
+}
+
+h3 {
+    font-size: var(--xl-text-size);
+    font-weight: var(--bold-font-weight);
+}
+
+h4 {
+    font-size: var(--l-text-size);
+    font-weight: var(--bold-font-weight);
+}
+
+h5 {
+    font-size: var(--m-text-size);
+    font-weight: var(--bold-font-weight);
+}
+
+h6 {
+    font-size: var(--s-text-size);
+    font-weight: var(--bold-font-weight);
+}
+
 .ion-color-cornflower {
     --ion-color-base: var(--ion-color-cornflower);
     --ion-color-base-rgb: var(--ion-color-cornflower-rgb);
