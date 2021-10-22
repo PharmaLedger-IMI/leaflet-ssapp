@@ -336,3 +336,238 @@ psk-input .form-control {
     margin-bottom: 10px;
 }
 
+/* CSS required ny Reactive HTML Elements from /drug-details
+/* leaflet-<components> specific */
+
+#leaflet-header[effect="collapse"] > section {
+    height: 80px;
+    border-radius: 0;
+}
+
+#leaflet-header[effect="collapse"] > section::after {
+    position: absolute;
+    content: '';
+    bottom: 8px;
+    width: 30%; height: 4px;
+    background: #FFFFFF;
+    border-radius: 1rem;
+}
+
+#leaflet-header[effect="collapse"] > section > * {
+    display: none;
+}
+
+[effect="collapse"] leaflet-shortcuts {
+    --scrollbar-color: #073C47;
+    --scrollbar-background: var(--primary-backgtound-color);
+}
+
+[effect="collapse"] leaflet-shortcuts::part(container) {
+    box-sizing: border-box;
+    display: flex;
+    overflow-x: scroll; overflow-y: visible;
+    scroll-behavior: smooth;
+    top: 0;
+    margin: 0; padding: 0.4rem 1rem;
+    gap: 1rem;
+    width: 100%;
+    border-radius: 0;
+    background-color: transparent;
+}
+
+[effect="collapse"] leaflet-shortcuts > leaflet-button {
+    --height: auto;
+    min-width: fit-content;
+    border-radius: 0.5rem;
+    overflow: hidden;
+}
+
+[effect="collapse"] leaflet-shortcuts > leaflet-button > ion-item {
+    --background: rgba(255, 255, 255, 0.2);
+    --color: #FFFFFF;
+}
+
+[effect="collapse"] leaflet-shortcuts > leaflet-button[active] > ion-item {
+    --background: rgba(255, 255, 255, 1);
+    --color: var(--primary-backgtound-color);
+}
+
+[effect="collapse"] leaflet-shortcuts > leaflet-button[active] .icon {
+    height: 40px;
+}
+
+[effect="collapse"] leaflet-shortcuts > leaflet-button[active] .container {
+    padding-left: 0.25rem;
+}
+
+[effect="collapse"] leaflet-shortcuts > leaflet-button .container {
+    flex-direction: row;
+    padding: 0 0.75rem;
+    gap: 1rem;
+}
+
+#leaflet-header {
+    position: sticky;
+    z-index: 2;
+    top: 0;
+}
+
+#leaflet-header > section {
+    background: var(--primary-backgtound-color);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+    border-bottom-right-radius: 40px;
+    border-bottom-left-radius: 40px;
+    height: 210px;
+}
+
+leaflet-shortcuts {
+    --delta-normal: 379px;  /* impact over scrolling breakpoints */
+    --delta-collapse: 94px; /* impact over scrolling breakpoints */
+    --background: #E5EAEB;
+    --box-shadow: 0 10px 40px rgba(0, 64, 120, 0.1);
+}
+
+leaflet-shortcuts::part(container) {
+    position: absolute;
+    left: 0; top: 90px;
+    margin: 0 24px; padding: 0;
+    width: calc(100% - 48px);
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1px;
+    border-radius: 12px;
+    overflow: hidden;
+    background: var(--background);
+    box-shadow: var(--box-shadow);
+    /*transition: top 200ms ease-in-out;*/
+
+    transition:
+            top 200ms ease-in-out;
+}
+
+leaflet-shortcuts::part(scroll-top) {
+    --background: var(--primary-backgtound-color);
+    position: fixed;
+    top: 98%; left: 50%;
+    transform: translate(-50%, -100%);
+    height: 3rem;
+    --padding-end: 3.5rem;
+    --padding-start: 3.5rem;
+    text-transform: none;
+}
+
+leaflet-button {
+    --height: 120px;
+}
+
+leaflet-button > ion-item {
+    --background: #FFFFFF;
+    --padding-start: 0;
+    --padding-end: 0;
+    --inner-padding-start: 0;
+    --inner-padding-end: 0;
+    --inner-border-width: 0;
+}
+
+leaflet-button > ion-item .container {
+    height: var(--height);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+    padding-top: 1.4rem;
+    gap: 0.5rem;
+}
+
+leaflet-button > ion-item .label {
+    font-size: 12px;
+}
+
+leaflet-section {
+    --toggle-color: var(--primary-backgtound-color);
+    --background: transaprent;
+}
+
+leaflet-section::part(header) {
+    --padding-start: 0;
+    --background: #FFFFFF;
+    --border-color: #E5EAEB;
+    box-shadow: 0 10px 40px rgba(0, 64, 128, 0.1);
+}
+
+leaflet-section::part(icon) {
+    padding-left: 10px;
+}
+
+leaflet-section::part(toggle) {
+    position: absolute;
+    content: '';
+    background: var(--toggle-color);
+}
+
+leaflet-section::part(horizntal-line) {
+    right: 24px;
+    width: 14px; height: 2px;
+}
+
+leaflet-section::part(vertical-line) {
+    right: 30px;
+    width: 2px; height: 14px;
+    transform: rotate(0deg);
+    opacity: 1;
+    transition:
+            transform 200ms ease-in-out,
+            opacity 300ms ease-in-out;
+}
+
+leaflet-section[active]::part(vertical-line) {
+    opacity: 0;
+    transform: rotate(90deg);
+    transition:
+            transform 300ms ease-in-out,
+            opacity 300ms ease-in-out;
+}
+
+leaflet-section::part(content) {
+    background: var(--background);
+    padding-left: 24px;
+    padding-right: 24px;
+    overflow: hidden;
+    opacity: 0;
+    max-height: 0;
+    transform-origin: top;
+    transform: scaleY(0.75);
+    transition:
+            max-height 350ms ease-in-out,
+            padding 300ms ease-in-out,
+            opacity 300ms ease-in-out,
+            transform 250ms ease-in-out;
+}
+
+leaflet-section[active]::part(content) {
+    max-height: 300vh;
+    height: 100%;
+    opacity: 1;
+    transform: scaleY(1);
+    padding-top: 1rem;
+    padding-bottom: 1rem;
+    transition:
+            max-height 350ms ease-in-out,
+            padding 300ms ease-in-out,
+            opacity 300ms ease-in-out,
+            transform 250ms ease-in-out;
+}
+
+[effect="collapse"] + div [controller="LeafletController"] {
+    display: block;
+    margin-top: 15px;
+}
+
+[controller="LeafletController"] {
+    display: block;
+    margin-top: 170px;
+    background-color: #FFFFFF;
+}

@@ -53,7 +53,7 @@ export default class DrugDetailsController extends WebcController {
       this.updateUIInGTINOnlyCase();
       if (this.model.product.gtin && this.model.product.showEPIOnUnknownBatchNumber) {
         this.model.showEPI = true;
-        this.querySelector(".subheader-container").classList.add("showEpi");
+        this.querySelector('#leaflet-header').removeAttribute('hidden');
       }
     }
 
@@ -79,7 +79,7 @@ export default class DrugDetailsController extends WebcController {
     const currentTime = Date.now();
     this.model.showEPI = this.leafletShouldBeDisplayed(this.model.product, this.model.batch, this.model.snCheck, expiryCheck, currentTime, this.model.expiryTime);
     if (this.model.showEPI) {
-      this.querySelector(".subheader-container").classList.add("showEpi");
+      this.querySelector('#leaflet-header').removeAttribute('hidden');
     }
 
 
