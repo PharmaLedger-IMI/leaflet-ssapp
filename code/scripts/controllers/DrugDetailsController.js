@@ -41,6 +41,12 @@ export default class DrugDetailsController extends WebcController {
       return
     }
 
+    this.model.onChange('showEPI', async () => {
+      this.querySelector('#leaflet-header').removeAttribute('hidden');
+      const element = WebCardinal.root.querySelector('leaflet-shortcuts')
+      await element.attachScrollListeners('webc-app-loader[tag="drug-details"] page-template');
+    });
+
     this.dsuDataRetrievalService = new DSUDataRetrievalService(this.gtinSSI);
     this.batchStatusService = new BatchStatusService();
     const smpcDisplayService = new XMLDisplayService(this.DSUStorage, element, this.gtinSSI, "smpc", "smpc.xml", this.model);
@@ -53,7 +59,6 @@ export default class DrugDetailsController extends WebcController {
       this.updateUIInGTINOnlyCase();
       if (this.model.product.gtin && this.model.product.showEPIOnUnknownBatchNumber) {
         this.model.showEPI = true;
-        this.querySelector('#leaflet-header').removeAttribute('hidden');
       }
     }
 
@@ -78,10 +83,6 @@ export default class DrugDetailsController extends WebcController {
 
     const currentTime = Date.now();
     this.model.showEPI = this.leafletShouldBeDisplayed(this.model.product, this.model.batch, this.model.snCheck, expiryCheck, currentTime, this.model.expiryTime);
-    if (this.model.showEPI) {
-      this.querySelector('#leaflet-header').removeAttribute('hidden');
-    }
-
 
     if (this.model.statusMessage !== constants.SN_OK_MESSAGE) {
       this.model.displayStatus = true;

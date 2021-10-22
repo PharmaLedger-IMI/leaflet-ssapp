@@ -27,8 +27,6 @@ export default class LeafletShortcuts extends HTMLElement {
         super();
 
         this.attachShadow({ mode: 'open' });
-
-        this.attachScrollListeners();
     }
 
     connectedCallback() {
@@ -62,15 +60,16 @@ export default class LeafletShortcuts extends HTMLElement {
         `;
     }
 
-    async attachScrollListeners() {
-        const leafletButtons = document.querySelectorAll('leaflet-button');
-        const leafletSections = document.querySelectorAll('leaflet-section');
-        const leafletHeader = document.querySelector('#leaflet-header');
+    async attachScrollListeners(selector = ':root') {
+        const pageTemplate = document.querySelector(`${selector}`);
+        await pageTemplate.componentOnReady();
+
+        const leafletButtons = pageTemplate.querySelectorAll('leaflet-button');
+        const leafletSections = pageTemplate.querySelectorAll('leaflet-section');
+        const leafletHeader = pageTemplate.querySelector('#leaflet-header');
 
         this.tags = Array.from(leafletButtons).map(button => button.getAttribute('tag'));
 
-        const pageTemplate = document.querySelector('page-template');
-        await pageTemplate.componentOnReady();
         const ionContent = pageTemplate.shadowRoot.querySelector('ion-content');
         await ionContent.componentOnReady();
         const scrollElement = await ionContent.getScrollElement();
@@ -94,7 +93,7 @@ export default class LeafletShortcuts extends HTMLElement {
         leafletButtons.forEach(button => {
             button.addEventListener('click', async () => {
                 const tag = button.getAttribute('tag');
-                const section = document.querySelector(`leaflet-section[ref="${tag}"]`);
+                const section = pageTemplate.querySelector(`leaflet-section[ref="${tag}"]`);
 
                 scrollOrigin = 'button';
                 buttonTarget = tag;

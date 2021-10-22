@@ -30,9 +30,4 @@ export default class LeafletController extends WebcController {
         // const xmlDisplayService = new XMLDisplayService(this.DSUStorage, element, this.gtinSSI, "leaflet", "leaflet.xml", this.model);
         // xmlDisplayService.populateModel();
     }
-
-    async onReady() {
-        const leafletShortcuts = document.querySelector('leaflet-shortcuts');
-        await leafletShortcuts.attachScrollListeners();
-    }
 }
