@@ -370,7 +370,11 @@ psk-input .form-control {
 /* CSS required ny Reactive HTML Elements from /drug-details
 /* leaflet-<components> specific */
 
-#leaflet-header[effect="collapse"] > section {
+#leaflet-header[show-leaflet] > section {
+    height: 210px;
+}
+
+#leaflet-header[show-leaflet][effect="collapse"] > section {
     height: 80px;
     border-radius: 0;
 }
@@ -458,10 +462,6 @@ psk-input .form-control {
     padding-bottom: var(--l-space);
 }
 
-#leaflet-header[show-leaflet] > section {
-    height: 210px;
-}
-
 leaflet-shortcuts {
     --delta-normal: 379px; /* impact over scrolling breakpoints */
     --delta-collapse: 94px; /* impact over scrolling breakpoints */
@@ -483,8 +483,6 @@ leaflet-shortcuts::part(container) {
     overflow: hidden;
     background: var(--background);
     box-shadow: var(--box-shadow);
-    /*transition: top 200ms ease-in-out;*/
-
     transition: top 200ms ease-in-out;
 }
 
@@ -588,7 +586,7 @@ leaflet-section::part(content) {
 }
 
 leaflet-section[active]::part(content) {
-    max-height: 300vh;
+    max-height: 1000000vh;
     height: 100%;
     opacity: 1;
     transform: scaleY(1);
