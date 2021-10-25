@@ -1,4 +1,4 @@
-<link href="pages/homePage/home.css" rel="stylesheet">
+<link href="pages/homePage/home.css" rel="stylesheet" />
 <div class="mobile-container">
     <menu-popover></menu-popover>
     <page-template id="home-page-template" roundShape="true" shadow>
@@ -12,78 +12,92 @@
                     <div class="group-date" slot="true">{{@groupDate}}</div>
                 </div>
                 <div data-if="@lastFakeItem">
-                    <div id="last-fake-item" class="history-item-container" slot="true">
-                        <img src="./assets/icons/fake-history-item.svg">
+                    <div
+                        id="last-fake-item"
+                        class="history-item-container"
+                        slot="true"
+                    >
+                        <img src="./assets/icons/fake-history-item.svg" />
                     </div>
-                    <div slot="false" class="history-item-container" data-tag="view-details" item-type="history-list-item">
+                    <div
+                        slot="false"
+                        class="history-item-container"
+                        data-tag="view-details"
+                        item-type="history-list-item"
+                    >
                         <div class="item-row-container">
                             <div class="product-image">
-                                <img src="@product.productPhoto"/>
+                                <img src="@product.productPhoto" />
                             </div>
                             <div class="product-info">
                                 <div class="product-info-row">
                                     <div>
-                                        <ion-label class="productItem_name">{{@product.name}}</ion-label>
+                                        <ion-label class="productItem_name"
+                                            >{{@product.name}}</ion-label
+                                        >
                                     </div>
-
                                 </div>
                                 <div class="product-info-row">
                                     <div>
-                                        <ion-label class="productItem_description">{{@product.description}}</ion-label>
+                                        <ion-label
+                                            class="productItem_description"
+                                            >{{@product.description}}</ion-label
+                                        >
                                     </div>
-
                                 </div>
 
-                                <div class="product-info-row" data-if="@advancedView">
+                                <div
+                                    class="product-info-row"
+                                    data-if="@advancedView"
+                                >
                                     <div>
-                                        <ion-label class="productItem_expiry">Expiry:</ion-label>
-                                        <ion-label class="productItem_expiry">{{@expiryForDisplay}}</ion-label>
+                                        <ion-label class="productItem_expiry"
+                                            >Expiry:</ion-label
+                                        >
+                                        <ion-label class="productItem_expiry"
+                                            >{{@expiryForDisplay}}</ion-label
+                                        >
                                     </div>
-
-                            <div class="product-info-row" data-if="@advancedView">
-                                <div>
-                                    <ion-label class="productItem_expiry">{{$info1}}</ion-label>
-                                    <ion-label class="productItem_expiry">{{@expiryForDisplay}}</ion-label>
                                 </div>
-                                <div class="product-info-row" data-if="@advancedView">
+                                <div
+                                    class="product-info-row"
+                                    data-if="@advancedView"
+                                >
                                     <div>
-                                        <ion-label class="productItem_expiry">Batch number:</ion-label>
-                                        <ion-label class="productItem_expiry">{{@batchData.batchNumber}}</ion-label>
+                                        <ion-label class="productItem_expiry"
+                                            >Batch number:</ion-label
+                                        >
+                                        <ion-label class="productItem_expiry"
+                                            >{{@batchData.batchNumber}}</ion-label
+                                        >
                                     </div>
-
-                            </div>
-                            <div class="product-info-row" data-if="@advancedView">
-                                <div>
-                                    <ion-label class="productItem_expiry">{{$info2}}</ion-label>
-                                    <ion-label class="productItem_expiry">{{@batchData.batchNumber}}</ion-label>
                                 </div>
 
                                 <div class="product-info-row">
                                     <div class="scan-date-time">
-                                        <ion-label class="productItem_expiry">{{@timeFrameOrDate}}</ion-label>
+                                        <ion-label class="productItem_expiry"
+                                            >{{@timeFrameOrDate}}</ion-label
+                                        >
                                     </div>
-
                                 </div>
                                 <div class="product-info-row" status="@status">
                                     <div>
-                                        <ion-label class="productItem_status">{{@statusMessage}}</ion-label>
+                                        <ion-label class="productItem_status"
+                                            >{{@statusMessage}}</ion-label
+                                        >
                                     </div>
                                 </div>
                             </div>
-                            <div class="arrow">
-                            </div>
+                            <div class="arrow"></div>
                         </div>
                     </div>
                 </div>
-
 
                 <div slot="no-data">
                     <div class="empty-history-list">
                         <div class="app-image"></div>
                         <div class="title">{{$welcome_row1}}</div>
-                        <div class="welcome-text">
-                            {{$welcome_row2}}
-                        </div>
+                        <div class="welcome-text">{{$welcome_row2}}</div>
                         <div class="wizard-steps">
                             <div class="step1 step-item">
                                 <div class="step-icon"></div>
@@ -107,10 +121,4 @@
         </webc-container>
     </page-template>
 </div>
-
-</div>
-</div>
-</webc-container>
-</page-template>
 <scan-button></scan-button>
-</div>
