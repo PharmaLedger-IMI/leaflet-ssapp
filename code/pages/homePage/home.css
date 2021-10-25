@@ -78,6 +78,22 @@
     width: 100%;
 }
 
+.group-date {
+    padding-bottom: var(--l-space);
+    font-weight: var(--bold-font-weight);
+    font-size: var(--xxs-text-size);
+}
+
+#last-fake-item {
+    height: 110px;
+    background: #FFFFFF;
+}
+
+#last-fake-item img {
+    object-fit: contain;
+    padding: 16px 0px 0px 16px;
+}
+
 .history-item-container {
     border-radius: var(--m-border-radius);
     min-height: 80px;
