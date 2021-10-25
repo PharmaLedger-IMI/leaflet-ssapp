@@ -18,28 +18,43 @@
                         </div>
                         <div class="product-info">
                             <div class="product-info-row">
-                                <ion-label class="productItem_name">{{@product.name}}</ion-label>
+                                <div>
+                                    <ion-label class="productItem_name">{{@product.name}}</ion-label>
+                                </div>
+
                             </div>
                             <div class="product-info-row">
-                                <ion-label class="productItem_description">{{@product.description}}</ion-label>
+                                <div>
+                                    <ion-label class="productItem_description">{{@product.description}}</ion-label>
+                                </div>
+
                             </div>
+
+                            <div class="product-info-row" data-if="@advancedView">
+                                <div>
+                                    <ion-label class="productItem_expiry">Expiry:</ion-label>
+                                    <ion-label class="productItem_expiry">{{@expiryForDisplay}}</ion-label>
+                                </div>
+
+                            </div>
+                            <div class="product-info-row" data-if="@advancedView">
+                                <div>
+                                    <ion-label class="productItem_expiry">Batch number:</ion-label>
+                                    <ion-label class="productItem_expiry">{{@batchData.batchNumber}}</ion-label>
+                                </div>
+
+                            </div>
+
                             <div class="product-info-row">
                                 <div class="scan-date-time">
                                     <ion-label class="productItem_expiry">{{@timeFrameOrDate}}</ion-label>
                                 </div>
 
                             </div>
-                            <div class="product-info-row" data-if="@advancedView">
-                                <ion-label class="productItem_expiry">Expiry:</ion-label>
-                                <ion-label class="productItem_expiry">{{@expiryForDisplay}}</ion-label>
-                            </div>
-                            <div class="product-info-row" data-if="@advancedView">
-                                <ion-label class="productItem_expiry">Batch number:</ion-label>
-                                <ion-label class="productItem_expiry">{{@batchData.batchNumber}}</ion-label>
-                            </div>
                             <div class="product-info-row" status="@status">
-                                <div class="status-icon"></div>
-                                <ion-label class="productItem_status">{{@statusMessage}}</ion-label>
+                                <div>
+                                    <ion-label class="productItem_status">{{@statusMessage}}</ion-label>
+                                </div>
                             </div>
                         </div>
                         <div class="arrow">
@@ -48,7 +63,7 @@
                 </div>
 
                 <div slot="no-data">
-                    <div class="empty-history-list" >
+                    <div class="empty-history-list">
                         <div class="app-image"></div>
                         <div class="title">{{$welcome_row1}}</div>
                         <div class="welcome-text">

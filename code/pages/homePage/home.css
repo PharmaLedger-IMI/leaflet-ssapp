@@ -125,7 +125,7 @@
     height: 48px;
 }
 
-.product-info-row {
+.product-info-row > div {
     padding-bottom: 3px;
 }
 
@@ -143,16 +143,19 @@
 
 .product-info {
     flex-grow: 1;
-    font-family: 'DM Sans regular';
-    font-size: 14px;
-    font-style: normal;
-    font-weight: 500;
+    font-size: var(--xs-text-size);
+    font-weight: var(--bold-font-weight);
 }
 
 .productItem_name,
 .productItem_status {
     text-transform: capitalize;
     font-weight: bold;
+}
+
+.productItem_status {
+    padding: 2px 8px;
+    font-size: var(--xxs-text-size);
 }
 
 .status-icon {
@@ -171,23 +174,19 @@
 .product-info-row[status="expired_date"],
 .product-info-row[status="invalid_data"] {
     color: #F86458;
+    border: 1px solid #F86458;
+    box-sizing: border-box;
+    border-radius: var(--m-border-radius);
+    width: fit-content;
 }
 
 .product-info-row[status="recalled_batch"],
 .product-info-row[status="recalled_sn"],
 .product-info-row[status="decommissioned_sn"] {
     color: #FFCB45;
+    border: 1px solid #FFCB45;
+    box-sizing: border-box;
+    border-radius: var(--m-border-radius);
+    width: fit-content;
 }
 
-.product-info-row[status="invalid_sn"] .status-icon,
-.product-info-row[status="incorrect_date"] .status-icon,
-.product-info-row[status="expired_date"] .status-icon,
-.product-info-row[status="invalid_data"] .status-icon {
-    background: url("../../assets/icons/error.svg") no-repeat;
-}
-
-.product-info-row[status="recalled_batch"] .status-icon,
-.product-info-row[status="recalled_sn"] .status-icon,
-.product-info-row[status="decommissioned_sn"] .status-icon {
-    background: url("../../assets/icons/recalled.svg") no-repeat;
-}
