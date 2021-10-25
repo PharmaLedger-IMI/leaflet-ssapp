@@ -25,7 +25,7 @@
     }
 
     .empty-history-list .app-image {
-        content: url("./assets/icons/app_icon.svg");
+        content: url('./assets/icons/app_icon.svg');
         margin: auto;
     }
 
@@ -40,7 +40,7 @@
     }
 
     .empty-history-list .wizard-steps {
-        content: url("./assets/icons/steps.svg");
+        content: url('./assets/icons/steps.svg');
         width: 100%;
         margin-top: 97px;
     }
@@ -52,49 +52,47 @@
         <webc-container controller="HistoryController" slot="content-slot">
             <div class="content-slot-container">
                 <div class="history-list">
-                    <div class="content" data-if="@historyIsEmpty" hidden="true">
+                    <div
+                        class="content"
+                        data-if="@historyIsEmpty"
+                        hidden="true"
+                    >
                         <div class="empty-history-list" slot="true">
                             <div class="app-image"></div>
-                            <div class="title">Welcome to Pharmaledger</div>
-                            <div class="welcome-text">
-                                An app created to help you inquire about new or prescribed medications.
-                            </div>
-                            <div class="wizard-steps">
-
-                            </div>
+                            <div class="title">{{$title}}</div>
+                            <div class="welcome-text">{{$subtitle}}</div>
+                            <div class="wizard-steps"></div>
                         </div>
                         <div slot="false">
                             <div class="last-scanned-container">
                                 <div class="section-label">
-                                    <ion-label>Last Scan</ion-label>
+                                    <ion-label>{{$section}}</ion-label>
                                 </div>
 
-                                <history-item controller="HistoryController"
-                                              data-view-model="@lastScannedProduct"
-                                              item-type="last-scanned"
-                                              shadow></history-item>
+                                <history-item
+                                    controller="HistoryController"
+                                    data-view-model="@lastScannedProduct"
+                                    item-type="last-scanned"
+                                    shadow
+                                ></history-item>
                             </div>
                             <div class="previous-scanned-container">
                                 <div class="section-label">
-                                    <ion-label>Previous Scans</ion-label>
+                                    <ion-label>{{$section1}}</ion-label>
                                 </div>
                                 <div data-for="@products">
-                                    <history-item controller="HistoryController"
-                                                  data-view-model="@"
-                                                  item-type="history-list-item"
-                                                  shadow></history-item>
+                                    <history-item
+                                        controller="HistoryController"
+                                        data-view-model="@"
+                                        item-type="history-list-item"
+                                        shadow
+                                    ></history-item>
 
-
-                                    <div slot="no-data">
-                                        The scan list does not currently contain any items. It will be completed when
-                                        you
-                                        have more than one item scanned
-                                    </div>
+                                    <div slot="no-data">{{$text}}</div>
                                 </div>
                             </div>
                         </div>
                     </div>
-
                 </div>
             </div>
         </webc-container>

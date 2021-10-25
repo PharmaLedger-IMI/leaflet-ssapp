@@ -1,10 +1,14 @@
-<link href="pages/scanErrorPage/scan-error.css" rel="stylesheet">
+<link href="pages/scanErrorPage/scan-error.css" rel="stylesheet" />
 
 <div class="mobile-container">
-    <page-template id="home-page-template" no-padding="true" roundShape="true" shadow>
+    <page-template
+        id="home-page-template"
+        no-padding="true"
+        roundShape="true"
+        shadow
+    >
         <landing-header goBack="true" slot="header-slot"></landing-header>
         <webc-container controller="ScanErrorController" slot="content-slot">
-
             <div class="no-product-container">
                 <div class="no-product-image"></div>
                 <div class="no-product-title">{{@title}}</div>
@@ -12,19 +16,19 @@
                     {{@message}}
                     <div class="scan-data">
                         <div class="scan-data-row">
-                            <div class="label">Serial number:</div>
+                            <div class="label">{{$data1}}</div>
                             <div class="info">{{@fields.serialNumber}}</div>
                         </div>
                         <div class="scan-data-row">
-                            <div class="label">Product Code (GTIN/ NTIN):</div>
+                            <div class="label">{{$data2}}</div>
                             <div class="info">{{@fields.gtin}}</div>
                         </div>
                         <div class="scan-data-row">
-                            <div class="label">Batch Number:</div>
+                            <div class="label">{{$data3}}</div>
                             <div class="info">{{@fields.batchNumber}}</div>
                         </div>
                         <div class="scan-data-row">
-                            <div class="label">Expiry:</div>
+                            <div class="label">{{$data4}}</div>
                             <div class="info">{{@fields.expiry}}</div>
                         </div>
                     </div>

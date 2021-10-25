@@ -1,4 +1,4 @@
-<link href="pages/drugDetailsPage/drug-details.css" rel="stylesheet">
+<link href="pages/drugDetailsPage/drug-details.css" rel="stylesheet" />
 
 <div class="mobile-container">
     <page-template id="home-page-template" roundShape="false" shadow>
@@ -6,7 +6,11 @@
 
         <webc-container controller="DrugDetailsController" slot="content-slot">
             <div data-if="@displayStatus">
-                <div class="status-container" slot="true" status-type="@statusType">
+                <div
+                    class="status-container"
+                    slot="true"
+                    status-type="@statusType"
+                >
                     <div class="icon-container"></div>
                     <span>{{@statusMessage}}</span>
                 </div>
@@ -17,26 +21,55 @@
                     <section>
                         <div class="product-name">
                             <div>{{ @product.name }}</div>
-                            <div class="verified-icon" data-tag="click-verified">
-                                <img src="./assets/icons/leaflet-verified.svg">
+                            <div
+                                class="verified-icon"
+                                data-tag="click-verified"
+                            >
+                                <img
+                                    src="./assets/icons/leaflet-verified.svg"
+                                />
                             </div>
                         </div>
-                        <div class="product-description">{{ @product.description }}</div>
+                        <div class="product-description">
+                            {{ @product.description }}
+                        </div>
                     </section>
                     <div data-if="@showEPI">
-                        <leaflet-shortcuts button="Back To Top" shadow slot="true">
-                            <leaflet-button icon="./assets/icons/leaflet-about-circle.svg" label="About"
-                                            tag="about"></leaflet-button>
-                            <leaflet-button icon="./assets/icons/leaflet-before-taking-circle.svg" label="Before Taking"
-                                            tag="before-taking"></leaflet-button>
-                            <leaflet-button icon="./assets/icons/leaflet-how-to-take-circle.svg" label="How to take"
-                                            tag="how-to-take"></leaflet-button>
-                            <leaflet-button icon="./assets/icons/leaflet-side-effects-circle.svg" label="Side Effects"
-                                            tag="side-effects"></leaflet-button>
-                            <leaflet-button icon="./assets/icons/leaflet-storing-circle.svg" label="Storing"
-                                            tag="storing"></leaflet-button>
-                            <leaflet-button icon="./assets/icons/leaflet-more-circle.svg" label="More"
-                                            tag="more"></leaflet-button>
+                        <leaflet-shortcuts
+                            button="Back To Top"
+                            shadow
+                            slot="true"
+                        >
+                            <leaflet-button
+                                icon="./assets/icons/leaflet-about-circle.svg"
+                                label="About"
+                                tag="about"
+                            ></leaflet-button>
+                            <leaflet-button
+                                icon="./assets/icons/leaflet-before-taking-circle.svg"
+                                label="Before Taking"
+                                tag="before-taking"
+                            ></leaflet-button>
+                            <leaflet-button
+                                icon="./assets/icons/leaflet-how-to-take-circle.svg"
+                                label="How to take"
+                                tag="how-to-take"
+                            ></leaflet-button>
+                            <leaflet-button
+                                icon="./assets/icons/leaflet-side-effects-circle.svg"
+                                label="Side Effects"
+                                tag="side-effects"
+                            ></leaflet-button>
+                            <leaflet-button
+                                icon="./assets/icons/leaflet-storing-circle.svg"
+                                label="Storing"
+                                tag="storing"
+                            ></leaflet-button>
+                            <leaflet-button
+                                icon="./assets/icons/leaflet-more-circle.svg"
+                                label="More"
+                                tag="more"
+                            ></leaflet-button>
                         </leaflet-shortcuts>
                     </div>
                 </header>
@@ -49,10 +82,8 @@
                     <div slot="false">
                         <div class="no-leaflet-container">
                             <div class="no-leaflet-image"></div>
-                            <div class="no-leaflet-title">Leaflet Not Displayed</div>
-                            <div class="no-leaflet-text">
-                                The leaflet for this product can not be displayed due to validation settings.
-                            </div>
+                            <div class="no-leaflet-title">{{$title}}</div>
+                            <div class="no-leaflet-text">{{$text}}</div>
                         </div>
                     </div>
                 </div>
