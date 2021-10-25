@@ -7,34 +7,49 @@
             <div class="section-label datatable-title" hidden="true">
                 <ion-label>{{$title}}</ion-label>
             </div>
-            <webc-datatable datasource="@productsDataSource">
+            <div data-for="@products">
                 <div data-if="@firstGroupItem">
                     <div class="group-date" slot="true">{{@groupDate}}</div>
                 </div>
-                <div class="history-item-container" data-tag="view-details" item-type="history-list-item">
-                    <div class="item-row-container">
-                        <div class="product-image">
-                            <img src="@product.productPhoto"/>
-                        </div>
-                        <div class="product-info">
-                            <div class="product-info-row">
-                                <div>
-                                    <ion-label class="productItem_name">{{@product.name}}</ion-label>
+                <div data-if="@lastFakeItem">
+                    <div id="last-fake-item" class="history-item-container" slot="true">
+                        <img src="./assets/icons/fake-history-item.svg">
+                    </div>
+                    <div slot="false" class="history-item-container" data-tag="view-details" item-type="history-list-item">
+                        <div class="item-row-container">
+                            <div class="product-image">
+                                <img src="@product.productPhoto"/>
+                            </div>
+                            <div class="product-info">
+                                <div class="product-info-row">
+                                    <div>
+                                        <ion-label class="productItem_name">{{@product.name}}</ion-label>
+                                    </div>
+
+                                </div>
+                                <div class="product-info-row">
+                                    <div>
+                                        <ion-label class="productItem_description">{{@product.description}}</ion-label>
+                                    </div>
+
                                 </div>
 
-                            </div>
-                            <div class="product-info-row">
-                                <div>
-                                    <ion-label class="productItem_description">{{@product.description}}</ion-label>
-                                </div>
-
-                            </div>
+                                <div class="product-info-row" data-if="@advancedView">
+                                    <div>
+                                        <ion-label class="productItem_expiry">Expiry:</ion-label>
+                                        <ion-label class="productItem_expiry">{{@expiryForDisplay}}</ion-label>
+                                    </div>
 
                             <div class="product-info-row" data-if="@advancedView">
                                 <div>
                                     <ion-label class="productItem_expiry">{{$info1}}</ion-label>
                                     <ion-label class="productItem_expiry">{{@expiryForDisplay}}</ion-label>
                                 </div>
+                                <div class="product-info-row" data-if="@advancedView">
+                                    <div>
+                                        <ion-label class="productItem_expiry">Batch number:</ion-label>
+                                        <ion-label class="productItem_expiry">{{@batchData.batchNumber}}</ion-label>
+                                    </div>
 
                             </div>
                             <div class="product-info-row" data-if="@advancedView">
@@ -43,24 +58,24 @@
                                     <ion-label class="productItem_expiry">{{@batchData.batchNumber}}</ion-label>
                                 </div>
 
-                            </div>
+                                <div class="product-info-row">
+                                    <div class="scan-date-time">
+                                        <ion-label class="productItem_expiry">{{@timeFrameOrDate}}</ion-label>
+                                    </div>
 
-                            <div class="product-info-row">
-                                <div class="scan-date-time">
-                                    <ion-label class="productItem_expiry">{{@timeFrameOrDate}}</ion-label>
                                 </div>
-
-                            </div>
-                            <div class="product-info-row" status="@status">
-                                <div>
-                                    <ion-label class="productItem_status">{{@statusMessage}}</ion-label>
+                                <div class="product-info-row" status="@status">
+                                    <div>
+                                        <ion-label class="productItem_status">{{@statusMessage}}</ion-label>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
-                        <div class="arrow">
+                            <div class="arrow">
+                            </div>
                         </div>
                     </div>
                 </div>
+
 
                 <div slot="no-data">
                     <div class="empty-history-list">
@@ -88,7 +103,7 @@
                         </div>
                     </div>
                 </div>
-            </webc-datatable>
+            </div>
         </webc-container>
     </page-template>
 </div>
