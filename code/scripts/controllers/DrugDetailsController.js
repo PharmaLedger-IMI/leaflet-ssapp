@@ -1,9 +1,9 @@
 const {WebcController} = WebCardinal.controllers;
 import utils from "../../utils.js";
-import DSUDataRetrievalService from "../services/DSUDataRetrievalService/DSUDataRetrievalService.js";
 import constants from "../../constants.js";
 import XMLDisplayService from "../services/XMLDisplayService/XMLDisplayService.js";
 import BatchStatusService from "../services/BatchStatusService.js";
+import SettingsService from "../services/SettingsService.js";
 
 export default class DrugDetailsController extends WebcController {
   constructor(element, history) {
@@ -20,6 +20,11 @@ export default class DrugDetailsController extends WebcController {
       showLeaflet: false,
       epiColumns: 0,
       displayStatus: false,
+      selectUserType: false,
+      preferredDocType: "",
+      twoOrMoreLanguages: false,
+      showEPI: false,
+      documentLanguages: []
     };
 
     if (typeof history.location.state !== "undefined") {
@@ -40,21 +45,149 @@ export default class DrugDetailsController extends WebcController {
       this.updateUIInGTINOnlyCase("Undefined product data")
       return
     }
+    this.smpcDisplayService = new XMLDisplayService(this.DSUStorage, element, this.gtinSSI, "smpc", "smpc.xml", this.model);
+    this.leafletDisplayService = new XMLDisplayService(this.DSUStorage, element, this.gtinSSI, "leaflet", "leaflet.xml", this.model);
 
-    this.model.onChange('showEPI', async () => {
-      this.querySelector('#leaflet-header').removeAttribute('hidden');
-      const element = WebCardinal.root.querySelector('leaflet-shortcuts')
-      await element.attachScrollListeners('webc-app-loader[tag="drug-details"] page-template');
+    this.querySelector('.select-document-type').addEventListener("ionChange", this.selectDocTypeHandler.bind(this));
+    this.querySelector('.select-document-language').addEventListener("ionChange", this.selectDocLanguageHandler.bind(this));
+    this.model.onChange('showEPI', async (...props) => {
+      if (this.model.showEPI) {
+        this.querySelector('#leaflet-header').removeAttribute('hidden');
+        this.querySelector(".leaflet-shortcuts-container").removeAttribute('hidden');
+        const element = WebCardinal.root.querySelector('leaflet-shortcuts')
+        await element.attachScrollListeners('webc-app-loader[tag="drug-details"] page-template');
+        if (this.model.hasMoreDocTypes) {
+          this.querySelector('.select-document-type-container').removeAttribute('hidden');
+        } else {
+          this.querySelector('.select-document-type-container').setAttribute('hidden', true);
+        }
+        if (this.model.twoOrMoreLanguages) {
+          this.querySelector('.select-document-language-container').removeAttribute('hidden');
+        } else {
+          this.querySelector('.select-document-language-container').setAttribute('hidden', true);
+        }
+      } else {
+        this.querySelector('#leaflet-header').setAttribute('hidden', true);
+        this.querySelector(".leaflet-shortcuts-container").setAttribute('hidden', true);
+      }
+
     });
 
-    this.dsuDataRetrievalService = new DSUDataRetrievalService(this.gtinSSI);
-    this.batchStatusService = new BatchStatusService();
-    const smpcDisplayService = new XMLDisplayService(this.DSUStorage, element, this.gtinSSI, "smpc", "smpc.xml", this.model);
-    const leafletDisplayService = new XMLDisplayService(this.DSUStorage, element, this.gtinSSI, "leaflet", "smpc.xml", this.model);
+    let dbApi = require("opendsu").loadApi("db");
+    dbApi.getMainEnclaveDB(async (err, enclaveDB) => {
+      if (err) {
+        console.log('Error on getting enclave DB');
+        return;
+      }
+      this.dbStorage = enclaveDB;
+      this.settingsService = new SettingsService(enclaveDB);
 
-    smpcDisplayService.isXmlAvailable();
-    leafletDisplayService.isXmlAvailable();
 
+      await this.smpcDisplayService.isXmlAvailable();
+      await this.leafletDisplayService.isXmlAvailable();
+      this.model.hasMoreDocTypes = this.model.showSmpc && this.model.showLeaflet;
+      this.model.preferredDocType = await this.settingsService.asyncReadSetting("preferredDocType");
+
+      //first time select preferred document type to display
+      if (!this.model.preferredDocType && this.model.hasMoreDocTypes) {
+        //display preferred user type select for document view
+        let modal = this.showModalFromTemplate('user-type-select', () => {
+        }, () => {
+        }, {
+          disableExpanding: true,
+          disableFooter: true,
+          disableClosing: true
+        });
+        modal.addEventListener("initialised", (ev) => {
+          this.onTagClick("select-user-type", async (model, target, event) => {
+            this.model.preferredDocType = target.getAttribute("preferredDocType");
+            debugger;
+            this.settingsService.writeSetting("preferredDocType", this.model.preferredDocType, async (err) => {
+              modal.destroy();
+              await this.selectServiceType(this.leafletDisplayService, this.smpcDisplayService);
+            })
+
+          })
+        })
+
+      }
+
+      if (this.model.preferredDocType) {
+        await this.selectServiceType(this.leafletDisplayService, this.smpcDisplayService);
+      }
+
+    })
+  }
+
+  async selectDocTypeHandler(event) {
+    this.model.preferredDocType = event.detail.value;
+    await this.selectServiceType(this.leafletDisplayService, this.smpcDisplayService);
+  }
+
+  async selectDocLanguageHandler(event) {
+    this.model.preferredLanguage = event.detail.value;
+    this.documentService.displayXmlForLanguage(this.model.preferredLanguage);
+    this.renderEpi();
+  }
+
+  async selectServiceType(leafletService, smpcService) {
+    if (this.model.preferredDocType === "smpc") {
+      if (this.model.showSmpc) {
+        this.documentService = smpcService;
+      } else {
+        this.documentService = leafletService;
+      }
+    }
+    if (this.model.preferredDocType === "leaflet") {
+      if (this.model.showLeaflet) {
+        this.documentService = leafletService;
+      } else {
+        this.documentService = smpcService;
+      }
+    }
+
+    this.model.documentLanguages = await $$.promisify(this.documentService.getAvailableLanguagesForXmlType.bind(this.documentService))();
+    if (!this.model.documentLanguages) {
+      this.documentService.displayError();
+      return;
+    }
+
+    if (this.model.documentLanguages.length >= 2) {
+      this.model.twoOrMoreLanguages = true;
+    }
+
+    if (!this.model.preferredLanguage) {
+      this.model.preferredLanguage = await this.settingsService.asyncReadSetting("preferredLanguage");
+    }
+
+    let documentLanguage = this.model.documentLanguages.find((item) => item.value === this.model.preferredLanguage);
+    if (documentLanguage) {
+      this.documentService.displayXmlForLanguage(documentLanguage.value);
+      this.renderEpi();
+    } else {
+      //display language select
+      let modal = this.showModalFromTemplate('document-language-select', () => {
+      }, () => {
+      }, {
+        model: {languages: this.model.documentLanguages},
+        disableExpanding: true,
+        disableFooter: true,
+        disableClosing: true
+      });
+      modal.addEventListener("initialised", () => {
+        modal.querySelector("ion-select").addEventListener("ionChange", (evt) => {
+          modal.destroy();
+          this.model.preferredLanguage = evt.detail.value;
+          this.documentService.displayXmlForLanguage(evt.detail.value);
+          this.renderEpi();
+        });
+      })
+
+
+    }
+  }
+
+  renderEpi() {
     if (typeof this.model.batch === "undefined") {
       this.updateUIInGTINOnlyCase();
       if (this.model.product.gtin && this.model.product.showEPIOnUnknownBatchNumber) {
@@ -104,15 +237,16 @@ export default class DrugDetailsController extends WebcController {
         disableExpanding: true,
         disableFooter: true
       });
-    })
+    });
   }
 
   updateUIInGTINOnlyCase(message) {
+    let batchStatusService = new BatchStatusService();
     let msg = message || "The batch number in the barcode could not be found";
     this.displayModal(msg, " ");
-    this.batchStatusService.unableToVerify();
-    this.model.statusMessage = this.batchStatusService.statusMessage;
-    this.model.statusType = this.batchStatusService.statusType;
+    batchStatusService.unableToVerify();
+    this.model.statusMessage = batchStatusService.statusMessage;
+    this.model.statusType = batchStatusService.statusType;
     this.model.packageVerification = constants.PACK_VERIFICATION_UNABLE_TO_VERIFY_MESSAGE;
   }
 

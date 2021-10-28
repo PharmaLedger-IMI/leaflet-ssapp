@@ -598,12 +598,12 @@ leaflet-section[active]::part(content) {
     transform 250ms ease-in-out;
 }
 
-[effect="collapse"] + div [controller="LeafletController"] {
+[effect="collapse"] + #leaflet-content {
     display: block;
     margin-top: 15px;
 }
 
-[controller="LeafletController"] {
+#leaflet-content {
     display: block;
     margin-top: 170px;
     background-color: #FFFFFF;

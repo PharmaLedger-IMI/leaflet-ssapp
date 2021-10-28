@@ -22,7 +22,7 @@ export default class ScanController extends WebcController {
       nativeSupport: false,
       useScandit: false
     };
-    this.settingsService = new SettingsService(this.DSUStorage);
+
     const dbApi = opendsu.loadApi("db");
     dbApi.getMainEnclaveDB((err, enclaveDB) => {
       if (err) {
@@ -32,7 +32,7 @@ export default class ScanController extends WebcController {
       this.dbStorage = enclaveDB;
       this.history = history;
       this.barcodePicker = null;
-
+      this.settingsService = new SettingsService(enclaveDB);
       const popStateHandler = (event) => {
         this.disposeOfBarcodePicker();
 
@@ -49,7 +49,7 @@ export default class ScanController extends WebcController {
           console.log("Not able to activate native API support. Continue using bar code scanner from web.", err);
         } else if (handler) {
           this.model.nativeSupport = true;
-          this.settingsService.readSetting("scanditlicense", (err, scanditLicense) => {
+          this.settingsService.readSetting("scanditLicense", (err, scanditLicense) => {
             if (scanditLicense && window.ScanditSDK) {
               const scan = handler.importNativeAPI("scanditScan");
               scan([scanditLicense]).then((resultArray) => {
@@ -130,7 +130,7 @@ export default class ScanController extends WebcController {
             }
           });
         } else {
-          this.settingsService.readSetting("scanditlicense", (err, scanditLicense) => {
+          this.settingsService.readSetting("scanditLicense", (err, scanditLicense) => {
             if (scanditLicense && window.ScanditSDK) {
               this.model.useScandit = true;
               this.initScanditLib(scanditLicense)
@@ -329,7 +329,7 @@ export default class ScanController extends WebcController {
   }
 
   buildSSI(gs1Fields, callback) {
-    this.settingsService.readSetting("networkname", (err, networkName) => {
+    this.settingsService.readSetting("networkName", (err, networkName) => {
       if (err || typeof networkName === "undefined") {
         networkName = constants.DEFAULT_NETWORK_NAME;
       }
@@ -381,7 +381,7 @@ export default class ScanController extends WebcController {
   }
 
   createConstProductDSU_SSI(gs1Fields, callback) {
-    this.settingsService.readSetting("networkname", (err, networkName) => {
+    this.settingsService.readSetting("networkName", (err, networkName) => {
       if (err || typeof networkName === "undefined") {
         networkName = constants.DEFAULT_NETWORK_NAME;
       }
