@@ -370,13 +370,13 @@ psk-input .form-control {
 /* CSS required ny Reactive HTML Elements from /drug-details
 /* leaflet-<components> specific */
 
-#leaflet-header[show-leaflet] > section {
-    height: 210px;
+#leaflet-header[show-leaflet] {
+    display: block;
 }
 
 #leaflet-header[show-leaflet][effect="collapse"] > section {
-    height: 80px;
     border-radius: 0;
+    padding-bottom: 80px;
 }
 
 #leaflet-header[effect="collapse"] > section::after {
@@ -394,6 +394,7 @@ psk-input .form-control {
 }
 
 [effect="collapse"] leaflet-shortcuts {
+    --background: var(--primary-backgtound-color);
     --scrollbar-color: #073C47;
     --scrollbar-background: var(--primary-backgtound-color);
 }
@@ -410,11 +411,11 @@ psk-input .form-control {
     gap: 1rem;
     width: 100%;
     border-radius: 0;
-    background-color: transparent;
+    transform: translateY(0);
 }
 
 [effect="collapse"] leaflet-shortcuts > leaflet-button {
-    --height: auto;
+    --button-height: auto;
     min-width: fit-content;
     border-radius: 0.5rem;
     overflow: hidden;
@@ -445,9 +446,11 @@ psk-input .form-control {
 }
 
 #leaflet-header {
+    display: none;
     position: sticky;
     z-index: 2;
     top: 0;
+    --button-height: 120px;
 }
 
 #leaflet-header > section {
@@ -459,7 +462,7 @@ psk-input .form-control {
     border-bottom-right-radius: var(--xl-border-radius);
     border-bottom-left-radius: var(--xl-border-radius);
     height: fit-content;
-    padding-bottom: var(--l-space);
+    padding-bottom: calc(var(--button-height) + 24px);
 }
 
 leaflet-shortcuts {
@@ -471,8 +474,8 @@ leaflet-shortcuts {
 
 leaflet-shortcuts::part(container) {
     position: absolute;
-    left: 0;
-    top: 90px;
+    left: 0; top: 100%;
+    transform: translateY(-50%);
     margin: 0 24px;
     padding: 0;
     width: calc(100% - 48px);
@@ -498,10 +501,6 @@ leaflet-shortcuts::part(scroll-top) {
     text-transform: none;
 }
 
-leaflet-button {
-    --height: 120px;
-}
-
 leaflet-button > ion-item {
     --background: #FFFFFF;
     --padding-start: 0;
@@ -512,7 +511,7 @@ leaflet-button > ion-item {
 }
 
 leaflet-button > ion-item .container {
-    height: var(--height);
+    height: var(--button-height);
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -598,8 +597,7 @@ leaflet-section[active]::part(content) {
     transform 250ms ease-in-out;
 }
 
-[effect="collapse"] + #leaflet-content {
-    display: block;
+#leaflet-content[effect="collapse"] {
     margin-top: 15px;
 }
 
