@@ -48,8 +48,7 @@ export default class DrugDetailsController extends WebcController {
     this.smpcDisplayService = new XMLDisplayService(this.DSUStorage, element, this.gtinSSI, "smpc", "smpc.xml", this.model);
     this.leafletDisplayService = new XMLDisplayService(this.DSUStorage, element, this.gtinSSI, "leaflet", "leaflet.xml", this.model);
 
-    this.querySelector('.select-document-type').addEventListener("ionChange", this.selectDocTypeHandler.bind(this));
-    this.querySelector('.select-document-language').addEventListener("ionChange", this.selectDocLanguageHandler.bind(this));
+
     this.model.onChange('showEPI', async (...props) => {
       if (this.model.showEPI) {
         this.querySelector('#leaflet-header').removeAttribute('hidden');
@@ -101,7 +100,6 @@ export default class DrugDetailsController extends WebcController {
         modal.addEventListener("initialised", (ev) => {
           this.onTagClick("select-user-type", async (model, target, event) => {
             this.model.preferredDocType = target.getAttribute("preferredDocType");
-            debugger;
             this.settingsService.writeSetting("preferredDocType", this.model.preferredDocType, async (err) => {
               modal.destroy();
               await this.selectServiceType(this.leafletDisplayService, this.smpcDisplayService);
@@ -114,20 +112,19 @@ export default class DrugDetailsController extends WebcController {
 
       if (this.model.preferredDocType) {
         await this.selectServiceType(this.leafletDisplayService, this.smpcDisplayService);
+
+        this.querySelector('.select-document-type').addEventListener("ionChange", async (event) => {
+          this.model.preferredDocType = event.detail.value;
+          await this.selectServiceType(this.leafletDisplayService, this.smpcDisplayService);
+        });
+
+        this.querySelector('.select-document-language').addEventListener("ionChange", async (event) => {
+          this.model.preferredLanguage = event.detail.value;
+          this.documentService.displayXmlForLanguage(this.model.preferredLanguage);
+          this.renderEpi();
+        });
       }
-
     })
-  }
-
-  async selectDocTypeHandler(event) {
-    this.model.preferredDocType = event.detail.value;
-    await this.selectServiceType(this.leafletDisplayService, this.smpcDisplayService);
-  }
-
-  async selectDocLanguageHandler(event) {
-    this.model.preferredLanguage = event.detail.value;
-    this.documentService.displayXmlForLanguage(this.model.preferredLanguage);
-    this.renderEpi();
   }
 
   async selectServiceType(leafletService, smpcService) {
@@ -154,6 +151,8 @@ export default class DrugDetailsController extends WebcController {
 
     if (this.model.documentLanguages.length >= 2) {
       this.model.twoOrMoreLanguages = true;
+    } else {
+      this.model.twoOrMoreLanguages = false;
     }
 
     if (!this.model.preferredLanguage) {

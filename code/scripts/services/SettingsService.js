@@ -47,7 +47,7 @@ export default class SettingsService {
     this.enclaveDB.readKey(property, (err, record) => {
       if (err) {
         console.log("Could not find record for pk: ", property);
-        return callback(undefined, DEFAULT_VALUES[property] !== "undefined" ? DEFAULT_VALUES[property] : "");
+        return callback(undefined, typeof DEFAULT_VALUES[property] !== "undefined" ? DEFAULT_VALUES[property] : "");
       }
       return callback(undefined, record);
     })

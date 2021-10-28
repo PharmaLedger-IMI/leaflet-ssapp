@@ -123,7 +123,7 @@ export default class XmlDisplayService {
 
   displayError() {
     let errorMessageElement = this.getErrorMessageElement(errorMessage)
-    this.element.querySelector("#content").appendChild(errorMessageElement);
+    this.element.querySelector("#leaflet-content").appendChild(errorMessageElement);
   }
 
   displayXmlContent(pathBase, xmlContent, xslContent) {
