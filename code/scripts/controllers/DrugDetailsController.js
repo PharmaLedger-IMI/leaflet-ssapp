@@ -108,39 +108,34 @@ export default class DrugDetailsController extends WebcController {
           })
         })
 
-      }
-
-      if (this.model.preferredDocType) {
+      } else {
         await this.selectServiceType(this.leafletDisplayService, this.smpcDisplayService);
-
-        this.querySelector('.select-document-type').addEventListener("ionChange", async (event) => {
-          this.model.preferredDocType = event.detail.value;
-          await this.selectServiceType(this.leafletDisplayService, this.smpcDisplayService);
-        });
-
-        this.querySelector('.select-document-language').addEventListener("ionChange", async (event) => {
-          this.model.preferredLanguage = event.detail.value;
-          this.documentService.displayXmlForLanguage(this.model.preferredLanguage);
-          this.renderEpi();
-        });
       }
+
+      this.querySelector('.select-document-type').addEventListener("ionChange", async (event) => {
+        this.model.preferredDocType = event.detail.value;
+        await this.selectServiceType(this.leafletDisplayService, this.smpcDisplayService);
+      });
+
+      this.querySelector('.select-document-language').addEventListener("ionChange", async (event) => {
+        this.model.preferredLanguage = event.detail.value;
+        this.documentService.displayXmlForLanguage(this.model.preferredLanguage);
+        this.renderEpi();
+      });
     })
   }
 
   async selectServiceType(leafletService, smpcService) {
-    if (this.model.preferredDocType === "smpc") {
-      if (this.model.showSmpc) {
-        this.documentService = smpcService;
-      } else {
-        this.documentService = leafletService;
-      }
-    }
-    if (this.model.preferredDocType === "leaflet") {
-      if (this.model.showLeaflet) {
-        this.documentService = leafletService;
-      } else {
-        this.documentService = smpcService;
-      }
+
+    switch (this.model.preferredDocType) {
+      case "smpc":
+        this.documentService = this.model.showSmpc ? smpcService : leafletService;
+        break;
+      case "leaflet":
+        this.documentService = this.model.showLeaflet ? leafletService : smpcService;
+        break
+      default:
+        this.documentService = this.model.showLeaflet ? leafletService : smpcService;
     }
 
     this.model.documentLanguages = await $$.promisify(this.documentService.getAvailableLanguagesForXmlType.bind(this.documentService))();
