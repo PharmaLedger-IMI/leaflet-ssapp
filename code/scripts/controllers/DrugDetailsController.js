@@ -42,7 +42,13 @@ export default class DrugDetailsController extends WebcController {
       this.model.snCheck = history.location.state.productData.snCheck;
     } else {
       console.log("Undefined product data");
-      this.updateUIInGTINOnlyCase("Undefined product data")
+      this.updateUIInGTINOnlyCase()
+      this.showModal("Undefined product data", "Note", () => {
+      }, () => {
+      }, {
+        disableExpanding: true,
+        disableFooter: true
+      });
       return
     }
     this.smpcDisplayService = new XMLDisplayService(this.DSUStorage, element, this.gtinSSI, "smpc", "smpc.xml", this.model);
@@ -81,7 +87,6 @@ export default class DrugDetailsController extends WebcController {
       this.dbStorage = enclaveDB;
       this.settingsService = new SettingsService(enclaveDB);
 
-
       await this.smpcDisplayService.isXmlAvailable();
       await this.leafletDisplayService.isXmlAvailable();
       this.model.hasMoreDocTypes = this.model.showSmpc && this.model.showLeaflet;
@@ -102,31 +107,50 @@ export default class DrugDetailsController extends WebcController {
             this.model.preferredDocType = target.getAttribute("preferredDocType");
             this.settingsService.writeSetting("preferredDocType", this.model.preferredDocType, async (err) => {
               modal.destroy();
-              await this.selectServiceType(this.leafletDisplayService, this.smpcDisplayService);
+              await this.init();
             })
 
           })
         })
 
       } else {
-        await this.selectServiceType(this.leafletDisplayService, this.smpcDisplayService);
+        await this.init()
       }
 
-      this.querySelector('.select-document-type').addEventListener("ionChange", async (event) => {
-        this.model.preferredDocType = event.detail.value;
-        await this.selectServiceType(this.leafletDisplayService, this.smpcDisplayService);
-      });
 
-      this.querySelector('.select-document-language').addEventListener("ionChange", async (event) => {
-        this.model.preferredLanguage = event.detail.value;
-        this.documentService.displayXmlForLanguage(this.model.preferredLanguage);
-        this.renderEpi();
+      this.onTagClick("click-verified", () => {
+        this.showModalFromTemplate('batch-info', () => {
+        }, () => {
+        }, {
+          model: {
+            title: "Batch Info",
+            expiryForDisplay: this.model.expiryForDisplay,
+            serialNumber: this.model.serialNumber,
+            gtin: this.model.gtin,
+            batchNumber: this.model.batchNumber
+          },
+          disableExpanding: true,
+          disableFooter: true
+        });
       });
     })
   }
 
-  async selectServiceType(leafletService, smpcService) {
+  async init() {
+    await this.selectServiceType(this.leafletDisplayService, this.smpcDisplayService);
+    this.querySelector('.select-document-type').addEventListener("ionChange", async (event) => {
+      this.model.preferredDocType = event.detail.value;
+      await this.selectServiceType(this.leafletDisplayService, this.smpcDisplayService);
+    });
 
+    this.querySelector('.select-document-language').addEventListener("ionChange", async (event) => {
+      this.model.preferredLanguage = event.detail.value;
+      this.documentService.displayXmlForLanguage(this.model.preferredLanguage);
+      this.renderEpi();
+    });
+  }
+
+  async selectServiceType(leafletService, smpcService) {
     switch (this.model.preferredDocType) {
       case "smpc":
         this.documentService = this.model.showSmpc ? smpcService : leafletService;
@@ -136,6 +160,10 @@ export default class DrugDetailsController extends WebcController {
         break
       default:
         this.documentService = this.model.showLeaflet ? leafletService : smpcService;
+    }
+
+    if (!this.model.preferredLanguage) {
+      this.model.preferredLanguage = await this.settingsService.asyncReadSetting("preferredLanguage");
     }
 
     this.model.documentLanguages = await $$.promisify(this.documentService.getAvailableLanguagesForXmlType.bind(this.documentService))();
@@ -150,14 +178,19 @@ export default class DrugDetailsController extends WebcController {
       this.model.twoOrMoreLanguages = false;
     }
 
-    if (!this.model.preferredLanguage) {
-      this.model.preferredLanguage = await this.settingsService.asyncReadSetting("preferredLanguage");
+    let documentLanguage;
+    if (this.model.twoOrMoreLanguages) {
+      documentLanguage = this.model.documentLanguages.find((item) => item.value === this.model.preferredLanguage);
+    } else {
+      documentLanguage = this.model.documentLanguages[0];
     }
-
-    let documentLanguage = this.model.documentLanguages.find((item) => item.value === this.model.preferredLanguage);
     if (documentLanguage) {
-      this.documentService.displayXmlForLanguage(documentLanguage.value);
-      this.renderEpi();
+      if (this.model.preferredLanguage !== documentLanguage.value) {
+        this.model.preferredLanguage = documentLanguage.value;
+      } else {
+        this.documentService.displayXmlForLanguage(documentLanguage.value);
+        this.renderEpi();
+      }
     } else {
       //display language select
       let modal = this.showModalFromTemplate('document-language-select', () => {
@@ -184,32 +217,38 @@ export default class DrugDetailsController extends WebcController {
   renderEpi() {
     if (typeof this.model.batch === "undefined") {
       this.updateUIInGTINOnlyCase();
-      if (this.model.product.gtin && this.model.product.showEPIOnUnknownBatchNumber) {
-        this.model.showEPI = true;
-      }
-    }
-
-    if (this.model.batch.defaultMessage || this.model.batch.recalled) {
-      this.showModalFromTemplate('batch-info-message', () => {
+      this.showModal("The batch number in the barcode could not be found", "Note", () => {
       }, () => {
       }, {
-        model: {
-          title: "Note",
-          recallMessage: this.model.batch.recalled ? this.model.batch.recalledMessage : "",
-          defaultMessage: this.model.batch.defaultMessage
-        },
         disableExpanding: true,
         disableFooter: true
       });
-    }
-    let expiryForDisplay = utils.convertFromGS1DateToYYYY_HM(this.model.batch.expiry);
-    if (expiryForDisplay.slice(0, 2) === "00") {
-      expiryForDisplay = expiryForDisplay.slice(5);
-    }
-    let expiryCheck = this.model.expiryForDisplay === expiryForDisplay;
+      if (this.model.product.gtin && this.model.product.showEPIOnUnknownBatchNumber) {
+        this.model.showEPI = true;
+      }
+    } else {
+      if (this.model.batch.defaultMessage || this.model.batch.recalled) {
+        this.showModalFromTemplate('batch-info-message', () => {
+        }, () => {
+        }, {
+          model: {
+            title: "Note",
+            recallMessage: this.model.batch.recalled ? this.model.batch.recalledMessage : "",
+            defaultMessage: this.model.batch.defaultMessage
+          },
+          disableExpanding: true,
+          disableFooter: true
+        });
+      }
+      let expiryForDisplay = utils.convertFromGS1DateToYYYY_HM(this.model.batch.expiry);
+      if (expiryForDisplay.slice(0, 2) === "00") {
+        expiryForDisplay = expiryForDisplay.slice(5);
+      }
+      let expiryCheck = this.model.expiryForDisplay === expiryForDisplay;
 
-    const currentTime = Date.now();
-    this.model.showEPI = this.leafletShouldBeDisplayed(this.model.product, this.model.batch, this.model.snCheck, expiryCheck, currentTime, this.model.expiryTime);
+      const currentTime = Date.now();
+      this.model.showEPI = this.leafletShouldBeDisplayed(this.model.product, this.model.batch, this.model.snCheck, expiryCheck, currentTime, this.model.expiryTime);
+    }
 
     if (this.model.statusMessage !== constants.SN_OK_MESSAGE) {
       this.model.displayStatus = true;
@@ -217,27 +256,10 @@ export default class DrugDetailsController extends WebcController {
       this.model.displayStatus = false;
     }
 
-    this.onTagClick("click-verified", () => {
-      this.showModalFromTemplate('batch-info', () => {
-      }, () => {
-      }, {
-        model: {
-          title: "Batch Info",
-          expiryForDisplay: this.model.expiryForDisplay,
-          serialNumber: this.model.serialNumber,
-          gtin: this.model.gtin,
-          batchNumber: this.model.batchNumber
-        },
-        disableExpanding: true,
-        disableFooter: true
-      });
-    });
   }
 
-  updateUIInGTINOnlyCase(message) {
+  updateUIInGTINOnlyCase() {
     let batchStatusService = new BatchStatusService();
-    let msg = message || "The batch number in the barcode could not be found";
-    this.displayModal(msg, " ");
     batchStatusService.unableToVerify();
     this.model.statusMessage = batchStatusService.statusMessage;
     this.model.statusType = batchStatusService.statusType;
