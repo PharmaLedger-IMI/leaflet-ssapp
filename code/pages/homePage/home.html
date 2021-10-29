@@ -15,7 +15,7 @@
                     <div id="last-fake-item" class="history-item-container" slot="true">
                         <img src="./assets/icons/fake-history-item.svg">
                     </div>
-                    <div slot="false" class="history-item-container" data-tag="view-details" item-type="history-list-item">
+                    <div slot="false" class="history-item-container" data-tag="view-details"  item-position="@itemPosition">
                         <div class="item-row-container">
                             <div class="product-image">
                                 <img src="@product.productPhoto"/>
@@ -44,7 +44,7 @@
                                 <div class="product-info-row" data-if="@advancedView">
                                     <div>
                                         <ion-label class="productItem_expiry">Batch number:</ion-label>
-                                        <ion-label class="productItem_expiry">{{@batchData.batchNumber}}</ion-label>
+                                        <ion-label class="productItem_expiry">{{@batch.batchNumber}}</ion-label>
                                     </div>
 
                                 </div>

@@ -46,7 +46,7 @@ export default class HistoryController extends WebcController {
         await ionContent.componentOnReady();
         ionContent.scrollEvents = true;
         await self.getPageDataAsync();
-        ionContent.addEventListener('ionScrollStart', async (e) => {
+        ionContent.addEventListener('ionScroll', async (e) => {
           e.stopImmediatePropagation();
           e.preventDefault();
           let fake_item = self.element.querySelector('#last-fake-item');
@@ -57,7 +57,6 @@ export default class HistoryController extends WebcController {
       }, 0)
 
     })
-
   }
 
   isInViewport(elem) {
@@ -65,14 +64,11 @@ export default class HistoryController extends WebcController {
     return (
       bounding.top >= 0 &&
       bounding.left >= 0 &&
-      bounding.bottom <= (window.innerHeight || document.documentElement.clientHeight) &&
-      bounding.right <= (window.innerWidth || document.documentElement.clientWidth)
+      bounding.bottom <= (window.innerHeight || document.documentElement.clientHeight)
     );
   };
 
   async getPageDataAsync() {
-
-    let dbApi = require("opendsu").loadApi("db");
     let advancedUser;
     let refreshPeriod;
     try {
@@ -81,18 +77,20 @@ export default class HistoryController extends WebcController {
       refreshPeriod = await this.model.settingsService.asyncReadSetting("refreshPeriod");
       this.secondsToUpdate = refreshPeriod || constants.DEFAULT_REFRESH_PERIOD;
     } catch (e) {
-
     }
-
-
+    let hasMoreItems = false;
     try {
       if (this.model.products.length && this.model.products[this.model.products.length - 1].lastFakeItem) {
         this.model.products.pop();
       }
       let lastCreatedAt = this.model.products.length ? this.model.products[this.model.products.length - 1].createdAt : new Date().toISOString();
 
-      let results = await $$.promisify(this.dbStorage.filter)(constants.HISTORY_TABLE, `createdAt < ${lastCreatedAt}`, "dsc", this.model.itemsOnPage);
+      let results = await $$.promisify(this.dbStorage.filter)(constants.HISTORY_TABLE, `createdAt < ${lastCreatedAt}`, "dsc", this.model.itemsOnPage + 1);
 
+      if (results.length > this.model.itemsOnPage) {
+        results.pop();
+        hasMoreItems = true;
+      }
       if (results && results.length > 0) {
         if (document.querySelector(".datatable-title") && document.querySelector(".datatable-title").hidden) {
           document.querySelector(".datatable-title").hidden = false;
@@ -119,7 +117,7 @@ export default class HistoryController extends WebcController {
             result.expiryTime = batchStatusService.expiryTime;
             result.snCheck = batchStatusService.snCheck;
             result.product = product;
-            result.batchData = batchData;
+            result.batch = batchData;
             result = await $$.promisify(this.dbStorage.updateRecord)(constants.HISTORY_TABLE, result.pk, result)
           }
           result.advancedView = this.advancedUser;
@@ -151,9 +149,10 @@ export default class HistoryController extends WebcController {
 
       groups[date].push(product);
     }
-    if (this.model.products.length > 0 && this.model.products.length >= this.model.itemsOnPage) {
-      this.model.products.push({lastFakeItem: true});
+    if (this.model.products.length > 0) {
+      hasMoreItems ? this.model.products.push({lastFakeItem: true}) : this.model.products[this.model.products.length - 1].itemPosition = "last";
     }
+
     return this.model.products;
   }
 }
