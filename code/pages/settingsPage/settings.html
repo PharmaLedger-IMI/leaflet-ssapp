@@ -64,33 +64,16 @@
                     <div class="accordion-item-content" slot="item-content">
                         <div data-if="@networkEditMode">
                             <div slot="true">
-                                <input
-                                    class="settings-input"
-                                    data-view-model="@networkNameSetting"
-                                    type="text"
-                                />
-                                <ion-button data-tag="change-network"
-                                    >{{$button}}</ion-button
-                                >
-                                <ion-button data-tag="change-default-network"
-                                    >{{$button1}}</ion-button
-                                >
+                                <input class="settings-input" data-view-model="@networkName" type="text"></input>
+                                <ion-button data-tag="change-network">Save</ion-button>
+                                <ion-button data-tag="change-default-network">Reset</ion-button>
                             </div>
                             <div slot="false">
-                                <input
-                                    class="settings-input"
-                                    data-view-model="@networkNameSetting"
-                                    readonly
-                                    type="text"
-                                />
-                                <ion-button
-                                    class="network-edit-button"
-                                    data="networkEditMode"
-                                    data-tag="change-edit-mode"
-                                    >{{$button2}}<i
-                                        class="fa fa-pencil-square-o"
-                                    ></i
-                                ></ion-button>
+                                <input class="settings-input" data-view-model="@networkName"
+                                       readonly type="text"></input>
+                                <ion-button class="network-edit-button" data="networkEditMode"
+                                            data-tag="change-edit-mode"> Edit <i
+                                        class="fa fa-pencil-square-o"></i></ion-button>
                             </div>
                         </div>
                     </div>
@@ -103,30 +86,15 @@
                     <div class="accordion-item-content" slot="item-content">
                         <div data-if="@scanditLicenseEditMode">
                             <div slot="true">
-                                <input
-                                    class="settings-input"
-                                    data-view-model="@useScanditLicense"
-                                    type="text"
-                                />
-                                <ion-button data-tag="set-scandit-license"
-                                    >{{$button3}}</ion-button
-                                >
+                                <input class="settings-input" data-view-model="@scanditLicense" type="text"></input>
+                                <ion-button data-tag="set-scandit-license">Set</ion-button>
                             </div>
                             <div slot="false">
-                                <input
-                                    class="settings-input"
-                                    data-view-model="@useScanditLicense"
-                                    readonly
-                                    type="text"
-                                />
-                                <ion-button
-                                    class="network-edit-button"
-                                    data="scanditLicenseEditMode"
-                                    data-tag="change-edit-mode"
-                                    >{{$button2}}<i
-                                        class="fa fa-pencil-square-o"
-                                    ></i
-                                ></ion-button>
+                                <input class="settings-input" data-view-model="@scanditLicense" readonly
+                                       type="text"></input>
+                                <ion-button class="network-edit-button" data="scanditLicenseEditMode"
+                                            data-tag="change-edit-mode"> Edit <i
+                                        class="fa fa-pencil-square-o"></i></ion-button>
                             </div>
                         </div>
                     </div>
@@ -155,34 +123,16 @@
                     <div class="accordion-item-content" slot="item-content">
                         <div data-if="@refreshPeriodEditMode">
                             <div slot="true">
-                                <input
-                                    class="settings-input"
-                                    data-view-model="@refreshPeriodValue"
-                                    type="text"
-                                />
-                                <ion-button data-tag="change-refresh-period"
-                                    >{{$button}}</ion-button
-                                >
-                                <ion-button
-                                    data-tag="change-default-refresh-period"
-                                    >{{$button1}}</ion-button
-                                >
+                                <input class="settings-input" data-view-model="@refreshPeriod" type="text"></input>
+                                <ion-button data-tag="change-refresh-period">Save</ion-button>
+                                <ion-button data-tag="change-default-refresh-period">Reset</ion-button>
                             </div>
                             <div slot="false">
-                                <input
-                                    class="settings-input"
-                                    data-view-model="@refreshPeriodValue"
-                                    readonly
-                                    type="text"
-                                />
-                                <ion-button
-                                    class="network-edit-button"
-                                    data="refreshPeriodEditMode"
-                                    data-tag="change-edit-mode"
-                                    >{{$button2}}<i
-                                        class="fa fa-pencil-square-o"
-                                    ></i
-                                ></ion-button>
+                                <input class="settings-input" data-view-model="@refreshPeriod"
+                                       readonly type="text"></input>
+                                <ion-button class="network-edit-button" data="refreshPeriodEditMode"
+                                            data-tag="change-edit-mode"> Edit <i
+                                        class="fa fa-pencil-square-o"></i></ion-button>
                             </div>
                         </div>
                     </div>

@@ -9,55 +9,54 @@ export default class HistoryController extends WebcController {
   constructor(element, history) {
     super(element, history);
     this.model = {products: [], itemsOnPage: 4};
-    this.model.settingsService = new SettingsService(this.DSUStorage);
-
-    let self = this;
-    this.model.settingsService.readSetting("refreshPeriod", (err, refreshPeriod) => {
-      if (err || !refreshPeriod) {
-        refreshPeriod = constants.DEFAULT_REFRESH_PERIOD;
+    let dbApi = require("opendsu").loadApi("db");
+    dbApi.getMainEnclaveDB((err, enclaveDB) => {
+      if (err) {
+        console.log('Error on getting enclave DB');
+        return;
       }
-      setInterval(async () => {
-        await self.getPageDataAsync();
-      }, refreshPeriod * 1000)
-    });
-
-    setTimeout(async () => {
-      const pageTemplate = document.querySelector('webc-app-loader[tag="home"] page-template');
-      await pageTemplate.componentOnReady();
-      const ionContent = pageTemplate.shadowRoot.querySelector('ion-content');
-      await ionContent.componentOnReady();
-      ionContent.scrollEvents = true;
-      await self.getPageDataAsync();
-      ionContent.addEventListener('ionScrollStart', async (e) => {
-        e.stopImmediatePropagation();
-        e.preventDefault();
-        let fake_item = self.element.querySelector('#last-fake-item');
-        if (fake_item && self.isInViewport(fake_item)) {
+      this.dbStorage = enclaveDB;
+      this.model.settingsService = new SettingsService(enclaveDB);
+      let self = this;
+      this.model.settingsService.readSetting("refreshPeriod", (err, refreshPeriod) => {
+        if (err || !refreshPeriod) {
+          refreshPeriod = constants.DEFAULT_REFRESH_PERIOD;
+        }
+        setInterval(async () => {
           await self.getPageDataAsync();
-        }
-      })
-    }, 0)
+        }, refreshPeriod * 1000)
+      });
 
-
-    this.onTagClick("view-details", (model, target, event) => {
-      let dbApi = require("opendsu").loadApi("db");
-      dbApi.getMainEnclaveDB((err, enclaveDB) => {
-        if (err) {
-          console.log('Error on getting enclave DB');
-          return;
-        }
-        enclaveDB.getRecord(constants.HISTORY_TABLE, model.pk, (err, record) => {
+      this.onTagClick("view-details", (model, target, event) => {
+        this.dbStorage.getRecord(constants.HISTORY_TABLE, model.pk, (err, record) => {
           if (err) {
             console.log("Could not find record for pk: ", model.pk);
             return;
           }
-
           this.navigateToPageTag("drug-details", {
             productData: record
           })
         })
-      })
-    });
+      });
+
+      setTimeout(async () => {
+        const pageTemplate = document.querySelector('webc-app-loader[tag="home"] page-template');
+        await pageTemplate.componentOnReady();
+        const ionContent = pageTemplate.shadowRoot.querySelector('ion-content');
+        await ionContent.componentOnReady();
+        ionContent.scrollEvents = true;
+        await self.getPageDataAsync();
+        ionContent.addEventListener('ionScrollStart', async (e) => {
+          e.stopImmediatePropagation();
+          e.preventDefault();
+          let fake_item = self.element.querySelector('#last-fake-item');
+          if (fake_item && self.isInViewport(fake_item)) {
+            await self.getPageDataAsync();
+          }
+        })
+      }, 0)
+
+    })
 
   }
 
@@ -74,14 +73,19 @@ export default class HistoryController extends WebcController {
   async getPageDataAsync() {
 
     let dbApi = require("opendsu").loadApi("db");
-    let advancedUser = await this.model.settingsService.asyncReadSetting("advancedUser");
-    this.advancedUser = !!advancedUser;
-    let refreshPeriod = await this.model.settingsService.asyncReadSetting("refreshPeriod");
-    this.secondsToUpdate = refreshPeriod || constants.DEFAULT_REFRESH_PERIOD;
+    let advancedUser;
+    let refreshPeriod;
+    try {
+      advancedUser = await this.model.settingsService.asyncReadSetting("advancedUser");
+      this.advancedUser = !!advancedUser;
+      refreshPeriod = await this.model.settingsService.asyncReadSetting("refreshPeriod");
+      this.secondsToUpdate = refreshPeriod || constants.DEFAULT_REFRESH_PERIOD;
+    } catch (e) {
+
+    }
+
 
     try {
-      this.dbStorage = await $$.promisify(dbApi.getMainEnclaveDB)();
-
       if (this.model.products.length && this.model.products[this.model.products.length - 1].lastFakeItem) {
         this.model.products.pop();
       }

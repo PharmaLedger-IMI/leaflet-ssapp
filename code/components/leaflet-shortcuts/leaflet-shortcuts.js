@@ -2,24 +2,25 @@ async function timeoutAsync(time) {
     return new Promise(resolve => setTimeout(resolve, time));
 }
 
-async function getBreakPointsAsync(delta = 0, delay = 0) {
+async function getBreakPointsAsync(delay = 0) {
     const breakPoints = [];
     const leafletSections = document.querySelectorAll('leaflet-section');
     await timeoutAsync(delay);
 
     for (const section of leafletSections) {
-        breakPoints.push(section.offsetTop - delta);
+        breakPoints.push(section.offsetTop - leafletSections[0].offsetTop);
     }
 
     for (const breakPoint of breakPoints) {
         if (breakPoint > 0) {
             breakPoints.push(Infinity);
+            breakPoints[0]++;
             return breakPoints;
         }
     }
 
     await timeoutAsync(5);
-    return await getBreakPointsAsync(delta);
+    return await getBreakPointsAsync(delay);
 }
 
 export default class LeafletShortcuts extends HTMLElement {
@@ -67,6 +68,7 @@ export default class LeafletShortcuts extends HTMLElement {
         const leafletButtons = pageTemplate.querySelectorAll('leaflet-button');
         const leafletSections = pageTemplate.querySelectorAll('leaflet-section');
         const leafletHeader = pageTemplate.querySelector('#leaflet-header');
+        const leafletContent = pageTemplate.querySelector('#leaflet-content');
 
         this.tags = Array.from(leafletButtons).map(button => button.getAttribute('tag'));
 
@@ -74,21 +76,14 @@ export default class LeafletShortcuts extends HTMLElement {
         await ionContent.componentOnReady();
         const scrollElement = await ionContent.getScrollElement();
         ionContent.scrollEvents = true;
-        // ionContent.scrollY = true;
-        // ionContent.forceOverscroll = true;
-
-        const style = window.getComputedStyle(this);
-        const normalDelta = Number.parseInt(style.getPropertyValue('--delta-normal'));
-        const collapseDelta =  Number.parseInt(style.getPropertyValue('--delta-collapse'));
+        ionContent.fullscreen = false;
 
         let lastTag = undefined;
         let ticking = false;
-        let delta = normalDelta;
-
         let scrollOrigin = 'scroll'; // or 'button';
         let buttonTarget = undefined;
 
-        this.breakPoints = await getBreakPointsAsync(delta);
+        this.breakPoints = await getBreakPointsAsync();
 
         leafletButtons.forEach(button => {
             button.addEventListener('click', async () => {
@@ -98,7 +93,7 @@ export default class LeafletShortcuts extends HTMLElement {
                 scrollOrigin = 'button';
                 buttonTarget = tag;
 
-                this.breakPoints = await getBreakPointsAsync(delta, 0);
+                this.breakPoints = await getBreakPointsAsync(0);
 
                 // If there is no more space for scrolling, open section first, then try to scroll to actual accordion
                 if (scrollElement.scrollHeight === scrollElement.offsetHeight) {
@@ -116,7 +111,7 @@ export default class LeafletShortcuts extends HTMLElement {
 
         leafletSections.forEach(accordion => {
             accordion.addEventListener('click', async () => {
-                this.breakPoints = await getBreakPointsAsync(delta, 300);
+                this.breakPoints = await getBreakPointsAsync(300);
             });
         });
 
@@ -128,8 +123,8 @@ export default class LeafletShortcuts extends HTMLElement {
 
                     if (scrollTop > 0) {
                         leafletHeader.setAttribute('effect', 'collapse');
+                        leafletContent.setAttribute('effect', 'collapse');
                         leafletButtons.forEach(button => button.setScrollAppearance());
-                        delta = collapseDelta;
                         if (!this.backButton.isConnected) {
                             this.shadowRoot.append(this.backButton);
                             this.backButton.addEventListener('click', async () => {
@@ -138,8 +133,8 @@ export default class LeafletShortcuts extends HTMLElement {
                         }
                     } else {
                         leafletHeader.removeAttribute('effect');
+                        leafletContent.removeAttribute('effect');
                         leafletButtons.forEach(button => button.setInitialAppearance());
-                        delta = normalDelta;
                         this.backButton.remove();
                     }
 

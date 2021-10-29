@@ -1,0 +1,68 @@
+<style>
+    webc-modal::part(header) {
+        display: none;
+    }
+
+    .main-container {
+        text-align: center;
+    }
+
+    .document-type-select-item {
+        background: #FFFFFF;
+        box-shadow: 0px 10px 40px rgba(0, 64, 128, 0.1);
+        border-radius: 16px;
+        height: 80px;
+        margin-top: 24px;
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+    }
+
+    .item-icon {
+        padding: 0px 16px;
+    }
+
+    .item-content-container {
+        display: flex;
+        flex-direction: column;
+        text-align: left;
+        flex-grow: 1;
+    }
+
+    .item-description {
+        font-size: 14px;
+    }
+
+    .arrow {
+        background: url("./assets/icons/history-arrow-dark.svg") no-repeat;
+        width: 16px;
+        height: 16px;
+        background-position-x: right;
+        margin-right: var(--m-space);
+    }
+</style>
+<main>
+    <div class="main-container">
+        <h5>Select preferred document type</h5>
+        <div class="document-type-select-item" data-tag="select-user-type" preferredDocType="smpc">
+            <div class="item-icon"><img src="./assets/icons/doctor_icon.svg"/></div>
+            <div class="item-content-container">
+                <h6>Doctor</h6>
+                <div class="item-description">I want to see drug SMPC first</div>
+            </div>
+
+            <div class="arrow">
+            </div>
+        </div>
+        <div class="document-type-select-item" data-tag="select-user-type" preferredDocType="leaflet">
+            <div class="item-icon"><img src="./assets/icons/patient_icon.svg"/></div>
+            <div class="item-content-container">
+                <h6 class="item-title">Patient</h6>
+                <div class="item-description">I want to see drug Leaflet first</div>
+            </div>
+            <div class="arrow">
+            </div>
+        </div>
+    </div>
+
+</main>

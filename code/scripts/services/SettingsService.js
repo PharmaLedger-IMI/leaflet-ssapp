@@ -1,90 +1,77 @@
 import constants from "../../constants.js";
 
+const DEFAULT_VALUES = {
+  "preferredLanguage": "en",
+  "networkName": constants.DEFAULT_NETWORK_NAME,
+  "scanditLicense": "",
+  "advancedUser": false,
+  "refreshPeriod": constants.DEFAULT_REFRESH_PERIOD
+
+}
 export default class SettingsService {
-	constructor(dsuStorageInstance) {
-		if (typeof dsuStorageInstance === "undefined") {
-			throw Error("Constructor need a DSUStorage instance as param.");
-		}
+  constructor(enclaveDB) {
+    if (enclaveDB) {
+      this.enclaveDB = enclaveDB;
+    }
+    if (!this.enclaveDB) {
+      let dbApi = require("opendsu").loadApi("db");
+      dbApi.getMainEnclaveDB((err, enclaveDB) => {
+        if (err) {
+          console.log('Error on getting enclave DB');
+          return;
+        }
+        this.enclaveDB = enclaveDB
+        this.initDefaultValues();
+      })
+    } else {
+      this.initDefaultValues();
+    }
 
-		this.DSUStorage = dsuStorageInstance;
-	}
+  }
 
-	readSetting(chain, callback){
-		let settingsChain = chain.split(".");
+  initDefaultValues() {
+    Object.keys(DEFAULT_VALUES).forEach(prop => {
+      this.readSetting(prop, (err, result) => {
+        if (err) {
+          this.writeSetting(prop, DEFAULT_VALUES[prop], (err, record) => {
+            if (err) {
+              console.log("Error in settings service constructor. Could not insert record for: ", prop, DEFAULT_VALUES[prop]);
+            }
+          })
+        }
+      })
+    })
+  }
 
-		if(settingsChain.length === 0){
-			return this.read(callback);
-		}
+  readSetting(property, callback) {
+    this.enclaveDB.readKey(property, (err, record) => {
+      if (err) {
+        console.log("Could not find record for pk: ", property);
+        return callback(undefined, typeof DEFAULT_VALUES[property] !== "undefined" ? DEFAULT_VALUES[property] : "");
+      }
+      return callback(undefined, record);
+    })
 
-		this.read((err, settings)=>{
-			if(err){
-				console.trace(err);
-				return callback(err);
-			}
-			let setting = settings;
-			for(let settingName of settingsChain){
-				if(settingName === ""){
-					continue;
-				}
-				try{
-					setting = setting[settingName];
-				}catch(err){
-					console.trace(err);
-					return callback(err);
-				}
-			}
+  }
 
-			return callback(undefined, setting);
-		});
-	}
+  asyncReadSetting(property) {
+    return new Promise((resolve, reject) => {
+      this.readSetting(property, (err, result) => {
+        if (err) {
+          return reject(err)
+        }
+        resolve(result);
+      })
+    })
+  }
 
-	asyncReadSetting(chain){
-		return new Promise((resolve, reject)=>{
-			this.readSetting(chain, (err, result)=> {
-				if (err) {
-					return reject(err)
-				}
-				resolve(result);
-			})
-		})
-	}
-
-	writeSetting(chain, value, callback){
-		let settingsChain = chain.split(".");
-		if(settingsChain === 0){
-			return callback("no setting chain provided");
-		}
-		let settingName = settingsChain.pop();
-		this.read((err, settings)=>{
-			if(err){
-				return callback(err);
-			}
-
-			try{
-				let currentSetting = settings;
-				for(let settingName of settingsChain){
-					currentSetting = currentSetting[settingName];
-				}
-				currentSetting[settingName] = value;
-			}catch(err){
-				return callback(err);
-			}
-
-			this.write(settings, callback);
-		});
-	}
-
-	read(callback){
-		this.DSUStorage.getObject(constants.SETTINGS_STORAGE_PATH, (err, settings)=>{
-			if(err || typeof settings === "undefined"){
-				settings = {};
-			}
-
-			callback(undefined, settings);
-		});
-	}
-
-	write(settings, callback){
-		this.DSUStorage.setObject(constants.SETTINGS_STORAGE_PATH, settings, callback);
-	}
+  writeSetting(property, value, callback) {
+    this.enclaveDB.writeKey(property, value, (err, record) => {
+      if (err) {
+        console.log("Could not insert record for: ", property, value);
+        return callback(err);
+      }
+      return callback(undefined, record);
+    })
+  }
 }

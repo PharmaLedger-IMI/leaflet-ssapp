@@ -2,8 +2,7 @@
     "theme": "epi-theme",
     "pagesFallback": {
         "name": "home",
-        "src": "./homePage/home.html",
-        "skin": { "name": "home", "translations": false }
+        "src": "./homePage/home.html"
     },
     "identity": {
         "name": "Consumer",

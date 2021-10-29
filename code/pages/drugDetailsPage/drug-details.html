@@ -33,8 +33,42 @@
                         <div class="product-description">
                             {{ @product.description }}
                         </div>
+                        <div class="language-doc-type-container">
+                            <div hidden class="select-document-type-container">
+                                <ion-select
+                                    class="select-document-type"
+                                    interface="action-sheet"
+                                    placeholder="Select Document Type"
+                                    value="@preferredDocType"
+                                >
+                                    <ion-select-option value="smpc"
+                                        >SMPC</ion-select-option
+                                    >
+                                    <ion-select-option value="leaflet"
+                                        >Leaflet</ion-select-option
+                                    >
+                                </ion-select>
+                            </div>
+                            <div
+                                hidden
+                                class="select-document-language-container"
+                            >
+                                <ion-select
+                                    class="select-document-language"
+                                    data-for="@documentLanguages"
+                                    data-for-option="rerender"
+                                    interface="action-sheet"
+                                    placeholder="Select Language"
+                                    value="@preferredLanguage"
+                                >
+                                    <ion-select-option value="@value"
+                                        >{{@label}}</ion-select-option
+                                    >
+                                </ion-select>
+                            </div>
+                        </div>
                     </section>
-                    <div data-if="@showEPI">
+                    <div hidden class="leaflet-shortcuts-container">
                         <leaflet-shortcuts
                             button="Back To Top"
                             shadow
@@ -75,9 +109,7 @@
                 </header>
                 <div data-if="@showEPI">
                     <div slot="true">
-                        <webc-container controller="LeafletController">
-                            <div id="leaflet-content"></div>
-                        </webc-container>
+                        <div id="leaflet-content"></div>
                     </div>
                     <div slot="false">
                         <div class="no-leaflet-container">
