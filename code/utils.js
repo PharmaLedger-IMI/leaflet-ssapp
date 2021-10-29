@@ -116,22 +116,22 @@ function getTimeSince(date) {
 
   let seconds = Math.floor((new Date() - new Date(date)) / 1000);
   let month = new Date(date).getMonth() + 1;
-  let monthSeconds = 31 * 24 + 60;
+  let monthSeconds = 31 * 24 * 60 * 60;
   if (month === 2) {
-    monthSeconds = 28 * 24 * 60;
+    monthSeconds = 28 * 24 * 60 * 60;
   }
   if ([4, 6, 9, 11].includes(month)) {
-    monthSeconds = 30 * 24 * 60;
+    monthSeconds = 30 * 24 * 60 * 60;
   }
 
   if (seconds > monthSeconds) {
     return
   }
-  let interval = seconds / monthSeconds;
+  let interval = seconds / (24 * 60 * 60);
   if (interval > 1) {
     return Math.floor(interval) + " days";
   }
-  interval = seconds / 3600;
+  interval = seconds / (60 * 60);
   if (interval > 1) {
     return Math.floor(interval) + " hours";
   }

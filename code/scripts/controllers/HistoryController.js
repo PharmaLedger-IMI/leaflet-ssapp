@@ -146,7 +146,8 @@ export default class HistoryController extends WebcController {
       let humanDate = utils.convertFromISOtoYYYY_HM(product.createdAt.split('T')[0], true, "");
       product.groupDate = humanDate.slice(4);
       let timeLabel = "ago";
-      product.timeFrameOrDate = `${utils.getTimeSince(product.createdAt)} ${timeLabel}` || humanDate;
+      let sinceTime = utils.getTimeSince(product.createdAt);
+      product.timeFrameOrDate = sinceTime ? `${sinceTime} ${timeLabel}` : humanDate;
 
       groups[date].push(product);
     }
