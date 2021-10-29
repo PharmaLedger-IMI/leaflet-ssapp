@@ -90,3 +90,56 @@
 .no-leaflet-container .no-leaflet-text {
     margin-top: var(--s-space);
 }
+
+.language-doc-type-container {
+    width: 100%;
+    padding-left: 24px;
+    padding-right: 24px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin-top: 20px;
+}
+
+.select-document-type,
+.select-document-language {
+    position: relative;
+    background: transparent;
+    border: 1px solid rgba(229, 234, 235, 0.9);
+    border-radius: 100px;
+    color: #E5EAEB;
+    --placeholder-color: #E5EAEB;
+    --placeholder-opacity: 0.9;
+}
+
+.select-document-type::part(text),
+.select-document-language::part(text),
+.select-document-type::part(placeholder),
+.select-document-language::part(placeholder) {
+    margin-left: 38px;
+}
+
+.select-document-type::before,
+.select-document-language::before {
+    position: absolute;
+    content: '';
+    margin-left: 4px;
+    width: 22px;
+    height: 22px;
+    background-position: center;
+}
+
+.select-document-type::before {
+    background: url("../../assets/icons/document-type.svg") no-repeat;
+}
+.select-document-language::before {
+    margin-top: 1px;
+    background: url("../../assets/icons/document-language.svg") no-repeat;
+}
+
+.select-document-type::after,
+.select-document-language::after {
+    background-position: top;
+    background-repeat: no-repeat;
+    background-image: url("../../assets/icons/select-arrow-light.svg");
+}
