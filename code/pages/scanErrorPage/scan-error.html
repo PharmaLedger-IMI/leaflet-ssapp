@@ -10,22 +10,24 @@
                 <div class="no-product-title">{{@title}}</div>
                 <div class="no-product-text">
                     {{@message}}
-                    <div class="scan-data">
-                        <div class="scan-data-row">
-                            <div class="label">Serial number:</div>
-                            <div class="info">{{@fields.serialNumber}}</div>
-                        </div>
-                        <div class="scan-data-row">
-                            <div class="label">Product Code:</div>
-                            <div class="info">{{@fields.gtin}}</div>
-                        </div>
-                        <div class="scan-data-row">
-                            <div class="label">Batch Number:</div>
-                            <div class="info">{{@fields.batchNumber}}</div>
-                        </div>
-                        <div class="scan-data-row">
-                            <div class="label">Expiry:</div>
-                            <div class="info">{{@fields.expiry}}</div>
+                    <div data-if="@showData">
+                        <div class="scan-data">
+                            <div class="scan-data-row">
+                                <div class="label">Serial number:</div>
+                                <div class="info">{{@fields.serialNumber}}</div>
+                            </div>
+                            <div class="scan-data-row">
+                                <div class="label">Product Code:</div>
+                                <div class="info">{{@fields.gtin}}</div>
+                            </div>
+                            <div class="scan-data-row">
+                                <div class="label">Batch Number:</div>
+                                <div class="info">{{@fields.batchNumber}}</div>
+                            </div>
+                            <div class="scan-data-row">
+                                <div class="label">Expiry:</div>
+                                <div class="info">{{@fields.expiry}}</div>
+                            </div>
                         </div>
                     </div>
                     <div data-if="@showSecondaryMessage">

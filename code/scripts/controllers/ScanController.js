@@ -189,7 +189,6 @@ export default class ScanController extends WebcController {
   }
 
   process(gs1Fields) {
-
     if (!this.hasMandatoryFields(gs1Fields)) {
       return this.redirectToError("Barcode is not readable, please contact pharmacy / doctor who issued the medicine package.", gs1Fields);
     }
