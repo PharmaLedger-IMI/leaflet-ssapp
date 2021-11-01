@@ -204,7 +204,7 @@ export default class ScanController extends WebcController {
             if (status) {
               this.addPackageToHistoryAndRedirect(gtinSSI, gs1Fields, (err) => {
                 if (err) {
-                  return console.log("Failed to add package to history", err);
+                  return this.redirectToError("Failed to add package to history", gs1Fields, err.message);
                 }
               });
             } else {
@@ -350,7 +350,7 @@ export default class ScanController extends WebcController {
         if (status) {
           this.addPackageToHistoryAndRedirect(constProductDSU_SSI, gs1Fields, (err) => {
             if (err) {
-              return console.log("Failed to add package to history", err);
+              return this.redirectToError("Failed to add package to history", gs1Fields, err.message)
             }
           });
         } else {
@@ -363,7 +363,8 @@ export default class ScanController extends WebcController {
   addPackageToHistoryAndRedirect(gtinSSI, gs1Fields, callback) {
     this.packageAlreadyScanned(gtinSSI, gs1Fields, (err, result) => {
       if (err) {
-        return console.log("Failed to verify if package was already scanned", err);
+        console.log("Failed to verify if package was already scanned", err);
+        return callback(err);
       }
 
       if (!result.status) {
