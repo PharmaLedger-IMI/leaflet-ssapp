@@ -9,6 +9,7 @@ export default {
   SN_FAIL_ICON: "assets/icons/serial_number/sn_fail_red_x.svg",
   SN_FAIL_MESSAGE: "Failed",
   SN_RECALLED_MESSAGE: "Recalled",
+  BATCH_RECALLED_MESSAGE: "Batch Recalled",
   SN_DECOMMISSIONED_MESSAGE: "Decommissioned",
   SN_OK_ICON: "assets/icons/serial_number/sn_ok.png",
   SN_GRAY_ICON: "assets/icons/serial_number/SN_gray_icon.svg",

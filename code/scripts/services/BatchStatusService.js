@@ -39,11 +39,7 @@ export default class BatchStatusService {
     }
 
     if (res.recalledSerial) {
-      if (batchData.recalled) {
-        this.status = "recalled_batch";
-      } else {
-        this.status = "recalled_sn";
-      }
+      this.status = "recalled_sn";
       this.statusType = "warning";
       this.statusMessage = constants.SN_RECALLED_MESSAGE;
     }
@@ -52,6 +48,12 @@ export default class BatchStatusService {
       this.statusType = "warning";
       this.statusMessage = constants.SN_DECOMMISSIONED_MESSAGE;
       this.status = "decommissioned_sn";
+    }
+
+    if (batchData.recalled) {
+      this.status = "recalled_batch";
+      this.statusType = "warning";
+      this.statusMessage = constants.BATCH_RECALLED_MESSAGE;
     }
     this.snCheck = res;
   };
