@@ -23,22 +23,24 @@
                         </div>
                         <div class="product-description">{{ @product.description }}</div>
                         <div class="language-doc-type-container">
-                            <div hidden class="select-document-type-container">
+                            <div class="select-document-type-container" hidden>
                                 <ion-select class="select-document-type" interface="action-sheet"
                                             placeholder="Select Document Type" value="@preferredDocType">
                                     <ion-select-option value="smpc">SMPC</ion-select-option>
                                     <ion-select-option value="leaflet">Leaflet</ion-select-option>
                                 </ion-select>
                             </div>
-                            <div hidden class="select-document-language-container">
-                                <ion-select class="select-document-language" data-for="@documentLanguages" data-for-option="rerender"
-                                            interface="action-sheet" placeholder="Select Language" value="@preferredLanguage">
+                            <div class="select-document-language-container" hidden>
+                                <ion-select class="select-document-language" data-for="@documentLanguages"
+                                            data-for-option="rerender"
+                                            interface="action-sheet" placeholder="Select Language"
+                                            value="@preferredLanguage">
                                     <ion-select-option value="@value">{{@label}}</ion-select-option>
                                 </ion-select>
                             </div>
                         </div>
                     </section>
-                    <div hidden class="leaflet-shortcuts-container">
+                    <div class="leaflet-shortcuts-container" hidden>
                         <leaflet-shortcuts button="Back To Top" shadow slot="true">
                             <leaflet-button icon="./assets/icons/leaflet-about-circle.svg" label="About"
                                             tag="about"></leaflet-button>
@@ -55,20 +57,26 @@
                         </leaflet-shortcuts>
                     </div>
                 </header>
-                <div data-if="@showEPI">
+                <div data-if="@loadingData">
                     <div slot="true">
-                        <div id="leaflet-content"></div>
+                        <ion-spinner name="bubbles"></ion-spinner>
                     </div>
-                    <div slot="false">
-                        <div class="no-leaflet-container">
-                            <div class="no-leaflet-image"></div>
-                            <div class="no-leaflet-title">Leaflet Not Displayed</div>
-                            <div class="no-leaflet-text">
-                                The leaflet for this product can not be displayed due to validation settings.
+                    <div data-if="@showEPI" slot="false">
+                        <div slot="true">
+                            <div id="leaflet-content"></div>
+                        </div>
+                        <div slot="false">
+                            <div class="no-leaflet-container">
+                                <div class="no-leaflet-image"></div>
+                                <div class="no-leaflet-title">Leaflet Not Displayed</div>
+                                <div class="no-leaflet-text">
+                                    The leaflet for this product can not be displayed due to validation settings.
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
+
 
             </div>
         </webc-container>

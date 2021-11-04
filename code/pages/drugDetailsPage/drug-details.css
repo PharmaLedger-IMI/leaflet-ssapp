@@ -69,6 +69,12 @@
     font-size: var(--xs-text-size);
 }
 
+ion-spinner {
+    width: 100%;
+    margin-top: calc(100vh / 2 - 97px);
+    transform: scale(2);
+}
+
 .no-leaflet-container {
     margin-top: calc(20vh - 65px);
     text-align: center;
@@ -132,6 +138,7 @@
 .select-document-type::before {
     background: url("../../assets/icons/document-type.svg") no-repeat;
 }
+
 .select-document-language::before {
     margin-top: 1px;
     background: url("../../assets/icons/document-language.svg") no-repeat;

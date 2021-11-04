@@ -23,9 +23,10 @@ export default class DrugDetailsController extends WebcController {
       selectUserType: false,
       preferredDocType: "",
       twoOrMoreLanguages: false,
-      showEPI: false,
       documentLanguages: []
     };
+
+    this.model.loadingData = this.model.showEPI === undefined;
 
     if (typeof history.location.state !== "undefined") {
       this.gtinSSI = history.location.state.productData.gtinSSI;
@@ -56,6 +57,7 @@ export default class DrugDetailsController extends WebcController {
 
 
     this.model.onChange('showEPI', async (...props) => {
+      this.model.loadingData = this.model.showEPI === undefined;
       if (this.model.showEPI) {
         this.querySelector('#leaflet-header').removeAttribute('hidden');
         this.querySelector(".leaflet-shortcuts-container").removeAttribute('hidden');
