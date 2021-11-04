@@ -1,3 +1,6 @@
 {
-
+    "alert1": "Allow Camera Access",
+    "alert2": "Access to your camera was denied. To begin scanning, please check your settings and allow access to the camera.",
+    "alert3": "Camera not found",
+    "alert4": "Please check if you have camera on your device or if the camera settings allow access to it."
 }

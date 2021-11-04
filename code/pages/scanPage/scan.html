@@ -1,4 +1,4 @@
-<link href="pages/scanPage/scan.css" rel="stylesheet">
+<link href="pages/scanPage/scan.css" rel="stylesheet"/>
 <div class="mobile-container">
     <webc-container controller="ScanController">
         <page-template roundShape="false" shadow>
@@ -18,16 +18,16 @@
                                     <img class="scan-status" src="./assets/icons/scan-in-progress.svg"/>
                                 </div>
                                 <div class="camera-error" slot="access_denied">
-                                    <h3>Allow Camera Access</h3>
-                                    <span>Access to your camera was denied.
-                                        To begin scanning, please check your settings and allow access to the camera.
-                                    </span>
+                                    <h3>{{$alert1}}</h3>
+                                    <span>{{$alert2}} </span>
                                 </div>
                                 <div class="camera-error" slot="error">
-                                    <h3>Camera not found.</h3>
-                                    <span>Please check if you have camera on your device or if the camera settings allow access to it</span>
+                                    <h3>{{$alert3}}</h3>
+                                    <span>{{$alert4}}</span>
                                 </div>
-                                <div slot="done"><img class="scan-status" src="./assets/icons/scan-done.svg"/></div>
+                                <div slot="done">
+                                    <img class="scan-status" src="./assets/icons/scan-done.svg"/>
+                                </div>
                                 <div class="scan-shape" slot="active">
                                     <img class="scan-status" src="./assets/icons/scan-in-progress.svg"/>
                                 </div>
