@@ -5,6 +5,7 @@ export default class PopupMenuController extends WebcController {
     super(...props);
     this.setModel({});
     this.onTagClick("go-home", () => {
+      this.closeMenu();
       this.navigateToPageTag("home");
     })
     this.onTagClick("go-about", () => {
@@ -16,6 +17,12 @@ export default class PopupMenuController extends WebcController {
     this.onTagClick("go-help", () => {
       this.navigateToPageTag("help");
     })
+  }
+  closeMenu() {
+    document.querySelector(".initial-state").classList.toggle("ion-hide");
+    document.querySelector(".open-state").classList.toggle("ion-hide");
+    document.getElementsByClassName("overlay")[0].style.visibility = "hidden";
+    document.getElementsByClassName("overlay")[0].style.opacity = 0;
   }
 
 }

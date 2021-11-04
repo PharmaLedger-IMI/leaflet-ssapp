@@ -40,15 +40,11 @@ export default class HistoryController extends WebcController {
       });
 
       setTimeout(async () => {
-        const pageTemplate = document.querySelector('webc-app-loader[tag="home"] page-template');
-        await pageTemplate.componentOnReady();
-        const ionContent = pageTemplate.shadowRoot.querySelector('ion-content');
+        const ionContent = document.querySelector('#home-page-template').shadowRoot.querySelector("ion-content")
         await ionContent.componentOnReady();
         ionContent.scrollEvents = true;
         await self.getPageDataAsync();
         ionContent.addEventListener('ionScroll', async (e) => {
-          e.stopImmediatePropagation();
-          e.preventDefault();
           let fake_item = self.element.querySelector('#last-fake-item');
           if (fake_item && self.isInViewport(fake_item)) {
             await self.getPageDataAsync();
@@ -135,6 +131,7 @@ export default class HistoryController extends WebcController {
     let groups = {};
     for (let product of this.model.products) {
       let date = product.createdAt.slice(0, 7);
+      product.itemPosition = "";
       if (!groups[date]) {
         groups[date] = [];
         product.firstGroupItem = true;

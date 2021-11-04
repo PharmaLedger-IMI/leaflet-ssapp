@@ -145,8 +145,11 @@ export default class DrugDetailsController extends WebcController {
 
     this.querySelector('.select-document-language').addEventListener("ionChange", async (event) => {
       this.model.preferredLanguage = event.detail.value;
-      this.documentService.displayXmlForLanguage(this.model.preferredLanguage);
       this.renderEpi();
+      if (this.model.showEPI) {
+        this.documentService.displayXmlForLanguage(this.model.preferredLanguage);
+      }
+
     });
   }
 
@@ -188,8 +191,11 @@ export default class DrugDetailsController extends WebcController {
       if (this.model.preferredLanguage !== documentLanguage.value) {
         this.model.preferredLanguage = documentLanguage.value;
       } else {
-        this.documentService.displayXmlForLanguage(documentLanguage.value);
         this.renderEpi();
+        if (this.model.showEPI) {
+          this.documentService.displayXmlForLanguage(documentLanguage.value);
+        }
+
       }
     } else {
       //display language select
@@ -205,8 +211,10 @@ export default class DrugDetailsController extends WebcController {
         modal.querySelector("ion-select").addEventListener("ionChange", (evt) => {
           modal.destroy();
           this.model.preferredLanguage = evt.detail.value;
-          this.documentService.displayXmlForLanguage(evt.detail.value);
           this.renderEpi();
+          if (this.model.showEPI) {
+            this.documentService.displayXmlForLanguage(evt.detail.value);
+          }
         });
       })
 
