@@ -1,6 +1,7 @@
 const {WebcController} = WebCardinal.controllers;
 import SettingsService from "../services/SettingsService.js";
 import constants from "../../constants.js";
+import appLanguages from "../../appLanguages.js";
 
 export default class SettingsController extends WebcController {
   constructor(element, history) {
@@ -12,11 +13,11 @@ export default class SettingsController extends WebcController {
       networkEditMode: true,
       scanditLicenseEditMode: true,
       refreshPeriodEditMode: true,
-      preferredLanguage: {label: "English", value: "en"},
       networkName: {value: constants.DEFAULT_NETWORK_NAME},
       advancedUser: false,
       refreshPeriod: {value: constants.DEFAULT_REFRESH_PERIOD},
-      scanditLicense: {value: ""}
+      scanditLicense: {value: ""},
+      appLanguages: appLanguages
     });
     let dbApi = require("opendsu").loadApi("db");
     dbApi.getMainEnclaveDB(async (err, enclaveDB) => {
@@ -89,6 +90,8 @@ export default class SettingsController extends WebcController {
             console.log(err);
             return;
           }
+          this.applySkinForCurrentPage(this.model.preferredLanguage);
+          this.setSkin(this.model.preferredLanguage);
         })
       });
 

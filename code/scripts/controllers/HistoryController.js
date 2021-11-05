@@ -40,6 +40,8 @@ export default class HistoryController extends WebcController {
       });
 
       setTimeout(async () => {
+        const pageTemplate = document.querySelector('webc-app-loader[tag="home"] page-template');
+        await pageTemplate.componentOnReady();
         const ionContent = document.querySelector('#home-page-template').shadowRoot.querySelector("ion-content")
         await ionContent.componentOnReady();
         ionContent.scrollEvents = true;
@@ -131,6 +133,7 @@ export default class HistoryController extends WebcController {
     let groups = {};
     for (let product of this.model.products) {
       let date = product.createdAt.slice(0, 7);
+      product.statusMessage = this.translate(product.statusMessage);
       product.itemPosition = "";
       if (!groups[date]) {
         groups[date] = [];
@@ -139,10 +142,18 @@ export default class HistoryController extends WebcController {
         product.firstGroupItem = false;
       }
       let humanDate = utils.convertFromISOtoYYYY_HM(product.createdAt.split('T')[0], true, "");
-      product.groupDate = humanDate.slice(4);
-      let timeLabel = "ago";
+      let month = this.translate(humanDate.slice(4).slice(0, -6));
+      product.groupDate = `${month} ${humanDate.slice(-4)}`;
+      let timeLabel = this.translate("ago");
       let sinceTime = utils.getTimeSince(product.createdAt);
-      product.timeFrameOrDate = sinceTime ? `${sinceTime} ${timeLabel}` : humanDate;
+      if (sinceTime) {
+        let timeNr = this.translate(sinceTime.split(" ")[0]);
+        let translatedUnit = this.translate(sinceTime.split(" ")[1]);
+        product.timeFrameOrDate = `${timeNr} ${translatedUnit} ${timeLabel}`
+      } else {
+        product.timeFrameOrDate = humanDate;
+      }
+
 
       groups[date].push(product);
     }

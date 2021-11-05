@@ -1,0 +1,16 @@
+.network-edit-button i {
+    padding-left: 10px;
+}
+
+.checkbox-label {
+    padding-right: 10px;
+}
+
+.settings-input {
+    width: 100%;
+    padding: var(--s-space);
+    border-radius: var(--xxs-border-radius);
+    border: 1px solid var(--ion-color-gray-three);
+    margin-bottom: var(--l-space);
+    font-size: var(--s-text-size);
+}

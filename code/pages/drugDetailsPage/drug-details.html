@@ -1,4 +1,4 @@
-<link href="pages/drugDetailsPage/drug-details.css" rel="stylesheet">
+<link href="pages/drugDetailsPage/drug-details.css" rel="stylesheet"/>
 
 <div class="mobile-container">
     <page-template id="home-page-template" roundShape="false" shadow>
@@ -18,7 +18,7 @@
                         <div class="product-name">
                             <div>{{ @product.name }}</div>
                             <div class="verified-icon" data-tag="click-verified">
-                                <img src="./assets/icons/leaflet-verified.svg">
+                                <img src="./assets/icons/leaflet-verified.svg"/>
                             </div>
                         </div>
                         <div class="product-description">{{ @product.description }}</div>
@@ -68,16 +68,12 @@
                         <div slot="false">
                             <div class="no-leaflet-container">
                                 <div class="no-leaflet-image"></div>
-                                <div class="no-leaflet-title">Leaflet Not Displayed</div>
-                                <div class="no-leaflet-text">
-                                    The leaflet for this product can not be displayed due to validation settings.
-                                </div>
+                                <div class="no-leaflet-title">{{$title}}</div>
+                                <div class="no-leaflet-text">{{$text}}</div>
                             </div>
                         </div>
                     </div>
                 </div>
-
-
             </div>
         </webc-container>
     </page-template>

@@ -14,7 +14,8 @@
       "name": "Home",
       "tag": "home",
       "src": "./homePage/home.html",
-      "path": "./"
+      "path": "./",
+      "skins":[{"name":  "default"}, {"name": "de"}, {"name": "ro"}]
     },
     {
       "name": "Scan",

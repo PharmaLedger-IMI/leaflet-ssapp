@@ -128,16 +128,16 @@ function getTimeSince(date) {
     return
   }
   let interval = seconds / (24 * 60 * 60);
-  if (interval > 1) {
-    return Math.floor(interval) + " days";
+  if (interval >= 1) {
+    return Math.floor(interval) + (interval > 1 ? " days" : " day");
   }
   interval = seconds / (60 * 60);
-  if (interval > 1) {
-    return Math.floor(interval) + " hours";
+  if (interval >= 1) {
+    return Math.floor(interval) + (interval > 1 ? " hours" : " hour");
   }
   interval = seconds / 60;
-  if (interval > 1) {
-    return Math.floor(interval) + " minutes";
+  if (interval >= 1) {
+    return Math.floor(interval) + (interval > 1 ? " minutes" : " minute");
   }
   return seconds + (seconds > 1 ? " seconds" : " second");
 }
