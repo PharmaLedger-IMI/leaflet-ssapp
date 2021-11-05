@@ -1,5 +1,6 @@
 import LanguageService from "../LanguageService/LanguageService.js";
 import constants from "../../../constants.js";
+import utils from "../../../utils.js";
 
 const pathToXsl = constants.XSL_PATH;
 let errorMessage = "This is a valid product. However, more information about this product has not been published by the Pharmaceutical Company. Please check back later.";
@@ -99,16 +100,43 @@ export default class XmlDisplayService {
 
   readXmlFile(language, callback) {
     this.buildBasePath((err, pathBase) => {
-      const pathToLeafletLanguage = `${pathBase}/${language}/`;
-      const pathToXml = pathToLeafletLanguage + this.xmlFile;
-
-      this.readFileAndDecodeContent(pathToXml, (err, xmlContent) => {
+      let pathToLeafletLanguage = `${pathBase}/${language}`;
+      const pathToXml = `${pathToLeafletLanguage}/${this.xmlFile}`;
+      const openDSU = require("opendsu");
+      const resolver = openDSU.loadAPI("resolver");
+      resolver.loadDSU(this.gtinSSI, async (err, dsu) => {
         if (err) {
           return callback(err);
         }
-        callback(undefined, xmlContent, pathToLeafletLanguage);
+        try {
+          let files = await $$.promisify(dsu.listFiles)(pathToLeafletLanguage);
+          let xmlContent = await $$.promisify(dsu.readFile)(pathToXml);
+          let textDecoder = new TextDecoder("utf-8");
+          this.images = {};
+          let anyOtherFiles = files.filter((file) => !file.endsWith('.xml'));
+          for (let i = 0; i < anyOtherFiles.length; i++) {
+            let filePath = `${pathToLeafletLanguage}/${anyOtherFiles[i]}`;
+            let imgFile = await $$.promisify(dsu.readFile)(filePath);
+            this.images[filePath] = utils.getImageAsBase64(imgFile);
+          }
+          callback(undefined, textDecoder.decode(xmlContent), `${pathToLeafletLanguage}/`);
+        } catch (e) {
+          return callback(e);
+        }
       })
+
     })
+  }
+
+  readFileAndDecodeContent(path, dsu, callback) {
+    dsu.readFile(path, (err, content) => {
+      if (err) {
+        return callback(err);
+      }
+      let textDecoder = new TextDecoder("utf-8");
+      callback(undefined, textDecoder.decode(content));
+    })
+
   }
 
   applyStylesheetAndDisplayXml(pathBase, xmlContent) {
@@ -128,7 +156,7 @@ export default class XmlDisplayService {
 
   displayXmlContent(pathBase, xmlContent, xslContent) {
     let xsltProcessor = new XSLTProcessor();
-    xsltProcessor.setParameter(null, "resources_path", "download" + pathBase);
+    xsltProcessor.setParameter(null, "resources_path", pathBase);
     let parser = new DOMParser();
 
     let xmlDoc = parser.parseFromString(xmlContent, "text/xml");
@@ -141,6 +169,10 @@ export default class XmlDisplayService {
     this.element.querySelector("#leaflet-content").innerHTML = '';
     let mainDiv = document.createElement("div");
     let sectionsElements = resultDocument.querySelectorAll(".leaflet-accordion-item");
+    let leafletImages = resultDocument.querySelectorAll("img");
+    for (let image of leafletImages) {
+      image.setAttribute("src", this.images[image.getAttribute("src")]);
+    }
     let aboutContent = "";
     let beforeContent = "";
     let howToContent = "";
@@ -230,24 +262,6 @@ export default class XmlDisplayService {
     pskLabel.className = "scan-error-message";
     pskLabel.label = errorMessage;
     return pskLabel;
-  }
-
-  readFileAndDecodeContent(path, callback) {
-    const openDSU = require("opendsu");
-    const resolver = openDSU.loadAPI("resolver");
-    resolver.loadDSU(this.gtinSSI, (err, dsu) => {
-      if (err) {
-        return callback(err);
-      }
-      dsu.readFile(path, (err, content) => {
-        if (err) {
-          return callback(err);
-        }
-        let textDecoder = new TextDecoder("utf-8");
-        callback(undefined, textDecoder.decode(content));
-      })
-    })
-
   }
 
   readXSLTFile(callback) {
