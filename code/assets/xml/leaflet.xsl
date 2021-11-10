@@ -50,12 +50,29 @@
     </xsl:template>
 
     <xsl:template match="xs:linkHtml">
-        <a>
-            <xsl:attribute name="href">
-                <xsl:value-of select="@href"/>
-            </xsl:attribute>
-            <xsl:value-of select="."/>
-        </a>
+        <xsl:variable name="_href">
+            <xsl:value-of select="@href"/>
+        </xsl:variable>
+        <xsl:variable name="firstLetter" select="substring($_href,1,1)"/>
+        <xsl:choose>
+            <xsl:when test="$firstLetter != '#'">
+                <a target="_blank">
+                    <xsl:attribute name="href">
+                        <xsl:value-of select="@href"/>
+                    </xsl:attribute>
+                    <xsl:value-of select="."/>
+                </a>
+            </xsl:when>
+            <xsl:otherwise>
+                <span class="leaflet-link">
+                    <xsl:attribute name="linkUrl">
+                        <xsl:value-of select="@href"/>
+                    </xsl:attribute>
+                    <xsl:value-of select="."/>
+                </span>
+            </xsl:otherwise>
+        </xsl:choose>
+
     </xsl:template>
 
     <xsl:template match="xs:section">
@@ -70,7 +87,8 @@
                         <xsl:variable name="partialTitle" select="substring(xs:code/@displayName,2)"/>
                         <xsl:variable name="firstLetter" select="substring(xs:code/@displayName,1,1)"/>
                         <xsl:variable name="modifiedTitle">
-                            <xsl:value-of select="concat($firstLetter,translate($partialTitle,'ABCDEFGHIJKLMNOPQRSTUVWXYZ','abcdefghijklmnopqrstuvwxyz'))"/>
+                            <xsl:value-of
+                                    select="concat($firstLetter,translate($partialTitle,'ABCDEFGHIJKLMNOPQRSTUVWXYZ','abcdefghijklmnopqrstuvwxyz'))"/>
                         </xsl:variable>
                         <xsl:value-of select="$modifiedTitle"/>
                     </h5>
@@ -90,7 +108,8 @@
                 <xsl:variable name="partialTitle" select="substring(xs:code/@displayName,2)"/>
                 <xsl:variable name="firstLetter" select="substring(xs:code/@displayName,1,1)"/>
                 <xsl:variable name="modifiedTitle">
-                    <xsl:value-of select="concat($firstLetter,translate($partialTitle,'ABCDEFGHIJKLMNOPQRSTUVWXYZ','abcdefghijklmnopqrstuvwxyz'))"/>
+                    <xsl:value-of
+                            select="concat($firstLetter,translate($partialTitle,'ABCDEFGHIJKLMNOPQRSTUVWXYZ','abcdefghijklmnopqrstuvwxyz'))"/>
                 </xsl:variable>
                 <xsl:value-of select="$modifiedTitle"/>
             </h3>
@@ -149,7 +168,8 @@
     </xsl:template>
 
     <!--nodes or attributes that we need to hide for a cleaner output-->
-    <xsl:template match="xs:author|xs:id|xs:document/xs:code|xs:document/xs:effectiveTime|xs:document/xs:setId|xs:document/xs:versionNumber">
+    <xsl:template
+            match="xs:author|xs:id|xs:document/xs:code|xs:document/xs:effectiveTime|xs:document/xs:setId|xs:document/xs:versionNumber">
         <!--hide selected nodes-->
     </xsl:template>
 </xsl:stylesheet>

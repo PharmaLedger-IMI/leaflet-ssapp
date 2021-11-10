@@ -150,3 +150,8 @@ ion-spinner {
     background-repeat: no-repeat;
     background-image: url("../../assets/icons/select-arrow-light.svg");
 }
+
+.leaflet-link{
+    color: var(--ion-color-cornflower-shade);
+    text-decoration: underline;
+}
