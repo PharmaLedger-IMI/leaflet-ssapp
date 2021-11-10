@@ -17,9 +17,8 @@
 </style>
 <main>
     <div class="main-container">
-        <h6>Change Language</h6>
-        <p class="description">Sorry, this leaflet is only available in the following languages. Select your
-            preference.</p>
+        <h6>{{@language_select_title}}</h6>
+        <p class="description">{{@language_select_description}}</p>
         <ion-select class="select-options" data-for="@languages" data-for-option="rerender"
                     interface="action-sheet" placeholder="Select a language">
             <ion-select-option value="@value">{{@label}}</ion-select-option>

@@ -5,7 +5,7 @@
         <webc-container controller="SettingsController" slot="content-slot">
             <div class="section-title">{{$main_title}}</div>
             <div class="accordion">
-                <accordion-item shadow subtitle="{{$subtitle}}" title="{{$title}}">
+                <accordion-item shadow subtitle="{{$lang_subtitle}}" title="{{$lang_title}}">
                     <div class="accordion-item-content" slot="item-content">
                         <ion-select class="select-options" interface="action-sheet" data-for-option="rerender" placeholder="$select_option"
                                     data-for="@appLanguages" value="@preferredLanguage">
@@ -15,64 +15,64 @@
                     </div>
                 </accordion-item>
 
-                <accordion-item shadow subtitle="{{$subtitle1}}" title="{{$title1}}">
+                <accordion-item shadow subtitle="{{$origin_subtitle}}" title="{{$origin_title}}">
                     <div class="accordion-item-content" slot="item-content">
                         <div>{{@origin}}</div>
                     </div>
                 </accordion-item>
-                <accordion-item shadow subtitle="{{$subtitle2}}" title="{{$title2}}">
+                <accordion-item shadow subtitle="{{$network_subtitle}}" title="{{$network_title}}">
                     <div class="accordion-item-content" slot="item-content">
                         <div data-if="@networkEditMode">
                             <div slot="true">
                                 <input class="settings-input" data-view-model="@networkName" type="text"/>
-                                <ion-button data-tag="change-network">Save</ion-button>
-                                <ion-button data-tag="change-default-network">Reset</ion-button>
+                                <ion-button data-tag="change-network">{{$save_btn}}</ion-button>
+                                <ion-button data-tag="change-default-network">{{$reset_btn}}</ion-button>
                             </div>
                             <div slot="false">
                                 <input class="settings-input" data-view-model="@networkName"
                                        readonly type="text"/>
                                 <ion-button class="network-edit-button" data="networkEditMode"
-                                            data-tag="change-edit-mode"> Edit <i class="fa fa-pencil-square-o"></i>
+                                            data-tag="change-edit-mode"> {{$edit_btn}} <i class="fa fa-pencil-square-o"></i>
                                 </ion-button>
                             </div>
                         </div>
                     </div>
                 </accordion-item>
-                <accordion-item shadow subtitle="{{$subtitle5}}" title="{{$title5}}">
+                <accordion-item shadow subtitle="{{$scandit_subtitle}}" title="{{$scandit_title}}">
                     <div class="accordion-item-content" slot="item-content">
                         <div data-if="@scanditLicenseEditMode">
                             <div slot="true">
                                 <input class="settings-input" data-view-model="@scanditLicense" type="text"/>
-                                <ion-button data-tag="set-scandit-license">Set</ion-button>
+                                <ion-button data-tag="set-scandit-license">{{$set_btn}}</ion-button>
                             </div>
                             <div slot="false">
                                 <input class="settings-input" data-view-model="@scanditLicense" readonly
                                        type="text"/>
                                 <ion-button class="network-edit-button" data="scanditLicenseEditMode"
-                                            data-tag="change-edit-mode"> Edit <i class="fa fa-pencil-square-o"></i>
+                                            data-tag="change-edit-mode"> {{$edit_btn}} <i class="fa fa-pencil-square-o"></i>
                                 </ion-button>
                             </div>
                         </div>
                     </div>
                 </accordion-item>
-                <accordion-item shadow subtitle="{{$subtitle3}}" title="{{$title3}}">
+                <accordion-item shadow subtitle="{{$advanced_subtitle}}" title="{{$advanced_title}}">
                     <div class="accordion-item-content align-center" slot="item-content">
                         <span class="checkbox-label">{{$checkbox}}</span>
                         <ion-checkbox checked="@advancedUser" slot="end"></ion-checkbox>
                     </div>
                 </accordion-item>
-                <accordion-item shadow subtitle="{{$subtitle4}}" title="{{$title4}}">
+                <accordion-item shadow subtitle="{{$refresh_subtitle}}" title="{{$refresh_title}}">
                     <div class="accordion-item-content" slot="item-content">
                         <div data-if="@refreshPeriodEditMode">
                             <div slot="true">
                                 <input class="settings-input" data-view-model="@refreshPeriod" type="text"/>
-                                <ion-button data-tag="change-refresh-period">Save</ion-button>
-                                <ion-button data-tag="change-default-refresh-period">Reset</ion-button>
+                                <ion-button data-tag="change-refresh-period">{{$save_btn}}</ion-button>
+                                <ion-button data-tag="change-default-refresh-period">{{$reset_btn}}</ion-button>
                             </div>
                             <div slot="false">
                                 <input class="settings-input" data-view-model="@refreshPeriod" readonly type="text"/>
                                 <ion-button class="network-edit-button" data="refreshPeriodEditMode"
-                                            data-tag="change-edit-mode"> Edit <i class="fa fa-pencil-square-o"></i>
+                                            data-tag="change-edit-mode"> {{$edit_btn}} <i class="fa fa-pencil-square-o"></i>
                                 </ion-button>
                             </div>
                         </div>

@@ -1,12 +1,12 @@
 <div class="mobile-container">
     <page-template id="home-page-template" roundShape="true" shadow>
-        <landing-header slot="header-slot" goBack="true"></landing-header>
-        <div class="page-content-container" slot="content-slot">
-            <div class="section-title">$title</div>
+        <landing-header goBack="true" slot="header-slot"></landing-header>
+        <webc-container controller="HelpController" slot="content-slot">
+            <div class="section-title">{{$title}}</div>
             <div class="accordion">
                 <accordion-item shadow title="{{$section_title}}">
                     <div class="accordion-item-content" slot="item-content">
-                        <div>$section_text</div>
+                        <div>{{$section_text}}</div>
                     </div>
                 </accordion-item>
                 <accordion-item shadow title="{{$section_title1}}">
@@ -35,6 +35,7 @@
                     </div>
                 </accordion-item>
             </div>
-        </div>
+
+        </webc-container>
     </page-template>
 </div>

@@ -21,73 +21,51 @@
       "name": "Scan",
       "tag": "scan",
       "src": "./scanPage/scan.html",
-      "path": "./scan"
+      "path": "./scan",
+      "skins":[{"name":  "default"}, {"name": "de"}, {"name": "ro"}]
     },
     {
       "name": "History",
       "tag": "history",
-      "path": "./history"
+      "path": "./history",
+      "skins":[{"name":  "default"}, {"name": "de"}, {"name": "ro"}]
     },
     {
       "name": "About",
       "tag": "about",
       "src": "./aboutPage/about.html",
-      "path": "./about"
+      "path": "./about",
+      "skins":[{"name":  "default"}, {"name": "de"}, {"name": "ro"}]
     },
     {
       "name": "Help",
       "tag": "help",
       "src": "./helpPage/help.html",
-      "path": "./help"
-    },
-    {
-      "name": "Report",
-      "indexed": false,
-      "path": "./report"
-    },
-    {
-      "name": "Report Dummy",
-      "indexed": false,
-      "path": "./report-dummy"
+      "path": "./help",
+      "skins":[{"name":  "default"}, {"name": "de"}, {"name": "ro"}]
     },
     {
       "name": "Settings",
       "tag": "settings",
       "src": "./settingsPage/settings.html",
-      "path": "./settings"
+      "path": "./settings",
+      "skins":[{"name":  "default"}, {"name": "de"}, {"name": "ro"}]
     },
     {
       "name": "Drug details",
       "indexed": false,
       "tag": "drug-details",
       "src": "./drugDetailsPage/drug-details.html",
-      "path": "./drug-details"
-    },
-    {
-      "name": "Leaflet",
-      "tag": "leaflet",
-      "src": "./leaflet/leaflet.html",
-      "indexed": false,
-      "path": "./leaflet"
-    },
-    {
-      "name": "smpc",
-      "tag": "smpc",
-      "indexed": false,
-      "path": "./smpc"
-    },
-    {
-      "name": "View Leaflet",
-      "indexed": false,
-      "tag": "view-leaflet",
-      "path": "./view-leaflet"
+      "path": "./drug-details",
+      "skins":[{"name":  "default"}, {"name": "de"}, {"name": "ro"}]
     },
     {
       "name": "Scan error",
       "indexed": false,
       "tag": "scan-error",
       "src": "./scanErrorPage/scan-error.html",
-      "path": "./scan-error"
+      "path": "./scan-error",
+      "skins":[{"name":  "default"}, {"name": "de"}, {"name": "ro"}]
     }
   ],
   "logLevel": "none"

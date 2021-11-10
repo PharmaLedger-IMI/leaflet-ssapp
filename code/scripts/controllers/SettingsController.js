@@ -7,7 +7,7 @@ export default class SettingsController extends WebcController {
   constructor(element, history) {
     super(element, history);
 
-    this.setModel({
+    this.model = {
       languageSelectorOpened: false,
       origin: window.location.origin,
       networkEditMode: true,
@@ -18,7 +18,7 @@ export default class SettingsController extends WebcController {
       refreshPeriod: {value: constants.DEFAULT_REFRESH_PERIOD},
       scanditLicense: {value: ""},
       appLanguages: appLanguages
-    });
+    };
     let dbApi = require("opendsu").loadApi("db");
     dbApi.getMainEnclaveDB(async (err, enclaveDB) => {
       if (err) {

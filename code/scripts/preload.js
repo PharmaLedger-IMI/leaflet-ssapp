@@ -4,7 +4,6 @@ async function defineNativeComponents() {
     const define = async (name) => {
         const { default: component } = await import(`../components/${name}/${name}.js`);
         customElements.define(name, component);
-        WebCardinal.components.tags.add(name);
     };
 
     await Promise.all([

@@ -1,6 +1,17 @@
 {
-    "alert1": "Allow Camera Access",
-    "alert2": "Access to your camera was denied. To begin scanning, please check your settings and allow access to the camera.",
-    "alert3": "Camera not found",
-    "alert4": "Please check if you have camera on your device or if the camera settings allow access to it."
+  "alert1": "Permite accesul la camera",
+  "alert2": "Accesul la camera dvs. a fost refuzat. Pentru a putea scana, verificați setările și permiteți accesul la cameră.",
+  "alert3": "Camera nu a fost găsită",
+  "alert4": "Vă rugăm să verificați dacă aveți o cameră pe dispozitiv sau dacă setările camerei permit accesul la aceasta.",
+  "cancel": "Anulează",
+  "guide": "Ghid",
+  "err_no_code_scanned": "Procesul de scanare a codului 2dMatrix s-a încheiat. Niciun cod scanat sau proces anulat.",
+  "err_no_code_found": "Nu a fost găsită nicio matrice de date GS1.",
+  "err_scan_not_supported": "Codul nu poate fi scanat.",
+  "err_cam_unavailable": "Nici o cameră disponibilă pentru scanare.",
+  "err_default": "Scanarea matricei de date GS1 a eșuat.",
+  "err_unknown": "Scanarea și procesarea codului s-a încheiat cu erori.",
+  "err_barcode": "Codul de bare nu poate fi citit, vă rugăm să contactați farmacia/medicul care a eliberat pachetul de medicamente.",
+  "err_combination": "Combinația de coduri de produs nu a putut fi rezolvată.",
+  "err_to_history": "Nu s-a putut adăuga pachetul la istoric"
 }

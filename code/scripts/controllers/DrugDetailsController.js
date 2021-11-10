@@ -26,6 +26,13 @@ export default class DrugDetailsController extends WebcController {
       documentLanguages: []
     };
 
+    this.model.aboutLabel = this.translate("about")
+    this.model.beforeTakingLabel = this.translate("before_taking")
+    this.model.howToLabel = this.translate("how_to")
+    this.model.sideEffectsLabel = this.translate("side_effects")
+    this.model.storingLabel = this.translate("storing")
+    this.model.moreLabel = this.translate("more")
+
     this.model.loadingData = this.model.showEPI === undefined;
 
     if (typeof history.location.state !== "undefined") {
@@ -44,7 +51,7 @@ export default class DrugDetailsController extends WebcController {
     } else {
       console.log("Undefined product data");
       this.updateUIInGTINOnlyCase()
-      this.showModal("Undefined product data", "Note", () => {
+      this.showModal(this.translate("undefined_data"), this.translate("note"), () => {
       }, () => {
       }, {
         disableExpanding: true,
@@ -100,6 +107,13 @@ export default class DrugDetailsController extends WebcController {
         let modal = this.showModalFromTemplate('user-type-select', () => {
         }, () => {
         }, {
+          model: {
+            title: this.translate("user_type_title"),
+            "user_type_1": this.translate("user_type_1"),
+            "user_type_1_description": this.translate("user_type_1_description"),
+            "user_type_2": this.translate("user_type_2"),
+            "user_type_2_description": this.translate("user_type_2_description"),
+          },
           disableExpanding: true,
           disableFooter: true,
           disableClosing: true
@@ -121,11 +135,21 @@ export default class DrugDetailsController extends WebcController {
 
 
       this.onTagClick("click-verified", () => {
+        let modalTitle = this.translate("info_title");
+        let exp_label = this.translate("exp_label");
+        let sn_label = this.translate("sn_label");
+        let pc_label = this.translate("pc_label");
+        let bn_label = this.translate("bn_label");
+
         this.showModalFromTemplate('batch-info', () => {
         }, () => {
         }, {
           model: {
-            title: "Batch Info",
+            title: modalTitle,
+            exp_label: exp_label,
+            sn_label: sn_label,
+            pc_label: pc_label,
+            bn_label: bn_label,
             expiryForDisplay: this.model.expiryForDisplay,
             serialNumber: this.model.serialNumber,
             gtin: this.model.gtin,
@@ -204,7 +228,11 @@ export default class DrugDetailsController extends WebcController {
       let modal = this.showModalFromTemplate('document-language-select', () => {
       }, () => {
       }, {
-        model: {languages: this.model.documentLanguages},
+        model: {
+          languages: this.model.documentLanguages,
+          language_select_title: this.translate("language_select_title"),
+          language_select_description: this.translate("language_select_description"),
+        },
         disableExpanding: true,
         disableFooter: true,
         disableClosing: true
@@ -227,7 +255,7 @@ export default class DrugDetailsController extends WebcController {
   renderEpi() {
     if (typeof this.model.batch === "undefined") {
       this.updateUIInGTINOnlyCase();
-      this.showModal("The batch number in the barcode could not be found", "Note", () => {
+      this.showModal(this.translate("batch_not_found"), this.translate("note"), () => {
       }, () => {
       }, {
         disableExpanding: true,
@@ -242,7 +270,7 @@ export default class DrugDetailsController extends WebcController {
         }, () => {
         }, {
           model: {
-            title: "Note",
+            title: this.translate("note"),
             recallMessage: this.model.batch.recalled ? this.model.batch.recalledMessage : "",
             defaultMessage: this.model.batch.defaultMessage
           },

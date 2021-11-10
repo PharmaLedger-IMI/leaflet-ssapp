@@ -166,8 +166,6 @@ export default class XmlDisplayService {
     xsltProcessor.importStylesheet(xslDoc);
 
     let resultDocument = xsltProcessor.transformToFragment(xmlDoc, document);
-    this.element.querySelector("#leaflet-content").innerHTML = '';
-    let mainDiv = document.createElement("div");
     let sectionsElements = resultDocument.querySelectorAll(".leaflet-accordion-item");
     let leafletImages = resultDocument.querySelectorAll("img");
     for (let image of leafletImages) {
@@ -220,17 +218,17 @@ export default class XmlDisplayService {
     });
 
     let htmlFragment = ` 
-                <leaflet-section active label="About" ref="about" icon="./assets/icons/leaflet-about.svg">${aboutContent}
+                <leaflet-section active label="${this.model.aboutLabel}" ref="about" icon="./assets/icons/leaflet-about.svg">${aboutContent}
                 </leaflet-section>
-                <leaflet-section active label="Before Taking" ref="before-taking" icon="./assets/icons/leaflet-before-taking.svg">${beforeContent}
+                <leaflet-section active label="${this.model.beforeTakingLabel}" ref="before-taking" icon="./assets/icons/leaflet-before-taking.svg">${beforeContent}
                 </leaflet-section>
-                <leaflet-section active label="How to take" ref="how-to-take" icon="./assets/icons/leaflet-how-to-take.svg">${howToContent}
+                <leaflet-section active label="${this.model.howToLabel}" ref="how-to-take" icon="./assets/icons/leaflet-how-to-take.svg">${howToContent}
                 </leaflet-section>
-                <leaflet-section active label="Side Effects" ref="side-effects" icon="./assets/icons/leaflet-side-effects.svg">${sideEffectsContent}
+                <leaflet-section active label="${this.model.sideEffectsLabel}" ref="side-effects" icon="./assets/icons/leaflet-side-effects.svg">${sideEffectsContent}
                 </leaflet-section>
-                <leaflet-section active label="Storing" ref="storing" icon="./assets/icons/leaflet-storing.svg">${storingContent}
+                <leaflet-section active label="${this.model.storingLabel}" ref="storing" icon="./assets/icons/leaflet-storing.svg">${storingContent}
                 </leaflet-section>
-                <leaflet-section active label="More" ref="more" icon="./assets/icons/leaflet-more.svg">${moreContent}
+                <leaflet-section active label="${this.model.moreLabel}" ref="more" icon="./assets/icons/leaflet-more.svg">${moreContent}
                 </leaflet-section>`
     this.element.querySelector("#leaflet-content").innerHTML = htmlFragment;
   }

@@ -75,17 +75,17 @@ export default class ScanController extends WebcController {
                     return this.processCompositeCodeScan(scanObjArray)
                   }
                 }
-                this.redirectToError("2dMatrix code scan process finished. No code scanned or process canceled.");
+                this.redirectToError(this.translate("err_no_code_scanned"));
               }, (error) => {
                 switch (error) {
                   case "ERR_NO_CODE_FOUND":
-                    this.redirectToError("No GS1 data matrix found.");
+                    this.redirectToError(this.translate("err_no_code_found"));
                     break;
                   case "ERR_SCAN_NOT_SUPPORTED":
-                    this.redirectToError("The code cannot be scanned.");
+                    this.redirectToError(this.translate("err_scan_not_supported"));
                     break;
                   case "ERR_CAM_UNAVAILABLE":
-                    this.redirectToError("No camera available for scanning.");
+                    this.redirectToError(this.translate("err_cam_unavailable"));
                     break;
                   case "ERR_USER_CANCELLED":
                     this.disposeOfBarcodePicker()
@@ -93,10 +93,10 @@ export default class ScanController extends WebcController {
                     //   this.history.push(`${new URL(this.history.win.basePath).pathname}home`);
                     break;
                   default:
-                    this.redirectToError("Failed to scan GS1 data matrix.");
+                    this.redirectToError(this.translate("err_default"));
                 }
               }).catch((err) => {
-                this.redirectToError("Code scanning and processing finished with errors.");
+                this.redirectToError(this.translate("err_unknown"));
               });
             } else {
               const scan = handler.importNativeAPI("dataMatrixScan");
@@ -104,17 +104,17 @@ export default class ScanController extends WebcController {
                 if (resultArray && resultArray.length > 0) {
                   return this.process(this.parseGS1Code(resultArray[0]));
                 }
-                this.redirectToError("2dMatrix code scan process finished. No code scanned or process canceled.");
+                this.redirectToError(this.translate("err_no_code_scanned"));
               }, (error) => {
                 switch (error) {
                   case "ERR_NO_CODE_FOUND":
-                    this.redirectToError("No GS1 data matrix found.");
+                    this.redirectToError(this.translate("err_no_code_found"));
                     break;
                   case "ERR_SCAN_NOT_SUPPORTED":
-                    this.redirectToError("The code cannot be scanned.");
+                    this.redirectToError(this.translate("err_scan_not_supported"));
                     break;
                   case "ERR_CAM_UNAVAILABLE":
-                    this.redirectToError("No camera available for scanning.");
+                    this.redirectToError(this.translate("err_cam_unavailable"));
                     break;
                   case "ERR_USER_CANCELLED":
                     this.disposeOfBarcodePicker()
@@ -122,10 +122,10 @@ export default class ScanController extends WebcController {
                     // this.history.push(`${new URL(this.history.win.basePath).pathname}home`);
                     break;
                   default:
-                    this.redirectToError("Failed to scan GS1 data matrix.");
+                    this.redirectToError(this.translate("err_default"));
                 }
               }).catch((err) => {
-                this.redirectToError("Code scanning and processing finished with errors.");
+                this.redirectToError(this.translate("err_unknown"));
               });
             }
           });
@@ -161,7 +161,7 @@ export default class ScanController extends WebcController {
     try {
       gs1FormatFields = interpretGS1scan.interpretScan(scannedBarcode);
     } catch (e) {
-      this.redirectToError("Barcode is not readable, please contact pharmacy / doctor who issued the medicine package.", this.parseGs1Fields(e.dlOrderedAIlist), e.message);
+      this.redirectToError(this.translate("err_barcode"), this.parseGs1Fields(e.dlOrderedAIlist), e.message);
       return;
     }
 
@@ -190,20 +190,20 @@ export default class ScanController extends WebcController {
 
   process(gs1Fields) {
     if (!this.hasMandatoryFields(gs1Fields)) {
-      return this.redirectToError("Barcode is not readable, please contact pharmacy / doctor who issued the medicine package.", gs1Fields);
+      return this.redirectToError(this.translate("err_barcode"), gs1Fields);
     }
 
     this.buildSSI(gs1Fields, (err, gtinSSI) => {
       this.packageAlreadyScanned(gtinSSI, gs1Fields, (err, result) => {
         if (err) {
-          return this.redirectToError("Product code combination could not be resolved.", gs1Fields);
+          return this.redirectToError(this.translate("err_combination"), gs1Fields);
         }
         if (result.status === false) {
           this.batchAnchorExists(gtinSSI, (err, status) => {
             if (status) {
               this.addPackageToHistoryAndRedirect(gtinSSI, gs1Fields, (err) => {
                 if (err) {
-                  return this.redirectToError("Failed to add package to history", gs1Fields, err.message);
+                  return this.redirectToError(this.translate("err_to_history"), gs1Fields, err.message);
                 }
               });
             } else {
@@ -349,11 +349,11 @@ export default class ScanController extends WebcController {
         if (status) {
           this.addPackageToHistoryAndRedirect(constProductDSU_SSI, gs1Fields, (err) => {
             if (err) {
-              return this.redirectToError("Failed to add package to history", gs1Fields, err.message)
+              return this.redirectToError(this.translate("err_to_history"), gs1Fields, err.message)
             }
           });
         } else {
-          return this.redirectToError("Product code combination could not be resolved.", gs1Fields);
+          return this.redirectToError(this.translate("err_combination"), gs1Fields);
         }
       });
     });

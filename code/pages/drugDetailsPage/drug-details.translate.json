@@ -1,4 +1,25 @@
 {
-    "title": "Leaflet Not Displayed",
-    "text": "The leaflet for this product can not be displayed due to validation settings."
+  "title": "Leaflet Not Displayed",
+  "text": "The leaflet for this product can not be displayed due to validation settings.",
+  "info_title": "Batch Info",
+  "sn_label": "Serial number:",
+  "pc_label": "Product code:",
+  "bn_label": "Batch number:",
+  "exp_label": "Expiry:",
+  "about": "About",
+  "before_taking": "Before Taking",
+  "how_to": "How to take",
+  "side_effects": "Side Effects",
+  "storing": "Storing",
+  "more": "More",
+  "undefined_data": "Undefined product data",
+  "batch_not_found": "The batch number in the barcode could not be found",
+  "note": "Note",
+  "user_type_title": "Select preferred document type",
+  "user_type_1": "Doctor",
+  "user_type_1_description": "I want to see drug SMPC first",
+  "user_type_2": "Patient",
+  "user_type_2_description": "I want to see drug Leaflet first",
+  "language_select_title": "Change Language",
+  "language_select_description": "Sorry, this leaflet is only available in the following languages. Select your preference."
 }

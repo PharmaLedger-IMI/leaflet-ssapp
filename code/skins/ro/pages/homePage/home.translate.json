@@ -34,5 +34,10 @@
   "Recalled": "rechemat",
   "Decommissioned": "Dezafectat",
   "Batch Recalled": "Lot rechemat",
-  "Failed": "Validare esuata"
+  "Failed": "Validare esuata",
+  "scan_now": "Scanaeaza",
+  "home": "Acasă",
+  "about": "Despre",
+  "settings": "Setări",
+  "help": "Ajutor"
 }

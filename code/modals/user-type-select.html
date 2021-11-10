@@ -43,12 +43,12 @@
 </style>
 <main>
     <div class="main-container">
-        <h5>Select preferred document type</h5>
+        <h5>{{@title}}</h5>
         <div class="document-type-select-item" data-tag="select-user-type" preferredDocType="smpc">
             <div class="item-icon"><img src="./assets/icons/doctor_icon.svg"/></div>
             <div class="item-content-container">
-                <h6>Doctor</h6>
-                <div class="item-description">I want to see drug SMPC first</div>
+                <h6>{{@user_type_1}}</h6>
+                <div class="item-description">{{@user_type_1_description}}</div>
             </div>
 
             <div class="arrow">
@@ -57,8 +57,8 @@
         <div class="document-type-select-item" data-tag="select-user-type" preferredDocType="leaflet">
             <div class="item-icon"><img src="./assets/icons/patient_icon.svg"/></div>
             <div class="item-content-container">
-                <h6 class="item-title">Patient</h6>
-                <div class="item-description">I want to see drug Leaflet first</div>
+                <h6 class="item-title">{{@user_type_2}}</h6>
+                <div class="item-description">{{@user_type_2_description}}</div>
             </div>
             <div class="arrow">
             </div>

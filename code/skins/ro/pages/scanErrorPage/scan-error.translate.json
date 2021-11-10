@@ -1,6 +1,7 @@
 {
-    "data1": "Serial number:",
-    "data2": "Product Code:",
-    "data3": "Batch Number:",
-    "data4": "Expiry:"
+  "data1": "Serie:",
+  "data2": "Cod produs:",
+  "data3": "Număr lot:",
+  "data4": "Expirare:",
+  "title": "Produsul nu a fost gasit"
 }
