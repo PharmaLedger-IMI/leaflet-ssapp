@@ -194,6 +194,9 @@ export default class ScanController extends WebcController {
     }
 
     this.buildSSI(gs1Fields, (err, gtinSSI) => {
+      if(err){
+        return this.redirectToError(this.translate("err_combination"), gs1Fields);
+      }
       this.packageAlreadyScanned(gtinSSI, gs1Fields, (err, result) => {
         if (err) {
           return this.redirectToError(this.translate("err_combination"), gs1Fields);
