@@ -3,5 +3,6 @@
   "data2": "Product code:",
   "data3": "Batch number:",
   "data4": "Expiry:",
-  "title": "Product not found"
+  "title": "Product not found",
+  "scan_now": "Scan now"
 }
