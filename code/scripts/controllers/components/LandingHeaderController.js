@@ -3,7 +3,7 @@ const {WebcController} = WebCardinal.controllers;
 export default class LandingHeaderController extends WebcController {
   constructor(...props) {
     super(...props);
-    this.setModel({});
+
     this.closeMenuFlag = true;
     this.menuOpened = false;
     this.onTagClick("open-menu", () => {

@@ -25,12 +25,6 @@
       "skins":[{"name":  "default"}, {"name": "de"}, {"name": "ro"}]
     },
     {
-      "name": "History",
-      "tag": "history",
-      "path": "./history",
-      "skins":[{"name":  "default"}, {"name": "de"}, {"name": "ro"}]
-    },
-    {
       "name": "About",
       "tag": "about",
       "src": "./aboutPage/about.html",

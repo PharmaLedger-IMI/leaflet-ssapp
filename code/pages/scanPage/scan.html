@@ -1,43 +1,43 @@
 <link href="pages/scanPage/scan.css" rel="stylesheet">
 <div class="mobile-container">
-    <webc-container controller="ScanController">
-        <page-template roundShape="false" shadow>
-            <scan-header slot="header-slot"></scan-header>
-            <div slot="content-slot">
-                <div data-if="@useScandit">
-                    <div id="scandit-barcode-picker-wrapper" slot="true">
-                        <div id="scandit-barcode-picker"></div>
-                    </div>
-                    <div data-if="@hasCode" slot="false">
-                        <div class="barcode-scanner-container" data-if="@nativeSupport" slot="false">
-                            <psk-barcode-scanner data="@data" slot="false" snap-video>
-                                <div slot="init">
-                                    <img class="scan-status" src="./assets/icons/scan-in-progress.svg"/>
-                                </div>
-                                <div slot="feedback">
-                                    <img class="scan-status" src="./assets/icons/scan-in-progress.svg"/>
-                                </div>
-                                <div class="camera-error" slot="access_denied">
-                                    <h3>{{$alert1}}</h3>
-                                    <span>{{$alert2}} </span>
-                                </div>
-                                <div class="camera-error" slot="error">
-                                    <h3>{{$alert3}}</h3>
-                                    <span>{{$alert4}}</span>
-                                </div>
-                                <div slot="done">
-                                    <img class="scan-status" src="./assets/icons/scan-done.svg"/>
-                                </div>
-                                <div class="scan-shape" slot="active">
-                                    <img class="scan-status" src="./assets/icons/scan-in-progress.svg"/>
-                                </div>
-                            </psk-barcode-scanner>
-                        </div>
+    <page-template roundShape="false" shadow>
+        <scan-header slot="header-slot"></scan-header>
+        <webc-container controller="ScanController" slot="content-slot">
+
+            <div data-if="@useScandit">
+                <div id="scandit-barcode-picker-wrapper" slot="true">
+                    <div id="scandit-barcode-picker"></div>
+                </div>
+                <div data-if="@hasCode" slot="false">
+                    <div class="barcode-scanner-container" data-if="@nativeSupport" slot="false">
+                        <psk-barcode-scanner data="@data" slot="false" snap-video>
+                            <div slot="init">
+                                <img class="scan-status" src="./assets/icons/scan-in-progress.svg"/>
+                            </div>
+                            <div slot="feedback">
+                                <img class="scan-status" src="./assets/icons/scan-in-progress.svg"/>
+                            </div>
+                            <div class="camera-error" slot="access_denied">
+                                <h3>{{$alert1}}</h3>
+                                <span>{{$alert2}} </span>
+                            </div>
+                            <div class="camera-error" slot="error">
+                                <h3>{{$alert3}}</h3>
+                                <span>{{$alert4}}</span>
+                            </div>
+                            <div slot="done">
+                                <img class="scan-status" src="./assets/icons/scan-done.svg"/>
+                            </div>
+                            <div class="scan-shape" slot="active">
+                                <img class="scan-status" src="./assets/icons/scan-in-progress.svg"/>
+                            </div>
+                        </psk-barcode-scanner>
                     </div>
                 </div>
             </div>
-        </page-template>
+        </webc-container>
+    </page-template>
 
-        <scan-status-button></scan-status-button>
-    </webc-container>
+    <scan-status-button></scan-status-button>
+
 </div>
