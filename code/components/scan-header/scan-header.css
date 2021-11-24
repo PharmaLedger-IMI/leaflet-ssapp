@@ -4,5 +4,6 @@
 
 .header-row ion-row.label {
     font-size: var(--xs-text-size);
+    cursor: pointer;
 }
 

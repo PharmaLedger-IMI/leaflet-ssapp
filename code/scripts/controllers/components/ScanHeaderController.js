@@ -5,12 +5,11 @@ export default class ScanHeaderController extends WebcController {
     super(...props);
 
     this.onTagClick('switch-camera', async () => {
-      const barcodeScanner = document.getElementsByTagName("psk-barcode-scanner")[0]
-      await barcodeScanner.switchCamera();
+      document.dispatchEvent(new CustomEvent('leaflet-ssapp:switch-camera'));
     });
+
     this.onTagClick('cancel-scan', () => {
       this.navigateToPageTag("home");
-    })
+    });
   }
-
 }

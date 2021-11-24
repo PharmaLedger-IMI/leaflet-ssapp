@@ -38,3 +38,11 @@ psk-barcode-scanner .scan-status #second {
     text-align: center;
     max-width: var(--app-max-width);
 }
+
+#scandit-barcode-picker {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    height: 100%;
+}
