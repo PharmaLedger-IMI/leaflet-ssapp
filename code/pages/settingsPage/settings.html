@@ -34,23 +34,6 @@
                     </div>
                 </leaflet-accordion>
 
-                <leaflet-accordion label="$network_title" description="$network_subtitle">
-                    <div data-if="@networkEditMode">
-                        <div slot="true">
-                            <input class="settings-input" data-view-model="@networkName" type="text"/>
-                            <ion-button data-tag="change-network">{{$save_btn}}</ion-button>
-                            <ion-button data-tag="change-default-network">{{$reset_btn}}</ion-button>
-                        </div>
-                        <div slot="false">
-                            <input class="settings-input" data-view-model="@networkName"
-                                   readonly type="text"/>
-                            <ion-button class="network-edit-button" data="networkEditMode"
-                                        data-tag="change-edit-mode"> {{$edit_btn}} <i class="fa fa-pencil-square-o"></i>
-                            </ion-button>
-                        </div>
-                    </div>
-                </leaflet-accordion>
-
                 <leaflet-accordion label="$advanced_title" description="$advanced_subtitle">
                     <div class="advanced-user">
                         <span>{{ $checkbox }}</span>
