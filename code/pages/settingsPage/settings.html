@@ -34,6 +34,21 @@
                     </div>
                 </leaflet-accordion>
 
+                <leaflet-accordion label="$scandit_title" description="$scandit_subtitle">
+                    <div data-if="@scanditLicenseEditMode">
+                        <div slot="true">
+                            <input class="settings-input" data-view-model="@scanditLicense" type="text"/>
+                            <ion-button data-tag="set-scandit-license">{{$set_btn}}</ion-button>
+                        </div>
+                        <div slot="false">
+                            <input class="settings-input" data-view-model="@scanditLicense" readonly type="text"/>
+                            <ion-button class="network-edit-button" data="scanditLicenseEditMode"
+                                        data-tag="change-edit-mode"> {{$edit_btn}} <i class="fa fa-pencil-square-o"></i>
+                            </ion-button>
+                        </div>
+                    </div>
+                </leaflet-accordion>
+
                 <leaflet-accordion label="$advanced_title" description="$advanced_subtitle">
                     <div class="advanced-user">
                         <span>{{ $checkbox }}</span>
