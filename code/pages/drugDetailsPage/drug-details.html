@@ -59,9 +59,10 @@
                         </leaflet-shortcuts>
                     </div>
                 </header>
+
                 <div data-if="@loadingData">
                     <div slot="true">
-                        <ion-spinner name="bubbles"></ion-spinner>
+                        <leaflet-spinner></leaflet-spinner>
                     </div>
                     <div data-if="@showEPI" slot="false">
                         <div slot="true">
@@ -70,12 +71,30 @@
                         <div slot="false">
                             <div class="no-leaflet-container">
                                 <div class="no-leaflet-image"></div>
-                                <div class="no-leaflet-title">{{$title}}</div>
-                                <div class="no-leaflet-text">{{$text}}</div>
+                                <div class="no-leaflet-title">{{ $title }}</div>
+                                <div class="no-leaflet-text">{{ $text }}</div>
                             </div>
                         </div>
                     </div>
                 </div>
+
+<!--                <div data-if="@loadingData">-->
+<!--                    <div slot="true">-->
+<!--                        <ion-spinner name="bubbles"></ion-spinner>-->
+<!--                    </div>-->
+<!--                    <div data-if="@showEPI" slot="false">-->
+<!--                        <div slot="true">-->
+<!--                            <div id="leaflet-content"></div>-->
+<!--                        </div>-->
+<!--                        <div slot="false">-->
+<!--                            <div class="no-leaflet-container">-->
+<!--                                <div class="no-leaflet-image"></div>-->
+<!--                                <div class="no-leaflet-title">{{$title}}</div>-->
+<!--                                <div class="no-leaflet-text">{{$text}}</div>-->
+<!--                            </div>-->
+<!--                        </div>-->
+<!--                    </div>-->
+<!--                </div>-->
             </div>
         </webc-container>
     </page-template>

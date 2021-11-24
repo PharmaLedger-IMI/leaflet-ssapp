@@ -14,53 +14,52 @@
       "name": "Home",
       "tag": "home",
       "src": "./homePage/home.html",
-      "path": "./",
-      "skins":[{"name":  "default"}, {"name": "de"}, {"name": "ro"}]
+      "path": "./"
     },
     {
       "name": "Scan",
       "tag": "scan",
       "src": "./scanPage/scan.html",
-      "path": "./scan",
-      "skins":[{"name":  "default"}, {"name": "de"}, {"name": "ro"}]
+      "path": "./scan"
     },
     {
       "name": "About",
       "tag": "about",
       "src": "./aboutPage/about.html",
-      "path": "./about",
-      "skins":[{"name":  "default"}, {"name": "de"}, {"name": "ro"}]
+      "path": "./about"
     },
     {
       "name": "Help",
       "tag": "help",
       "src": "./helpPage/help.html",
-      "path": "./help",
-      "skins":[{"name":  "default"}, {"name": "de"}, {"name": "ro"}]
+      "path": "./help"
     },
     {
       "name": "Settings",
       "tag": "settings",
       "src": "./settingsPage/settings.html",
-      "path": "./settings",
-      "skins":[{"name":  "default"}, {"name": "de"}, {"name": "ro"}]
+      "path": "./settings"
     },
     {
       "name": "Drug details",
       "indexed": false,
       "tag": "drug-details",
       "src": "./drugDetailsPage/drug-details.html",
-      "path": "./drug-details",
-      "skins":[{"name":  "default"}, {"name": "de"}, {"name": "ro"}]
+      "path": "./drug-details"
     },
     {
       "name": "Scan error",
       "indexed": false,
       "tag": "scan-error",
       "src": "./scanErrorPage/scan-error.html",
-      "path": "./scan-error",
-      "skins":[{"name":  "default"}, {"name": "de"}, {"name": "ro"}]
+      "path": "./scan-error"
     }
   ],
-  "logLevel": "none"
+  "logLevel": "none",
+  "leaflet": {
+    "devOptions": {
+      "disabled": ["useFrames"],
+      "useFrames": false
+    }
+  }
 }

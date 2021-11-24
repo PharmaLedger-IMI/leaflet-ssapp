@@ -47,8 +47,17 @@ export default class ScanController extends WebcController {
       this.getNativeApiHandler((err, handler) => {
         if (err) {
           console.log("Not able to activate native API support. Continue using bar code scanner from web.", err);
-        } else if (handler) {
+          return;
+        }
+
+        if (handler) {
           this.model.nativeSupport = true;
+
+          if (this.isDeveloperOptionActive(constants.IOS_USE_FRAMES)) {
+            this.initPskBarcodeWithFrames(handler)
+            return;
+          }
+
           this.settingsService.readSetting("scanditLicense", (err, scanditLicense) => {
             if (scanditLicense && window.ScanditSDK) {
               const scan = handler.importNativeAPI("scanditScan");
@@ -129,18 +138,23 @@ export default class ScanController extends WebcController {
               });
             }
           });
-        } else {
-          this.settingsService.readSetting("scanditLicense", (err, scanditLicense) => {
+          return;
+        }
+
+        // TODO: still under development, just a mock for exemplification
+        if (this.isDeveloperOptionActive(constants.IOS_USE_FRAMES)) {
+          this.initPskBarcodeWithFrames()
+          return;
+        }
+
+        this.settingsService.readSetting("scanditLicense", (err, scanditLicense) => {
             if (scanditLicense && window.ScanditSDK) {
               this.model.useScandit = true;
               this.initScanditLib(scanditLicense)
             }
           });
-        }
       });
     })
-
-
   }
 
   callAfterElementLoad(querySelector, callback, ms = 100) {
@@ -311,6 +325,62 @@ export default class ScanController extends WebcController {
         return createNewBarcodePicker()
       })
       .then(newBarcodePickerCallback);
+  }
+
+  initPskBarcodeWithFrames = (nativeHandler) => {
+    window.requestAnimationFrame(async () => {
+      const barcodeScanner = this.querySelector('psk-barcode-scanner');
+      barcodeScanner.useFrames = true;
+
+      // TODO:
+      //  code bellow explains a basic usage of psk-barcode-scanner with use-frames option for native iOS handler
+      //  real life scenario will lock like:
+
+      /** start capturing using native API **/
+      // await nativeHandler.startFrameCapturing(INTERVAL_BETWEEN_CAPTURES);
+
+      /** receive each frame and set it in psk-barcode-scanner **/
+      // const interval = setInterval(async () => {
+      //    // for the moment frame is an image string encoded 'data:image/jpeg;base64, <encoding>'
+      //    const frame = await nativeHandler.getFrame()
+      //    await barcodeScanner.setFrame(frame);
+      // }, INTERVAL_BETWEEN_CAPTURES);
+
+      /** be sure that capturing is ended when clearFrameInterval is called **/
+      // const clearFrameInterval = async () => {
+      //   clearInterval(interval);
+      //   await nativeHandler.stopFrameCapturing();
+      //   // stencil router does not have a removeListener for history
+      // }
+
+      // TODO:
+      //  current mock uses frames from a JSON file
+
+      // start mock
+      let i = 0;
+      let increment = true;
+      const file = await fetch(`./assets/frames/frames-01.json`);
+      const frames = await file.json();
+      const interval = setInterval(async () => {
+        if (i === 0) {
+          increment = true;
+        }
+        if (i === frames.length - 1) {
+          increment = false;
+        }
+        await barcodeScanner.setFrame(frames[i]);
+        increment ? i++ : i--;
+      }, 100);
+
+      const clearFrameInterval = () => {
+        clearInterval(interval);
+        // stencil router does not have a removeListener for history
+      }
+      // end mock
+
+      this.model.onChange("data", clearFrameInterval);
+      this.history.listen(clearFrameInterval);
+    });
   }
 
   processSingleCodeScan(scanObj) {
@@ -523,6 +593,13 @@ export default class ScanController extends WebcController {
     if (this.barcodePicker) {
       this.barcodePicker.pauseScanning()
       this.barcodePicker.destroy()
+    }
+  }
+
+  isDeveloperOptionActive(option) {
+    switch (option) {
+      case constants.IOS_USE_FRAMES:
+        return localStorage.getItem(constants.IOS_USE_FRAMES) === 'true';
     }
   }
 }

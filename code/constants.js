@@ -28,5 +28,6 @@ export default {
   HISTORY_TABLE : "history_table",
   PATH_TO_PRODUCT_DSU: "/product/",
   PATH_TO_BATCH_DSU: "/batch/",
-  HISTORY_ITEM_DEFAULT_ICON: "./assets/icons/product_image_placeholder.svg"
+  HISTORY_ITEM_DEFAULT_ICON: "./assets/icons/product_image_placeholder.svg",
+  IOS_USE_FRAMES: 'dev-options:ios-use-frames'
 }

@@ -1,11 +1,12 @@
-const {WebcController} = WebCardinal.controllers;
 import SettingsService from "../services/SettingsService.js";
 import constants from "../../constants.js";
 import appLanguages from "../../appLanguages.js";
 
-export default class SettingsController extends WebcController {
-  constructor(element, history) {
-    super(element, history);
+const { WebcIonicController } = WebCardinal.controllers;
+
+export default class SettingsController extends WebcIonicController {
+  constructor(...props) {
+    super(...props);
 
     this.model = {
       languageSelectorOpened: false,
@@ -17,14 +18,23 @@ export default class SettingsController extends WebcController {
       advancedUser: false,
       refreshPeriod: {value: constants.DEFAULT_REFRESH_PERIOD},
       scanditLicense: {value: ""},
-      appLanguages: appLanguages
+      appLanguages: appLanguages,
+      devOptions: {
+        areEnabled: undefined,
+        useFrames: {
+          // Check also: webcardinal.json > leaflet > devOptions > useFrames
+          checked: false, value: 'off'
+        }
+      }
     };
-    let dbApi = require("opendsu").loadApi("db");
+
+    const dbApi = require("opendsu").loadApi("db");
     dbApi.getMainEnclaveDB(async (err, enclaveDB) => {
       if (err) {
         console.log('Error on getting enclave DB');
         return;
       }
+
       this.settingsService = new SettingsService(enclaveDB);
 
       this.model.preferredLanguage = await this.settingsService.asyncReadSetting("preferredLanguage");
@@ -83,17 +93,7 @@ export default class SettingsController extends WebcController {
         });
       });
 
-      this.querySelector("ion-select").addEventListener("ionChange", (ev) => {
-        this.model.preferredLanguage = ev.detail.value;
-        this.settingsService.writeSetting("preferredLanguage", ev.detail.value, (err) => {
-          if (err) {
-            console.log(err);
-            return;
-          }
-          this.applySkinForCurrentPage(this.model.preferredLanguage);
-          this.setSkin(this.model.preferredLanguage);
-        })
-      });
+      this.model.onChange('preferredLanguage', this.changeLanguageHandler);
 
       this.querySelector("ion-checkbox").addEventListener("ionChange", (ev) => {
         this.model.advancedUser = ev.detail.checked;
@@ -119,10 +119,84 @@ export default class SettingsController extends WebcController {
       });
     })
 
+    this.onTagClick('dev-options:ios-use-frames', this.iosUseFramesHandler);
+
+    this.setDeveloperOptions();
   }
 
   toggleEditMode(prop) {
     this.model[prop] = !this.model[prop]
   }
 
+  // Language
+
+  changeLanguageHandler = async () => {
+    try {
+      await this.settingsService.asyncWriteSetting('preferredLanguage', this.model.preferredLanguage);
+      this.applySkinForCurrentPage(this.model.preferredLanguage);
+      this.setSkin(this.model.preferredLanguage);
+    } catch (error) {
+      console.log('Language can not be changed', error);
+    }
+  }
+
+  // Developer Options
+
+  getDeveloperOptions = async () => {
+    try {
+      const file = await fetch('webcardinal.json')
+      const data = await file.json();
+      if (!data.leaflet || !data.leaflet.devOptions) {
+        return [false];
+      }
+      let isAtLeastOne = false;
+      const options = data.leaflet.devOptions;
+      const disabled = options.disabled || [];
+      delete options.disabled;
+      const keys = Object.keys(options).filter(key => key !== 'disabled');
+      for (const key of keys) {
+        if (disabled.includes(key)) {
+          delete options[key];
+          continue;
+        }
+        isAtLeastOne = true;
+        break;
+      }
+      if (!isAtLeastOne) {
+        return [false];
+      }
+      return [true, options]
+    } catch (error) {
+      console.log(error)
+      return [false];
+    }
+  }
+
+  setDeveloperOptions = async () => {
+    const [isDevConfigEnabled, options] = await this.getDeveloperOptions();
+    this.model.devOptions.areDisabled = !isDevConfigEnabled;
+    if (!isDevConfigEnabled) {
+      return;
+    }
+
+    this.model.addExpression('devOptions.useFrames.value', () => {
+      return this.model.devOptions.useFrames.checked ? 'on' : 'off'
+    }, 'devOptions.useFrames.checked');
+
+    const value = localStorage.getItem(constants.IOS_USE_FRAMES);
+    if (typeof value !== 'string') {
+      this.model.devOptions.useFrames.checked = options.useFrames;
+      return;
+    }
+    this.model.devOptions.useFrames.checked = value === 'true';
+  }
+
+  iosUseFramesHandler = (readOnlyModel) => {
+    if (this.model.devOptions.areDisabled) {
+      return;
+    }
+
+    this.model.devOptions.useFrames.checked = !readOnlyModel.devOptions.useFrames.checked;
+    localStorage.setItem(constants.IOS_USE_FRAMES, `${this.model.devOptions.useFrames.checked}`);
+  }
 }

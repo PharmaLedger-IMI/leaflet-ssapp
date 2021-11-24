@@ -367,7 +367,7 @@ psk-input .form-control {
     margin-bottom: 10px;
 }
 
-/* CSS required ny Reactive HTML Elements from /drug-details
+/* CSS required by Reactive HTML Elements
 /* leaflet-<components> specific */
 
 #leaflet-header[show-leaflet] {
@@ -524,13 +524,32 @@ leaflet-button > ion-item .label {
     font-size: 12px;
 }
 
+leaflet-accordion {
+    display: block;
+    border-bottom: 1px solid var(--ion-color-gray-three);
+    margin-top: var(--l-space);
+    padding-bottom: var(--l-space);
+}
+
+leaflet-accordion,
 leaflet-section {
     --toggle-color: var(--primary-backgtound-color);
     --background: transaprent;
 }
 
+leaflet-accordion::part(header),
 leaflet-section::part(header) {
     --padding-start: 0;
+    --border-color: transparent;
+}
+
+leaflet-accordion::part(description) {
+    font-size: var(--xxs-text-size);
+    color: var(--primary-backgtound-color);
+    margin-top: var(--s-space);
+}
+
+leaflet-section::part(header) {
     --background: #FFFFFF;
     --border-color: #E5EAEB;
     box-shadow: 0 10px 40px rgba(0, 64, 128, 0.1);
@@ -540,18 +559,25 @@ leaflet-section::part(icon) {
     padding-left: 10px;
 }
 
+leaflet-accordion::part(toggle),
 leaflet-section::part(toggle) {
     position: absolute;
     content: '';
     background: var(--toggle-color);
 }
 
+leaflet-accordion::part(horizntal-line),
 leaflet-section::part(horizntal-line) {
     right: 24px;
     width: 14px;
     height: 2px;
 }
 
+leaflet-accordion::part(horizntal-line) {
+    right: 0;
+}
+
+leaflet-accordion::part(vertical-line),
 leaflet-section::part(vertical-line) {
     right: 30px;
     width: 2px;
@@ -562,6 +588,11 @@ leaflet-section::part(vertical-line) {
     opacity 300ms ease-in-out;
 }
 
+leaflet-accordion::part(vertical-line) {
+    right: 6px;
+}
+
+leaflet-accordion[active]::part(vertical-line),
 leaflet-section[active]::part(vertical-line) {
     opacity: 0;
     transform: rotate(90deg);
@@ -569,10 +600,8 @@ leaflet-section[active]::part(vertical-line) {
     opacity 300ms ease-in-out;
 }
 
+leaflet-accordion::part(content),
 leaflet-section::part(content) {
-    background: var(--background);
-    padding-left: 24px;
-    padding-right: 24px;
     overflow: hidden;
     opacity: 0;
     max-height: 0;
@@ -584,17 +613,27 @@ leaflet-section::part(content) {
     transform 250ms ease-in-out;
 }
 
+leaflet-section::part(content) {
+    background: var(--background);
+    padding-left: 24px;
+    padding-right: 24px;
+}
+
+leaflet-accordion[active]::part(content),
 leaflet-section[active]::part(content) {
     max-height: 1000000vh;
     height: 100%;
     opacity: 1;
     transform: scaleY(1);
     padding-top: 1rem;
-    padding-bottom: 1rem;
     transition: max-height 350ms ease-in-out,
     padding 300ms ease-in-out,
     opacity 300ms ease-in-out,
     transform 250ms ease-in-out;
+}
+
+leaflet-section[active]::part(content) {
+    padding-bottom: 1rem;
 }
 
 #leaflet-content[effect="collapse"] {
@@ -606,3 +645,102 @@ leaflet-section[active]::part(content) {
     margin-top: 170px;
     background-color: #FFFFFF;
 }
+
+.sk-cube-grid {
+    width: 128px;
+    height: 128px;
+    margin: 100px auto;
+}
+
+.sk-cube-grid .sk-cube {
+    width: 33%;
+    height: 33%;
+    background-color: #dee9f8;
+    float: left;
+    -webkit-animation: sk-cubeGridScaleDelay 1.3s infinite ease-in-out;
+    animation: sk-cubeGridScaleDelay 1.3s infinite ease-in-out;
+}
+
+.sk-cube-grid .sk-cube1 {
+    -webkit-animation-delay: 0.2s;
+    animation-delay: 0.2s;
+}
+
+.sk-cube-grid .sk-cube2 {
+    -webkit-animation-delay: 0.3s;
+    animation-delay: 0.3s;
+}
+
+.sk-cube-grid .sk-cube3 {
+    -webkit-animation-delay: 0.4s;
+    animation-delay: 0.4s;
+}
+
+.sk-cube-grid .sk-cube4 {
+    -webkit-animation-delay: 0.1s;
+    animation-delay: 0.1s;
+}
+
+.sk-cube-grid .sk-cube5 {
+    -webkit-animation-delay: 0.2s;
+    animation-delay: 0.2s;
+}
+
+.sk-cube-grid .sk-cube6 {
+    -webkit-animation-delay: 0.3s;
+    animation-delay: 0.3s;
+}
+
+.sk-cube-grid .sk-cube7 {
+    -webkit-animation-delay: 0s;
+    animation-delay: 0s;
+}
+
+.sk-cube-grid .sk-cube8 {
+    -webkit-animation-delay: 0.1s;
+    animation-delay: 0.1s;
+}
+
+.sk-cube-grid .sk-cube9 {
+    -webkit-animation-delay: 0.2s;
+    animation-delay: 0.2s;
+}
+
+@-webkit-keyframes sk-cubeGridScaleDelay {
+    0%, 70%, 100% {
+        -webkit-transform: scale3D(1, 1, 1);
+        transform: scale3D(1, 1, 1);
+    }
+    35% {
+        -webkit-transform: scale3D(0, 0, 1);
+        transform: scale3D(0, 0, 1);
+    }
+}
+
+@keyframes sk-cubeGridScaleDelay {
+    0%, 70%, 100% {
+        -webkit-transform: scale3D(1, 1, 1);
+        transform: scale3D(1, 1, 1);
+    }
+    35% {
+        -webkit-transform: scale3D(0, 0, 1);
+        transform: scale3D(0, 0, 1);
+    }
+}
+
+leaflet-spinner .loader-container {
+    position: absolute;
+    height: 100%;
+    width: 100%;
+    min-height: 100%;
+    left: 0;
+    top: 0;
+    display: flex;
+    align-items: center;
+    background: #00000099;
+    flex-direction: column;
+    justify-content: center;
+}
+
+
+

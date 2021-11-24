@@ -2,40 +2,15 @@
     <page-template id="home-page-template" roundShape="true" shadow>
         <landing-header goBack="true" slot="header-slot"></landing-header>
         <webc-container controller="HelpController" slot="content-slot">
-            <div class="section-title">{{$title}}</div>
+            <div class="section-title">{{ $title }}</div>
             <div class="accordion">
-                <accordion-item shadow title="{{$section_title}}">
-                    <div class="accordion-item-content" slot="item-content">
-                        <div>{{$section_text}}</div>
-                    </div>
-                </accordion-item>
-                <accordion-item shadow title="{{$section_title1}}">
-                    <div class="accordion-item-content" slot="item-content">
-                        <div>{{$section_text1}}</div>
-                    </div>
-                </accordion-item>
-                <accordion-item shadow title="{{$section_title2}}">
-                    <div class="accordion-item-content" slot="item-content">
-                        <div>{{$section_text2}}</div>
-                    </div>
-                </accordion-item>
-                <accordion-item shadow title="{{$section_title3}}">
-                    <div class="accordion-item-content" slot="item-content">
-                        <div>{{$section_text3}}</div>
-                    </div>
-                </accordion-item>
-                <accordion-item shadow title="{{$section_title4}}">
-                    <div class="accordion-item-content" slot="item-content">
-                        <div>{{$section_text4}}</div>
-                    </div>
-                </accordion-item>
-                <accordion-item shadow title="{{$section_title5}}">
-                    <div class="accordion-item-content" slot="item-content">
-                        <div>{{$section_text5}}</div>
-                    </div>
-                </accordion-item>
+                <leaflet-accordion label="$section_title">{{ $section_text }}</leaflet-accordion>
+                <leaflet-accordion label="$section_title1">{{ $section_text1 }}</leaflet-accordion>
+                <leaflet-accordion label="$section_title2">{{ $section_text2 }}</leaflet-accordion>
+                <leaflet-accordion label="$section_title3">{{ $section_text3 }}</leaflet-accordion>
+                <leaflet-accordion label="$section_title4">{{ $section_text4 }}</leaflet-accordion>
+                <leaflet-accordion label="$section_title5">{{ $section_text5 }}</leaflet-accordion>
             </div>
-
         </webc-container>
     </page-template>
 </div>

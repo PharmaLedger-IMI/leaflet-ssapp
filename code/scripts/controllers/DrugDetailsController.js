@@ -66,10 +66,12 @@ export default class DrugDetailsController extends WebcController {
     this.model.onChange('showEPI', async (...props) => {
       this.model.loadingData = this.model.showEPI === undefined;
       if (this.model.showEPI) {
+        window.requestAnimationFrame(async () => {
+          const element = WebCardinal.root.querySelector('leaflet-shortcuts')
+          await element.attachScrollListeners('webc-app-loader[tag="drug-details"] page-template');
+        });
         this.querySelector('#leaflet-header').removeAttribute('hidden');
         this.querySelector(".leaflet-shortcuts-container").removeAttribute('hidden');
-        const element = WebCardinal.root.querySelector('leaflet-shortcuts')
-        await element.attachScrollListeners('webc-app-loader[tag="drug-details"] page-template');
         if (this.model.hasMoreDocTypes) {
           this.querySelector('.select-document-type-container').removeAttribute('hidden');
         } else {
@@ -85,7 +87,7 @@ export default class DrugDetailsController extends WebcController {
           let linkUrl = link.getAttribute("linkUrl");
           if (linkUrl.slice(0, 1) === "#") {
             link.addEventListener("click", () => {
-              console.log('fuck ', linkUrl);
+              console.log('linkUrl', linkUrl);
               document.getElementById(linkUrl.slice(1)).scrollIntoView();
             });
           }
@@ -94,7 +96,6 @@ export default class DrugDetailsController extends WebcController {
         this.querySelector('#leaflet-header').setAttribute('hidden', true);
         this.querySelector(".leaflet-shortcuts-container").setAttribute('hidden', true);
       }
-
     });
 
     let dbApi = require("opendsu").loadApi("db");
@@ -185,7 +186,6 @@ export default class DrugDetailsController extends WebcController {
       if (this.model.showEPI) {
         this.documentService.displayXmlForLanguage(this.model.preferredLanguage);
       }
-
     });
   }
 

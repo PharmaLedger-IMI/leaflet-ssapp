@@ -74,4 +74,15 @@ export default class SettingsService {
       return callback(undefined, record);
     })
   }
+
+  asyncWriteSetting(property, value) {
+    return new Promise((resolve, reject) => {
+      this.writeSetting(property, value, (err, result) => {
+        if (err) {
+          return reject(err)
+        }
+        resolve(result);
+      })
+    })
+  }
 }

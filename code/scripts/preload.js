@@ -10,6 +10,8 @@ async function defineNativeComponents() {
         define('leaflet-shortcuts'),
         define('leaflet-section'),
         define('leaflet-button'),
+        define('leaflet-accordion'),
+        define('leaflet-spinner'),
     ]);
 }
 

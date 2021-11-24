@@ -50,5 +50,6 @@
 
 .page-content-container[roundShape=false] ion-content .content-slot-wrapper {
     padding: 0px;
+    height: 100%;
 }
 

@@ -13,6 +13,8 @@
     "refresh_subtitle": "Application refresh period for status update",
     "scandit_title": "Setup Scanning",
     "scandit_subtitle": "Application scandit licence",
+    "dev_title": "Developer settings",
+    "dev_subtitle": "Advanced developer settings",
     "checkbox": "Use app as advanced user",
     "save_btn": "Save",
     "reset_btn": "Reset",

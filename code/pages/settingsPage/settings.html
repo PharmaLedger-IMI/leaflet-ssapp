@@ -5,65 +5,61 @@
         <webc-container controller="SettingsController" slot="content-slot">
             <div class="section-title">{{$main_title}}</div>
             <div class="accordion">
-                <accordion-item shadow subtitle="{{$lang_subtitle}}" title="{{$lang_title}}">
-                    <div class="accordion-item-content" slot="item-content">
-                        <ion-select class="select-options" interface="action-sheet" data-for-option="rerender" placeholder="$select_option"
-                                    data-for="@appLanguages" value="@preferredLanguage">
-                            <ion-select-option value="@value">{{@label}}</ion-select-option>
+                <leaflet-accordion label="$lang_title" description="$lang_subtitle">
+                    <ion-select value="@preferredLanguage" interface="action-sheet" placeholder="$select_option"
+                                data-tag="language.select" data-for="@appLanguages" data-for-option="rerender"
+                                class="select-options">
+                        <ion-select-option value="@value">{{ @label }}</ion-select-option>
+                    </ion-select>
+                </leaflet-accordion>
 
-                        </ion-select>
-                    </div>
-                </accordion-item>
+                <leaflet-accordion label="$origin_title" description="$origin_subtitle">
+                    <div>{{ @origin }}</div>
+                </leaflet-accordion>
 
-                <accordion-item shadow subtitle="{{$origin_subtitle}}" title="{{$origin_title}}">
-                    <div class="accordion-item-content" slot="item-content">
-                        <div>{{@origin}}</div>
-                    </div>
-                </accordion-item>
-                <accordion-item shadow subtitle="{{$network_subtitle}}" title="{{$network_title}}">
-                    <div class="accordion-item-content" slot="item-content">
-                        <div data-if="@networkEditMode">
-                            <div slot="true">
-                                <input class="settings-input" data-view-model="@networkName" type="text"/>
-                                <ion-button data-tag="change-network">{{$save_btn}}</ion-button>
-                                <ion-button data-tag="change-default-network">{{$reset_btn}}</ion-button>
-                            </div>
-                            <div slot="false">
-                                <input class="settings-input" data-view-model="@networkName"
-                                       readonly type="text"/>
-                                <ion-button class="network-edit-button" data="networkEditMode"
-                                            data-tag="change-edit-mode"> {{$edit_btn}} <i class="fa fa-pencil-square-o"></i>
-                                </ion-button>
-                            </div>
+                <leaflet-accordion label="$network_title" description="$network_subtitle">
+                    <div data-if="@networkEditMode">
+                        <div slot="true">
+                            <input class="settings-input" data-view-model="@networkName" type="text"/>
+                            <ion-button data-tag="change-network">{{$save_btn}}</ion-button>
+                            <ion-button data-tag="change-default-network">{{$reset_btn}}</ion-button>
+                        </div>
+                        <div slot="false">
+                            <input class="settings-input" data-view-model="@networkName"
+                                   readonly type="text"/>
+                            <ion-button class="network-edit-button" data="networkEditMode"
+                                        data-tag="change-edit-mode"> {{$edit_btn}} <i class="fa fa-pencil-square-o"></i>
+                            </ion-button>
                         </div>
                     </div>
-                </accordion-item>
-                <accordion-item shadow subtitle="{{$scandit_subtitle}}" title="{{$scandit_title}}">
-                    <div class="accordion-item-content" slot="item-content">
-                        <div data-if="@scanditLicenseEditMode">
-                            <div slot="true">
-                                <input class="settings-input" data-view-model="@scanditLicense" type="text"/>
-                                <ion-button data-tag="set-scandit-license">{{$set_btn}}</ion-button>
-                            </div>
-                            <div slot="false">
-                                <input class="settings-input" data-view-model="@scanditLicense" readonly
-                                       type="text"/>
-                                <ion-button class="network-edit-button" data="scanditLicenseEditMode"
-                                            data-tag="change-edit-mode"> {{$edit_btn}} <i class="fa fa-pencil-square-o"></i>
-                                </ion-button>
-                            </div>
+                </leaflet-accordion>
+
+                <leaflet-accordion label="$network_title" description="$network_subtitle">
+                    <div data-if="@networkEditMode">
+                        <div slot="true">
+                            <input class="settings-input" data-view-model="@networkName" type="text"/>
+                            <ion-button data-tag="change-network">{{$save_btn}}</ion-button>
+                            <ion-button data-tag="change-default-network">{{$reset_btn}}</ion-button>
+                        </div>
+                        <div slot="false">
+                            <input class="settings-input" data-view-model="@networkName"
+                                   readonly type="text"/>
+                            <ion-button class="network-edit-button" data="networkEditMode"
+                                        data-tag="change-edit-mode"> {{$edit_btn}} <i class="fa fa-pencil-square-o"></i>
+                            </ion-button>
                         </div>
                     </div>
-                </accordion-item>
-                <accordion-item shadow subtitle="{{$advanced_subtitle}}" title="{{$advanced_title}}">
-                    <div class="accordion-item-content align-center" slot="item-content">
-                        <span class="checkbox-label">{{$checkbox}}</span>
+                </leaflet-accordion>
+
+                <leaflet-accordion label="$advanced_title" description="$advanced_subtitle">
+                    <div class="advanced-user">
+                        <span>{{ $checkbox }}</span>
                         <ion-checkbox checked="@advancedUser" slot="end"></ion-checkbox>
                     </div>
-                </accordion-item>
-                <accordion-item shadow subtitle="{{$refresh_subtitle}}" title="{{$refresh_title}}">
-                    <div class="accordion-item-content" slot="item-content">
-                        <div data-if="@refreshPeriodEditMode">
+                </leaflet-accordion>
+
+                <leaflet-accordion label="$refresh_title" description="$refresh_subtitle" >
+                    <div data-if="@refreshPeriodEditMode">
                             <div slot="true">
                                 <input class="settings-input" data-view-model="@refreshPeriod" type="text"/>
                                 <ion-button data-tag="change-refresh-period">{{$save_btn}}</ion-button>
@@ -75,10 +71,21 @@
                                             data-tag="change-edit-mode"> {{$edit_btn}} <i class="fa fa-pencil-square-o"></i>
                                 </ion-button>
                             </div>
-                        </div>
-                    </div>
-                </accordion-item>
+                </div>
+                </leaflet-accordion>
+
+                <leaflet-accordion label="$dev_title" description="$dev_subtitle" hidden="@devOptions.areDisabled" class="dev-options">
+                    <ion-item class="ion" data-tag="dev-options:ios-use-frames" class="dev-options" detail="false" button>
+                        <p>
+                            <ion-badge color="dark" mode="ios">Experimental</ion-badge>
+                            <br>Applicable only for iOS
+                            <br>Use native frames captured by camera instead of user video stream
+                        </p>
+                        <ion-toggle data-view-model="@devOptions.useFrames" slot="end" mode="ios"></ion-toggle>
+                    </ion-item>
+                </leaflet-accordion>
             </div>
         </webc-container>
     </page-template>
 </div>
+
