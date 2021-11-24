@@ -16,9 +16,9 @@
   "batch_not_found": "Numărul lotului din codul de bare nu a putut fi găsit",
   "note": "Notă",
   "user_type_title": "Selectați tipul de document preferat",
-  "user_type_1": "Doctor",
+  "user_type_1": "SmPC",
   "user_type_1_description": "Vreau să văd mai întâi documentul SMPC",
-  "user_type_2": "Pacient",
+  "user_type_2": "Informatii pentru pacient",
   "user_type_2_description": "Vreau să văd mai întâi prospectul medicamentului",
   "language_select_title": "Schimbați limba",
   "language_select_description": "Ne pare rău, acest prospect este disponibil numai în următoarele limbi. Selectați preferința dvs.."
