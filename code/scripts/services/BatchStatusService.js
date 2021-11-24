@@ -94,7 +94,7 @@ export default class BatchStatusService {
     } catch (err) {
       // do nothing
     }
-    if (batchData.incorrectDateCheck && !this.expiryTime) {
+    if (batchData.incorrectDateCheck && (!this.expiryTime || utils.convertFromGS1DateToYYYY_HM(batchData.expiry) !== gs1Fields.expiry)) {
       this.statusMessage = constants.PRODUCT_STATUS_FAIL_MESSAGE;
       this.statusType = "error";
       this.status = "incorrect_date";

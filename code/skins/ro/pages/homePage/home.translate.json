@@ -34,6 +34,8 @@
   "Recalled": "rechemat",
   "Decommissioned": "Dezafectat",
   "Batch Recalled": "Lot rechemat",
+  "Product expired": "Produs expirat",
+  "Incorrect expiry date on pack": "Data de expirare incorectă pe ambalaj",
   "Failed": "Validare eșuata",
   "scan_now": "Scanează",
   "home": "Acasă",

@@ -134,6 +134,7 @@ export default class HistoryController extends WebcController {
     for (let product of this.model.products) {
       let date = product.createdAt.slice(0, 7);
       product.statusMessage = this.translate(product.statusMessage);
+      product.lastFakeItem = false;
       product.itemPosition = "";
       if (!groups[date]) {
         groups[date] = [];

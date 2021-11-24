@@ -12,10 +12,11 @@
                     <div class="group-date" slot="true">{{@groupDate}}</div>
                 </div>
                 <div data-if="@lastFakeItem">
-                    <div id="last-fake-item" class="history-item-container" slot="true">
+                    <div class="history-item-container" id="last-fake-item" slot="true">
                         <img src="./assets/icons/fake-history-item.svg"/>
                     </div>
-                    <div slot="false" class="history-item-container" data-tag="view-details" item-position="@itemPosition">
+                    <div class="history-item-container" data-tag="view-details" item-position="@itemPosition"
+                         slot="false">
                         <div class="item-row-container">
                             <div class="product-image">
                                 <img src="@product.productPhoto"/>
@@ -59,49 +60,10 @@
                             </div>
                         </div>
                     </div>
-                    <!-- temporary -->
-                    <div slot="loading" class="history-item-container" data-tag="view-details" item-position="@itemPosition">
-                        <div class="item-row-container">
-                            <div class="product-image">
-                                <img src="@product.productPhoto"/>
-                            </div>
-                            <div class="product-info">
-                                <div class="product-info-row">
-                                    <div>
-                                        <ion-label class="productItem_name">{{@product.name}}</ion-label>
-                                    </div>
-                                </div>
-                                <div class="product-info-row">
-                                    <div>
-                                        <ion-label class="productItem_description">{{@product.description}}
-                                        </ion-label>
-                                    </div>
-                                </div>
-                                <div class="product-info-row" data-if="@advancedView">
-                                    <div>
-                                        <ion-label class="productItem_expiry">{{$info1}}</ion-label>
-                                        <ion-label class="productItem_expiry">{{@expiryForDisplay}}</ion-label>
-                                    </div>
-                                </div>
-                                <div class="product-info-row" data-if="@advancedView">
-                                    <div>
-                                        <ion-label class="productItem_expiry">{{$info2}}</ion-label>
-                                        <ion-label class="productItem_expiry">{{@batch.batchNumber}}</ion-label>
-                                    </div>
-                                </div>
-                                <div class="product-info-row">
-                                    <div class="scan-date-time">
-                                        <ion-label class="productItem_expiry">{{@timeFrameOrDate}}</ion-label>
-                                    </div>
-                                </div>
-                                <div class="product-info-row" status="@status">
-                                    <div>
-                                        <ion-label class="productItem_status">{{@statusMessage}}</ion-label>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="arrow"></div>
-                        </div>
+
+                    <div class="history-item-container" data-tag="view-details" item-position="@itemPosition"
+                         slot="loading">
+                        <ion-spinner name="bubbles"></ion-spinner>
                     </div>
                 </div>
 
