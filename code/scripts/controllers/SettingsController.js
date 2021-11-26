@@ -2,9 +2,9 @@ import SettingsService from "../services/SettingsService.js";
 import constants from "../../constants.js";
 import appLanguages from "../../appLanguages.js";
 
-const { WebcIonicController } = WebCardinal.controllers;
+const {WebcController} = WebCardinal.controllers;
 
-export default class SettingsController extends WebcIonicController {
+export default class SettingsController extends WebcController {
   constructor(...props) {
     super(...props);
 
@@ -93,8 +93,7 @@ export default class SettingsController extends WebcIonicController {
         });
       });
 
-      this.model.onChange('preferredLanguage', this.changeLanguageHandler);
-
+      this.onTagEvent('language.select', 'ionChange', this.changeLanguageHandler);
       this.querySelector("ion-checkbox").addEventListener("ionChange", (ev) => {
         this.model.advancedUser = ev.detail.checked;
         this.settingsService.writeSetting("advancedUser", ev.detail.checked, (err) => {
@@ -130,8 +129,12 @@ export default class SettingsController extends WebcIonicController {
 
   // Language
 
-  changeLanguageHandler = async () => {
+  changeLanguageHandler = async (model, target, event) => {
     try {
+      if (this.model.preferredLanguage === event.detail.value) {
+        return;
+      }
+      this.model.preferredLanguage = event.detail.value;
       await this.settingsService.asyncWriteSetting('preferredLanguage', this.model.preferredLanguage);
       this.applySkinForCurrentPage(this.model.preferredLanguage);
       this.setSkin(this.model.preferredLanguage);
