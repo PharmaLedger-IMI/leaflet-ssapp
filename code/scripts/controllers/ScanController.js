@@ -36,6 +36,7 @@ export default class ScanController extends WebcController {
       document.addEventListener('leaflet-ssapp:switch-camera', this.switchCamera);
 
       this.model.onChange("data", () => {
+        console.log("new event data change: ", this.model.data);
         this.process(this.parseGS1Code(this.model.data));
       });
 
@@ -224,6 +225,7 @@ export default class ScanController extends WebcController {
   }
 
   process(gs1Fields) {
+    console.log("Processing fields: ", gs1Fields);
     if (!this.hasMandatoryFields(gs1Fields)) {
       return this.redirectToError(this.translate("err_barcode"), gs1Fields);
     }
