@@ -283,15 +283,25 @@ export default class ScanController extends WebcController {
         window.ScanditSDK.Barcode.Symbology.DATA_MATRIX,
         window.ScanditSDK.Barcode.Symbology.DOTCODE,
         window.ScanditSDK.Barcode.Symbology.GS1_DATABAR_LIMITED,
-        window.ScanditSDK.Barcode.Symbology.EAN13
+        window.ScanditSDK.Barcode.Symbology.EAN13,
+        window.ScanditSDK.Barcode.Symbology.PDF417,
+        window.ScanditSDK.Barcode.Symbology.MICRO_PDF417,
+        window.ScanditSDK.Barcode.Symbology.GS1_DATABAR,
+        window.ScanditSDK.Barcode.Symbology.UPCE,
+        window.ScanditSDK.Barcode.Symbology.UPCA,
+        window.ScanditSDK.Barcode.Symbology.EAN8,
+        window.ScanditSDK.Barcode.Symbology.GS1_DATABAR_EXPANDED
       ],
-      maxNumberOfCodesPerFrame: 2
+      maxNumberOfCodesPerFrame: 4
     }
     const createNewBarcodePicker = (scanSettings = defaultScanSettings) => {
       const scanningSettings = new window.ScanditSDK.ScanSettings(scanSettings)
       scanningSettings.getSymbologySettings(window.ScanditSDK.Barcode.Symbology.GS1_DATABAR_LIMITED).setColorInvertedEnabled(true)
       scanningSettings.getSymbologySettings(window.ScanditSDK.Barcode.Symbology.DATA_MATRIX).setColorInvertedEnabled(true);
       scanningSettings.getSymbologySettings(window.ScanditSDK.Barcode.Symbology.DOTCODE).setColorInvertedEnabled(true);
+      //just to eliminate dublicates durring scanning
+      scanningSettings.codeDuplicateFilter = 3000;
+
       return new Promise((resolve) => {
         window.requestAnimationFrame(() => {
           this.callAfterElementLoad("#scandit-barcode-picker", (element) => {
