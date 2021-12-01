@@ -129,17 +129,17 @@ function getTimeSince(date) {
   }
   let interval = seconds / (24 * 60 * 60);
   if (interval >= 1) {
-    return Math.floor(interval) + (interval > 1 ? " days" : " day");
+    return Math.floor(interval) + (interval >= 2 ? " days" : " day");
   }
   interval = seconds / (60 * 60);
   if (interval >= 1) {
-    return Math.floor(interval) + (interval > 1 ? " hours" : " hour");
+    return Math.floor(interval) + (interval >= 2 ? " hours" : " hour");
   }
   interval = seconds / 60;
   if (interval >= 1) {
-    return Math.floor(interval) + (interval > 1 ? " minutes" : " minute");
+    return Math.floor(interval) + (interval >= 2 ? " minutes" : " minute");
   }
-  return seconds + (seconds > 1 ? " seconds" : " second");
+  return seconds + (seconds >= 2 ? " seconds" : " second");
 }
 
 function getDateForDisplay(date) {
