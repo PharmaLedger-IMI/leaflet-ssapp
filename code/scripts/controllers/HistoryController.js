@@ -8,10 +8,8 @@ import utils from "../../utils.js";
 
 class HistoryDataSource extends DataSource {
   constructor(...props) {
-    const [translateFunc, ...defaultOptions] = props;
-    super(...defaultOptions);
+    super(...props);
     this.setPageSize(8);
-    this.translate = translateFunc;
   }
 
   async getPageDataAsync(startOffset, dataLengthForCurrentPage) {
@@ -104,11 +102,11 @@ class HistoryDataSource extends DataSource {
 }
 
 export default class HistoryController extends WebcController {
-  constructor(element, history) {
-    super(element, history);
+  constructor(...props) {
+    super(...props);
 
     this.model = {
-      productsDataSource: new HistoryDataSource(this.translate)
+      productsDataSource: new HistoryDataSource()
     }
     let dbApi = require("opendsu").loadApi("db");
     dbApi.getMainEnclaveDB((err, enclaveDB) => {
