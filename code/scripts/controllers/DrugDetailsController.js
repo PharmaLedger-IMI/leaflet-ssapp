@@ -46,7 +46,7 @@ export default class DrugDetailsController extends WebcController {
       this.model.product = history.location.state.productData.product;
       this.model.batch = history.location.state.productData.batch;
       this.model.statusType = history.location.state.productData.statusType;
-      this.model.statusMessage = history.location.state.productData.statusMessage;
+      this.model.statusMessage = this.translate(history.location.state.productData.statusMessage);
       this.model.snCheck = history.location.state.productData.snCheck;
     } else {
       console.log("Undefined product data");

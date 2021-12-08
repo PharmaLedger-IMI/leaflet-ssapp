@@ -21,5 +21,11 @@
   "user_type_2": "Informatii pentru pacient",
   "user_type_2_description": "Vreau să văd mai întâi prospectul medicamentului",
   "language_select_title": "Schimbați limba",
-  "language_select_description": "Ne pare rău, acest prospect este disponibil numai în următoarele limbi. Selectați preferința dvs.."
+  "language_select_description": "Ne pare rău, acest prospect este disponibil numai în următoarele limbi. Selectați preferința dvs..",
+  "Recalled": "rechemat",
+  "Decommissioned": "Dezafectat",
+  "Batch Recalled": "Lot rechemat",
+  "Product expired": "Produs expirat",
+  "Incorrect expiry date on pack": "Data de expirare incorectă pe ambalaj",
+  "Failed": "Validare număr de serie eșuată"
 }

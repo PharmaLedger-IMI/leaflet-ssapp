@@ -21,5 +21,11 @@
   "user_type_2": "Patient Information",
   "user_type_2_description": "I want to see drug Leaflet first",
   "language_select_title": "Change Language",
-  "language_select_description": "Sorry, this leaflet is only available in the following languages. Select your preference."
+  "language_select_description": "Sorry, this leaflet is only available in the following languages. Select your preference.",
+  "Recalled": "Recalled",
+  "Decommissioned": "Decommissioned",
+  "Batch Recalled": "Batch Recalled",
+  "Product expired": "Product expired",
+  "Incorrect expiry date on pack": "Incorrect expiry date on pack",
+  "Failed": "Failed to validate serial Number"
 }
