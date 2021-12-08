@@ -27,5 +27,6 @@
   "Batch Recalled": "Batch Recalled",
   "Product expired": "Product expired",
   "Incorrect expiry date on pack": "Incorrect expiry date on pack",
-  "Failed": "Failed to validate serial Number"
+  "Failed": "Failed to validate serial Number",
+  "watch_video": "Watch video"
 }

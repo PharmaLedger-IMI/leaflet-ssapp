@@ -12,6 +12,20 @@
     color: #F9FBFB;
 }
 
+.video-container {
+    color: #F9FBFB;
+    display: flex;
+    align-items: center;
+}
+
+.product-video {
+    height: 35px;
+    width: 35px;
+    background: #F9FBFB;
+    border-radius: 42%;
+    margin-left: 10px;
+}
+
 .language-doc-type-container {
     width: 100%;
     padding-left: 24px;
@@ -141,7 +155,7 @@
     background-image: url("../../assets/icons/select-arrow-light.svg");
 }
 
-.leaflet-link{
+.leaflet-link {
     color: var(--ion-color-cornflower-shade);
     text-decoration: underline;
 }

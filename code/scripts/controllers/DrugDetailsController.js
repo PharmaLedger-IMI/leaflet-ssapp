@@ -48,6 +48,7 @@ export default class DrugDetailsController extends WebcController {
       this.model.statusType = history.location.state.productData.statusType;
       this.model.statusMessage = this.translate(history.location.state.productData.statusMessage);
       this.model.snCheck = history.location.state.productData.snCheck;
+      this.model.showVideoLink = !!this.model.product.videoLink;
     } else {
       console.log("Undefined product data");
       this.updateUIInGTINOnlyCase()
@@ -61,7 +62,6 @@ export default class DrugDetailsController extends WebcController {
     }
     this.smpcDisplayService = new XMLDisplayService(this.DSUStorage, element, this.gtinSSI, "smpc", "smpc.xml", this.model);
     this.leafletDisplayService = new XMLDisplayService(this.DSUStorage, element, this.gtinSSI, "leaflet", "leaflet.xml", this.model);
-
 
     this.model.onChange('showEPI', async (...props) => {
       this.model.loadingData = this.model.showEPI === undefined;
@@ -168,6 +168,20 @@ export default class DrugDetailsController extends WebcController {
           },
           disableExpanding: true,
           disableFooter: true
+        });
+      });
+
+      this.onTagClick("show-video", () => {
+
+        this.showModalFromTemplate('product-video', () => {
+        }, () => {
+        }, {
+          model: {
+            title: this.model.product.name,
+            videoLink: `https://www.youtube.com/embed/${this.model.product.videoLink.split("v=")[1]}?autoplay=1`
+          },
+          disableFooter: true,
+          disableExpanding: true,
         });
       });
     })

@@ -1,0 +1,38 @@
+<style>
+    .custom-modal-header {
+        display: flex;
+        justify-content: center;
+        flex-direction: column;
+        width: 100%;
+    }
+
+    webc-modal::part(header) {
+        padding-bottom: 0px;
+        padding-top: 0px;
+        background: linear-gradient(
+                0deg, rgba(90, 89, 253, 0.1), rgba(90, 89, 253, 0.1)), #FFFFFF;
+    }
+
+    webc-modal::part(close) {
+        top: 15px;
+        right: 15px;
+    }
+
+    webc-modal::part(content) {
+        min-height: 350px;
+    }
+
+    main iframe {
+        height: 350px;
+    }
+</style>
+<div class="custom-modal-header header-color" slot="header">
+    <h5>{{@title}}</h5>
+</div>
+<main>
+
+    <iframe height="100%" src="@videoLink"
+            width="100%">
+    </iframe>
+</main>
+

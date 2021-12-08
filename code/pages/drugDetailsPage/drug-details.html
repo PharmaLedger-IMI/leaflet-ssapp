@@ -22,6 +22,7 @@
                             </div>
                         </div>
                         <div class="product-description">{{ @product.description }}</div>
+
                         <div class="language-doc-type-container">
                             <div class="select-document-type-container" hidden>
                                 <ion-select class="select-document-type" interface="action-sheet"
@@ -38,6 +39,14 @@
                                     <ion-select-option value="@value">{{@label}}</ion-select-option>
                                 </ion-select>
                             </div>
+                        </div>
+
+                        <div class="video-container" data-if="@showVideoLink">
+                            <h6 data-tag="show-video">{{$watch_video}}</h6>
+                            <div class="product-video product-description" data-tag="show-video">
+                                <img src="./assets/icons/youtube-logo.png"/>
+                            </div>
+
                         </div>
                     </section>
                     <div class="leaflet-shortcuts-container" hidden>
@@ -78,23 +87,23 @@
                     </div>
                 </div>
 
-<!--                <div data-if="@loadingData">-->
-<!--                    <div slot="true">-->
-<!--                        <ion-spinner name="bubbles"></ion-spinner>-->
-<!--                    </div>-->
-<!--                    <div data-if="@showEPI" slot="false">-->
-<!--                        <div slot="true">-->
-<!--                            <div id="leaflet-content"></div>-->
-<!--                        </div>-->
-<!--                        <div slot="false">-->
-<!--                            <div class="no-leaflet-container">-->
-<!--                                <div class="no-leaflet-image"></div>-->
-<!--                                <div class="no-leaflet-title">{{$title}}</div>-->
-<!--                                <div class="no-leaflet-text">{{$text}}</div>-->
-<!--                            </div>-->
-<!--                        </div>-->
-<!--                    </div>-->
-<!--                </div>-->
+                <!--                <div data-if="@loadingData">-->
+                <!--                    <div slot="true">-->
+                <!--                        <ion-spinner name="bubbles"></ion-spinner>-->
+                <!--                    </div>-->
+                <!--                    <div data-if="@showEPI" slot="false">-->
+                <!--                        <div slot="true">-->
+                <!--                            <div id="leaflet-content"></div>-->
+                <!--                        </div>-->
+                <!--                        <div slot="false">-->
+                <!--                            <div class="no-leaflet-container">-->
+                <!--                                <div class="no-leaflet-image"></div>-->
+                <!--                                <div class="no-leaflet-title">{{$title}}</div>-->
+                <!--                                <div class="no-leaflet-text">{{$text}}</div>-->
+                <!--                            </div>-->
+                <!--                        </div>-->
+                <!--                    </div>-->
+                <!--                </div>-->
             </div>
         </webc-container>
     </page-template>
