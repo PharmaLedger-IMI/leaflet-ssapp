@@ -10,6 +10,7 @@ class HistoryDataSource extends DataSource {
   constructor(...props) {
     super(...props);
     this.setPageSize(8);
+    this.groups = {}
   }
 
   async getPageDataAsync(startOffset, dataLengthForCurrentPage) {
@@ -47,16 +48,16 @@ class HistoryDataSource extends DataSource {
       console.log('Error on getting async page data: ', e);
     }
     //group by month and year
-    let groups = {};
     for (let product of products) {
       let date = product.createdAt.slice(0, 7);
       product.statusMessage = this.translate(product.statusMessage);
-      if (!groups[date]) {
-        groups[date] = [];
+      if (!this.groups[date]) {
+        this.groups[date] = [];
         product.firstGroupItem = true;
       } else {
         product.firstGroupItem = false;
       }
+
       let humanDate = utils.convertFromISOtoYYYY_HM(product.createdAt.split('T')[0], true, "");
       let month = this.translate(humanDate.slice(4).slice(0, -6));
       product.groupDate = `${month} ${humanDate.slice(-4)}`;
@@ -69,7 +70,7 @@ class HistoryDataSource extends DataSource {
       } else {
         product.timeFrameOrDate = humanDate;
       }
-      groups[date].push(product);
+      this.groups[date].push(product);
     }
     return products;
   }
@@ -106,7 +107,7 @@ export default class HistoryController extends WebcController {
     super(...props);
 
     this.model = {
-      productsDataSource: new HistoryDataSource()
+      productsDataSource: new HistoryDataSource({useInfiniteScroll: true})
     }
     let dbApi = require("opendsu").loadApi("db");
     dbApi.getMainEnclaveDB((err, enclaveDB) => {
