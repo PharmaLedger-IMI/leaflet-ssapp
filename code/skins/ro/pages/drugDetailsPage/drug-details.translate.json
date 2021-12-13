@@ -28,5 +28,8 @@
   "Product expired": "Produs expirat",
   "Incorrect expiry date on pack": "Data de expirare incorectă pe ambalaj",
   "Failed": "Validare număr de serie eșuată",
-  "watch_video": "Urmăriți video"
+  "watch_video": "Urmăriți video",
+  "leaflet": "Pliant",
+  "smpc": "SMPC",
+  "select_lang_placeholder": "Selectati Limba"
 }

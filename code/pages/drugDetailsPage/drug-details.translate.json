@@ -28,5 +28,8 @@
   "Product expired": "Product expired",
   "Incorrect expiry date on pack": "Incorrect expiry date on pack",
   "Failed": "Failed to validate serial Number",
-  "watch_video": "Watch video"
+  "watch_video": "Watch video",
+  "leaflet": "Leaflet",
+  "smpc": "SMPC",
+  "select_lang_placeholder": "Select Language"
 }

@@ -27,16 +27,16 @@
                             <div class="select-document-type-container" hidden>
                                 <ion-select class="select-document-type" interface="action-sheet"
                                             placeholder="Select Document Type" value="@preferredDocType">
-                                    <ion-select-option value="smpc">SMPC</ion-select-option>
-                                    <ion-select-option value="leaflet">Leaflet</ion-select-option>
+                                    <ion-select-option value="smpc">{{$smpc}</ion-select-option>
+                                    <ion-select-option value="leaflet">{{$leaflet}}</ion-select-option>
                                 </ion-select>
                             </div>
                             <div class="select-document-language-container" hidden>
                                 <ion-select class="select-document-language" data-for="@documentLanguages"
                                             data-for-option="rerender"
-                                            interface="action-sheet" placeholder="Select Language"
+                                            interface="action-sheet" placeholder="$select_lang_placeholder"
                                             value="@preferredLanguage">
-                                    <ion-select-option value="@value">{{@label}}</ion-select-option>
+                                    <ion-select-option value="@value">{{@label}} ({{@nativeName}})</ion-select-option>
                                 </ion-select>
                             </div>
                         </div>

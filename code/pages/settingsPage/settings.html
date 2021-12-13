@@ -9,7 +9,7 @@
                     <ion-select value="@preferredLanguage" interface="action-sheet" placeholder="$select_option"
                                 data-tag="language.select" data-for="@appLanguages" data-for-option="rerender"
                                 class="select-options">
-                        <ion-select-option value="@value">{{ @label }}</ion-select-option>
+                        <ion-select-option value="@value">{{ @label }} ({{@nativeName}})</ion-select-option>
                     </ion-select>
                 </leaflet-accordion>
 

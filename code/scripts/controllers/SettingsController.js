@@ -18,7 +18,7 @@ export default class SettingsController extends WebcController {
       advancedUser: false,
       refreshPeriod: {value: constants.DEFAULT_REFRESH_PERIOD},
       scanditLicense: {value: ""},
-      appLanguages: appLanguages,
+      appLanguages: [],
       devOptions: {
         areEnabled: undefined,
         useFrames: {
@@ -38,6 +38,11 @@ export default class SettingsController extends WebcController {
       this.settingsService = new SettingsService(enclaveDB);
 
       this.model.preferredLanguage = await this.settingsService.asyncReadSetting("preferredLanguage");
+      if (appLanguages[this.model.preferredLanguage]) {
+        this.model.appLanguages = appLanguages[this.model.preferredLanguage]
+      } else {
+        this.model.appLanguages = appLanguages["en"];
+      }
       this.model.networkName.value = await this.settingsService.asyncReadSetting("networkName");
       this.model.scanditLicense.value = await this.settingsService.asyncReadSetting("scanditLicense");
       this.model.advancedUser = await this.settingsService.asyncReadSetting("advancedUser");
