@@ -231,6 +231,16 @@ export default class XmlDisplayService {
                 <leaflet-section active label="${this.model.moreLabel}" ref="more" icon="./assets/icons/leaflet-more.svg">${moreContent}
                 </leaflet-section>`
     this.element.querySelector("#leaflet-content").innerHTML = htmlFragment;
+    let leafletLinks =  this.element.querySelectorAll(".leaflet-link");
+    for (let link of leafletLinks) {
+      let linkUrl = link.getAttribute("linkUrl");
+      if (linkUrl.slice(0, 1) === "#") {
+        link.addEventListener("click", () => {
+          console.log('linkUrl', linkUrl);
+          document.getElementById(linkUrl.slice(1)).scrollIntoView();
+        });
+      }
+    }
   }
 
   buildBasePath(callback) {

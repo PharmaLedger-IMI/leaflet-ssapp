@@ -82,16 +82,7 @@ export default class DrugDetailsController extends WebcController {
         } else {
           this.querySelector('.select-document-language-container').setAttribute('hidden', true);
         }
-        let leafletLinks = this.querySelectorAll(".leaflet-link");
-        for (let link of leafletLinks) {
-          let linkUrl = link.getAttribute("linkUrl");
-          if (linkUrl.slice(0, 1) === "#") {
-            link.addEventListener("click", () => {
-              console.log('linkUrl', linkUrl);
-              document.getElementById(linkUrl.slice(1)).scrollIntoView();
-            });
-          }
-        }
+
       } else {
         this.querySelector('#leaflet-header').setAttribute('hidden', true);
         this.querySelector(".leaflet-shortcuts-container").setAttribute('hidden', true);
