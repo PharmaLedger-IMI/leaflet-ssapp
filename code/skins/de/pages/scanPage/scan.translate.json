@@ -1,6 +1,17 @@
 {
-    "alert1": "Allow Camera Access",
-    "alert2": "Access to your camera was denied. To begin scanning, please check your settings and allow access to the camera.",
-    "alert3": "Camera not found",
-    "alert4": "Please check if you have camera on your device or if the camera settings allow access to it."
+    "alert1": "Kamerazugriff zulassen",
+    "alert2": "Der Zugriff auf Ihre Kamera wurde verweigert. Um mit dem Scannen zu beginnen, überprüfen Sie bitte Ihre Einstellungen und erlauben Sie den Zugriff auf die Kamera.",
+    "alert3": "Kamera nicht gefunden",
+    "alert4": "Bitte überprüfen Sie, ob Sie eine Kamera auf Ihrem Gerät haben oder ob die Kameraeinstellungen den Zugriff erlauben.",
+    "cancel": "Abbrechen",
+    "guide": "Anleitung",
+    "err_no_code_scanned": "2dMatrix-Code-Scan-Vorgang beendet. Kein Code gescannt oder Prozess abgebrochen.",
+    "err_no_code_found": "Keine GS1-Datenmatrix gefunden.",
+    "err_scan_not_supported": "Der Code kann nicht gescannt werden.",
+    "err_cam_unavailable": "Keine Kamera zum Scannen verfügbar.",
+    "err_default": "GS1-Datenmatrix konnte nicht gescannt werden.",
+    "err_unknown": "Code-Scannen und -Verarbeitung mit Fehlern beendet.",
+    "err_barcode": "Barcode ist nicht lesbar, bitte wenden Sie sich an die Apotheke/den Arzt, die/der die Arzneimittelpackung ausgestellt hat.",
+    "err_combination": "Produktcode-Kombination konnte nicht aufgelöst werden.",
+    "err_to_history": "Paket konnte nicht zur Historie hinzugefügt werden"
 }

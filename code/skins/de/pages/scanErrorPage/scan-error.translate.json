@@ -1,6 +1,8 @@
 {
-    "data1": "Serial number:",
-    "data2": "Product Code:",
-    "data3": "Batch Number:",
-    "data4": "Expiry:"
+    "data1": "Seriennummer:",
+    "data2": "Produktcode:",
+    "data3": "Chargennummer:",
+    "data4": "Verfall:",
+    "title": "Produkt nicht gefunden",
+    "scan_now": "Jetzt scannen"
 }
