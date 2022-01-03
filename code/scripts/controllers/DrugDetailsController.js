@@ -163,19 +163,30 @@ export default class DrugDetailsController extends WebcController {
       });
 
       this.onTagClick("show-video", () => {
-
         this.showModalFromTemplate('product-video', () => {
         }, () => {
         }, {
           model: {
             title: this.model.product.name,
-            videoLink: `https://www.youtube.com/embed/${this.model.product.videoLink.split("v=")[1]}?autoplay=1`
+            videoLink: this.getEmbeddedVideoLink(this.model.product.videoLink)
           },
           disableFooter: true,
           disableExpanding: true,
         });
       });
     })
+  }
+
+  getEmbeddedVideoLink(videoLink) {
+
+    if (videoLink.includes("youtube.com")) {
+      return `https://www.youtube.com/embed/${videoLink.split("v=")[1]}?autoplay=1`
+    }
+    if (videoLink.includes("vimeo.com")) {
+      return `https://player.vimeo.com/video/${videoLink.split("vimeo.com/")[1]}`
+    }
+
+
   }
 
   async init() {

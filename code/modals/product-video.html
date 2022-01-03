@@ -23,16 +23,17 @@
     }
 
     main iframe {
-        height: 350px;
+        height: 60vh;
     }
 </style>
 <div class="custom-modal-header header-color" slot="header">
     <h5>{{@title}}</h5>
 </div>
 <main>
-
-    <iframe height="100%" src="@videoLink"
-            width="100%">
+   <iframe allow="autoplay; fullscreen; picture-in-picture" allowfullscreen
+            frameborder="0" src="@videoLink" width="320">
     </iframe>
+
 </main>
+
 
