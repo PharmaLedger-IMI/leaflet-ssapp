@@ -15,6 +15,7 @@
   "undefined_data": "Datele produsului nu pot fi identificate",
   "batch_not_found": "Numărul lotului din codul de bare nu a putut fi găsit",
   "note": "Notă",
+  "no_leaflet": "Nu s-a putut găsi niciun prospect pentru produsul scanat.",
   "user_type_title": "Selectați tipul de document preferat",
   "user_type_1": "SmPC",
   "user_type_1_description": "Vreau să văd mai întâi documentul SMPC",

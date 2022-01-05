@@ -15,6 +15,7 @@
     "undefined_data": "Undefinierte Produktdaten",
     "batch_not_found": "Die Chargennummer im Barcode konnte nicht gefunden werden",
     "note": "Hinweis",
+    "no_leaflet": "Keine Broschüre für das gescannte Produkt gefunden.",
     "user_type_title": "Bevorzugten Dokumententyp auswählen",
     "user_type_1": "Doktor",
     "user_type_1_description": "Ich möchte das Medikament SMPC sehen",

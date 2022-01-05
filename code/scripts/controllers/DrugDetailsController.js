@@ -222,10 +222,21 @@ export default class DrugDetailsController extends WebcController {
     }
 
     this.model.documentLanguages = await $$.promisify(this.documentService.getAvailableLanguagesForXmlType.bind(this.documentService))();
-    if (!this.model.documentLanguages) {
-      this.documentService.displayError();
+    if (!this.model.documentLanguages || this.model.documentLanguages.length === 0) {
+      this.showModalFromTemplate('error-message', () => {
+      }, () => {
+        this.navigateToPageTag("home")
+      }, {
+        model: {
+          title: this.translate("note"),
+          messageText: this.translate("no_leaflet")
+        },
+        disableExpanding: true,
+        disableFooter: true
+      });
       return;
     }
+
 
     if (this.model.documentLanguages.length >= 2) {
       this.model.twoOrMoreLanguages = true;

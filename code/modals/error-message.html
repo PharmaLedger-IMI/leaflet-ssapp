@@ -1,0 +1,37 @@
+<style>
+    .custom-modal-header {
+        display: flex;
+        justify-content: center;
+        flex-direction: row;
+        width: 100%;
+        gap: 10px
+    }
+
+    .custom-modal-header img {
+        width: 25px;
+    }
+
+    main {
+        display: flex;
+        flex-direction: column;
+    }
+
+    webc-modal::part(header) {
+        background: linear-gradient(
+                0deg, rgba(90, 89, 253, 0.1), rgba(90, 89, 253, 0.1)), #FFFFFF;
+    }
+
+    webc-modal::part(main) {
+        min-height: 100px;
+        align-items: center;
+        display: flex;
+    }
+</style>
+<div class="custom-modal-header header-color" slot="header">
+    <img src="./assets/icons/error.svg">
+    <h5>{{@title}}</h5>
+</div>
+<main>
+    <div class="custom-modal-header">{{@messageText}}</div>
+</main>
+

@@ -15,6 +15,7 @@
   "undefined_data": "Undefined product data",
   "batch_not_found": "The batch number in the barcode could not be found",
   "note": "Note",
+  "no_leaflet": "Could not find any leaflet for scanned product.",
   "user_type_title": "Select preferred document type",
   "user_type_1": "SmPC",
   "user_type_1_description": "I want to see drug SMPC first",
