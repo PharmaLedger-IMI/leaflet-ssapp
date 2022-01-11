@@ -59,6 +59,7 @@ export default class XmlDisplayService {
   }
 
 
+/*
   populateModel() {
     this.getAvailableLanguagesForXmlType((err, languages) => {
       this.languageService.addWorkingLanguages(languages, (err) => {
@@ -78,6 +79,7 @@ export default class XmlDisplayService {
       });
     })
   }
+*/
 
   createLanguageSelector(languages) {
     this.model.twoOrMoreLanguages = true;
@@ -300,13 +302,13 @@ export default class XmlDisplayService {
     });
   }
 
-  registerLanguages(languages, callback) {
+/*  registerLanguages(languages, callback) {
     this.languageService.addWorkingLanguages(languages, callback);
-  }
+  }*/
 
-  registerAvailableLanguages(callback) {
+/*  registerAvailableLanguages(callback) {
     this.getAvailableLanguagesForXmlType((err, languages) => {
       this.registerLanguages(languages, callback);
     });
-  }
+  }*/
 }

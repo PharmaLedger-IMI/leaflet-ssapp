@@ -48,7 +48,7 @@ export default class DrugDetailsController extends WebcController {
       this.model.statusType = history.location.state.productData.statusType;
       this.model.statusMessage = this.translate(history.location.state.productData.statusMessage);
       this.model.snCheck = history.location.state.productData.snCheck;
-      this.model.showVideoLink = !!this.model.product.videoLink;
+      this.model.showVideoLink = false;
     } else {
       console.log("Undefined product data");
       this.updateUIInGTINOnlyCase()
@@ -168,7 +168,7 @@ export default class DrugDetailsController extends WebcController {
         }, {
           model: {
             title: this.model.product.name,
-            videoLink: this.getEmbeddedVideoLink(this.model.product.videoLink)
+            videoSource: this.getEmbeddedVideo(this.model.videoSource)
           },
           disableFooter: true,
           disableExpanding: true,
@@ -177,15 +177,24 @@ export default class DrugDetailsController extends WebcController {
     })
   }
 
-  getEmbeddedVideoLink(videoLink) {
+  getVideoSource(documentType) {
+    this.model.videoSource = this.model.batch.videos[`${documentType}/${this.model.preferredLanguage}`] ||
+      this.model.batch.videos["defaulSource"] ||
+      this.model.product.videos[`${documentType}/${this.model.preferredLanguage}`] ||
+      this.model.product.videos["defaulSource"]
+    this.model.showVideoLink = !!this.model.videoSource;
+  }
 
-    if (videoLink.includes("youtube.com")) {
-      return `https://www.youtube.com/embed/${videoLink.split("v=")[1]}?autoplay=1`
+  getEmbeddedVideo(videoSource) {
+
+    if (videoSource.includes("youtube.com")) {
+      return `https://www.youtube.com/embed/${videoSource.split("v=")[1]}?autoplay=1`
     }
-    if (videoLink.includes("vimeo.com")) {
-      return `https://player.vimeo.com/video/${videoLink.split("vimeo.com/")[1]}`
+    if (videoSource.includes("vimeo.com")) {
+      return `https://player.vimeo.com/video/${videoSource.split("vimeo.com/")[1]}`
     }
 
+    return "";
 
   }
 
@@ -284,9 +293,8 @@ export default class DrugDetailsController extends WebcController {
           }
         });
       })
-
-
     }
+    this.model.preferredDocType === "smpc" ? this.getVideoSource("smpc") : this.getVideoSource("leaflet");
   }
 
   renderEpi() {
