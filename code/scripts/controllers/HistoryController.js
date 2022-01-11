@@ -95,7 +95,7 @@ class HistoryDataSource extends DataSource {
     dataObj.expiryTime = batchStatusService.expiryTime;
     dataObj.snCheck = batchStatusService.snCheck;
     dataObj.product = product;
-    dataObj.batchData = batchData;
+    dataObj.batch = batchData;
     let result = await $$.promisify(this.enclaveDB.updateRecord)(constants.HISTORY_TABLE, dataObj.pk, dataObj)
     return result;
   }

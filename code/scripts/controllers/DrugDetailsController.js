@@ -177,11 +177,12 @@ export default class DrugDetailsController extends WebcController {
     })
   }
 
-  getVideoSource(documentType) {
+  getVideoSource() {
+    let documentType =  this.model.preferredDocType  || "leaflet"
     this.model.videoSource = this.model.batch.videos[`${documentType}/${this.model.preferredLanguage}`] ||
-      this.model.batch.videos["defaulSource"] ||
       this.model.product.videos[`${documentType}/${this.model.preferredLanguage}`] ||
-      this.model.product.videos["defaulSource"]
+      this.model.batch.videos["defaultSource"] ||
+      this.model.product.videos["defaultSource"]
     this.model.showVideoLink = !!this.model.videoSource;
   }
 
@@ -207,6 +208,7 @@ export default class DrugDetailsController extends WebcController {
 
     this.querySelector('.select-document-language').addEventListener("ionChange", async (event) => {
       this.model.preferredLanguage = event.detail.value;
+      this.getVideoSource();
       this.renderEpi();
       if (this.model.showEPI) {
         this.documentService.displayXmlForLanguage(this.model.preferredLanguage);
@@ -294,7 +296,7 @@ export default class DrugDetailsController extends WebcController {
         });
       })
     }
-    this.model.preferredDocType === "smpc" ? this.getVideoSource("smpc") : this.getVideoSource("leaflet");
+    this.getVideoSource();
   }
 
   renderEpi() {
