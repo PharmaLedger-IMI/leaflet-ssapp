@@ -5,19 +5,19 @@
         <webc-container controller="SettingsController" slot="content-slot">
             <div class="section-title">{{$main_title}}</div>
             <div class="accordion">
-                <leaflet-accordion label="$lang_title" description="$lang_subtitle">
-                    <ion-select value="@preferredLanguage" interface="action-sheet" placeholder="$select_option"
-                                data-tag="language.select" data-for="@appLanguages" data-for-option="rerender"
-                                class="select-options">
+                <leaflet-accordion description="$lang_subtitle" label="$lang_title">
+                    <ion-select class="select-options" data-for="@appLanguages" data-for-option="rerender"
+                                data-tag="language.select" interface="action-sheet" placeholder="$select_option"
+                                value="@preferredLanguage">
                         <ion-select-option value="@value">{{ @label }} ({{@nativeName}})</ion-select-option>
                     </ion-select>
                 </leaflet-accordion>
 
-                <leaflet-accordion label="$origin_title" description="$origin_subtitle">
+                <leaflet-accordion description="$origin_subtitle" label="$origin_title">
                     <div>{{ @origin }}</div>
                 </leaflet-accordion>
 
-                <leaflet-accordion label="$network_title" description="$network_subtitle">
+                <leaflet-accordion description="$network_subtitle" label="$network_title">
                     <div data-if="@networkEditMode">
                         <div slot="true">
                             <input class="settings-input" data-view-model="@networkName" type="text"/>
@@ -34,7 +34,7 @@
                     </div>
                 </leaflet-accordion>
 
-                <leaflet-accordion label="$scandit_title" description="$scandit_subtitle">
+                <leaflet-accordion description="$scandit_subtitle" label="$scandit_title">
                     <div data-if="@scanditLicenseEditMode">
                         <div slot="true">
                             <input class="settings-input" data-view-model="@scanditLicense" type="text"/>
@@ -49,37 +49,61 @@
                     </div>
                 </leaflet-accordion>
 
-                <leaflet-accordion label="$advanced_title" description="$advanced_subtitle">
-                    <div class="advanced-user">
+                <leaflet-accordion description="$advanced_subtitle" label="$advanced_title">
+                    <div class="checkbox-layout">
                         <span>{{ $checkbox }}</span>
-                        <ion-checkbox checked="@advancedUser" slot="end"></ion-checkbox>
+                        <ion-checkbox checked="@advancedUser" id="advancedUserCheckbox" slot="end"></ion-checkbox>
                     </div>
                 </leaflet-accordion>
 
-                <leaflet-accordion label="$refresh_title" description="$refresh_subtitle" >
+                <leaflet-accordion description="$refresh_subtitle" label="$refresh_title">
                     <div data-if="@refreshPeriodEditMode">
-                            <div slot="true">
-                                <input class="settings-input" data-view-model="@refreshPeriod" type="text"/>
-                                <ion-button data-tag="change-refresh-period">{{$save_btn}}</ion-button>
-                                <ion-button data-tag="change-default-refresh-period">{{$reset_btn}}</ion-button>
-                            </div>
-                            <div slot="false">
-                                <input class="settings-input" data-view-model="@refreshPeriod" readonly type="text"/>
-                                <ion-button class="network-edit-button" data="refreshPeriodEditMode"
-                                            data-tag="change-edit-mode"> {{$edit_btn}} <i class="fa fa-pencil-square-o"></i>
-                                </ion-button>
-                            </div>
-                </div>
+                        <div slot="true">
+                            <input class="settings-input" data-view-model="@refreshPeriod" type="text"/>
+                            <ion-button data-tag="change-refresh-period">{{$save_btn}}</ion-button>
+                            <ion-button data-tag="change-default-refresh-period">{{$reset_btn}}</ion-button>
+                        </div>
+                        <div slot="false">
+                            <input class="settings-input" data-view-model="@refreshPeriod" readonly type="text"/>
+                            <ion-button class="network-edit-button" data="refreshPeriodEditMode"
+                                        data-tag="change-edit-mode"> {{$edit_btn}} <i class="fa fa-pencil-square-o"></i>
+                            </ion-button>
+                        </div>
+                    </div>
                 </leaflet-accordion>
 
-                <leaflet-accordion label="$dev_title" description="$dev_subtitle" hidden="@devOptions.areDisabled" class="dev-options">
-                    <ion-item class="ion" data-tag="dev-options:ios-use-frames" class="dev-options" detail="false" button>
+                <leaflet-accordion description="$acdc_subtitle" label="$acdc_title">
+                    <div class="acdc-container">
+                        <div class="checkbox-layout">
+                            <span>{{ $acdc_checkbox }}</span>
+                            <ion-checkbox checked="@acdc.enabled" id="acdcEnabledCheckbox" slot="end"></ion-checkbox>
+                        </div>
+                        <div class="acdcOptionsContainer">
+                            <div class="checkbox-layout acdc-option">
+                                <span>{{ $acdc_did_checkbox }}</span>
+                                <ion-checkbox checked="@acdc.did_enabled" id="acdcDidCheckbox"
+                                              slot="end"></ion-checkbox>
+                            </div>
+                            <div class="checkbox-layout acdc-option">
+                                <span>{{ $acdc_location_checkbox }}</span>
+                                <ion-checkbox checked="@acdc.location_enabled" id="acdcLocationCheckbox"
+                                              slot="end"></ion-checkbox>
+                            </div>
+                        </div>
+                    </div>
+                </leaflet-accordion>
+
+
+                <leaflet-accordion class="dev-options" description="$dev_subtitle" hidden="@devOptions.areDisabled"
+                                   label="$dev_title">
+                    <ion-item button class="dev-options" class="ion" data-tag="dev-options:ios-use-frames"
+                              detail="false">
                         <p>
                             <ion-badge color="dark" mode="ios">Experimental</ion-badge>
                             <br>Applicable only for iOS
                             <br>Use native frames captured by camera instead of user video stream
                         </p>
-                        <ion-toggle data-view-model="@devOptions.useFrames" slot="end" mode="ios"></ion-toggle>
+                        <ion-toggle data-view-model="@devOptions.useFrames" mode="ios" slot="end"></ion-toggle>
                     </ion-item>
                 </leaflet-accordion>
             </div>

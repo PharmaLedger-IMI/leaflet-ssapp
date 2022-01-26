@@ -99,7 +99,7 @@ export default class SettingsController extends WebcController {
       });
 
       this.onTagEvent('language.select', 'ionChange', this.changeLanguageHandler);
-      this.querySelector("ion-checkbox").addEventListener("ionChange", (ev) => {
+      this.querySelector("ion-checkbox#advancedUserCheckbox").addEventListener("ionChange", (ev) => {
         this.model.advancedUser = ev.detail.checked;
         this.settingsService.writeSetting("advancedUser", ev.detail.checked, (err) => {
           if (err) {
@@ -107,7 +107,22 @@ export default class SettingsController extends WebcController {
             return;
           }
         })
-      });
+      })
+
+      this.querySelector("ion-checkbox#acdcEnabledCheckbox").addEventListener("ionChange", (ev) => {
+        this.model.acdc.enabled = ev.detail.checked;
+        this.querySelector(".acdcOptionsContainer").hidden = !this.model.acdc.enabled;
+        if (!this.model.acdc.enabled) {
+          this.model.acdc.did_enabled = this.model.acdc.location_enabled = this.model.acdc.enabled;
+        }
+      })
+
+      this.querySelector("ion-checkbox#acdcDidCheckbox").addEventListener("ionChange", (ev) => {
+        this.model.acdc.did_enabled = ev.detail.checked;
+      })
+      this.querySelector("ion-checkbox#acdcLocationCheckbox").addEventListener("ionChange", (ev) => {
+        this.model.acdc.location_enabled = ev.detail.checked;
+      })
 
       this.onTagClick("set-scandit-license", (model, target, event) => {
         let newValue = target.parentElement.querySelector("input").value;
@@ -124,6 +139,13 @@ export default class SettingsController extends WebcController {
     })
 
     this.onTagClick('dev-options:ios-use-frames', this.iosUseFramesHandler);
+
+    // ACDC integration settings
+    this.acdc = require('acdc').ReportingService.getInstance(this.settingsService);
+
+    this.acdc.setSettingsToModel(this.model, err => console.log(err
+      ? `Error Binding ACDC settings to model: ${err}`
+      : "Acdc Settings Added"));
 
     this.setDeveloperOptions();
   }

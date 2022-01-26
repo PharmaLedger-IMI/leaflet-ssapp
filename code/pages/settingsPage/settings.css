@@ -15,7 +15,7 @@
     font-size: var(--s-text-size);
 }
 
-.advanced-user {
+.checkbox-layout {
     display: grid;
     grid-template-columns: 1fr auto;
     align-items: center;
@@ -24,12 +24,14 @@
 .dev-options ion-toggle {
     pointer-events: none;
 }
+
 .dev-options ion-item {
     --background: transparent;
     --border-color: transparent;
     --padding-start: 0;
     --inner-padding-end: 0;
 }
+
 .dev-options ion-badge {
     background: #F0EFFE;
     color: #2F2F2F;
@@ -38,4 +40,8 @@
 
 .dev-options p {
     font-size: .8rem;
+}
+
+.acdc-option {
+    margin: 15px 15px 0px 15px;
 }

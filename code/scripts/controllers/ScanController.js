@@ -32,6 +32,7 @@ export default class ScanController extends WebcController {
       this.dbStorage = enclaveDB;
       this.barcodePicker = null;
       this.settingsService = new SettingsService(enclaveDB);
+      this.acdc = require('acdc').ReportingService.getInstance(this.settingsService);
 
       document.addEventListener('leaflet-ssapp:switch-camera', this.switchCamera);
 
@@ -144,11 +145,11 @@ export default class ScanController extends WebcController {
         }
 
         this.settingsService.readSetting("scanditLicense", (err, scanditLicense) => {
-            if (scanditLicense && window.ScanditSDK) {
-              this.model.useScandit = true;
-              this.initScanditLib(scanditLicense)
-            }
-          });
+          if (scanditLicense && window.ScanditSDK) {
+            this.model.useScandit = true;
+            this.initScanditLib(scanditLicense)
+          }
+        });
       });
     });
   }
@@ -166,7 +167,7 @@ export default class ScanController extends WebcController {
     }
 
     if (this.barcodePicker) {
-      const types = { BACK: 'back', FRONT: 'front' };
+      const types = {BACK: 'back', FRONT: 'front'};
 
       try {
         this.barcodePicker.setCameraType(this.barcodePicker.cameraManager.cameraType === types.BACK ? types.FRONT : types.BACK);
@@ -230,28 +231,49 @@ export default class ScanController extends WebcController {
       return this.redirectToError(this.translate("err_barcode"), gs1Fields);
     }
 
+    const evt = this.acdc.createScanEvent(gs1Fields);
+
     this.buildSSI(gs1Fields, (err, gtinSSI) => {
-      if(err){
+      if (err) {
         return this.redirectToError(this.translate("err_combination"), gs1Fields);
       }
       this.packageAlreadyScanned(gtinSSI, gs1Fields, (err, result) => {
         if (err) {
-          return this.redirectToError(this.translate("err_combination"), gs1Fields);
+          evt.report((err, response) => {
+            if (err)
+              console.log(err)
+            return this.redirectToError(this.translate("err_combination"), gs1Fields);
+          });
         }
         if (result.status === false) {
           this.batchAnchorExists(gtinSSI, (err, status) => {
             if (status) {
-              this.addPackageToHistoryAndRedirect(gtinSSI, gs1Fields, (err) => {
-                if (err) {
-                  return this.redirectToError(this.translate("err_to_history"), gs1Fields, err.message);
-                }
+              evt.setBatchDSUStatus(true)
+              evt.report((err, response) => {
+                if (err)
+                  console.log(err)
+                this.addPackageToHistoryAndRedirect(gtinSSI, gs1Fields, (err) => {
+                  if (err) {
+                    return this.redirectToError(this.translate("err_to_history"), gs1Fields, err.message);
+                  }
+                });
               });
             } else {
-              this.addConstProductDSUToHistory(gs1Fields);
+              evt.setBatchDSUStatus(false);
+              evt.report((err, response) => {
+                if (err)
+                  console.log(err);
+                this.addConstProductDSUToHistory(gs1Fields);
+              })
             }
           });
         } else {
-          this.redirectToDrugDetails({productData: result.record});
+          evt.setBatchDSUStatus(true);
+          evt.report((err, response) => {
+            if (err)
+              console.log(err)
+            this.redirectToDrugDetails({productData: result.record});
+          })
         }
       });
     });
@@ -382,16 +404,16 @@ export default class ScanController extends WebcController {
       // }, INTERVAL_BETWEEN_CAPTURES);
 
       /** be sure that capturing is ended when clearFrameInterval is called **/
-      // const clearFrameInterval = async () => {
-      //   clearInterval(interval);
-      //   await nativeHandler.stopFrameCapturing();
-      //   // stencil router does not have a removeListener for history
-      // }
+        // const clearFrameInterval = async () => {
+        //   clearInterval(interval);
+        //   await nativeHandler.stopFrameCapturing();
+        //   // stencil router does not have a removeListener for history
+        // }
 
-      // TODO:
-      //  current mock uses frames from a JSON file
+        // TODO:
+        //  current mock uses frames from a JSON file
 
-      // start mock
+        // start mock
       let i = 0;
       let increment = true;
       const file = await fetch(`./assets/frames/frames-01.json`);
