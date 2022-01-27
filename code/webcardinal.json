@@ -48,6 +48,13 @@
       "path": "./drug-details"
     },
     {
+      "name": "Authentication Feature",
+      "tag": "auth-feature",
+      "indexed": false,
+      "src": "./authFeaturePage/auth-feature.html",
+      "path": "./auth-feature"
+    },
+    {
       "name": "Scan error",
       "indexed": false,
       "tag": "scan-error",
@@ -58,7 +65,9 @@
   "logLevel": "none",
   "leaflet": {
     "devOptions": {
-      "disabled": ["useFrames"],
+      "disabled": [
+        "useFrames"
+      ],
       "useFrames": false
     }
   }

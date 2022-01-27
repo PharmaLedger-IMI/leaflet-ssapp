@@ -11,8 +11,6 @@ export default class DrugDetailsController extends WebcController {
     this.model = {
       serialNumberLabel: constants.SN_LABEL,
       statusMessage: constants.SN_OK_MESSAGE,
-      packageVerification: "Action required",
-      showVerifyPackageButton: true,
       showReportButton: true,
       showAddToCabinetButton: true,
       serialNumber: "",
@@ -49,6 +47,7 @@ export default class DrugDetailsController extends WebcController {
       this.model.statusMessage = this.translate(history.location.state.productData.statusMessage);
       this.model.snCheck = history.location.state.productData.snCheck;
       this.model.showVideoLink = false;
+      this.acdc = history.location.state.acdc;
     } else {
       console.log("Undefined product data");
       this.updateUIInGTINOnlyCase()
@@ -59,6 +58,22 @@ export default class DrugDetailsController extends WebcController {
         disableFooter: true
       });
       return
+    }
+
+    if ((!this.acdc || !this.acdc.authResponse) && !!this.model.batch.acdcAuthFeatureSSI) {
+      this.onTagClick('auth-feature', () => {
+        if (!this.model.batch || !this.model.batch.acdcAuthFeatureSSI) {
+          return this.showErrorModal(`Could not find and Authentication Feature`, "Anti Counterfeiting");
+        }
+        this.navigateToPageTag('auth-feature', {
+          ssi: this.model.batch.acdcAuthFeatureSSI,
+          gtinSSI: this.gtinSSI,
+          gs1Fields: this.gs1Fields
+        });
+      });
+    } else if (this.acdc && this.acdc.authResponse) {
+      const {status, error} = this.acdc.authResponse;
+      this.model.packageVerification = status ? this.translate("verified") : `${this.translate("invalid")}${error.message ? `\n${error.message}` : ''}`;
     }
     this.smpcDisplayService = new XMLDisplayService(this.DSUStorage, element, this.gtinSSI, "smpc", "smpc.xml", this.model);
     this.leafletDisplayService = new XMLDisplayService(this.DSUStorage, element, this.gtinSSI, "leaflet", "leaflet.xml", this.model);
@@ -212,18 +227,18 @@ export default class DrugDetailsController extends WebcController {
     }
 
     if (videoSource.includes("</script>")) {
-/*      let regex1 = /(?:\&width.*(?:height.*\/&))/gi
-      let regex2 = /(?:\&width.*(?:height.*\"\>))/gi
-      let regex3 = /(?:\width:.*height:.*px;)/gi
-      if (videoSource.match(regex1)) {
-        videoSource = videoSource.replace(regex1, '&width=310&height=300&');
-      }
-      if (videoSource.match(regex2)) {
-        videoSource = videoSource.replace(regex2, '&width=310&height=300">');
-      }
-      if (videoSource.match(regex3)) {
-        videoSource = videoSource.replace(regex3, 'width: 310px; height: 300px;');
-      }*/
+      /*      let regex1 = /(?:\&width.*(?:height.*\/&))/gi
+            let regex2 = /(?:\&width.*(?:height.*\"\>))/gi
+            let regex3 = /(?:\width:.*height:.*px;)/gi
+            if (videoSource.match(regex1)) {
+              videoSource = videoSource.replace(regex1, '&width=310&height=300&');
+            }
+            if (videoSource.match(regex2)) {
+              videoSource = videoSource.replace(regex2, '&width=310&height=300">');
+            }
+            if (videoSource.match(regex3)) {
+              videoSource = videoSource.replace(regex3, 'width: 310px; height: 300px;');
+            }*/
       return `<iframe  id="script-iframe" allow="autoplay; fullscreen; picture-in-picture" allowfullscreen
             frameborder="0" src="data:text/html;charset=utf-8,${encodeURI(videoSource)}">`
     }

@@ -32,5 +32,8 @@
   "watch_video": "Watch video",
   "leaflet": "Leaflet",
   "smpc": "SMPC",
-  "select_lang_placeholder": "Select Language"
+  "select_lang_placeholder": "Select Language",
+  "verify_package": "Verify package",
+  "verified": "Package verified",
+  "invalid": "Invalid Package"
 }

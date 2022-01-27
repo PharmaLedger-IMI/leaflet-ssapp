@@ -12,18 +12,34 @@
     color: #F9FBFB;
 }
 
-.video-container {
+.video-container, .auth-feature-container {
     color: #F9FBFB;
     display: flex;
     align-items: center;
 }
 
-.product-video {
-    height: 35px;
-    width: 35px;
+.product-video, .auth-feature {
+    height: 33px;
+    width: 33px;
     background: #F9FBFB;
-    border-radius: 42%;
+    border-radius: 50%;
     margin-left: 10px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.product-video img {
+    width: 25px;
+    height: 25px;
+}
+
+.auth-feature img {
+    width: 20px;
+    height: 20px;
+    left: -1px;
+    position: relative;
 }
 
 .language-doc-type-container {

@@ -23,6 +23,14 @@
                         </div>
                         <div class="product-description">{{ @product.description }}</div>
 
+                        <div class="auth-feature-container" data-if="@product.antiCounterfeitingEnabled">
+                            <h6 data-tag="auth-feature">{{$verify_package}}</h6>
+                            <div class="auth-feature product-description" data-tag="auth-feature">
+                                <img src="./assets/icons/verify-package.svg"/>
+                            </div>
+
+                        </div>
+
                         <div class="language-doc-type-container">
                             <div class="select-document-type-container" hidden>
                                 <ion-select class="select-document-type" interface="action-sheet"
