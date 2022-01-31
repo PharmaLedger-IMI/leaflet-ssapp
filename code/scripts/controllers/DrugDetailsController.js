@@ -189,6 +189,29 @@ export default class DrugDetailsController extends WebcController {
           disableExpanding: true,
         });
       });
+
+      const searchbar = this.querySelector('ion-searchbar');
+      searchbar.addEventListener('ionInput', (event) => {
+        const query = event.target.value.toLowerCase().trim();
+        //clear all highlights
+        const leafletContent = this.querySelector("#leaflet-content");
+        let leafletContentHtml = leafletContent.innerHTML.replace(/(<mark>|<\/mark>)/gim, '');
+        leafletContent.innerHTML = leafletContentHtml;
+        if (query === "") {
+          return
+        }
+        const regex = new RegExp(query, 'gi');
+        try {
+          let domNode = this.element.parentElement.ownerDocument.evaluate(`.//*[text()[contains(translate(., 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz'),"${query}")]]`, this.querySelector("#leaflet-content")).iterateNext();
+          let text = domNode.innerHTML;
+          const newText = text.replace(regex, '<mark>$&</mark>');
+          domNode.innerHTML = newText;
+          domNode.scrollIntoView({block: "nearest"});
+          window.scroll(0, domNode.getBoundingClientRect().height);
+        } catch (e) {
+          // ignore
+        }
+      });
     })
   }
 

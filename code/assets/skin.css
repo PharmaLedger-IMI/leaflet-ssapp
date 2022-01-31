@@ -376,7 +376,7 @@ psk-input .form-control {
 
 #leaflet-header[show-leaflet][effect="collapse"] > section {
     border-radius: 0;
-    padding-bottom: 80px;
+    padding-bottom: 105px;
 }
 
 #leaflet-header[effect="collapse"] > section::after {
@@ -405,7 +405,7 @@ psk-input .form-control {
     overflow-x: scroll;
     overflow-y: visible;
     scroll-behavior: smooth;
-    top: 0;
+    top: 53px;
     margin: 0;
     padding: 0.4rem 1rem;
     gap: 1rem;

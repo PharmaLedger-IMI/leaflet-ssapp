@@ -95,6 +95,24 @@
     background: linear-gradient(0deg, rgba(248, 100, 88, 0.1), rgba(248, 100, 88, 0.1)), #FFFFFF;
 }
 
+.search-container {
+    width: 100%;
+    position: absolute;
+    top: calc(50% - 40px);
+}
+
+[effect="collapse"] .search-container {
+    top: 0;
+}
+
+.search-container ion-searchbar {
+    padding: 0px;
+    --background: #F9FBFB;
+    --border-radius: 25px;
+    width: calc(100% - 50px);
+    left: 25px;
+}
+
 .no-leaflet-container {
     margin-top: calc(20vh - 65px);
     text-align: center;
