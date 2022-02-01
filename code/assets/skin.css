@@ -475,7 +475,7 @@ leaflet-shortcuts {
 leaflet-shortcuts::part(container) {
     position: absolute;
     left: 0; top: 100%;
-    transform: translateY(-50%);
+    transform: translateY(-60%);
     margin: 0 24px;
     padding: 0;
     width: calc(100% - 48px);
