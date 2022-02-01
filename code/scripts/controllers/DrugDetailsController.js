@@ -44,6 +44,7 @@ export default class DrugDetailsController extends WebcController {
       this.model.product = history.location.state.productData.product;
       this.model.batch = history.location.state.productData.batch;
       this.model.statusType = history.location.state.productData.statusType;
+      this.model.status = history.location.state.productData.status;
       this.model.statusMessage = this.translate(history.location.state.productData.statusMessage);
       this.model.snCheck = history.location.state.productData.snCheck;
       this.model.showVideoLink = false;
@@ -149,6 +150,33 @@ export default class DrugDetailsController extends WebcController {
       } else {
         await this.init()
       }
+
+
+      this.onTagClick("learn-more", (model, target, event) => {
+        let modalTitle = model.statusType;
+        let iconSrc;
+        switch (model.statusType.toLowerCase()) {
+          case "warning":
+            iconSrc = "./assets/icons/recalled.svg";
+            break;
+          case "error":
+            iconSrc = "./assets/icons/error.svg";
+            break
+        }
+        let modalContentMsg = this.translate(`${model.status}_status_message`);
+        this.showModalFromTemplate('status-message', () => {
+        }, () => {
+        }, {
+          model: {
+            title: model.statusMessage,
+            statusType: model.statusType,
+            iconSrc: iconSrc,
+            messageText: modalContentMsg
+          },
+          disableExpanding: true,
+          disableFooter: true
+        });
+      });
 
 
       this.onTagClick("click-verified", () => {

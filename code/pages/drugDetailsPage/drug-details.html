@@ -6,9 +6,10 @@
 
         <webc-container controller="DrugDetailsController" slot="content-slot">
             <div data-if="@displayStatus">
-                <div class="status-container" slot="true" status-type="@statusType">
+                <div class="status-container" slot="true" status-type="@statusType" data-tag="learn-more">
                     <div class="icon-container"></div>
                     <span>{{@statusMessage}}</span>
+                    <span class="learn-more-link">{{$learn_more}}</span>
                 </div>
                 <div class="padding-item" slot="true"></div>
             </div>
@@ -28,9 +29,13 @@
                             <div class="auth-feature product-description" data-tag="auth-feature">
                                 <img src="./assets/icons/verify-package.svg"/>
                             </div>
-
                         </div>
-
+                        <div class="video-container" data-if="@showVideoLink">
+                            <h6 data-tag="show-video">{{$watch_video}}</h6>
+                            <div class="product-video product-description" data-tag="show-video">
+                                <img src="./assets/icons/youtube-logo.png"/>
+                            </div>
+                        </div>
                         <div class="language-doc-type-container">
                             <div class="select-document-type-container" hidden>
                                 <ion-select class="select-document-type" interface="action-sheet"
@@ -48,14 +53,6 @@
                                 </ion-select>
                             </div>
                         </div>
-
-                        <div class="video-container" data-if="@showVideoLink">
-                            <h6 data-tag="show-video">{{$watch_video}}</h6>
-                            <div class="product-video product-description" data-tag="show-video">
-                                <img src="./assets/icons/youtube-logo.png"/>
-                            </div>
-                        </div>
-x
                     </section>
                     <div class="leaflet-shortcuts-container" hidden>
 
