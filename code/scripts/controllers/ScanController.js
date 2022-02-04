@@ -11,6 +11,15 @@ const gtinResolver = require("gtin-resolver");
 const opendsu = require("opendsu");
 const resolver = opendsu.loadApi("resolver");
 
+const timeout = (time) => {
+  return new Promise((resolve) => {
+    const id = setTimeout(() => {
+      resolve();
+      clearTimeout(id)
+    }, time)
+  })
+}
+
 export default class ScanController extends WebcController {
   constructor(element, history) {
     super(element, history);
