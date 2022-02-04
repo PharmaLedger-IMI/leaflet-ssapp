@@ -47,6 +47,7 @@ export default class ScanController extends WebcController {
 
       this.model.onChange("data", () => {
         console.log("new event data change: ", this.model.data);
+        this.shouldRequestCaptures = false;
         this.process(this.parseGS1Code(this.model.data));
       });
 
@@ -402,25 +403,30 @@ export default class ScanController extends WebcController {
         return;
       }
 
-      let interval;
-      const startFrameInterval = async () => {
+      this.shouldRequestCaptures = true;
+
+      const startCapturing = async() => {
         try {
-          const [frame] = await photoCaptureStream.retrieveNextValue(1)
-          await barcodeScanner.setFrame(frame)
+          if (this.shouldRequestCaptures) {
+            const [frame] = await photoCaptureStream.retrieveNextValue(1)
+            await barcodeScanner.setFrame(frame)
+            await timeout(0)
+            await startCapturing()
+          }
         } catch (error) {
           console.log("Received error on retrieved next value " + error);
         }
       }
 
-      interval = setInterval(startFrameInterval, 250);
-
-      const stopFrameInterval = () => {
-        clearInterval(interval);
+      const stopCapturing = () => {
+        this.shouldRequestCaptures = false
         // stencil router does not have a removeListener for history
       }
 
-      this.model.onChange("data", stopFrameInterval);
-      this.history.listen(stopFrameInterval);
+      startCapturing();
+
+      this.model.onChange("data", stopCapturing);
+      this.history.listen(stopCapturing);
     });
   }
 
