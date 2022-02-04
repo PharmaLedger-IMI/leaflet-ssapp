@@ -182,6 +182,11 @@ export default class SettingsController extends WebcController {
       let isAtLeastOne = false;
       const options = data.leaflet.devOptions;
       const disabled = options.disabled || [];
+      const nativeBridgeSupport = window.opendsu_native_apis;
+
+      if (typeof nativeBridgeSupport !== "object") {
+        disabled.push("useFrames");
+      }
       delete options.disabled;
       const keys = Object.keys(options).filter(key => key !== 'disabled');
       for (const key of keys) {

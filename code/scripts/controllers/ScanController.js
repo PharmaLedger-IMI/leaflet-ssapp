@@ -48,12 +48,13 @@ export default class ScanController extends WebcController {
         }
 
         if (handler) {
-          this.model.nativeSupport = true;
 
           if (this.isDeveloperOptionActive(constants.IOS_USE_FRAMES)) {
             this.initPskBarcodeWithFrames(handler)
             return;
           }
+
+          this.model.nativeSupport = true;
 
           this.settingsService.readSetting("scanditLicense", (err, scanditLicense) => {
             if (scanditLicense && window.ScanditSDK) {
@@ -135,12 +136,6 @@ export default class ScanController extends WebcController {
               });
             }
           });
-          return;
-        }
-
-        // TODO: still under development, just a mock for exemplification
-        if (this.isDeveloperOptionActive(constants.IOS_USE_FRAMES)) {
-          this.initPskBarcodeWithFrames()
           return;
         }
 
@@ -242,7 +237,7 @@ export default class ScanController extends WebcController {
           evt.report((err, response) => {
             if (err)
               console.log(err)
-            return this.redirectToError(this.translate("err_combination"), gs1Fields);
+          return this.redirectToError(this.translate("err_combination"), gs1Fields);
           });
         }
         if (result.status === false) {
@@ -252,10 +247,10 @@ export default class ScanController extends WebcController {
               evt.report((err, response) => {
                 if (err)
                   console.log(err)
-                this.addPackageToHistoryAndRedirect(gtinSSI, gs1Fields, (err) => {
-                  if (err) {
-                    return this.redirectToError(this.translate("err_to_history"), gs1Fields, err.message);
-                  }
+              this.addPackageToHistoryAndRedirect(gtinSSI, gs1Fields, (err) => {
+                if (err) {
+                  return this.redirectToError(this.translate("err_to_history"), gs1Fields, err.message);
+                }
                 });
               });
             } else {
@@ -263,7 +258,7 @@ export default class ScanController extends WebcController {
               evt.report((err, response) => {
                 if (err)
                   console.log(err);
-                this.addConstProductDSUToHistory(gs1Fields);
+              this.addConstProductDSUToHistory(gs1Fields);
               })
             }
           });
@@ -272,7 +267,7 @@ export default class ScanController extends WebcController {
           evt.report((err, response) => {
             if (err)
               console.log(err)
-            this.redirectToDrugDetails({productData: result.record});
+          this.redirectToDrugDetails({productData: result.record});
           })
         }
       });
@@ -388,55 +383,35 @@ export default class ScanController extends WebcController {
     window.requestAnimationFrame(async () => {
       const barcodeScanner = this.querySelector('psk-barcode-scanner');
       barcodeScanner.useFrames = true;
+      const photoCaptureStream = nativeHandler.importNativeStreamAPI("photoCaptureStream");
 
-      // TODO:
-      //  code bellow explains a basic usage of psk-barcode-scanner with use-frames option for native iOS handler
-      //  real life scenario will lock like:
+      try {
+        await photoCaptureStream.openStream()
+        console.log("Photo capture stream API opened");
+      } catch (error) {
+        console.log("Photo stream API error " + error);
+        return;
+      }
 
-      /** start capturing using native API **/
-      // await nativeHandler.startFrameCapturing(INTERVAL_BETWEEN_CAPTURES);
-
-      /** receive each frame and set it in psk-barcode-scanner **/
-      // const interval = setInterval(async () => {
-      //    // for the moment frame is an image string encoded 'data:image/jpeg;base64, <encoding>'
-      //    const frame = await nativeHandler.getFrame()
-      //    await barcodeScanner.setFrame(frame);
-      // }, INTERVAL_BETWEEN_CAPTURES);
-
-      /** be sure that capturing is ended when clearFrameInterval is called **/
-        // const clearFrameInterval = async () => {
-        //   clearInterval(interval);
-        //   await nativeHandler.stopFrameCapturing();
-        //   // stencil router does not have a removeListener for history
-        // }
-
-        // TODO:
-        //  current mock uses frames from a JSON file
-
-        // start mock
-      let i = 0;
-      let increment = true;
-      const file = await fetch(`./assets/frames/frames-01.json`);
-      const frames = await file.json();
-      const interval = setInterval(async () => {
-        if (i === 0) {
-          increment = true;
+      let interval;
+      const startFrameInterval = async () => {
+        try {
+          const [frame] = await photoCaptureStream.retrieveNextValue(1)
+          await barcodeScanner.setFrame(frame)
+        } catch (error) {
+          console.log("Received error on retrieved next value " + error);
         }
-        if (i === frames.length - 1) {
-          increment = false;
-        }
-        await barcodeScanner.setFrame(frames[i]);
-        increment ? i++ : i--;
-      }, 100);
+      }
 
-      const clearFrameInterval = () => {
+      interval = setInterval(startFrameInterval, 250);
+
+      const stopFrameInterval = () => {
         clearInterval(interval);
         // stencil router does not have a removeListener for history
       }
-      // end mock
 
-      this.model.onChange("data", clearFrameInterval);
-      this.history.listen(clearFrameInterval);
+      this.model.onChange("data", stopFrameInterval);
+      this.history.listen(stopFrameInterval);
     });
   }
 

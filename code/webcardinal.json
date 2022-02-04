@@ -65,9 +65,7 @@
   "logLevel": "none",
   "leaflet": {
     "devOptions": {
-      "disabled": [
-        "useFrames"
-      ],
+      "disabled": [],
       "useFrames": false
     }
   }
