@@ -110,7 +110,7 @@ export default class HistoryController extends WebcController {
       productsDataSource: new HistoryDataSource({useInfiniteScroll: true})
     }
     let dbApi = require("opendsu").loadApi("db");
-    dbApi.getMainEnclaveDB((err, enclaveDB) => {
+    dbApi.getMainEnclaveDB(async (err, enclaveDB) => {
       if (err) {
         console.log('Error on getting enclave DB');
         return;
@@ -118,6 +118,9 @@ export default class HistoryController extends WebcController {
 
       const {productsDataSource} = this.model;
       let settingsService = new SettingsService(enclaveDB);
+      let appLang = await settingsService.asyncReadSetting("preferredLanguage");
+      this.applySkinForCurrentPage(appLang);
+      this.setSkin(appLang);
       settingsService.readSetting("refreshPeriod", (err, refreshPeriod) => {
         if (err || !refreshPeriod) {
           refreshPeriod = constants.DEFAULT_REFRESH_PERIOD;
