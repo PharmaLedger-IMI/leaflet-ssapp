@@ -231,6 +231,7 @@ export default class DrugDetailsController extends WebcController {
         const regex = new RegExp(query, 'gi');
         try {
           let domNode = this.element.parentElement.ownerDocument.evaluate(`.//*[text()[contains(translate(., 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz'),"${query}")]]`, this.querySelector("#leaflet-content")).iterateNext();
+          domNode.closest("leaflet-section").open();
           let text = domNode.innerHTML;
           const newText = text.replace(regex, '<mark>$&</mark>');
           domNode.innerHTML = newText;

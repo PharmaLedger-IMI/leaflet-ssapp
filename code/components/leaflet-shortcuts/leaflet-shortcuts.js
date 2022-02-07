@@ -89,22 +89,21 @@ export default class LeafletShortcuts extends HTMLElement {
             button.addEventListener('click', async () => {
                 const tag = button.getAttribute('tag');
                 const section = pageTemplate.querySelector(`leaflet-section[ref="${tag}"]`);
-
+                await section.open();
                 scrollOrigin = 'button';
                 buttonTarget = tag;
 
                 this.breakPoints = await getBreakPointsAsync(0);
 
                 // If there is no more space for scrolling, open section first, then try to scroll to actual accordion
-                if (scrollElement.scrollHeight === scrollElement.offsetHeight) {
+              /*  if (scrollElement.scrollHeight === scrollElement.offsetHeight) {
                     await section.open();
-                }
+                }*/
 
                 await ionContent.scrollToPoint(undefined, this.breakPoints[this.tags.indexOf(tag)], 200);
 
                 // Otherwise, wait for scrolling efect, then open de accordion
                 await timeoutAsync(175);
-                await section.open();
                 await this.headerSelectorHandler(tag, leafletButtons);
             });
         });
