@@ -67,8 +67,7 @@ export default class DrugDetailsController extends WebcController {
           return this.showErrorModal(`Could not find and Authentication Feature`, "Anti Counterfeiting");
         }
         this.navigateToPageTag('auth-feature', {
-          // TO DO : replace seed with real ssi value
-          ssi: $$.SSAPP_CONTEXT.SEED, //this.model.batch.acdcAuthFeatureSSI,
+          ssi: this.model.batch.acdcAuthFeatureSSI,
           gtinSSI: this.gtinSSI,
           gs1Fields: this.gs1Fields
         });
