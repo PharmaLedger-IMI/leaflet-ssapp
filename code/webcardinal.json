@@ -1,9 +1,5 @@
 {
   "theme": "epi-theme",
-  "pagesFallback": {
-    "name": "home",
-    "src": "./homePage/home.html"
-  },
   "identity": {
     "name": "Consumer",
     "email": "",

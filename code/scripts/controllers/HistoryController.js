@@ -1,10 +1,11 @@
-const {WebcController} = WebCardinal.controllers;
-const {DataSource} = WebCardinal.dataSources;
 import constants from "../../constants.js";
 import SettingsService from "../services/SettingsService.js";
 import BatchStatusService from "../services/BatchStatusService.js";
 import DSUDataRetrievalService from "../services/DSUDataRetrievalService/DSUDataRetrievalService.js";
 import utils from "../../utils.js";
+
+const { WebcController } = WebCardinal.controllers;
+const { DataSource } = WebCardinal.dataSources;
 
 class HistoryDataSource extends DataSource {
   constructor(...props) {

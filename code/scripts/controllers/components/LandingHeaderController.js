@@ -1,4 +1,4 @@
-const {WebcController} = WebCardinal.controllers;
+const { WebcController } = WebCardinal.controllers;
 
 export default class LandingHeaderController extends WebcController {
   constructor(...props) {
@@ -6,17 +6,6 @@ export default class LandingHeaderController extends WebcController {
 
     this.closeMenuFlag = true;
     this.menuOpened = false;
-    this.onTagClick("open-menu", () => {
-      this.querySelector(".initial-state").classList.toggle("ion-hide");
-      this.querySelector(".open-state").classList.toggle("ion-hide");
-      document.getElementsByClassName("overlay")[0].style.visibility = "visible";
-      document.getElementsByClassName("overlay")[0].style.opacity = 1;
-      this.menuOpened = true;
-    })
-    this.onTagClick("close-menu", () => {
-      this.closeMenu();
-    });
-
 
     if (document.getElementsByClassName("mobile-container")) {
       document.getElementsByClassName("mobile-container")[0].addEventListener("click", (event) => {
@@ -33,6 +22,18 @@ export default class LandingHeaderController extends WebcController {
       })
     }
 
+    this.onTagClick("open-menu", () => {
+      this.querySelector(".initial-state").classList.toggle("ion-hide");
+      this.querySelector(".open-state").classList.toggle("ion-hide");
+      document.getElementsByClassName("overlay")[0].style.visibility = "visible";
+      document.getElementsByClassName("overlay")[0].style.opacity = 1;
+      this.menuOpened = true;
+    })
+
+    this.onTagClick("close-menu", () => {
+      this.closeMenu();
+    });
+
     this.onTagClick("menu-go-back", () => {
       this.navigateToPageTag("home");
     })
@@ -45,6 +46,4 @@ export default class LandingHeaderController extends WebcController {
     document.getElementsByClassName("overlay")[0].style.opacity = 0;
     this.menuOpened = false;
   }
-
-
 }

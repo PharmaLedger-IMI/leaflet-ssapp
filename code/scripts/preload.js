@@ -27,7 +27,13 @@ function defineWebCardinalComponents() {
     define('accordion-item', 'accordion-item/accordion-item');
 }
 
+function overwriteIframeLog() {
+    console.warn = (...args) => console.log(...args);
+}
+
 addHook('beforeAppLoads', async () => {
+    overwriteIframeLog();
+
     try {
         await defineNativeComponents();
     } catch (error) {
