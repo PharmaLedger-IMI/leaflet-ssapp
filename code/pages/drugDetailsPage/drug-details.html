@@ -6,7 +6,7 @@
 
         <webc-container controller="DrugDetailsController" slot="content-slot">
             <div data-if="@displayStatus">
-                <div class="status-container" slot="true" status-type="@statusType" data-tag="learn-more">
+                <div class="status-container" data-tag="learn-more" slot="true" status-type="@statusType">
                     <div class="icon-container"></div>
                     <span>{{@statusMessage}}</span>
                     <span class="learn-more-link">{{$learn_more}}</span>
@@ -24,7 +24,7 @@
                         </div>
                         <div class="product-description">{{ @product.description }}</div>
 
-                        <div class="auth-feature-container" data-if="@product.antiCounterfeitingEnabled">
+                        <div class="auth-feature-container" data-if="@showACDCAuthLink">
                             <h6 data-tag="auth-feature">{{$verify_package}}</h6>
                             <div class="auth-feature product-description" data-tag="auth-feature">
                                 <img src="./assets/icons/verify-package.svg"/>

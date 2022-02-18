@@ -82,7 +82,7 @@ export default class BatchStatusService {
 
   getProductStatus(batchData, gs1Fields) {
     this.checkSNCheck(batchData, gs1Fields.serialNumber);
-    this.expiryForDisplay = utils.getDateForDisplay(utils.convertFromGS1DateToYYYY_HM(batchData.expiry));
+    this.expiryForDisplay = utils.getDateForDisplay(gs1Fields.expiry);
 
     if (gs1Fields.expiry.slice(0, 2) === "00") {
       this.normalizedExpiryDate = utils.convertToLastMonthDay(gs1Fields.expiry);

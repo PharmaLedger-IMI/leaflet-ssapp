@@ -49,6 +49,7 @@ export default class DrugDetailsController extends WebcController {
       this.model.snCheck = history.location.state.productData.snCheck;
       this.model.showVideoLink = false;
       this.acdc = history.location.state.acdc;
+      this.model.showACDCAuthLink = !!this.model.batch.acdcAuthFeatureSSI;
     } else {
       console.log("Undefined product data");
       this.updateUIInGTINOnlyCase()
@@ -76,6 +77,7 @@ export default class DrugDetailsController extends WebcController {
       const {status, error} = this.acdc.authResponse;
       this.model.packageVerification = status ? this.translate("verified") : `${this.translate("invalid")}${error.message ? `\n${error.message}` : ''}`;
     }
+
     this.smpcDisplayService = new XMLDisplayService(this.DSUStorage, element, this.gtinSSI, "smpc", "smpc.xml", this.model);
     this.leafletDisplayService = new XMLDisplayService(this.DSUStorage, element, this.gtinSSI, "leaflet", "leaflet.xml", this.model);
 
