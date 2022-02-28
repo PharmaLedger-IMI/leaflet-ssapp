@@ -6,7 +6,7 @@ import constants from "../../constants.js";
 import DSUDataRetrievalService from "../services/DSUDataRetrievalService/DSUDataRetrievalService.js";
 import BatchStatusService from "../services/BatchStatusService.js";
 
-import Scanner from "../../lib/zxing-wrapper/scanner.js";
+import ScanService from "../services/ScanService.js";
 
 const gtinResolver = require("gtin-resolver");
 
@@ -28,10 +28,12 @@ export default class ScanController extends WebcController {
 
 		element.addEventListener("content-updated", ()=>{
 			let placeHolder = this.querySelector("#scanner-placeholder");
-			if(!this.scanner){
-				this.scanner = new Scanner(placeHolder);
+			if(!this.scanService){
+				this.scanService = new ScanService(placeHolder);
+				this.scanService.setup();
+			}else{
+				console.log("Multiple calls to content-updated. Maybe you should check this ... ");
 			}
-			this.scanner.setup();
 			this.startScanning();
 		})
 
@@ -171,13 +173,12 @@ export default class ScanController extends WebcController {
 	}
 
 	async startScanning() {
-		this.scanner.changeWorker("lib/zxing-wrapper/worker/zxing-0.18.6-worker.js");
 		let result;
 		while (!result) {
-			result = await this.scanner.scan();
+			result = await this.scanService.scan();
 		}
 		console.log("Scan result:", result);
-		this.scanner.shutDown();
+		this.scanService.stop();
 	}
 
 	onDisconnectedCallback() {
