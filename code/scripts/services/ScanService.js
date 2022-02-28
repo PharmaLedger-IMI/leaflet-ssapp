@@ -1,37 +1,10 @@
-/*
-* const photoStream = nativeHandler.importNativeStreamAPI("photoCaptureStream");
-      const settings = JSON.stringify({"captureType": "rgba"});
-      const canvas = document.getElementById('canvas');
-      const ctx = canvas.getContext('2d');
-
-      photoStream.openStream([settings]).then(() => {
-        const interval = setInterval(async () => {
-          photoStream.retrieveNextValue().then( async (resultArray) => {
-            const frameBlob = resultArray[0];
-            const width = resultArray[1];
-            const height = resultArray[2];
-
-            const arrayBuffer = await frameBlob.arrayBuffer();
-            const imageBuffer = new Uint8ClampedArray(arrayBuffer);
-            let imageData = new ImageData(imageBuffer, width, height);
-            canvas.width = height;
-            canvas.height = width;
-            ctx.putImageData(imageData, 0, 0);
-            console.log(frameBlob, width, height);
-          }, (error) => {
-            console.log("next value error: " + error);
-          });
-        }, 100);
-* */
-
-
 import Scanner from "../../lib/zxing-wrapper/scanner.js";
 
-function nativeLayerAvailable(){
+function nativeLayerAvailable() {
 	let result = false;
-	try{
+	try {
 		result = window.opendsu_native_apis && typeof window.opendsu_native_apis === "object" && typeof window.opendsu_native_apis.createNativeBridge === "function";
-	}catch(err){
+	} catch (err) {
 		//we ignore any errors...
 	}
 	return result;
@@ -47,26 +20,68 @@ export default class ScanService {
 	}
 
 	setup() {
-		if(!this.usingNativeLayer){
+		if (!this.usingNativeLayer) {
 			//running browser only apis...
 			this.scanner.setup();
-		}else{
-			console.log("!!! Native Layer not implemented yet !!!");
+		} else {
+			this.scanner.setup(true);
+			//console.log("!!! Native Layer not implemented yet !!!");
 		}
 	}
 
 	async scan() {
-		if(!this.usingNativeLayer){
+		if (!this.usingNativeLayer) {
 			return await this.scanner.scan();
-		}else{
-			console.log("!!! Native Layer not implemented yet !!!");
+		} else {
+			return new Promise((resolve, reject) => {
+				function scanOneFrame() {
+					return new Promise((resolve, reject) => {
+						this.photoStream.retrieveNextValue().then(async (resultArray) => {
+							try {
+								const frameBlob = resultArray[0];
+								const width = resultArray[1];
+								const height = resultArray[2];
+
+								const arrayBuffer = await frameBlob.arrayBuffer();
+								const imageBuffer = new Uint8ClampedArray(arrayBuffer);
+								let imageData = new ImageData(imageBuffer, width, height);
+
+								let scanResult = await this.scanner.scanImageData(imageData);
+								resolve(scanResult);
+							} catch (err) {
+								reject(err);
+							}
+						}, (error) => {
+							reject(error);
+						});
+					});
+				}
+
+				if (!this.photoStream) {
+					opendsu_native_apis.createNativeBridge(async (err, handler) => {
+						if (err) {
+							reject(err);
+						}
+						let result;
+						try {
+							this.photoStream = handler.importNativeStreamAPI("photoCaptureStream");
+							const settings = JSON.stringify({"captureType": "rgba"});
+							await this.photoStream.openStream([settings]);
+							result = await scanOneFrame();
+						} catch (err) {
+							reject(err)
+						}
+						resolve(result);
+					});
+				}
+			});
 		}
 	}
 
 	stop() {
-		if(!this.usingNativeLayer){
+		if (!this.usingNativeLayer) {
 			this.scanner.shutDown();
-		}else{
+		} else {
 			console.log("!!! Native Layer not implemented yet !!!");
 		}
 	}
