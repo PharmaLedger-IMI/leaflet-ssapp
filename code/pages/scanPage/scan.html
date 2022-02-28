@@ -3,16 +3,16 @@
     <page-template roundShape="false" shadow>
         <scan-header slot="header-slot"></scan-header>
         <webc-container controller="ScanController" slot="content-slot">
-            <div id="scanner-placeholder" style="height: 100%">
 
-            </div>
             <div data-if="@useScandit">
                 <div id="scandit-barcode-picker-wrapper" slot="true">
                     <div id="scandit-barcode-picker"></div>
                 </div>
-                <div data-if="@hasCode" slot="false">
+                <div data-if="@hasCode" slot="false" id="watcherIf" data-if-options="events">
                     <div class="barcode-scanner-container" slot="false">
+                        <div id="scanner-placeholder" style="position: absolute; top: 0; bottom:0; width: 100%;">
 
+                        </div>
                         <!--<psk-barcode-scanner data="@data" slot="false" snap-video>
                             <div slot="init">
                                 <img class="scan-status" src="./assets/icons/scan-in-progress.svg"/>
