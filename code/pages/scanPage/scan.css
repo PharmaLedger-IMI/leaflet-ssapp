@@ -1,5 +1,6 @@
 .barcode-scanner-container {
     height: calc(100vh - 97px);
+    background: var(--primary-backgtound-color);
 }
 
 .scan-shape {
