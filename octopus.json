@@ -1,6 +1,11 @@
 {
   "workDir": ".",
-  "dependencies": [],
+  "dependencies": [
+    {
+      "name": "../code/lib/zxing-wrapper",
+      "src": "http://github.com/webcardinal/zxing-wrapper.git"
+    }
+  ],
   "prebuild": [
     {
       "name": "PSK bundles",

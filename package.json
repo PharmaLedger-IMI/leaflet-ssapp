@@ -4,6 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
+    "postinstall": "node ./node_modules/octopus/scripts/run dependencies devmode",
     "prebuild": "node ./node_modules/octopus/scripts/run prebuild devmode",
     "build": "node ./node_modules/octopus/scripts/buildDossier.js",
     "postbuild": "node ./node_modules/octopus/scripts/run postbuild devmode",

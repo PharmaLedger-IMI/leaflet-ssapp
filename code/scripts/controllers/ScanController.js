@@ -6,6 +6,8 @@ import constants from "../../constants.js";
 import DSUDataRetrievalService from "../services/DSUDataRetrievalService/DSUDataRetrievalService.js";
 import BatchStatusService from "../services/BatchStatusService.js";
 
+import Scanner from "../../lib/zxing-wrapper/scanner.js";
+
 const gtinResolver = require("gtin-resolver");
 
 const opendsu = require("opendsu");
@@ -22,7 +24,13 @@ const timeout = (time) => {
 
 export default class ScanController extends WebcController {
   constructor(element, history) {
+    let scanner = new Scanner(element.querySelector("#scanner-placeholder"));
+    scanner.setup();
+
     super(element, history);
+
+    this.scanner = scanner;
+    this.startScanning();
 
     this.model = {
       data: '',
@@ -157,6 +165,16 @@ export default class ScanController extends WebcController {
         });
       });
     });
+  }
+
+  async startScanning() {
+    this.scanner.changeWorker("lib/zxing-wrapper/worker/zxing-0.18.6-worker.js");
+    let result;
+    while(!result){
+      result = await this.scanner.scan();
+    }
+    console.log("Scan result:", result);
+    this.scanner.shutDown();
   }
 
   onDisconnectedCallback() {
