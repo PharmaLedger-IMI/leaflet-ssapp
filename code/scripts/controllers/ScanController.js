@@ -1,4 +1,3 @@
-const {WebcController} = WebCardinal.controllers;
 import SettingsService from "../services/SettingsService.js";
 import interpretGS1scan from "../gs1ScanInterpreter/interpretGS1scan/interpretGS1scan.js";
 import utils from "../../utils.js";
@@ -6,7 +5,9 @@ import constants from "../../constants.js";
 import DSUDataRetrievalService from "../services/DSUDataRetrievalService/DSUDataRetrievalService.js";
 import BatchStatusService from "../services/BatchStatusService.js";
 
-import ScanService from "../services/ScanService.js";
+import ScanService, { SCANNER_STATUS } from "../services/ScanService.js";
+
+const { WebcController } = WebCardinal.controllers;
 
 const gtinResolver = require("gtin-resolver");
 
@@ -26,29 +27,33 @@ export default class ScanController extends WebcController {
 	constructor(...props) {
 		super(...props);
 
-		this.on("content-updated", () => {
+		this.model = {
+			data: '',
+			scannerStatus: undefined,
+			hasCode: false,
+			hasError: false,
+			nativeSupport: false,
+			useScandit: false
+		};
+
+		this.on("content-updated", async () => {
 			let placeHolderElement = this.querySelector("#scanner-placeholder");
 
 			if (!this.scanService) {
 				this.scanService = new ScanService(placeHolderElement);
-				this.scanService.setup();
+
+				this.scanService.onStatusChanged = (status) => this.onScannerStatusChanged(status);
+
+				await this.scanService.setup();
 			} else {
 				console.log("Multiple calls to content-updated. Maybe you should check this...");
 			}
 
 			if (this.startScanningAsSoonAsPossible) {
 				delete this.startScanningAsSoonAsPossible;
-				this.startScanning();
+				await this.startScanning();
 			}
 		});
-
-		this.model = {
-			data: '',
-			hasCode: false,
-			hasError: false,
-			nativeSupport: false,
-			useScandit: false
-		};
 
 		const dbApi = opendsu.loadApi("db");
 		dbApi.getMainEnclaveDB((err, enclaveDB) => {
@@ -187,7 +192,30 @@ export default class ScanController extends WebcController {
 		}
 		console.log("Scan result:", result);
 		this.scanService.stop();
+		this.onScannerStatusChanged(SCANNER_STATUS.DONE);
 		this.process(this.parseGS1Code(result.text));
+	}
+
+	onScannerStatusChanged(status) {
+		switch (status) {
+			case SCANNER_STATUS.ACTIVE:
+				this.model.scannerStatus = 'active';
+				return;
+			case SCANNER_STATUS.SETTING:
+				this.model.scannerStatus = 'feedback';
+				return;
+			case SCANNER_STATUS.NO_CAMERAS:
+				this.model.scannerStatus = 'no-cameras';
+				return;
+			case SCANNER_STATUS.PERMISSION_DENIED:
+				this.model.scannerStatus = 'permission-denied';
+				return;
+			case SCANNER_STATUS.DONE:
+				this.model.scannerStatus = 'done';
+				return;
+			default:
+				this.model.scannerStatus = undefined;
+		}
 	}
 
 	onDisconnectedCallback() {

@@ -1,5 +1,16 @@
 import Scanner from "../../lib/zxing-wrapper/scanner.js";
 
+const TAG = '[ScanService]'
+
+const SCANNER_STATUS = {
+	INITIALIZING: 'Initializing scanner...',
+	SETTING: 'Pending the access rights for the video cameras + DOM manipulations...',
+	ACTIVE: 'Video streaming is active, scanning is now available...',
+	DONE: 'Decoding is done!',
+	NO_CAMERAS: 'There are no cameras available!',
+	PERMISSION_DENIED: 'Access to the camera was denied!'
+}
+
 function createOverlay([x, y, w, h], canvasDimensions) {
 	const canvas = document.createElement("canvas");
 	canvas.id = "overlay";
@@ -89,98 +100,136 @@ function nativeLayerAvailable() {
 	return result;
 }
 
-export default class ScanService {
+class ScanService {
 	constructor(domElement) {
+		this._status = SCANNER_STATUS.INITIALIZING;
+		this._videoSources = [];
+
 		this.scanner = new Scanner(domElement);
 
-		//todo: remove this changeWorker call when possible
+		// TODO: remove this changeWorker call when possible
 		this.scanner.changeWorker("lib/zxing-wrapper/worker/zxing-0.18.6-worker.js");
 
 		this.scanner.drawOverlay = (centralPoints, canvasDimensions) => {
 			const overlay = createOverlay(centralPoints, canvasDimensions);
-			domElement.append(overlay)
+			domElement.append(overlay);
 		}
 
 		this.usingNativeLayer = nativeLayerAvailable();
+
+		Object.defineProperty(this, 'status', {
+			get: () => this._status,
+			set: (status) => {
+				this._status = status;
+				this.onStatusChanged(this._status);
+			}
+		});
 	}
 
-	setup() {
-		if (!this.usingNativeLayer) {
-			//running browser only apis...
-			this.scanner.setup();
-		} else {
-			this.scanner.setup(true);
-			//console.log("!!! Native Layer not implemented yet !!!");
+	async setup() {
+		this.status = SCANNER_STATUS.SETTING;
+
+		try {
+			if (!this.usingNativeLayer) {
+				this._videoSources = await this.scanner.listVideoInputDevices();
+			}
+
+			if (this._videoSources.length === 0) {
+				this.status = SCANNER_STATUS.NO_CAMERAS;
+				return this._videoSources;
+			}
+		} catch (error) {
+			console.log(TAG, 'Error while getting video input devices', error);
+		}
+
+		try {
+			if (!this.usingNativeLayer) {
+				// running Browser only APIs...
+				await this.scanner.setup();
+			} else {
+				await this.scanner.setup(true);
+			}
+
+			this.status = SCANNER_STATUS.ACTIVE;
+			return this._videoSources;
+		} catch (error) {
+			if (error.message === 'Permission denied') {
+				this.status = SCANNER_STATUS.PERMISSION_DENIED;
+			}
+
+			console.log(TAG, 'Error while setting scanner', error);
+			return this._videoSources;
 		}
 	}
 
 	async scan() {
 		if (!this.usingNativeLayer) {
 			return await this.scanner.scan();
-		} else {
-			return new Promise(async (resolve, reject) => {
-				let scanOneFrame = () => {
-					return new Promise((resolve, reject) => {
-						let currentTime = Date.now();
-						if(this.startDecodingTime && (currentTime-this.startDecodingTime)<100){
-							let delay = 100-this.startDecodingTime;
-							setTimeout(executePromise, delay);
-							console.log(`Scanning was delayed with ~${delay}ms.`);
-							return;
-						}
+		}
 
-						let executePromise = () =>{
-							this.photoStream.retrieveNextValue().then(async (resultArray) => {
-								try {
-									this.startDecodingTime = Date.now();
-									const frameBlob = resultArray[0];
-									const width = resultArray[1];
-									const height = resultArray[2];
+		return new Promise(async (resolve, reject) => {
+			let scanOneFrame = () => {
+				return new Promise((resolve, reject) => {
+					let currentTime = Date.now();
+					if(this.startDecodingTime && (currentTime-this.startDecodingTime)<100){
+						let delay = 100-this.startDecodingTime;
+						setTimeout(executePromise, delay);
+						console.log(`Scanning was delayed with ~${delay}ms.`);
+						return;
+					}
 
-									const arrayBuffer = await frameBlob.arrayBuffer();
-									const imageBuffer = new Uint8ClampedArray(arrayBuffer);
-									let imageData = new ImageData(imageBuffer, width, height);
+					let executePromise = () =>{
+						this.photoStream.retrieveNextValue().then(async (resultArray) => {
+							try {
+								this.startDecodingTime = Date.now();
+								const frameBlob = resultArray[0];
+								const width = resultArray[1];
+								const height = resultArray[2];
 
-									let scanResult = await this.scanner.scanImageData(imageData);
-									resolve(scanResult);
-								} catch (err) {
-									reject(err);
-								}
-							}, (error) => {
-								reject(error);
-							});
-						}
+								const arrayBuffer = await frameBlob.arrayBuffer();
+								const imageBuffer = new Uint8ClampedArray(arrayBuffer);
+								let imageData = new ImageData(imageBuffer, width, height);
 
-						executePromise();
-					});
-				}
-				let result;
-				if (!this.photoStream) {
-					opendsu_native_apis.createNativeBridge(async (err, handler) => {
-						if (err) {
-							reject(err);
-						}
+								let scanResult = await this.scanner.scanImageData(imageData);
+								resolve(scanResult);
+							} catch (err) {
+								reject(err);
+							}
+						}, (error) => {
+							reject(error);
+						});
+					}
 
-						try {
-							this.photoStream = handler.importNativeStreamAPI("photoCaptureStream");
-							const settings = JSON.stringify({"captureType": "rgba"});
-							await this.photoStream.openStream([settings]);
-							result = await scanOneFrame();
-						} catch (err) {
-							reject(err)
-						}
-						resolve(result);
-					});
-				}else{
-					try{
-						result = await scanOneFrame();
-					}catch(err){
+					executePromise();
+				});
+			}
+
+			let result;
+			if (!this.photoStream) {
+				opendsu_native_apis.createNativeBridge(async (err, handler) => {
+					if (err) {
 						reject(err);
 					}
+
+					try {
+						this.photoStream = handler.importNativeStreamAPI("photoCaptureStream");
+						const settings = JSON.stringify({"captureType": "rgba"});
+						await this.photoStream.openStream([settings]);
+						result = await scanOneFrame();
+					} catch (err) {
+						reject(err)
+					}
 					resolve(result);
+				});
+			}else{
+				try{
+					result = await scanOneFrame();
+				}catch(err){
+					reject(err);
 				}
-			});
-		}
+				resolve(result);
+			}
+		});
 	}
 
 	stop() {
@@ -190,4 +239,15 @@ export default class ScanService {
 			this.photoStream.closeStream();
 		}
 	}
+
+	async changeCamera(deviceID) {
+		// TODO: implement this!
+	}
+
+	onStatusChanged(status) {
+		console.log(TAG, `Status has changed to "${status}"`);
+	}
 }
+
+export default ScanService
+export { SCANNER_STATUS }

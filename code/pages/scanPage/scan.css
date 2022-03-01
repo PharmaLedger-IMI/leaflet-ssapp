@@ -3,47 +3,21 @@
     background: var(--primary-backgtound-color);
 }
 
-.scan-shape {
+#scanner-placeholder webc-switch > * {
     position: absolute;
-    background-image: url(../../assets/icons/barcode-scanner.svg);
-    background-size: contain;
-    background-repeat: no-repeat;
-    height: 372px;
-    top: calc(50% - 186px);
-    left: 49px;
-    right: 49px;
-    background-position: center;
+    left: 0.5em; right: 0.5em;
+    bottom: 1em;
+    text-align: center;
+    color: var(--secondary-background-color);
 }
 
-psk-barcode-scanner .scan-status {
-    position: fixed;
-    bottom: 26px;
-    left: calc(50% - 31px);
-}
-
-psk-barcode-scanner .scan-status #first {
-    animation: load 1s infinite;
-}
-
-psk-barcode-scanner .scan-status #second {
-    animation: load 1s infinite;
-}
-
-.camera-error {
-    position: fixed;
-    top: 50%;
+#scanner-placeholder webc-switch > *.message {
+    top: 50%; bottom: unset;
+    padding-bottom: 1em;
     padding-left: var(--l-space);
     padding-right: var(--l-space);
     display: flex;
     flex-direction: column;
-    text-align: center;
     max-width: var(--app-max-width);
-}
-
-#scandit-barcode-picker {
-    position: absolute;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    height: 100%;
+    transform: translateY(-50%);
 }
