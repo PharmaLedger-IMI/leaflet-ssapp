@@ -23,18 +23,20 @@ const timeout = (time) => {
 }
 
 export default class ScanController extends WebcController {
-	constructor(element, history) {
-		super(element, history);
+	constructor(...props) {
+		super(...props);
 
-		element.addEventListener("content-updated", ()=>{
-			let placeHolder = this.querySelector("#scanner-placeholder");
-			if(!this.scanService){
-				this.scanService = new ScanService(placeHolder);
+		this.on("content-updated", () => {
+			let placeHolderElement = this.querySelector("#scanner-placeholder");
+
+			if (!this.scanService) {
+				this.scanService = new ScanService(placeHolderElement);
 				this.scanService.setup();
-			}else{
-				console.log("Multiple calls to content-updated. Maybe you should check this ... ");
+			} else {
+				console.log("Multiple calls to content-updated. Maybe you should check this...");
 			}
-			if(this.startScanningAsSoonAsPossible){
+
+			if (this.startScanningAsSoonAsPossible) {
 				delete this.startScanningAsSoonAsPossible;
 				this.startScanning();
 			}
@@ -191,6 +193,10 @@ export default class ScanController extends WebcController {
 	onDisconnectedCallback() {
 		this.disposeOfBarcodePicker();
 		document.removeEventListener('leaflet-ssapp:switch-camera', this.switchCamera);
+
+		if (this.scanService) {
+			this.scanService.stop();
+		}
 	}
 
 	switchCamera = async () => {
