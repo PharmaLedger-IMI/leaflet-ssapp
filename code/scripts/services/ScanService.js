@@ -100,10 +100,20 @@ function nativeLayerAvailable() {
     return result;
 }
 
+function switchFacingMode(facingMode) {
+    switch (facingMode) {
+        case "environment":
+            return "user";
+        default:
+            return "environment";
+    }
+}
+
 class ScanService {
     constructor(domElement) {
         this._status = SCANNER_STATUS.INITIALIZING;
         this._videoSources = [];
+        this._facingMode = null;
 
         this.scanner = new Scanner(domElement);
 
@@ -111,8 +121,7 @@ class ScanService {
         this.scanner.changeWorker("lib/zxing-wrapper/worker/zxing-0.18.6-worker.js");
 
         this.scanner.drawOverlay = (centralPoints, canvasDimensions) => {
-            const overlay = createOverlay(centralPoints, canvasDimensions);
-            domElement.append(overlay);
+            return createOverlay(centralPoints, canvasDimensions);
         }
 
         this.usingNativeLayer = nativeLayerAvailable();
@@ -128,6 +137,7 @@ class ScanService {
 
     async setup() {
         this.status = SCANNER_STATUS.SETTING;
+        this._facingMode = switchFacingMode(this._facingMode)
 
         try {
             if (!this.usingNativeLayer) {
@@ -143,13 +153,10 @@ class ScanService {
         }
 
         try {
-            if (!this.usingNativeLayer) {
-                // running Browser only APIs...
-                await this.scanner.setup();
-            } else {
-                await this.scanner.setup(true);
-            }
-
+            await this.scanner.setup({
+                facingMode: this._facingMode,
+                useBasicSetup: !!this.usingNativeLayer
+            });
             this.status = SCANNER_STATUS.ACTIVE;
             return this._videoSources;
         } catch (error) {
@@ -229,10 +236,6 @@ class ScanService {
         } else {
             this.photoStream.close();
         }
-    }
-
-    async changeCamera(deviceID) {
-        // TODO: implement this!
     }
 
     onStatusChanged(status) {

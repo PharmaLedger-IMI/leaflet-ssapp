@@ -239,9 +239,8 @@ export default class ScanController extends WebcController {
     }
 
     switchCamera = async () => {
-        const barcodeScanner = this.querySelector('psk-barcode-scanner');
-        if (barcodeScanner) {
-            await barcodeScanner.switchCamera();
+        if (this.scanService) {
+            await this.scanService.setup();
             return;
         }
 
