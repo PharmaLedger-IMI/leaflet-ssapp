@@ -145,11 +145,11 @@ class ScanService {
             });
             this.status = SCANNER_STATUS.ACTIVE;
         } catch (error) {
-            if (error.message === 'Permission denied') {
+            if (error.name === 'NotAllowedError') {
                 this.status = SCANNER_STATUS.PERMISSION_DENIED;
+                return;
             }
-
-            console.log(TAG, 'Error while setting scanner', error);
+            throw error;
         }
     }
 

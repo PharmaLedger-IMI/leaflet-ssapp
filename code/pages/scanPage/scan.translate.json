@@ -1,7 +1,7 @@
 {
   "status": {
     "feedback": [
-      "Booting Scanner!",
+      "Scanner initializing",
       "Waiting for user approval..."
     ],
     "permission-denied": [

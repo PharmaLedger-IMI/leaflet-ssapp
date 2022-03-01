@@ -1,16 +1,16 @@
 {
   "status": {
     "feedback": [
-      "Pornire Scanner!",
+      "Etapa de initializare",
       "Așteptăm accesul la camera video..."
     ],
     "permission-denied": [
-      "Accesul respins!",
-      "Pentru a începe scanarea verifică setările de acces la cameră."
+      "Acces nepermis!",
+      "Pentru a începe scanarea verifică drepturile de accesare a camerelor."
     ],
     "no-cameras": [
       "Nicio cameră disponibilă!",
-      "Se pare că dispozitivul dvs. nu are camere disponibile."
+      "Se pare că dispozitivul dvs. nu este dotat cu camera."
     ]
   },
   "cancel": "Anulează",
