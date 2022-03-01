@@ -10,7 +10,7 @@
     ],
     "no-cameras": [
       "Camera not found!",
-      "It seems that your device does not have any camera"
+      "It seems that your device does not have any camera."
     ]
   },
   "cancel": "Cancel",

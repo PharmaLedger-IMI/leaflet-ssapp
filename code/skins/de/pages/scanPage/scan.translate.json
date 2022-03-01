@@ -1,8 +1,18 @@
 {
-    "alert1": "Kamerazugriff zulassen",
-    "alert2": "Der Zugriff auf Ihre Kamera wurde verweigert. Um mit dem Scannen zu beginnen, überprüfen Sie bitte Ihre Einstellungen und erlauben Sie den Zugriff auf die Kamera.",
-    "alert3": "Kamera nicht gefunden",
-    "alert4": "Bitte überprüfen Sie, ob Sie eine Kamera auf Ihrem Gerät haben oder ob die Kameraeinstellungen den Zugriff erlauben.",
+    "status": {
+        "feedback": [
+            "Scanner starten!",
+            "Warten auf Benutzergenehmigung..."
+        ],
+        "permission-denied": [
+            "Zugriff verweigert!",
+            "Um mit dem Scannen zu beginnen, überprüfen Sie bitte Ihre Einstellungen und erlauben Sie den Zugriff auf die Kamera."
+        ],
+        "no-cameras": [
+            "Kamera nicht gefunden!",
+            "\nEs scheint, dass Ihr Gerät keine Kamera hat."
+        ]
+    },
     "cancel": "Abbrechen",
     "guide": "Anleitung",
     "err_no_code_scanned": "2dMatrix-Code-Scan-Vorgang beendet. Kein Code gescannt oder Prozess abgebrochen.",
