@@ -64,7 +64,7 @@ export default class ScanController extends WebcController {
 				this.process(this.parseGS1Code(this.model.data));
 			});
 
-			this.getNativeApiHandler((err, handler) => {
+			/*this.getNativeApiHandler((err, handler) => {
 				if (err) {
 					console.log("Not able to activate native API support. Continue using bar code scanner from web.", err);
 					return;
@@ -168,7 +168,7 @@ export default class ScanController extends WebcController {
 						this.initScanditLib(scanditLicense)
 					}
 				});
-			});
+			});*/
 		});
 	}
 

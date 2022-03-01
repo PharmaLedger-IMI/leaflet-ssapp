@@ -115,13 +115,14 @@ export default class ScanService {
 	}
 
 	async scan() {
+		let self = this;
 		if (!this.usingNativeLayer) {
 			return await this.scanner.scan();
 		} else {
-			return new Promise((resolve, reject) => {
-				function scanOneFrame() {
+			return new Promise(async (resolve, reject) => {
+				let scanOneFrame = () => {
 					return new Promise((resolve, reject) => {
-						this.photoStream.retrieveNextValue().then(async (resultArray) => {
+						self.photoStream.retrieveNextValue().then(async (resultArray) => {
 							try {
 								const frameBlob = resultArray[0];
 								const width = resultArray[1];
@@ -141,23 +142,30 @@ export default class ScanService {
 						});
 					});
 				}
-
-				if (!this.photoStream) {
+				let result;
+				if (!self.photoStream) {
 					opendsu_native_apis.createNativeBridge(async (err, handler) => {
 						if (err) {
 							reject(err);
 						}
-						let result;
+
 						try {
-							this.photoStream = handler.importNativeStreamAPI("photoCaptureStream");
+							self.photoStream = handler.importNativeStreamAPI("photoCaptureStream");
 							const settings = JSON.stringify({"captureType": "rgba"});
-							await this.photoStream.openStream([settings]);
+							await self.photoStream.openStream([settings]);
 							result = await scanOneFrame();
 						} catch (err) {
 							reject(err)
 						}
 						resolve(result);
 					});
+				}else{
+					try{
+						result = await scanOneFrame();
+					}catch(err){
+						reject(err);
+					}
+					resolve(result);
 				}
 			});
 		}
@@ -167,7 +175,7 @@ export default class ScanService {
 		if (!this.usingNativeLayer) {
 			this.scanner.shutDown();
 		} else {
-			console.log("!!! Native Layer not implemented yet !!!");
+			this.photoStream.closeStream();
 		}
 	}
 }
