@@ -34,8 +34,11 @@ export default class ScanController extends WebcController {
 			}else{
 				console.log("Multiple calls to content-updated. Maybe you should check this ... ");
 			}
-			this.startScanning();
-		})
+			if(this.startScanningAsSoonAsPossible){
+				delete this.startScanningAsSoonAsPossible;
+				this.startScanning();
+			}
+		});
 
 		this.model = {
 			data: '',
@@ -64,18 +67,14 @@ export default class ScanController extends WebcController {
 				this.process(this.parseGS1Code(this.model.data));
 			});
 
-			/*this.getNativeApiHandler((err, handler) => {
+			this.getNativeApiHandler((err, handler) => {
 				if (err) {
 					console.log("Not able to activate native API support. Continue using bar code scanner from web.", err);
+					this.startScanning();
 					return;
 				}
 
 				if (handler) {
-
-					if (this.isDeveloperOptionActive(constants.IOS_USE_FRAMES)) {
-						this.initPskBarcodeWithFrames(handler)
-						return;
-					}
 
 					this.model.nativeSupport = true;
 
@@ -129,7 +128,8 @@ export default class ScanController extends WebcController {
 								this.redirectToError(this.translate("err_unknown"));
 							});
 						} else {
-							const scan = handler.importNativeAPI("dataMatrixScan");
+							this.startScanning();
+							/*const scan = handler.importNativeAPI("dataMatrixScan");
 							scan().then((resultArray) => {
 								if (resultArray && resultArray.length > 0) {
 									return this.process(this.parseGS1Code(resultArray[0]));
@@ -156,10 +156,12 @@ export default class ScanController extends WebcController {
 								}
 							}).catch((err) => {
 								this.redirectToError(this.translate("err_unknown"));
-							});
+							});*/
 						}
 					});
 					return;
+				}else{
+					this.startScanning();
 				}
 
 				this.settingsService.readSetting("scanditLicense", (err, scanditLicense) => {
@@ -168,17 +170,22 @@ export default class ScanController extends WebcController {
 						this.initScanditLib(scanditLicense)
 					}
 				});
-			});*/
+			});
 		});
 	}
 
 	async startScanning() {
+		if(!this.scanService){
+			this.startScanningAsSoonAsPossible = true;
+			return;
+		}
 		let result;
 		while (!result) {
 			result = await this.scanService.scan();
 		}
 		console.log("Scan result:", result);
 		this.scanService.stop();
+		this.process(this.parseGS1Code(result.text));
 	}
 
 	onDisconnectedCallback() {
