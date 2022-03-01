@@ -112,7 +112,6 @@ function switchFacingMode(facingMode) {
 class ScanService {
     constructor(domElement) {
         this._status = SCANNER_STATUS.INITIALIZING;
-        this._videoSources = [];
         this._facingMode = null;
 
         this.scanner = new Scanner(domElement);
@@ -137,20 +136,7 @@ class ScanService {
 
     async setup() {
         this.status = SCANNER_STATUS.SETTING;
-        this._facingMode = switchFacingMode(this._facingMode)
-
-        try {
-            if (!this.usingNativeLayer) {
-                this._videoSources = await this.scanner.listVideoInputDevices();
-            }
-
-            if (this._videoSources.length === 0) {
-                this.status = SCANNER_STATUS.NO_CAMERAS;
-                return this._videoSources;
-            }
-        } catch (error) {
-            console.log(TAG, 'Error while getting video input devices', error);
-        }
+        this._facingMode = switchFacingMode(this._facingMode);
 
         try {
             await this.scanner.setup({
@@ -158,14 +144,12 @@ class ScanService {
                 useBasicSetup: !!this.usingNativeLayer
             });
             this.status = SCANNER_STATUS.ACTIVE;
-            return this._videoSources;
         } catch (error) {
             if (error.message === 'Permission denied') {
                 this.status = SCANNER_STATUS.PERMISSION_DENIED;
             }
 
             console.log(TAG, 'Error while setting scanner', error);
-            return this._videoSources;
         }
     }
 
