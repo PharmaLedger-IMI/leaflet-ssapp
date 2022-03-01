@@ -1,8 +1,18 @@
 {
-  "alert1": "Permite accesul la camera",
-  "alert2": "Accesul la camera dvs. a fost refuzat. Pentru a putea scana, verificați setările și permiteți accesul la cameră.",
-  "alert3": "Camera nu a fost găsită",
-  "alert4": "Vă rugăm să verificați dacă aveți o cameră pe dispozitiv sau dacă setările camerei permit accesul la aceasta.",
+  "status": {
+    "feedback": [
+      "Pornire Scanner!",
+      "Așteptăm accesul la camera video..."
+    ],
+    "permission-denied": [
+      "Accesul respins!",
+      "Pentru a începe scanarea verifică setările de acces la cameră."
+    ],
+    "no-cameras": [
+      "Nicio cameră disponibilă!",
+      "Se pare că dispozitivul dvs. nu are camere disponibile."
+    ]
+  },
   "cancel": "Anulează",
   "guide": "Ghid",
   "err_no_code_scanned": "Procesul de scanare a codului 2dMatrix s-a încheiat. Niciun cod scanat sau proces anulat.",
