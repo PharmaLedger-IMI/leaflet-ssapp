@@ -7,7 +7,7 @@
       "actions": [
                 {
                     "type": "smartClone",
-                    "target": ".",
+                    "target": "./zxing-wrapper",
                     "collectLog": false,
                     "commit": "bd58e501dbdfb1a7d6659bb0cf72731875090adf"
                 }
