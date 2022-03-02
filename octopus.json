@@ -9,7 +9,7 @@
                     "type": "smartClone",
                     "target": "./zxing-wrapper",
                     "collectLog": false,
-                    "commit": "bd58e501dbdfb1a7d6659bb0cf72731875090adf"
+                    "commit": "7b9b65fa1cc61c950d15e8ba40cf9656242a0741"
                 }
       ]
     }
