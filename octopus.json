@@ -5,12 +5,12 @@
       "name": "../code/lib/zxing-wrapper",
       "src": "http://github.com/webcardinal/zxing-wrapper.git",
       "actions": [
-                {
-                    "type": "smartClone",
-                    "target": "./zxing-wrapper",
-                    "collectLog": false,
-                    "commit": "7b9b65fa1cc61c950d15e8ba40cf9656242a0741"
-                }
+        {
+            "type": "smartClone",
+            "target": "./zxing-wrapper",
+            "collectLog": false,
+            "commit": "cb3ce1958397fcd1021d371fed00f1251d87d0bb"
+        }
       ]
     }
   ],

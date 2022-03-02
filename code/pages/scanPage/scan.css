@@ -7,7 +7,7 @@
     overflow: hidden;
 }
 
-#scanner-placeholder webc-switch > * {
+#scanner-placeholder ~ webc-switch > * {
     position: absolute;
     left: 0.5em; right: 0.5em;
     bottom: 1em;
@@ -16,7 +16,7 @@
     z-index: 99;
 }
 
-#scanner-placeholder webc-switch > *.message {
+#scanner-placeholder ~ webc-switch > *.message {
     top: 50%; bottom: unset;
     padding-bottom: 1em;
     padding-left: var(--l-space);
