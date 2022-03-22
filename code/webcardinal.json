@@ -56,6 +56,12 @@
       "tag": "scan-error",
       "src": "./scanErrorPage/scan-error.html",
       "path": "./scan-error"
+    },
+    {
+      "name": "Native",
+      "path": "./native",
+      "src": "./nativePage/native.html",
+      "tag": "native"
     }
   ],
   "logLevel": "none",
