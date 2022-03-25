@@ -138,7 +138,7 @@ export default class SettingsController extends WebcController {
       });
     })
 
-    this.onTagClick('dev-options:ios-use-frames', this.iosUseFramesHandler);
+    this.onTagClick('navigate-to-native-page', this.navigateToNativeIntegrationPage);
 
     // ACDC integration settings
     this.acdc = require('acdc').ReportingService.getInstance(this.settingsService);
@@ -226,12 +226,7 @@ export default class SettingsController extends WebcController {
     this.model.devOptions.useFrames.checked = value === 'true';
   }
 
-  iosUseFramesHandler = (readOnlyModel) => {
-    if (this.model.devOptions.areDisabled) {
-      return;
-    }
-
-    this.model.devOptions.useFrames.checked = !readOnlyModel.devOptions.useFrames.checked;
-    localStorage.setItem(constants.IOS_USE_FRAMES, `${this.model.devOptions.useFrames.checked}`);
+  navigateToNativeIntegrationPage = () => {
+    this.navigateToPageTag("native")
   }
 }

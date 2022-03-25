@@ -24,5 +24,6 @@
     "save_btn": "Salvează",
     "reset_btn": "Resetează",
     "edit_btn": "Editează",
-    "set_btn": "Aplică"
+    "set_btn": "Aplică",
+    "test_native_integration": "Testează integrarea nativă"
 }

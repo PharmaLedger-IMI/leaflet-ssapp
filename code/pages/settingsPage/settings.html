@@ -96,14 +96,14 @@
 
                 <leaflet-accordion class="dev-options" description="$dev_subtitle" hidden="@devOptions.areDisabled"
                                    label="$dev_title">
-                    <ion-item button class="dev-options" class="ion" data-tag="dev-options:ios-use-frames"
+                    <ion-item button class="dev-options" class="ion"
                               detail="false">
                         <p>
                             <ion-badge color="dark" mode="ios">Experimental</ion-badge>
                             <br>Applicable only for iOS
-                            <br>Use native frames captured by camera instead of user video stream
+                            <br>By clicking the following button you will be redirected to native integration page.
                         </p>
-                        <ion-toggle data-view-model="@devOptions.useFrames" mode="ios" slot="end"></ion-toggle>
+                        <ion-button data-tag="navigate-to-native-page">{{$test_native_integration}}</ion-button>
                     </ion-item>
                 </leaflet-accordion>
             </div>

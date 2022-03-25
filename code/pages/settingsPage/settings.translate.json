@@ -24,5 +24,6 @@
     "save_btn": "Save",
     "reset_btn": "Reset",
     "edit_btn": "Edit",
-    "set_btn": "Set"
+    "set_btn": "Set",
+    "test_native_integration": "Test native integration"
 }

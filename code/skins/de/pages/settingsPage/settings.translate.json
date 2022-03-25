@@ -24,5 +24,6 @@
     "save_btn": "Speichern",
     "reset_btn": "Zurücksetzen",
     "edit_btn": "Bearbeiten",
-    "set_btn": "Setzen"
+    "set_btn": "Setzen",
+    "test_native_integration": "Testen Sie die native Integration"
 }
