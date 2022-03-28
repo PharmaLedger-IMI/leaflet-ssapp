@@ -23,5 +23,6 @@
     "err_unknown": "Code-Scannen und -Verarbeitung mit Fehlern beendet.",
     "err_barcode": "Barcode ist nicht lesbar, bitte wenden Sie sich an die Apotheke/den Arzt, die/der die Arzneimittelpackung ausgestellt hat.",
     "err_combination": "Produktcode-Kombination konnte nicht aufgelöst werden.",
-    "err_to_history": "Paket konnte nicht zur Historie hinzugefügt werden"
+    "err_to_history": "Paket konnte nicht zur Historie hinzugefügt werden",
+    "err_network_not_found": "Einstellungen enthalten keinen Netzwerkwert. Bitte überprüfen Sie die Einstellungen und aktualisieren Sie den Netzwerkwert."
 }

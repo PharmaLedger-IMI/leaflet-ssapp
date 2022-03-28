@@ -1,11 +1,13 @@
 import constants from "../../constants.js";
 import SettingsService from "../services/SettingsService.js";
 import BatchStatusService from "../services/BatchStatusService.js";
-import DSUDataRetrievalService from "../services/DSUDataRetrievalService/DSUDataRetrievalService.js";
 import utils from "../../utils.js";
 
-const { WebcController } = WebCardinal.controllers;
-const { DataSource } = WebCardinal.dataSources;
+const gtinResolver = require("gtin-resolver");
+const LeafletInfoService = gtinResolver.LeafletInfoService;
+
+const {WebcController} = WebCardinal.controllers;
+const {DataSource} = WebCardinal.dataSources;
 
 class HistoryDataSource extends DataSource {
   constructor(...props) {
@@ -77,14 +79,20 @@ class HistoryDataSource extends DataSource {
   }
 
   async updateRecordData(dataObj) {
-    let batchData;
-    let product;
+
+    let productModel;
+    let batchModel;
     let batchStatusService = new BatchStatusService();
     try {
-      let dsuDataRetrievalService = new DSUDataRetrievalService(dataObj.gtinSSI);
-      product = await dsuDataRetrievalService.asyncReadProductData();
-      batchData = await dsuDataRetrievalService.asyncReadBatchData();
-      batchStatusService.getProductStatus(batchData, dataObj.gs1Fields);
+      let leafletInfo = await LeafletInfoService.init(dataObj.gs1Fields, dataObj.networkName);
+      productModel = await leafletInfo.getProductClientModel();
+      batchModel = await leafletInfo.getBatchClientModel();
+    } catch (e) {
+      console.log("Could not update record. ", e);
+      return;
+    }
+    try {
+      batchStatusService.getProductStatus(batchModel, dataObj.gs1Fields);
     } catch (e) {
       batchStatusService.unableToVerify();
     }
@@ -95,8 +103,8 @@ class HistoryDataSource extends DataSource {
     dataObj.expiryForDisplay = batchStatusService.expiryForDisplay;
     dataObj.expiryTime = batchStatusService.expiryTime;
     dataObj.snCheck = batchStatusService.snCheck;
-    dataObj.product = product;
-    dataObj.batch = batchData;
+    dataObj.product = productModel;
+    dataObj.batch = batchModel;
     let result = await $$.promisify(this.enclaveDB.updateRecord)(constants.HISTORY_TABLE, dataObj.pk, dataObj)
     return result;
   }
@@ -139,7 +147,7 @@ export default class HistoryController extends WebcController {
           }
           let drugDetails = await productsDataSource.updateRecordData(record);
           this.navigateToPageTag("drug-details", {
-            productData: drugDetails
+            productData: drugDetails.pk
           })
         })
       });

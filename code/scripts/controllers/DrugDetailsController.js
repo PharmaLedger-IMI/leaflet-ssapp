@@ -11,8 +11,6 @@ export default class DrugDetailsController extends WebcController {
     this.model = {
       serialNumberLabel: constants.SN_LABEL,
       statusMessage: constants.SN_OK_MESSAGE,
-      showReportButton: true,
-      showAddToCabinetButton: true,
       serialNumber: "",
       showSmpc: false,
       showLeaflet: false,
@@ -32,217 +30,85 @@ export default class DrugDetailsController extends WebcController {
     this.model.moreLabel = this.translate("more")
 
     this.model.loadingData = this.model.showEPI === undefined;
-
-    if (typeof history.location.state !== "undefined") {
-      this.gtinSSI = history.location.state.productData.gtinSSI;
-      this.gs1Fields = history.location.state.productData.gs1Fields;
-      this.model.serialNumber = this.gs1Fields.serialNumber === "0" ? "-" : this.gs1Fields.serialNumber;
-      this.model.gtin = this.gs1Fields.gtin;
-      this.model.batchNumber = this.gs1Fields.batchNumber;
-      this.model.expiryForDisplay = history.location.state.productData.expiryForDisplay
-      this.model.expiryTime = history.location.state.productData.expiryTime;
-      this.model.product = history.location.state.productData.product;
-      this.model.batch = history.location.state.productData.batch;
-      this.model.statusType = history.location.state.productData.statusType;
-      this.model.status = history.location.state.productData.status;
-      this.model.statusMessage = this.translate(history.location.state.productData.statusMessage);
-      this.model.snCheck = history.location.state.productData.snCheck;
-      this.model.showVideoLink = false;
-      this.acdc = history.location.state.acdc;
-      this.model.showACDCAuthLink = !!this.model.batch.acdcAuthFeatureSSI;
-    } else {
-      console.log("Undefined product data");
-      this.updateUIInGTINOnlyCase()
-      this.showModal(this.translate("undefined_data"), this.translate("note"), () => {
-      }, () => {
-      }, {
-        disableExpanding: true,
-        disableFooter: true
-      });
-      return
-    }
-
-    if ((!this.acdc || !this.acdc.authResponse) && !!this.model.batch.acdcAuthFeatureSSI) {
-      this.onTagClick('auth-feature', () => {
-        if (!this.model.batch || !this.model.batch.acdcAuthFeatureSSI) {
-          return this.showErrorModal(`Could not find and Authentication Feature`, "Anti Counterfeiting");
-        }
-        this.navigateToPageTag('auth-feature', {
-          ssi: this.model.batch.acdcAuthFeatureSSI,
-          gtinSSI: this.gtinSSI,
-          gs1Fields: this.gs1Fields
-        });
-      });
-    } else if (this.acdc && this.acdc.authResponse) {
-      const {status, error} = this.acdc.authResponse;
-      this.model.packageVerification = status ? this.translate("verified") : `${this.translate("invalid")}${error.message ? `\n${error.message}` : ''}`;
-    }
-
-    this.smpcDisplayService = new XMLDisplayService(this.DSUStorage, element, this.gtinSSI, "smpc", "smpc.xml", this.model);
-    this.leafletDisplayService = new XMLDisplayService(this.DSUStorage, element, this.gtinSSI, "leaflet", "leaflet.xml", this.model);
-
-    this.model.onChange('showEPI', async (...props) => {
-      this.model.loadingData = this.model.showEPI === undefined;
-      if (this.model.showEPI) {
-        window.requestAnimationFrame(async () => {
-          const element = WebCardinal.root.querySelector('leaflet-shortcuts')
-          await element.attachScrollListeners('webc-app-loader[tag="drug-details"] page-template');
-        });
-        this.querySelector('#leaflet-header').removeAttribute('hidden');
-        this.querySelector(".leaflet-shortcuts-container").removeAttribute('hidden');
-        if (this.model.hasMoreDocTypes) {
-          this.querySelector('.select-document-type-container').removeAttribute('hidden');
-        } else {
-          this.querySelector('.select-document-type-container').setAttribute('hidden', true);
-        }
-        if (this.model.twoOrMoreLanguages) {
-          this.querySelector('.select-document-language-container').removeAttribute('hidden');
-        } else {
-          this.querySelector('.select-document-language-container').setAttribute('hidden', true);
-        }
-
-      } else {
-        this.querySelector('#leaflet-header').setAttribute('hidden', true);
-        this.querySelector(".leaflet-shortcuts-container").setAttribute('hidden', true);
-      }
-    });
-
     let dbApi = require("opendsu").loadApi("db");
     dbApi.getMainEnclaveDB(async (err, enclaveDB) => {
       if (err) {
         console.log('Error on getting enclave DB');
         return;
       }
-      this.dbStorage = enclaveDB;
-      this.settingsService = new SettingsService(enclaveDB);
-
-      await this.smpcDisplayService.isXmlAvailable();
-      await this.leafletDisplayService.isXmlAvailable();
-      this.model.hasMoreDocTypes = this.model.showSmpc && this.model.showLeaflet;
-      this.model.preferredDocType = await this.settingsService.asyncReadSetting("preferredDocType");
-
-      //first time select preferred document type to display
-      if (!this.model.preferredDocType && this.model.hasMoreDocTypes) {
-        //display preferred user type select for document view
-        let modal = this.showModalFromTemplate('user-type-select', () => {
-        }, () => {
-        }, {
-          model: {
-            title: this.translate("user_type_title"),
-            "user_type_1": this.translate("user_type_1"),
-            "user_type_1_description": this.translate("user_type_1_description"),
-            "user_type_2": this.translate("user_type_2"),
-            "user_type_2_description": this.translate("user_type_2_description"),
-          },
-          disableExpanding: true,
-          disableFooter: true,
-          disableClosing: true
-        });
-        modal.addEventListener("initialised", (ev) => {
-          this.onTagClick("select-user-type", async (model, target, event) => {
-            this.model.preferredDocType = target.getAttribute("preferredDocType");
-            this.settingsService.writeSetting("preferredDocType", this.model.preferredDocType, async (err) => {
-              modal.destroy();
-              await this.init();
-            })
-
-          })
-        })
-
-      } else {
-        await this.init()
-      }
-
-
-      this.onTagClick("learn-more", (model, target, event) => {
-        let modalTitle = model.statusType;
-        let iconSrc;
-        switch (model.statusType.toLowerCase()) {
-          case "warning":
-            iconSrc = "./assets/icons/recalled.svg";
-            break;
-          case "error":
-            iconSrc = "./assets/icons/error.svg";
-            break
-        }
-        let modalContentMsg = this.translate(`${model.status}_status_message`);
-        this.showModalFromTemplate('status-message', () => {
-        }, () => {
-        }, {
-          model: {
-            title: model.statusMessage,
-            statusType: model.statusType,
-            iconSrc: iconSrc,
-            messageText: modalContentMsg
-          },
-          disableExpanding: true,
-          disableFooter: true
-        });
-      });
-
-
-      this.onTagClick("click-verified", () => {
-        let modalTitle = this.translate("info_title");
-        let exp_label = this.translate("exp_label");
-        let sn_label = this.translate("sn_label");
-        let pc_label = this.translate("pc_label");
-        let bn_label = this.translate("bn_label");
-
-        this.showModalFromTemplate('batch-info', () => {
-        }, () => {
-        }, {
-          model: {
-            title: modalTitle,
-            exp_label: exp_label,
-            sn_label: sn_label,
-            pc_label: pc_label,
-            bn_label: bn_label,
-            expiryForDisplay: this.model.expiryForDisplay,
-            serialNumber: this.model.serialNumber,
-            gtin: this.model.gtin,
-            batchNumber: this.model.batchNumber
-          },
-          disableExpanding: true,
-          disableFooter: true
-        });
-      });
-
-      this.onTagClick("show-video", () => {
-        let modal = this.showModalFromTemplate('product-video', () => {
-        }, () => {
-        }, {
-          model: {
-            title: this.model.product.name + " - video",
-            videoSource: {html: this.getEmbeddedVideo(this.model.videoSource)},
-          },
-          disableFooter: true,
-          disableExpanding: true,
-        });
-      });
-
-      const searchbar = this.querySelector('ion-searchbar');
-      searchbar.addEventListener('ionInput', (event) => {
-        const query = event.target.value.toLowerCase().trim();
-        //clear all highlights
-        const leafletContent = this.querySelector("#leaflet-content");
-        let leafletContentHtml = leafletContent.innerHTML.replace(/(<mark>|<\/mark>)/gim, '');
-        leafletContent.innerHTML = leafletContentHtml;
-        if (query === "") {
+      enclaveDB.getRecord(constants.HISTORY_TABLE, history.location.state.productData, async (err, record) => {
+        if (err) {
+          console.log("Undefined product data");
+          this.updateUIInGTINOnlyCase()
+          this.showModal(this.translate("undefined_data"), this.translate("note"), () => {
+          }, () => {
+          }, {
+            disableExpanding: true,
+            disableFooter: true
+          });
           return
         }
-        const regex = new RegExp(query, 'gi');
-        try {
-          let domNode = this.element.parentElement.ownerDocument.evaluate(`.//*[text()[contains(translate(., 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz'),"${query}")]]`, this.querySelector("#leaflet-content")).iterateNext();
-          domNode.closest("leaflet-section").open();
-          let text = domNode.innerHTML;
-          const newText = text.replace(regex, '<mark>$&</mark>');
-          domNode.innerHTML = newText;
-          domNode.scrollIntoView({block: "nearest"});
-          window.scroll(0, domNode.getBoundingClientRect().height);
-        } catch (e) {
-          // ignore
+        this.gtinSSI = record.gtinSSI;
+        this.gs1Fields = record.gs1Fields;
+        this.model.serialNumber = this.gs1Fields.serialNumber === "0" ? "-" : this.gs1Fields.serialNumber;
+        this.model.gtin = this.gs1Fields.gtin;
+        this.model.batchNumber = this.gs1Fields.batchNumber;
+        this.model.expiryForDisplay = record.expiryForDisplay
+        this.model.expiryTime = record.expiryTime;
+        this.model.product = record.product;
+        this.model.batch = record.batch;
+        this.model.statusType = record.statusType;
+        this.model.status = record.status;
+        this.model.statusMessage = this.translate(record.statusMessage);
+        this.model.snCheck = record.snCheck;
+        this.model.showVideoLink = false;
+        this.acdc = history.location.state.acdc;
+        this.model.showACDCAuthLink = !!this.model.batch.acdcAuthFeatureSSI;
+
+        this.smpcDisplayService = new XMLDisplayService(this.DSUStorage, element, this.gtinSSI, "smpc", "smpc.xml", this.model);
+        this.leafletDisplayService = new XMLDisplayService(this.DSUStorage, element, this.gtinSSI, "leaflet", "leaflet.xml", this.model);
+
+        this.addEventListeners();
+        this.settingsService = new SettingsService(enclaveDB);
+
+        await this.smpcDisplayService.isXmlAvailable();
+        await this.leafletDisplayService.isXmlAvailable();
+        this.model.hasMoreDocTypes = this.model.showSmpc && this.model.showLeaflet;
+        this.model.preferredDocType = await this.settingsService.asyncReadSetting("preferredDocType");
+
+        //first time select preferred document type to display
+        if (!this.model.preferredDocType && this.model.hasMoreDocTypes) {
+          //display preferred user type select for document view
+          let modal = this.showModalFromTemplate('user-type-select', () => {
+          }, () => {
+          }, {
+            model: {
+              title: this.translate("user_type_title"),
+              "user_type_1": this.translate("user_type_1"),
+              "user_type_1_description": this.translate("user_type_1_description"),
+              "user_type_2": this.translate("user_type_2"),
+              "user_type_2_description": this.translate("user_type_2_description"),
+            },
+            disableExpanding: true,
+            disableFooter: true,
+            disableClosing: true
+          });
+          modal.addEventListener("initialised", (ev) => {
+            this.onTagClick("select-user-type", async (model, target, event) => {
+              this.model.preferredDocType = target.getAttribute("preferredDocType");
+              this.settingsService.writeSetting("preferredDocType", this.model.preferredDocType, async (err) => {
+                modal.destroy();
+                await this.init();
+              })
+
+            })
+          })
+
+        } else {
+          await this.init()
         }
-      });
+      })
+
     })
   }
 
@@ -451,6 +317,140 @@ export default class DrugDetailsController extends WebcController {
     this.model.statusMessage = batchStatusService.statusMessage;
     this.model.statusType = batchStatusService.statusType;
     this.model.packageVerification = constants.PACK_VERIFICATION_UNABLE_TO_VERIFY_MESSAGE;
+  }
+
+  addEventListeners() {
+    if ((!this.acdc || !this.acdc.authResponse) && !!this.model.batch.acdcAuthFeatureSSI) {
+      this.onTagClick('auth-feature', () => {
+        if (!this.model.batch || !this.model.batch.acdcAuthFeatureSSI) {
+          return this.showErrorModal(`Could not find and Authentication Feature`, "Anti Counterfeiting");
+        }
+        this.navigateToPageTag('auth-feature', {
+          ssi: this.model.batch.acdcAuthFeatureSSI,
+          gtinSSI: this.gtinSSI,
+          gs1Fields: this.gs1Fields
+        });
+      });
+    } else if (this.acdc && this.acdc.authResponse) {
+      const {status, error} = this.acdc.authResponse;
+      this.model.packageVerification = status ? this.translate("verified") : `${this.translate("invalid")}${error.message ? `\n${error.message}` : ''}`;
+    }
+
+    this.model.onChange('showEPI', async (...props) => {
+      this.model.loadingData = this.model.showEPI === undefined;
+      if (this.model.showEPI) {
+        window.requestAnimationFrame(async () => {
+          const element = WebCardinal.root.querySelector('leaflet-shortcuts')
+          await element.attachScrollListeners('webc-app-loader[tag="drug-details"] page-template');
+        });
+        this.querySelector('#leaflet-header').removeAttribute('hidden');
+        this.querySelector(".leaflet-shortcuts-container").removeAttribute('hidden');
+        if (this.model.hasMoreDocTypes) {
+          this.querySelector('.select-document-type-container').removeAttribute('hidden');
+        } else {
+          this.querySelector('.select-document-type-container').setAttribute('hidden', true);
+        }
+        if (this.model.twoOrMoreLanguages) {
+          this.querySelector('.select-document-language-container').removeAttribute('hidden');
+        } else {
+          this.querySelector('.select-document-language-container').setAttribute('hidden', true);
+        }
+
+      } else {
+        this.querySelector('#leaflet-header').setAttribute('hidden', true);
+        this.querySelector(".leaflet-shortcuts-container").setAttribute('hidden', true);
+      }
+    });
+
+    this.onTagClick("learn-more", (model, target, event) => {
+      let modalTitle = model.statusType;
+      let iconSrc;
+      switch (model.statusType.toLowerCase()) {
+        case "warning":
+          iconSrc = "./assets/icons/recalled.svg";
+          break;
+        case "error":
+          iconSrc = "./assets/icons/error.svg";
+          break
+      }
+      let modalContentMsg = this.translate(`${model.status}_status_message`);
+      this.showModalFromTemplate('status-message', () => {
+      }, () => {
+      }, {
+        model: {
+          title: model.statusMessage,
+          statusType: model.statusType,
+          iconSrc: iconSrc,
+          messageText: modalContentMsg
+        },
+        disableExpanding: true,
+        disableFooter: true
+      });
+    });
+
+
+    this.onTagClick("click-verified", () => {
+      let modalTitle = this.translate("info_title");
+      let exp_label = this.translate("exp_label");
+      let sn_label = this.translate("sn_label");
+      let pc_label = this.translate("pc_label");
+      let bn_label = this.translate("bn_label");
+
+      this.showModalFromTemplate('batch-info', () => {
+      }, () => {
+      }, {
+        model: {
+          title: modalTitle,
+          exp_label: exp_label,
+          sn_label: sn_label,
+          pc_label: pc_label,
+          bn_label: bn_label,
+          expiryForDisplay: this.model.expiryForDisplay,
+          serialNumber: this.model.serialNumber,
+          gtin: this.model.gtin,
+          batchNumber: this.model.batchNumber
+        },
+        disableExpanding: true,
+        disableFooter: true
+      });
+    });
+
+    this.onTagClick("show-video", () => {
+      let modal = this.showModalFromTemplate('product-video', () => {
+      }, () => {
+      }, {
+        model: {
+          title: this.model.product.name + " - video",
+          videoSource: {html: this.getEmbeddedVideo(this.model.videoSource)},
+        },
+        disableFooter: true,
+        disableExpanding: true,
+      });
+    });
+
+    const searchbar = this.querySelector('ion-searchbar');
+    searchbar.addEventListener('ionInput', (event) => {
+      const query = event.target.value.toLowerCase().trim();
+      //clear all highlights
+      const leafletContent = this.querySelector("#leaflet-content");
+      let leafletContentHtml = leafletContent.innerHTML.replace(/(<mark>|<\/mark>)/gim, '');
+      leafletContent.innerHTML = leafletContentHtml;
+      if (query === "") {
+        return
+      }
+      const regex = new RegExp(query, 'gi');
+      try {
+        let domNode = this.element.parentElement.ownerDocument.evaluate(`.//*[text()[contains(translate(., 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz'),"${query}")]]`, this.querySelector("#leaflet-content")).iterateNext();
+        domNode.closest("leaflet-section").open();
+        let text = domNode.innerHTML;
+        const newText = text.replace(regex, '<mark>$&</mark>');
+        domNode.innerHTML = newText;
+        domNode.scrollIntoView({block: "nearest"});
+        window.scroll(0, domNode.getBoundingClientRect().height);
+      } catch (e) {
+        // ignore
+      }
+    });
   }
 
   leafletShouldBeDisplayed(product, batchData, snCheck, expiryCheck, currentTime, expiryTime) {

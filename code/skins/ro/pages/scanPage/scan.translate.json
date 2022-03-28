@@ -23,5 +23,6 @@
   "err_unknown": "Scanarea și procesarea codului s-a încheiat cu erori.",
   "err_barcode": "Codul de bare nu poate fi citit, vă rugăm să contactați farmacia/medicul care a eliberat pachetul de medicamente.",
   "err_combination": "Combinația de coduri de produs nu a putut fi rezolvată.",
-  "err_to_history": "Nu s-a putut adăuga pachetul la istoric"
+  "err_to_history": "Nu s-a putut adăuga pachetul la istoric",
+  "err_network_not_found": "Setările nu conțin valoarea rețelei. Vă rugăm să verificați setările și sa actualizati valoarea pentru rețea"
 }

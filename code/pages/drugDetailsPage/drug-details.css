@@ -42,12 +42,6 @@
     position: relative;
 }
 
-.language-doc-type-container {
-    width: 100%;
-    padding-left: 24px;
-    padding-right: 24px;
-}
-
 .verified-icon {
     margin-left: 11px;
     margin-bottom: 8px;
@@ -151,6 +145,7 @@
     flex-direction: column;
     gap: 12px;
     margin-top: 20px;
+    margin-bottom: 26px;
 }
 
 .select-document-type,

@@ -81,13 +81,13 @@ export default class XmlDisplayService {
   }
 */
 
-  createLanguageSelector(languages) {
+/*  createLanguageSelector(languages) {
     this.model.twoOrMoreLanguages = true;
     this.model.languages = {
       value: languages[0].value,
       options: languages
     }
-  }
+  }*/
 
   displayXmlForLanguage(language) {
     this.readXmlFile(language, (err, xmlContent, pathBase) => {
@@ -130,7 +130,7 @@ export default class XmlDisplayService {
     })
   }
 
-  readFileAndDecodeContent(path, dsu, callback) {
+/*  readFileAndDecodeContent(path, dsu, callback) {
     dsu.readFile(path, (err, content) => {
       if (err) {
         return callback(err);
@@ -139,7 +139,7 @@ export default class XmlDisplayService {
       callback(undefined, textDecoder.decode(content));
     })
 
-  }
+  }*/
 
   applyStylesheetAndDisplayXml(pathBase, xmlContent) {
     this.readXSLTFile((err, xslContent) => {
