@@ -136,15 +136,15 @@ export default class NativeController extends WebcController{
         this._initializeValues();
         this._bindListeners();
 
-        this.hide(this.elements.rawCropRoiInput);
-        this.hide(this.elements.rawCropCanvas);
-        this.hide(this.elements.rawCropCbCanvas);
-        this.hide(this.elements.rawCropCrCanvas);
+        // this.hide(this.elements.rawCropRoiInput);
+        // this.hide(this.elements.rawCropCanvas);
+        // this.hide(this.elements.rawCropCbCanvas);
+        // this.hide(this.elements.rawCropCrCanvas);
 
-        this.hide(this.elements.canvasgl);
-        this.hide(this.elements.streamPreview);
-        this.hide(this.elements.status_fps_preview);
-        this.hide(this.elements.status_fps_raw);
+        // this.hide(this.elements.canvasgl);
+        // this.hide(this.elements.streamPreview);
+        // this.hide(this.elements.status_fps_preview);
+        // this.hide(this.elements.status_fps_raw);
     }
 
     changeDesiredCamerasList() {
@@ -227,7 +227,7 @@ export default class NativeController extends WebcController{
     }
 
     stopCamera(){
-        window.close();
+        window.stop();
         this.Camera.closeCameraStream();
         this.elements.select_preset.disabled = false;
         this.elements.startCameraButtonGL.disabled = false
