@@ -1,12 +1,13 @@
 import SettingsService from "../services/SettingsService.js";
 import interpretGS1scan from "../gs1ScanInterpreter/interpretGS1scan/interpretGS1scan.js";
-import utils from "../../utils.js";
+
 import constants from "../../constants.js";
 import BatchStatusService from "../services/BatchStatusService.js";
 import ScanService, {SCANNER_STATUS} from "../services/ScanService.js";
 
 const {WebcController} = WebCardinal.controllers;
 const gtinResolver = require("gtin-resolver");
+const utils = gtinResolver.utils;
 const LeafletInfoService = gtinResolver.LeafletInfoService;
 
 const opendsu = require("opendsu");
@@ -537,22 +538,28 @@ export default class ScanController extends WebcController {
   }
 
   addPackageToHistoryAndRedirect(gtinSSI, gs1Fields, callback) {
-    this.packageAlreadyScanned(async (err, result) => {
-      if (err) {
-        console.log("Failed to verify if package was already scanned", err);
-        return callback(err);
-      }
-      if (!result.status) {
-        try {
-          let record = await this.addPackageToScannedPackagesList()
-          this.redirectToDrugDetails({productData: record.pk});
-        } catch (err) {
-          return callback(err);
-        }
-      } else {
-        this.redirectToDrugDetails({productData: result.record.pk});
-      }
-    });
+    this.addPackageToScannedPackagesList().then(record => {
+      this.redirectToDrugDetails({productData: record.pk});
+    }).catch(err => {
+      return callback(err);
+    })
+
+    /* this.packageAlreadyScanned(async (err, result) => {
+       if (err) {
+         console.log("Failed to verify if package was already scanned", err);
+         return callback(err);
+       }
+       if (result.status === false) {
+         try {
+           let record = await this.addPackageToScannedPackagesList()
+           this.redirectToDrugDetails({productData: record.pk});
+         } catch (err) {
+           return callback(err);
+         }
+       } else {
+         this.redirectToDrugDetails({productData: result.record.pk});
+       }
+     });*/
 
   }
 

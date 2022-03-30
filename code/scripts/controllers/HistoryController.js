@@ -1,9 +1,9 @@
 import constants from "../../constants.js";
 import SettingsService from "../services/SettingsService.js";
 import BatchStatusService from "../services/BatchStatusService.js";
-import utils from "../../utils.js";
 
 const gtinResolver = require("gtin-resolver");
+const utils = gtinResolver.utils;
 const LeafletInfoService = gtinResolver.LeafletInfoService;
 
 const {WebcController} = WebCardinal.controllers;

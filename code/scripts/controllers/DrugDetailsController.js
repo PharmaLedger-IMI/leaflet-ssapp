@@ -1,9 +1,14 @@
-const {WebcController} = WebCardinal.controllers;
-import utils from "../../utils.js";
 import constants from "../../constants.js";
-import XMLDisplayService from "../services/XMLDisplayService/XMLDisplayService.js";
 import BatchStatusService from "../services/BatchStatusService.js";
 import SettingsService from "../services/SettingsService.js";
+import videoSourceUtils from "../utils/VideoSourceUtils.js";
+
+const {WebcController} = WebCardinal.controllers;
+const gtinResolver = require("gtin-resolver");
+const utils = gtinResolver.utils;
+const XMLDisplayService = gtinResolver.XMLDisplayService;
+const LeafletInfoService = gtinResolver.LeafletInfoService;
+
 
 export default class DrugDetailsController extends WebcController {
   constructor(element, history) {
@@ -65,14 +70,12 @@ export default class DrugDetailsController extends WebcController {
         this.acdc = history.location.state.acdc;
         this.model.showACDCAuthLink = !!this.model.batch.acdcAuthFeatureSSI;
 
-        this.smpcDisplayService = new XMLDisplayService(this.DSUStorage, element, this.gtinSSI, "smpc", "smpc.xml", this.model);
-        this.leafletDisplayService = new XMLDisplayService(this.DSUStorage, element, this.gtinSSI, "leaflet", "leaflet.xml", this.model);
-
+        this.smpcDisplayService = await XMLDisplayService.init(element, this.gtinSSI, this.model, "smpc");
+        this.leafletDisplayService = await XMLDisplayService.init(element, this.gtinSSI, this.model, "leaflet");
+        this.leafletInfoService = await LeafletInfoService.init(record.gs1Fields, record.networkName);
         this.addEventListeners();
         this.settingsService = new SettingsService(enclaveDB);
 
-        await this.smpcDisplayService.isXmlAvailable();
-        await this.leafletDisplayService.isXmlAvailable();
         this.model.hasMoreDocTypes = this.model.showSmpc && this.model.showLeaflet;
         this.model.preferredDocType = await this.settingsService.asyncReadSetting("preferredDocType");
 
@@ -93,10 +96,10 @@ export default class DrugDetailsController extends WebcController {
             disableFooter: true,
             disableClosing: true
           });
-          modal.addEventListener("initialised", (ev) => {
-            this.onTagClick("select-user-type", async (model, target, event) => {
+          modal.addEventListener("initialised", () => {
+            this.onTagClick("select-user-type", async (model, target) => {
               this.model.preferredDocType = target.getAttribute("preferredDocType");
-              this.settingsService.writeSetting("preferredDocType", this.model.preferredDocType, async (err) => {
+              this.settingsService.writeSetting("preferredDocType", this.model.preferredDocType, async () => {
                 modal.destroy();
                 await this.init();
               })
@@ -128,43 +131,6 @@ export default class DrugDetailsController extends WebcController {
       this.model.videoSource = this.model.batch.videos[`${documentType}/${this.model.preferredLanguage}`]
     }
     this.model.showVideoLink = !!this.model.videoSource;
-  }
-
-  getEmbeddedVideo(encodedVideoSource) {
-    let videoSource = atob(encodedVideoSource);
-    let videoUrl;
-
-    if (videoSource.startsWith("https://www.youtube.com/")) {
-      videoUrl = `https://www.youtube.com/embed/${videoSource.split("v=")[1]}?autoplay=1`
-    }
-    if (videoSource.startsWith("https://vimeo.com/")) {
-      videoUrl = `https://player.vimeo.com/video/${videoSource.split("vimeo.com/")[1]}`
-    }
-    if (videoUrl) {
-      return `<iframe name="url-iframe" allow="autoplay; fullscreen; picture-in-picture" allowfullscreen
-            frameborder="0" src="${videoUrl}" width="310">
-    </iframe>`
-    }
-
-    if (videoSource.includes("</script>")) {
-      /*      let regex1 = /(?:\&width.*(?:height.*\/&))/gi
-            let regex2 = /(?:\&width.*(?:height.*\"\>))/gi
-            let regex3 = /(?:\width:.*height:.*px;)/gi
-            if (videoSource.match(regex1)) {
-              videoSource = videoSource.replace(regex1, '&width=310&height=300&');
-            }
-            if (videoSource.match(regex2)) {
-              videoSource = videoSource.replace(regex2, '&width=310&height=300">');
-            }
-            if (videoSource.match(regex3)) {
-              videoSource = videoSource.replace(regex3, 'width: 310px; height: 300px;');
-            }*/
-      return `<iframe  id="script-iframe" allow="autoplay; fullscreen; picture-in-picture" allowfullscreen
-            frameborder="0" src="data:text/html;charset=utf-8,${encodeURI(videoSource)}">`
-    }
-
-    return videoSource;
-
   }
 
   async init() {
@@ -216,12 +182,7 @@ export default class DrugDetailsController extends WebcController {
       return;
     }
 
-
-    if (this.model.documentLanguages.length >= 2) {
-      this.model.twoOrMoreLanguages = true;
-    } else {
-      this.model.twoOrMoreLanguages = false;
-    }
+    this.model.twoOrMoreLanguages = this.model.documentLanguages.length >= 2;
 
     let documentLanguage;
     if (this.model.twoOrMoreLanguages) {
@@ -300,14 +261,10 @@ export default class DrugDetailsController extends WebcController {
       let expiryCheck = this.model.expiryForDisplay === expiryForDisplay;
 
       const currentTime = Date.now();
-      this.model.showEPI = this.leafletShouldBeDisplayed(this.model.product, this.model.batch, this.model.snCheck, expiryCheck, currentTime, this.model.expiryTime);
+      this.model.showEPI = this.leafletInfoService.leafletShouldBeDisplayed(this.model, expiryCheck, currentTime);
     }
 
-    if (this.model.statusMessage !== constants.SN_OK_MESSAGE) {
-      this.model.displayStatus = true;
-    } else {
-      this.model.displayStatus = false;
-    }
+    this.model.displayStatus = this.model.statusMessage !== constants.SN_OK_MESSAGE
 
   }
 
@@ -362,8 +319,7 @@ export default class DrugDetailsController extends WebcController {
       }
     });
 
-    this.onTagClick("learn-more", (model, target, event) => {
-      let modalTitle = model.statusType;
+    this.onTagClick("learn-more", (model) => {
       let iconSrc;
       switch (model.statusType.toLowerCase()) {
         case "warning":
@@ -416,12 +372,12 @@ export default class DrugDetailsController extends WebcController {
     });
 
     this.onTagClick("show-video", () => {
-      let modal = this.showModalFromTemplate('product-video', () => {
+      this.showModalFromTemplate('product-video', () => {
       }, () => {
       }, {
         model: {
           title: this.model.product.name + " - video",
-          videoSource: {html: this.getEmbeddedVideo(this.model.videoSource)},
+          videoSource: {html: videoSourceUtils.getEmbeddedVideo(this.model.videoSource)},
         },
         disableFooter: true,
         disableExpanding: true,
@@ -432,106 +388,8 @@ export default class DrugDetailsController extends WebcController {
     searchbar.addEventListener('ionInput', (event) => {
       const query = event.target.value.toLowerCase().trim();
       //clear all highlights
-      const leafletContent = this.querySelector("#leaflet-content");
-      let leafletContentHtml = leafletContent.innerHTML.replace(/(<mark>|<\/mark>)/gim, '');
-      leafletContent.innerHTML = leafletContentHtml;
-      if (query === "") {
-        return
-      }
-      const regex = new RegExp(query, 'gi');
-      try {
-        let domNode = this.element.parentElement.ownerDocument.evaluate(`.//*[text()[contains(translate(., 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz'),"${query}")]]`, this.querySelector("#leaflet-content")).iterateNext();
-        domNode.closest("leaflet-section").open();
-        let text = domNode.innerHTML;
-        const newText = text.replace(regex, '<mark>$&</mark>');
-        domNode.innerHTML = newText;
-        domNode.scrollIntoView({block: "nearest"});
-        window.scroll(0, domNode.getBoundingClientRect().height);
-      } catch (e) {
-        // ignore
-      }
+      this.documentService.searchInHtml(query);
     });
   }
 
-  leafletShouldBeDisplayed(product, batchData, snCheck, expiryCheck, currentTime, expiryTime) {
-    //fix for the missing case describe here: https://github.com/PharmaLedger-IMI/epi-workspace/issues/167
-    if (batchData.serialCheck && !snCheck.validSerial && !snCheck.recalledSerial && !snCheck.decommissionedSerial && product.showEPIOnSNUnknown) {
-      return true;
-    }
-
-    if (batchData.serialCheck && typeof this.model.serialNumber === "undefined" && product.showEPIOnSNUnknown) {
-      return true;
-    }
-
-    if (batchData.serialCheck && snCheck.recalledSerial && (product.showEPIOnBatchRecalled || product.showEPIOnSNRecalled)) {
-      return true;
-    }
-
-    if (batchData.serialCheck && snCheck.decommissionedSerial && product.showEPIOnSNDecommissioned) {
-      return true;
-    }
-
-    if (!batchData.expiredDateCheck && !batchData.incorrectDateCheck && !batchData.serialCheck) {
-      return true;
-    }
-
-    if (batchData.expiredDateCheck && currentTime < expiryTime && !batchData.incorrectDateCheck && !batchData.serialCheck) {
-      return true;
-    }
-
-    if (batchData.expiredDateCheck && expiryTime < currentTime && product.showEPIOnBatchExpired && !batchData.incorrectDateCheck && !batchData.serialCheck) {
-      return true;
-    }
-
-    if (batchData.incorrectDateCheck && !expiryCheck && !batchData.serialCheck && product.showEPIOnIncorrectExpiryDate && !batchData.serialCheck) {
-      return true;
-    }
-
-    if (!batchData.expiredDateCheck && batchData.incorrectDateCheck && expiryCheck && !batchData.serialCheck) {
-      return true;
-    }
-
-    if (batchData.expiredDateCheck && currentTime < expiryTime && batchData.incorrectDateCheck && expiryCheck && !batchData.serialCheck) {
-      return true;
-    }
-
-    if (batchData.expiredDateCheck && expiryTime < currentTime && product.showEPIOnBatchExpired && batchData.incorrectDateCheck && expiryCheck && !batchData.serialCheck) {
-      return true;
-    }
-
-    if (batchData.expiredDateCheck && currentTime < expiryTime && !batchData.incorrectDateCheck && batchData.serialCheck && snCheck.validSerial) {
-      return true;
-    }
-
-    if (batchData.expiredDateCheck && expiryTime < currentTime && product.showEPIOnBatchExpired && !batchData.incorrectDateCheck && batchData.serialCheck && snCheck.validSerial) {
-      return true;
-    }
-
-    if (batchData.expiredDateCheck && currentTime < expiryTime && batchData.incorrectDateCheck && expiryCheck && batchData.serialCheck && snCheck.validSerial && batchData.recalled && product.showEPIOnBatchRecalled) {
-      return true;
-    }
-
-    if (batchData.expiredDateCheck && currentTime < expiryTime && batchData.incorrectDateCheck && expiryCheck && batchData.serialCheck && snCheck.validSerial && !batchData.recalled) {
-      return true;
-    }
-
-    if (batchData.expiredDateCheck && expiryTime < currentTime && product.showEPIOnBatchExpired && batchData.incorrectDateCheck && expiryCheck
-      && batchData.serialCheck && snCheck.validSerial) {
-      return true;
-    }
-
-    if (batchData.incorrectDateCheck && !expiryCheck && product.showEPIOnIncorrectExpiryDate && batchData.serialCheck && snCheck.validSerial) {
-      return true;
-    }
-
-    if (!batchData.expiredDateCheck && !batchData.incorrectDateCheck && batchData.serialCheck && snCheck.validSerial) {
-      return true;
-    }
-
-    if (!batchData.expiredDateCheck && batchData.incorrectDateCheck && expiryCheck && batchData.serialCheck && snCheck.validSerial) {
-      return true;
-    }
-
-    return false;
-  }
 }

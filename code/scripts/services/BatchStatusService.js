@@ -1,5 +1,6 @@
 import constants from "../../constants.js";
-import utils from "../../utils.js";
+const gtinResolver = require("gtin-resolver");
+const utils = gtinResolver.utils;
 
 export default class BatchStatusService {
   statusMessage = constants.SN_OK_MESSAGE;
