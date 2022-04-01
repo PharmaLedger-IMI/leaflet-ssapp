@@ -29,6 +29,7 @@ export default class SettingsController extends WebcController {
     };
 
     const dbApi = require("opendsu").loadApi("db");
+
     dbApi.getMainEnclaveDB(async (err, enclaveDB) => {
       if (err) {
         console.log('Error on getting enclave DB');
@@ -47,98 +48,9 @@ export default class SettingsController extends WebcController {
       this.model.scanditLicense.value = await this.settingsService.asyncReadSetting("scanditLicense");
       this.model.advancedUser = await this.settingsService.asyncReadSetting("advancedUser");
       this.model.refreshPeriod.value = await this.settingsService.asyncReadSetting("refreshPeriod");
-
-      this.onTagClick("change-edit-mode", (model, target, event) => {
-        this.toggleEditMode(target.getAttribute("data"));
-      });
-
-      this.onTagClick("change-network", (model, target, event) => {
-        let newValue = target.parentElement.querySelector("input").value;
-        this.settingsService.writeSetting("networkName", newValue, (err) => {
-          if (err) {
-            console.log(err);
-            return;
-          }
-          this.model.networkName.value = newValue;
-          this.toggleEditMode("networkEditMode");
-        });
-      });
-
-      this.onTagClick("change-default-network", (model, target, event) => {
-        this.settingsService.writeSetting("networkName", constants.DEFAULT_NETWORK_NAME, (err) => {
-          if (err) {
-            console.log(err);
-            return;
-          }
-          this.model.networkName.value = constants.DEFAULT_NETWORK_NAME;
-          this.toggleEditMode("networkEditMode");
-        });
-      });
-
-      this.onTagClick("change-refresh-period", (model, target, event) => {
-        let newValue = target.parentElement.querySelector("input").value;
-        this.settingsService.writeSetting("refreshPeriod", newValue, (err) => {
-          if (err) {
-            console.log(err);
-            return;
-          }
-          this.model.refreshPeriod.value = newValue
-          this.toggleEditMode("refreshPeriodEditMode");
-        });
-      });
-
-      this.onTagClick("change-default-refresh-period", (model, target, event) => {
-        this.settingsService.writeSetting("refreshPeriod", constants.DEFAULT_REFRESH_PERIOD, (err) => {
-          if (err) {
-            console.log(err);
-            return;
-          }
-          this.model.refreshPeriod.value = constants.DEFAULT_REFRESH_PERIOD
-          this.toggleEditMode("refreshPeriodEditMode");
-        });
-      });
-
-      this.onTagEvent('language.select', 'ionChange', this.changeLanguageHandler);
-      this.querySelector("ion-checkbox#advancedUserCheckbox").addEventListener("ionChange", (ev) => {
-        this.model.advancedUser = ev.detail.checked;
-        this.settingsService.writeSetting("advancedUser", ev.detail.checked, (err) => {
-          if (err) {
-            console.log(err);
-            return;
-          }
-        })
-      })
-
-      this.querySelector("ion-checkbox#acdcEnabledCheckbox").addEventListener("ionChange", (ev) => {
-        this.model.acdc.enabled = ev.detail.checked;
-        this.querySelector(".acdcOptionsContainer").hidden = !this.model.acdc.enabled;
-        if (!this.model.acdc.enabled) {
-          this.model.acdc.did_enabled = this.model.acdc.location_enabled = this.model.acdc.enabled;
-        }
-      })
-
-      this.querySelector("ion-checkbox#acdcDidCheckbox").addEventListener("ionChange", (ev) => {
-        this.model.acdc.did_enabled = ev.detail.checked;
-      })
-      this.querySelector("ion-checkbox#acdcLocationCheckbox").addEventListener("ionChange", (ev) => {
-        this.model.acdc.location_enabled = ev.detail.checked;
-      })
-
-      this.onTagClick("set-scandit-license", (model, target, event) => {
-        let newValue = target.parentElement.querySelector("input").value;
-
-        this.settingsService.writeSetting("scanditLicense", newValue, (err) => {
-          if (err) {
-            console.log(err);
-            return;
-          }
-          this.model.scanditLicense.value = newValue;
-          this.toggleEditMode("scanditLicenseEditMode");
-        });
-      });
+       this.addListeners();
     })
 
-    this.onTagClick('navigate-to-native-page', this.navigateToNativeIntegrationPage);
 
     // ACDC integration settings
     this.acdc = require('acdc').ReportingService.getInstance(this.settingsService);
@@ -148,6 +60,16 @@ export default class SettingsController extends WebcController {
       : "Acdc Settings Added"));
 
     this.setDeveloperOptions();
+  }
+
+  async renderEnvData() {
+    const config = require("opendsu").loadApi("config");
+    let envFile = await $$.promisify(config.readEnvFile)();
+    let displayData = [];
+    Object.keys(envFile).forEach(key => {
+      displayData.push({key: key, value: envFile[key]})
+    })
+    this.model.envData = displayData;
   }
 
   toggleEditMode(prop) {
@@ -228,5 +150,119 @@ export default class SettingsController extends WebcController {
 
   navigateToNativeIntegrationPage = () => {
     this.navigateToPageTag("native")
+  }
+
+  addListeners() {
+
+    this.onTagClick('navigate-to-native-page', this.navigateToNativeIntegrationPage);
+
+    this.onTagClick("change-edit-mode", (model, target, event) => {
+      this.toggleEditMode(target.getAttribute("data"));
+    });
+
+    this.onTagClick("change-network", (model, target, event) => {
+      let newValue = target.parentElement.querySelector("input").value;
+      this.settingsService.writeSetting("networkName", newValue, (err) => {
+        if (err) {
+          console.log(err);
+          return;
+        }
+        this.model.networkName.value = newValue;
+        this.toggleEditMode("networkEditMode");
+      });
+    });
+
+    this.onTagClick("change-default-network", (model, target, event) => {
+      this.settingsService.writeSetting("networkName", constants.DEFAULT_NETWORK_NAME, (err) => {
+        if (err) {
+          console.log(err);
+          return;
+        }
+        this.model.networkName.value = constants.DEFAULT_NETWORK_NAME;
+        this.toggleEditMode("networkEditMode");
+      });
+    });
+
+    this.onTagClick("change-refresh-period", (model, target, event) => {
+      let newValue = target.parentElement.querySelector("input").value;
+      this.settingsService.writeSetting("refreshPeriod", newValue, (err) => {
+        if (err) {
+          console.log(err);
+          return;
+        }
+        this.model.refreshPeriod.value = newValue
+        this.toggleEditMode("refreshPeriodEditMode");
+      });
+    });
+
+    this.onTagClick("change-default-refresh-period", (model, target, event) => {
+      this.settingsService.writeSetting("refreshPeriod", constants.DEFAULT_REFRESH_PERIOD, (err) => {
+        if (err) {
+          console.log(err);
+          return;
+        }
+        this.model.refreshPeriod.value = constants.DEFAULT_REFRESH_PERIOD
+        this.toggleEditMode("refreshPeriodEditMode");
+      });
+    });
+
+    this.onTagEvent('language.select', 'ionChange', this.changeLanguageHandler);
+    this.querySelector("ion-checkbox#advancedUserCheckbox").addEventListener("ionChange", (ev) => {
+      this.model.advancedUser = ev.detail.checked;
+      this.settingsService.writeSetting("advancedUser", ev.detail.checked, (err) => {
+        if (err) {
+          console.log(err);
+          return;
+        }
+      })
+    })
+
+    this.querySelector("ion-checkbox#acdcEnabledCheckbox").addEventListener("ionChange", (ev) => {
+      this.model.acdc.enabled = ev.detail.checked;
+      this.querySelector(".acdcOptionsContainer").hidden = !this.model.acdc.enabled;
+      if (!this.model.acdc.enabled) {
+        this.model.acdc.did_enabled = this.model.acdc.location_enabled = this.model.acdc.enabled;
+      }
+    })
+
+    this.querySelector("ion-checkbox#acdcDidCheckbox").addEventListener("ionChange", (ev) => {
+      this.model.acdc.did_enabled = ev.detail.checked;
+    })
+    this.querySelector("ion-checkbox#acdcLocationCheckbox").addEventListener("ionChange", (ev) => {
+      this.model.acdc.location_enabled = ev.detail.checked;
+    })
+
+    this.onTagClick("set-scandit-license", (model, target, event) => {
+      let newValue = target.parentElement.querySelector("input").value;
+
+      this.settingsService.writeSetting("scanditLicense", newValue, (err) => {
+        if (err) {
+          console.log(err);
+          return;
+        }
+        this.model.scanditLicense.value = newValue;
+        this.toggleEditMode("scanditLicenseEditMode");
+      });
+    });
+
+    this.onTagClick("view-env", async () => {
+      await this.renderEnvData();
+      this.showModalFromTemplate("view-env-data", () => {
+      }, () => {
+      }, {
+        model: {title: "Environment settings", envData: this.model.envData}, disableExpanding: true,
+        disableFooter: true
+      })
+    });
+
+    this.onTagClick("edit-env", () => {
+      this.showModalFromTemplate("manage-available-features", () => {
+          return;
+        }, () => {
+          return;
+        },
+        {controller: "FeaturesModalController", disableExpanding: true}
+      );
+    })
   }
 }

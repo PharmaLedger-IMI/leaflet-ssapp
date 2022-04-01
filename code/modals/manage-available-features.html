@@ -1,0 +1,64 @@
+<div class="custom-modal-header header-color" slot="header">
+    <h5>{{@title}}</h5>
+</div>
+<main>
+    <div class="features-container" data-for="@features">
+        <div class="env-row">
+            <div data-if="@checked">
+                <input checked name="@code" slot="true" type="checkbox" value="@value">
+                <input name="@code" slot="false" type="checkbox" value="@value">
+            </div>
+
+            <span class="checkbox-label">{{@code}} - {{@label}} </span>
+        </div>
+
+    </div>
+
+</main>
+<footer class="modal-action-menu" slot="footer">
+    <ion-button data-tag="close-window" class="md button button-solid ion-activatable ion-focusable hydrated ion-activated">Cancel</ion-button>
+    <ion-button data-tag="submit-window" class="md button button-solid ion-activatable ion-focusable hydrated ion-activated">Accept</ion-button>
+</footer>
+
+<style>
+
+    .features-container {
+        display: flex;
+        flex-direction: column;
+    }
+
+    .env-row {
+        display: flex;
+        padding-bottom: 15px;
+    }
+
+    .checkbox-label {
+        margin-left: 10px;
+    }
+
+    .custom-modal-header {
+        display: flex;
+        justify-content: center;
+        flex-direction: column;
+        width: 100%;
+    }
+
+    main {
+        height: 50vh;
+        overflow: auto;
+    }
+
+    webc-modal::part(header) {
+        background: linear-gradient(
+                0deg, rgba(90, 89, 253, 0.1), rgba(90, 89, 253, 0.1)), #FFFFFF;
+    }
+
+    webc-modal::part(content) {
+        margin: 0px;
+    }
+
+    webc-modal::part(dialog) {
+        max-width: calc(var(--app-max-width) - 24px);
+    }
+
+</style>

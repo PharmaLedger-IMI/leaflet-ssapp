@@ -21,9 +21,11 @@
     "acdc_did_checkbox": "Anonymisierte Markierung zu Fälschungsschutzzwecken teilen",
     "acdc_title":"Anti-Counterfeiting-Integration einrichten",
     "acdc_subtitle":"Integrationsoptionen für Fälschungsschutz",
+    "env_settings_label": "App environment settings",
     "save_btn": "Speichern",
     "reset_btn": "Zurücksetzen",
     "edit_btn": "Bearbeiten",
     "set_btn": "Setzen",
+    "view_btn": "Ansicht",
     "test_native_integration": "Testen Sie die native Integration"
 }

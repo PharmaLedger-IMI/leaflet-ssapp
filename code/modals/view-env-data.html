@@ -1,0 +1,62 @@
+<div class="custom-modal-header header-color" slot="header">
+    <h5>{{@title}}</h5>
+</div>
+<main>
+    <div class="features-container" data-for="@envData">
+        <div class="env-row">
+            <div class="key-col">{{@key}}</div>
+            <div class="value-col">{{@value}}</div>
+        </div>
+
+    </div>
+
+</main>
+<footer class="modal-action-menu" slot="footer">
+    <button class="page-action-btn" data-close>Cancel</button>
+    <button class="page-action-btn" data-confirm>Ok</button>
+</footer>
+
+<style>
+
+    .env-row {
+        display: grid;
+        grid-template-columns: 2fr 2fr;
+        border-bottom: 1px solid;
+        padding: 5px 0px;
+    }
+
+    .key-col {
+        flex-grow: 1;
+    }
+
+    .value-col {
+        padding-left: 10px;
+        word-break: break-all;
+    }
+
+    .custom-modal-header {
+        display: flex;
+        justify-content: center;
+        flex-direction: column;
+        width: 100%;
+    }
+
+    main {
+        height: 50vh;
+        overflow: auto;
+    }
+
+    webc-modal::part(header) {
+        background: linear-gradient(
+                0deg, rgba(90, 89, 253, 0.1), rgba(90, 89, 253, 0.1)), #FFFFFF;
+    }
+
+    webc-modal::part(content) {
+        margin: 0px;
+    }
+
+    webc-modal::part(dialog) {
+        max-width: calc(var(--app-max-width) - 24px);
+    }
+
+</style>

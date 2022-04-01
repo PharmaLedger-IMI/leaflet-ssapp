@@ -54,6 +54,12 @@
                         <span>{{ $checkbox }}</span>
                         <ion-checkbox checked="@advancedUser" id="advancedUserCheckbox" slot="end"></ion-checkbox>
                     </div>
+                    <div class="env-settings-container">
+                        <span>{{$env_settings_label}}</span>
+                        <ion-button data-tag="view-env">{{$view_btn}}</ion-button>
+                        <ion-button data-tag="edit-env">{{$edit_btn}}</ion-button>
+                    </div>
+
                 </leaflet-accordion>
 
                 <leaflet-accordion description="$refresh_subtitle" label="$refresh_title">

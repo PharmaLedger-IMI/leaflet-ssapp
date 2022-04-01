@@ -21,9 +21,11 @@
     "acdc_did_checkbox": "Share de-identified marker for Anti-Counterfeiting purposes",
     "acdc_title":"Setup Anti-Counterfeiting Integration",
     "acdc_subtitle":"Anti-Counterfeiting Integration options",
+    "env_settings_label": "App environment settings",
     "save_btn": "Save",
     "reset_btn": "Reset",
     "edit_btn": "Edit",
     "set_btn": "Set",
+    "view_btn": "View",
     "test_native_integration": "Test native integration"
 }

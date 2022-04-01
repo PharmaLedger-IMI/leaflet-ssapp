@@ -21,9 +21,11 @@
     "acdc_did_checkbox": "Partajați marcajul de-identificat în scopuri de combatere a contrafacerii",
     "acdc_title":"Configurați integrarea anti-contrafacere",
     "acdc_subtitle":"Opțiuni de integrare împotriva contrafacerii",
-    "save_btn": "Salvează",
-    "reset_btn": "Resetează",
-    "edit_btn": "Editează",
+    "env_settings_label": "App environment settings",
+    "save_btn": "Salvare",
+    "reset_btn": "Resetare",
+    "edit_btn": "Editare",
     "set_btn": "Aplică",
+    "view_btn": "Vizionare",
     "test_native_integration": "Testează integrarea nativă"
 }

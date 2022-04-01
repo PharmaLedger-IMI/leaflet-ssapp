@@ -21,6 +21,13 @@
     align-items: center;
 }
 
+.env-settings-container {
+    margin-top: 15px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
 .dev-options ion-toggle {
     pointer-events: none;
 }
