@@ -1,0 +1,58 @@
+#snapshotImage,
+#rawCropCanvas,
+#streamPreview,
+#cameraCanvas {
+    width: 100vw;
+    height: 30vh;
+}
+
+        button {
+            margin: 10px;
+        }
+
+        .custom-control-input,
+        .custom-control-label {
+            margin: 10px;
+        }
+
+
+        .cameraImg {
+            width: 100vw !important;
+            height: 30vh;
+        }
+
+        .fullwidth {
+            width: 100vw !important;
+            min-height: 40px;
+        }
+
+        .minSize {
+            min-height: 50px;
+            min-width: 50px;
+        }
+
+        .vStack {
+            width: 100vw;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .hStack {
+            width: 100vw;
+            display: flex;
+            flex-direction: row;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .spacer {
+            display: block;
+            height: 50px;
+        }
+
+        .content {
+            overflow-y: scroll;
+            height: 100vh;
+        }
