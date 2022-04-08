@@ -66,6 +66,7 @@ export default class DrugDetailsController extends WebcController {
         this.model.status = record.status;
         this.model.statusMessage = this.translate(record.statusMessage);
         this.model.snCheck = record.snCheck;
+        this.networkName = record.networkName;
         this.model.showVideoLink = false;
         this.acdc = history.location.state.acdc;
         this.model.showACDCAuthLink = !!this.model.batch.acdcAuthFeatureSSI;
@@ -285,7 +286,8 @@ export default class DrugDetailsController extends WebcController {
         this.navigateToPageTag('auth-feature', {
           ssi: this.model.batch.acdcAuthFeatureSSI,
           gtinSSI: this.gtinSSI,
-          gs1Fields: this.gs1Fields
+          gs1Fields: this.gs1Fields,
+          networkName: this.networkName
         });
       });
     } else if (this.acdc && this.acdc.authResponse) {

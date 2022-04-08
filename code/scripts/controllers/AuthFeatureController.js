@@ -10,7 +10,8 @@ export default class AuthFeatureController extends WebcController {
     super(element, history, ...args);
     if (!history.location.state)
       return console.log(`ERROR: No state found for Auth Feature`);
-    const {ssi, gs1Fields, gtinSSI, acdc} = history.location.state;
+    const {ssi, gs1Fields, gtinSSI, acdc, networkName} = history.location.state;
+    gs1Fields.domain = networkName;
     this.model = {
       ssi: ssi,
       gtinSSI: gtinSSI,
