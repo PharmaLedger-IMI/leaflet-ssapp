@@ -70,7 +70,7 @@ export default class ScanController extends WebcController {
       this.model.onChange("data", () => {
         console.log("new event data change: ", this.model.data);
         this.shouldRequestCaptures = false;
-        this.process(this.parseGS1Code(this.model.data));
+        this.processGS1Fields(this.parseGS1Code(this.model.data));
       });
 
       this.getNativeApiHandler((err, handler) => {
@@ -138,7 +138,7 @@ export default class ScanController extends WebcController {
               /*const scan = handler.importNativeAPI("dataMatrixScan");
               scan().then((resultArray) => {
                   if (resultArray && resultArray.length > 0) {
-                      return this.process(this.parseGS1Code(resultArray[0]));
+                      return this.processGS1Fields(this.parseGS1Code(resultArray[0]));
                   }
                   this.redirectToError(this.translate("err_no_code_scanned"));
               }, (error) => {
@@ -196,7 +196,7 @@ export default class ScanController extends WebcController {
         this.scanService.stop();
         clearInterval(this.scanInterval);
 
-        this.process(this.parseGS1Code(result.text));
+        this.processGS1Fields(this.parseGS1Code(result.text));
       }).catch(err => {
         console.log("Caught", err);
       });
@@ -311,7 +311,7 @@ export default class ScanController extends WebcController {
     }
   }
 
-  process(gs1Fields) {
+  processGS1Fields(gs1Fields) {
     console.log("Processing fields: ", gs1Fields);
     if (!this.hasMandatoryFields(gs1Fields)) {
       return this.redirectToError(this.translate("err_barcode"), gs1Fields);
@@ -503,11 +503,11 @@ export default class ScanController extends WebcController {
 
   processSingleCodeScan(scanObj) {
     if (scanObj.symbology === "data-matrix") {
-      return this.process(this.parseGS1Code(scanObj.data));
+      return this.processGS1Fields(this.parseGS1Code(scanObj.data));
     } else if (scanObj.symbology === "code128") {
-      return this.process(this.parseGS1Code(scanObj.data));
+      return this.processGS1Fields(this.parseGS1Code(scanObj.data));
     } else if (scanObj.symbology === "ean13") {
-      return this.process(this.parseEAN13CodeScan(scanObj.data))
+      return this.processGS1Fields(this.parseEAN13CodeScan(scanObj.data))
     } else {
       console.error(`Incompatible barcode scan: `, scanObj)
       throw new Error(`code symbology "${scanObj.symbology}" not recognized.`)
@@ -515,7 +515,7 @@ export default class ScanController extends WebcController {
   }
 
   processCompositeCodeScan(scanResultArray) {
-    return this.process(this.parseCompositeCodeScan(scanResultArray));
+    return this.processGS1Fields(this.parseCompositeCodeScan(scanResultArray));
   }
 
   addConstProductDSUToHistory() {
@@ -580,8 +580,8 @@ export default class ScanController extends WebcController {
     let productModel;
     let batchModel;
     productModel = await this.leafletInfo.getProductClientModel();
-    batchModel = await this.leafletInfo.getBatchClientModel();
     try {
+      batchModel = await this.leafletInfo.getBatchClientModel();
       batchStatusService.getProductStatus(batchModel, this.leafletInfo.gs1Fields);
     } catch (e) {
       batchStatusService.unableToVerify();

@@ -86,16 +86,17 @@ class HistoryDataSource extends DataSource {
     try {
       let leafletInfo = await LeafletInfoService.init(dataObj.gs1Fields, dataObj.networkName);
       productModel = await leafletInfo.getProductClientModel();
-      batchModel = await leafletInfo.getBatchClientModel();
+      try {
+        batchModel = await leafletInfo.getBatchClientModel();
+        batchStatusService.getProductStatus(batchModel, dataObj.gs1Fields);
+      } catch (e) {
+        batchStatusService.unableToVerify();
+      }
     } catch (e) {
       console.log("Could not update record. ", e);
       return;
     }
-    try {
-      batchStatusService.getProductStatus(batchModel, dataObj.gs1Fields);
-    } catch (e) {
-      batchStatusService.unableToVerify();
-    }
+
 
     dataObj.status = batchStatusService.status;
     dataObj.statusMessage = batchStatusService.statusMessage;

@@ -61,7 +61,7 @@ export default class DrugDetailsController extends WebcController {
         this.model.expiryForDisplay = record.expiryForDisplay
         this.model.expiryTime = record.expiryTime;
         this.model.product = record.product;
-        this.model.batch = record.batch;
+        this.model.batch = record.batch || {};
         this.model.statusType = record.statusType;
         this.model.status = record.status;
         this.model.statusMessage = this.translate(record.statusMessage);
@@ -229,7 +229,7 @@ export default class DrugDetailsController extends WebcController {
   }
 
   renderEpi() {
-    if (typeof this.model.batch === "undefined") {
+    if (!this.model.batch || Object.keys(this.model.batch).length === 0) {
       this.updateUIInGTINOnlyCase();
       this.showModal(this.translate("batch_not_found"), this.translate("note"), () => {
       }, () => {
