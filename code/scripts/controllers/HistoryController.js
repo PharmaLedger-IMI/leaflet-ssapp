@@ -13,10 +13,10 @@ class HistoryDataSource extends DataSource {
   constructor(...props) {
     super(...props);
     this.setPageSize(8);
-    this.groups = {}
   }
 
   async getPageDataAsync(startOffset, dataLengthForCurrentPage) {
+    this.groups = {}
     let dbApi = require("opendsu").loadApi("db");
     this.enclaveDB = await $$.promisify(dbApi.getMainEnclaveDB)();
     this.settingsService = new SettingsService(this.enclaveDB);
@@ -135,8 +135,9 @@ export default class HistoryController extends WebcController {
         if (err || !refreshPeriod) {
           refreshPeriod = constants.DEFAULT_REFRESH_PERIOD;
         }
-        setInterval(() => {
-          productsDataSource.goToPageByIndex(productsDataSource.getCurrentPageIndex())
+        setInterval(async () => {
+          await productsDataSource.forceLoading();
+          await productsDataSource.forceUpdate();
         }, refreshPeriod * 1000)
       });
       this.onTagClick("view-details", (model, target, event) => {
