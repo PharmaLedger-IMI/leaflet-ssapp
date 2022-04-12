@@ -1,4 +1,4 @@
-.webc-datatable--scroll{
+.webc-datatable--scroll {
     --height: calc(100vh - 260px);
 }
 
@@ -102,6 +102,7 @@
 
 .history-item-container .productItem_name {
     color: var(--primary-backgtound-color);
+    font-weight: bold;
 }
 
 
@@ -146,7 +147,6 @@
     font-weight: var(--bold-font-weight);
 }
 
-.productItem_name,
 .productItem_status {
     text-transform: capitalize;
     font-weight: bold;
