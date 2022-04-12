@@ -3,6 +3,7 @@ import constants from "../../constants.js";
 import appLanguages from "../../appLanguages.js";
 
 const {WebcController} = WebCardinal.controllers;
+const config = require("opendsu").loadApi("config");
 
 export default class SettingsController extends WebcController {
   constructor(...props) {
@@ -48,7 +49,9 @@ export default class SettingsController extends WebcController {
       this.model.scanditLicense.value = await this.settingsService.asyncReadSetting("scanditLicense");
       this.model.advancedUser = await this.settingsService.asyncReadSetting("advancedUser");
       this.model.refreshPeriod.value = await this.settingsService.asyncReadSetting("refreshPeriod");
-       this.addListeners();
+      let lockFeatures = await $$.promisify(config.getEnv)("lockFeatures");
+      this.model.editableFeatures = !!lockFeatures;
+      this.addListeners();
     })
 
 
@@ -63,7 +66,6 @@ export default class SettingsController extends WebcController {
   }
 
   async renderEnvData() {
-    const config = require("opendsu").loadApi("config");
     let envFile = await $$.promisify(config.readEnvFile)();
     let displayData = [];
     Object.keys(envFile).forEach(key => {

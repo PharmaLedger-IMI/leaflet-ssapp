@@ -57,7 +57,10 @@
                     <div class="env-settings-container">
                         <span>{{$env_settings_label}}</span>
                         <ion-button data-tag="view-env">{{$view_btn}}</ion-button>
-                        <ion-button data-tag="edit-env">{{$edit_btn}}</ion-button>
+                        <div data-if="@editableFeatures">
+                            <ion-button data-tag="edit-env" slot="true">{{$edit_btn}}</ion-button>
+                        </div>
+
                     </div>
 
                 </leaflet-accordion>
