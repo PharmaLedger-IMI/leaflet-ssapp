@@ -462,7 +462,11 @@ psk-input .form-control {
     border-bottom-right-radius: var(--xl-border-radius);
     border-bottom-left-radius: var(--xl-border-radius);
     height: fit-content;
+    padding-left: 24px;
+    padding-right: 24px;
     padding-bottom: calc(var(--button-height) + 24px);
+    word-break: break-word;
+    text-align: center;
 }
 
 leaflet-shortcuts {
