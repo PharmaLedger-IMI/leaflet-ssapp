@@ -1,22 +1,22 @@
 {
-  "name": "leaflet-ssapp",
-  "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
-  "scripts": {
-    "postinstall": "node ./../node_modules/octopus/scripts/run dependencies devmode",
-    "build": "node ./../node_modules/octopus/scripts/buildDSU.js",
-    "update": "npm install",
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/PharmaLedger-IMI/leaflet-ssapp.git"
-  },
-  "author": "",
-  "license": "MIT",
-  "bugs": {
-    "url": "https://github.com/PharmaLedger-IMI/leaflet-ssapp/issues"
-  },
-  "homepage": "https://github.com/PharmaLedger-IMI/leaflet-ssapp#readme"
+    "name": "leaflet-ssapp",
+    "version": "v1.0.1",
+    "description": "",
+    "main": "index.js",
+    "scripts": {
+        "postinstall": "node ./../node_modules/octopus/scripts/run dependencies devmode",
+        "build": "node ./../node_modules/octopus/scripts/buildDSU.js",
+        "update": "npm install",
+        "test": "echo \"Error: no test specified\" && exit 1"
+    },
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/PharmaLedger-IMI/leaflet-ssapp.git"
+    },
+    "author": "",
+    "license": "MIT",
+    "bugs": {
+        "url": "https://github.com/PharmaLedger-IMI/leaflet-ssapp/issues"
+    },
+    "homepage": "https://github.com/PharmaLedger-IMI/leaflet-ssapp#readme"
 }
