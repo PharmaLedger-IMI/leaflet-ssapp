@@ -42,15 +42,24 @@ export default class ScanController extends WebcController {
         this.scanService = new ScanService(placeHolderElement);
 
         this.scanService.onStatusChanged = (status) => this.onScannerStatusChanged(status);
+        try {
+          await this.scanService.setup();
+        } catch (err) {
+          this.redirectToError(this.translate("err_cam_unavailable"), null, err.message);
+        }
 
-        await this.scanService.setup();
       } else {
         console.log("Multiple calls to content-updated. Maybe you should check this...");
       }
 
       if (this.startScanningAsSoonAsPossible) {
         delete this.startScanningAsSoonAsPossible;
-        await this.startScanning();
+        try {
+          await this.startScanning();
+        } catch (err) {
+          this.redirectToError(this.translate("err_unknown"), null, err.message);
+        }
+
       }
     });
 
@@ -240,7 +249,11 @@ export default class ScanController extends WebcController {
 
   switchCamera = async () => {
     if (this.scanService) {
-      await this.scanService.setup();
+      try {
+        await this.scanService.setup();
+      } catch (err) {
+        this.redirectToError(this.translate("err_cam_unavailable"), null, err.message);
+      }
       return;
     }
 

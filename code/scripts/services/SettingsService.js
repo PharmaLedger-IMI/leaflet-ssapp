@@ -46,7 +46,7 @@ export default class SettingsService {
   readSetting(property, callback) {
     this.enclaveDB.readKey(property, (err, record) => {
       if (err) {
-        console.log(`Returning default value for ${roperty}`);
+        console.log(`Returning default value for ${property}`);
         return callback(undefined, typeof DEFAULT_VALUES[property] !== "undefined" ? DEFAULT_VALUES[property] : "");
       }
       return callback(undefined, record);

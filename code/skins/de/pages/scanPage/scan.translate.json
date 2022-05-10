@@ -18,7 +18,7 @@
     "err_no_code_scanned": "2dMatrix-Code-Scan-Vorgang beendet. Kein Code gescannt oder Prozess abgebrochen.",
     "err_no_code_found": "Keine GS1-Datenmatrix gefunden.",
     "err_scan_not_supported": "Der Code kann nicht gescannt werden.",
-    "err_cam_unavailable": "Keine Kamera zum Scannen verfügbar.",
+    "err_cam_unavailable": "Keine Kamera zum Scannen verfügbar. Bitte überprüfen Sie die Verfügbarkeit und Berechtigungen der Kamera",
     "err_default": "GS1-Datenmatrix konnte nicht gescannt werden.",
     "err_unknown": "Code-Scannen und -Verarbeitung mit Fehlern beendet.",
     "err_barcode": "Barcode ist nicht lesbar, bitte wenden Sie sich an die Apotheke/den Arzt, die/der die Arzneimittelpackung ausgestellt hat.",
