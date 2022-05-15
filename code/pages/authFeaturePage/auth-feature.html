@@ -1,20 +1,24 @@
 <style>
-    .topPadding {
-        margin-top: 50px;
-        text-align: center;
-        height: 100%
+    webc-ssapp {
+        height: 100%;
     }
-    webc-ssapp{
-        height: 70%;
-        margin-top: 20px;
+
+    .content-slot-container {
+        height: 100%;
     }
 </style>
 
-<div class="topPadding">Placeholder for AuthFeature
-    <webc-container controller="AuthFeatureController">
-        <webc-ssapp app-name="AuthFeature"
-                    key-ssi="@ssi"
-                    landing-path="/"
-                    params="@gs1Fields" shadow></webc-ssapp>
-    </webc-container>
+<div class="mobile-container">
+    <page-template id="home-page-template" roundShape="false" shadow>
+        <landing-header goBack="true" slot="header-slot"></landing-header>
+
+        <webc-container controller="AuthFeatureController" slot="content-slot">
+            <div class="content-slot-container">
+                <webc-ssapp app-name="AuthFeature"
+                            key-ssi="@ssi"
+                            landing-path="/"
+                            params="@gs1Fields" shadow></webc-ssapp>
+            </div>
+        </webc-container>
+    </page-template>
 </div>

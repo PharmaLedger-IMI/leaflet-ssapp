@@ -1,0 +1,63 @@
+<style>
+    .custom-modal-header {
+        display: flex;
+        justify-content: center;
+        flex-direction: column;
+        width: 100%;
+        gap: 10px;
+        align-items: center;
+        margin-top: -40px;
+        margin-bottom: -40px;
+        padding: 30px 0px;
+        border-top-left-radius: 20px;
+        border-top-right-radius: 20px;
+    }
+
+    .custom-modal-header[status-type="warning"] {
+        background: linear-gradient(0deg, rgba(247, 224, 79, 0.1), rgba(247, 224, 79, 0.1)), #FFFFFF;
+    }
+
+    .custom-modal-header[status-type="error"] {
+        background: linear-gradient(0deg, rgba(248, 100, 88, 0.1), rgba(248, 100, 88, 0.1)), #FFFFFF;
+    }
+
+    .custom-modal-header img {
+        width: 32px;
+    }
+
+    main {
+        display: flex;
+        flex-direction: column;
+        height: 100%;
+        width: 100%;
+    }
+
+
+    webc-modal::part(main) {
+        min-height: 100px;
+        align-items: center;
+        display: flex;
+        height: 100%;
+    }
+
+    webc-modal::part(content) {
+        height: 75%
+    }
+
+    webc-container, webc-ssapp {
+        height: 100%;
+        width: 100%;
+    }
+</style>
+<div class="custom-modal-header header-color" slot="header">
+    <h5>{{@title}}</h5>
+</div>
+<main>
+    <webc-container controller="AuthFeatureController" data-view-model="@">
+        <webc-ssapp app-name="AuthFeature"
+                    key-ssi="@ssi"
+                    landing-path="/"
+                    params="@gs1Fields" shadow></webc-ssapp>
+    </webc-container>
+</main>
+
