@@ -201,3 +201,8 @@
     color: var(--ion-color-cornflower-shade);
     text-decoration: underline;
 }
+
+leaflet-accordion-item-content table {
+    display: block;
+    overflow: auto;
+}
