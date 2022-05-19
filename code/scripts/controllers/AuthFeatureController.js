@@ -28,9 +28,7 @@ export default class AuthFeatureController extends WebcController {
       this.settingsService = new SettingsService(enclaveDB);
       this.acdc = require('acdc').ReportingService.getInstance(this.settingsService);
 
-      this.on('windowAction', (result) => {
-        alert("Received acdc rezult: ", result);
-      })
+      this.on('windowAction', this.receiveAuthResponse.bind(this))
     })
 
     // this.on('windowAction', this.receiveAuthResponse.bind(this));
