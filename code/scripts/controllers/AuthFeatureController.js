@@ -13,12 +13,6 @@ export default class AuthFeatureController extends WebcController {
     // const {ssi, gs1Fields, gtinSSI, acdc, networkName} = history.location.state;
     const {ssi, gs1Fields, gtinSSI, acdc, networkName} = this.model;
     gs1Fields.domain = networkName;
-    this.model = {
-      ssi: ssi,
-      gtinSSI: gtinSSI,
-      gs1Fields: gs1Fields,
-      acdc: acdc
-    };
     let dbApi = require("opendsu").loadApi("db");
     dbApi.getMainEnclaveDB(async (err, enclaveDB) => {
       if (err) {
@@ -28,8 +22,6 @@ export default class AuthFeatureController extends WebcController {
       this.dbStorage = enclaveDB;
       this.settingsService = new SettingsService(enclaveDB);
       this.acdc = require('acdc').ReportingService.getInstance(this.settingsService);
-
-      // this.on('windowAction', this.receiveAuthResponse.bind(this))
     })
 
     this.on('windowAction', this.receiveAuthResponse.bind(this));
