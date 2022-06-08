@@ -8,9 +8,10 @@ const utils = gtinResolver.utils;
 export default class AuthFeatureController extends WebcController {
   constructor(element, history, ...args) {
     super(element, history, ...args);
-    if (!history.location.state)
-      return console.log(`ERROR: No state found for Auth Feature`);
-    const {ssi, gs1Fields, gtinSSI, acdc, networkName} = history.location.state;
+    // if (!history.location.state)
+    //   return console.log(`ERROR: No state found for Auth Feature`);
+    // const {ssi, gs1Fields, gtinSSI, acdc, networkName} = history.location.state;
+    const {ssi, gs1Fields, gtinSSI, acdc, networkName} = this.model;
     gs1Fields.domain = networkName;
     this.model = {
       ssi: ssi,
@@ -28,10 +29,10 @@ export default class AuthFeatureController extends WebcController {
       this.settingsService = new SettingsService(enclaveDB);
       this.acdc = require('acdc').ReportingService.getInstance(this.settingsService);
 
-      this.on('windowAction', this.receiveAuthResponse.bind(this))
+      // this.on('windowAction', this.receiveAuthResponse.bind(this))
     })
 
-    // this.on('windowAction', this.receiveAuthResponse.bind(this));
+    this.on('windowAction', this.receiveAuthResponse.bind(this));
   }
 
   receiveAuthResponse(evt) {
