@@ -62,7 +62,7 @@ export default class AuthFeatureController extends WebcController {
     self.dbStorage.getRecord(constants.HISTORY_TABLE, pk, (err, record) => {
       if (err)
         return callback(err);
-      record.acdc = Object.assign(record.acdc, {
+      record.acdc = Object.assign(record.acdc || {}, {
         authResponse: authResponse
       });
 
