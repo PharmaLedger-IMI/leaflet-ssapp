@@ -318,7 +318,8 @@ export default class ScanController extends WebcController {
 
   async updateReport(evt) {
     try {
-      await $$.promisify(evt.report)();
+      const newEvt = await $$.promisify(evt.report)();
+      evt.eventId = newEvt.eventId;
     } catch (err) {
       console.log(err)
     }
@@ -350,7 +351,7 @@ export default class ScanController extends WebcController {
         if (batchAnchorExists) {
           evt.setBatchDSUStatus(true);
           await this.updateReport(evt);
-          this.addPackageToHistoryAndRedirect(this.leafletInfo.gtinSSI, gs1Fields, (err) => {
+          this.addPackageToHistoryAndRedirect(this.leafletInfo.gtinSSI, gs1Fields, evt, (err) => {
             if (err) {
               return this.redirectToError(this.translate("err_to_history"), gs1Fields, err.message);
             }
@@ -358,12 +359,12 @@ export default class ScanController extends WebcController {
         } else {
           evt.setBatchDSUStatus(false);
           await this.updateReport(evt);
-          this.addConstProductDSUToHistory();
+          this.addConstProductDSUToHistory(evt);
         }
       } else {
         evt.setBatchDSUStatus(true);
         await this.updateReport(evt);
-        this.redirectToDrugDetails({productData: alreadyScanned.record.pk});
+        this.redirectToDrugDetails({productData: alreadyScanned.record.pk, acdc: evt});
       }
     })
   }
@@ -531,14 +532,14 @@ export default class ScanController extends WebcController {
     return this.processGS1Fields(this.parseCompositeCodeScan(scanResultArray));
   }
 
-  addConstProductDSUToHistory() {
+  addConstProductDSUToHistory(acdcEvt) {
     if (this.leafletInfo.gtinSSI) {
       this.leafletInfo.checkConstProductDSUExists((err, status) => {
         if (err) {
           return console.log("Failed to check constProductDSU existence", err);
         }
         if (status) {
-          this.addPackageToHistoryAndRedirect(this.leafletInfo.gtinSSI, this.leafletInfo.gs1Fields, (err) => {
+          this.addPackageToHistoryAndRedirect(this.leafletInfo.gtinSSI, this.leafletInfo.gs1Fields, acdcEvt, (err) => {
             if (err) {
               return this.redirectToError(this.translate("err_to_history"), this.leafletInfo.gs1Fields, err.message)
             }
@@ -550,9 +551,9 @@ export default class ScanController extends WebcController {
     }
   }
 
-  addPackageToHistoryAndRedirect(gtinSSI, gs1Fields, callback) {
+  addPackageToHistoryAndRedirect(gtinSSI, gs1Fields, acdcEvt, callback) {
     this.addPackageToScannedPackagesList().then(record => {
-      this.redirectToDrugDetails({productData: record.pk});
+      this.redirectToDrugDetails({productData: record.pk, acdc: acdcEvt});
     }).catch(err => {
       return callback(err);
     })
