@@ -49,11 +49,26 @@ export default class AuthFeatureController extends WebcController {
     const acdc = Object.assign({}, this.model.acdc, {
       authResponse: authResponse
     })
-    this.navigateToPageTag('drug-details', {
+    
+    const result = {
       gs1Fields: Object.assign({}, this.model.gs1Fields),
       gtinSSI: this.model.gtinSSI,
       acdc: acdc
-    });
+    }
+    
+    // Since this is now a modal, I dont really know how I should return these results back to the Main Application.
+    // This was the former way
+    // this.navigateToPageTag('drug-details', results);
+    
+    // You could use an event... but regardless, the scanning and validation is done, the report has been sent. all is good
+    
+    // So now I just close the modal and log the results... 
+    const modal = this.element.closest('webc-modal');
+    
+    if (!modal)
+      console.errors("This should be impossible...");
+    modal.hide().then(_ => console.log("Results of Auth Feature:\n" + JSON.stringify(result, undefined, 2)))
+    
   }
 
   storeResults(authResponse, callback) {
