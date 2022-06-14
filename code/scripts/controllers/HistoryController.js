@@ -1,6 +1,6 @@
 import constants from "../../constants.js";
 import SettingsService from "../services/SettingsService.js";
-import BatchStatusService from "../services/BatchStatusService.js";
+import recordUtils from "../../utils.js"
 
 const gtinResolver = require("gtin-resolver");
 const utils = gtinResolver.utils;
@@ -37,7 +37,7 @@ class HistoryDataSource extends DataSource {
         results = results.slice(startOffset, startOffset + dataLengthForCurrentPage);
         for (let result of results) {
           if (Date.now() - result['__timestamp'] > this.secondsToUpdate * 1000) {
-            result = await this.updateRecordData(result);
+            result = await recordUtils.updateRecordData(this.enclaveDB, result);
           }
           result.advancedView = this.advancedUser;
         }

@@ -2,6 +2,7 @@ import constants from "../../constants.js";
 import BatchStatusService from "../services/BatchStatusService.js";
 import SettingsService from "../services/SettingsService.js";
 import videoSourceUtils from "../utils/VideoSourceUtils.js";
+import recordUtils from "../../utils.js"
 
 const {WebcController} = WebCardinal.controllers;
 const gtinResolver = require("gtin-resolver");
@@ -54,7 +55,7 @@ export default class DrugDetailsController extends WebcController {
           });
           return
         }
-        record = await this.updateRecordData(record);
+        record = await recordUtils.updateRecordData(this.enclaveDB, record);
         this.gtinSSI = record.gtinSSI;
         this.gs1Fields = record.gs1Fields;
         this.model.serialNumber = this.gs1Fields.serialNumber === "0" ? "-" : this.gs1Fields.serialNumber;
@@ -403,38 +404,6 @@ export default class DrugDetailsController extends WebcController {
       //clear all highlights
       this.documentService.searchInHtml(query);
     });
-  }
-
-  async updateRecordData(dataObj) {
-
-    let productModel;
-    let batchModel;
-    let batchStatusService = new BatchStatusService();
-    try {
-      let leafletInfo = await LeafletInfoService.init(dataObj.gs1Fields, dataObj.networkName);
-      leafletInfo.gtinSSI = dataObj.gtinSSI; // this is for gtin only case (ignore batch number)
-      productModel = await leafletInfo.getProductClientModel();
-      try {
-        batchModel = await leafletInfo.getBatchClientModel();
-        batchStatusService.getProductStatus(batchModel, dataObj.gs1Fields);
-      } catch (e) {
-        batchStatusService.unableToVerify();
-      }
-    } catch (e) {
-      console.log("Could not update record. ", e);
-      return;
-    }
-
-    dataObj.status = batchStatusService.status;
-    dataObj.statusMessage = batchStatusService.statusMessage;
-    dataObj.statusType = batchStatusService.statusType;
-    dataObj.expiryForDisplay = batchStatusService.expiryForDisplay;
-    dataObj.expiryTime = batchStatusService.expiryTime;
-    dataObj.snCheck = batchStatusService.snCheck;
-    dataObj.product = productModel;
-    dataObj.batch = batchModel;
-    let result = await $$.promisify(this.enclaveDB.updateRecord)(constants.HISTORY_TABLE, dataObj.pk, dataObj)
-    return result;
   }
 
 }
