@@ -2,6 +2,7 @@ import constants from "../../constants.js";
 import BatchStatusService from "../services/BatchStatusService.js";
 import SettingsService from "../services/SettingsService.js";
 import videoSourceUtils from "../utils/VideoSourceUtils.js";
+import recordUtils from "../../utils.js"
 
 const {WebcController} = WebCardinal.controllers;
 const gtinResolver = require("gtin-resolver");
@@ -42,6 +43,7 @@ export default class DrugDetailsController extends WebcController {
         console.log('Error on getting enclave DB');
         return;
       }
+      this.enclaveDB = enclaveDB;
       enclaveDB.getRecord(constants.HISTORY_TABLE, history.location.state.productData, async (err, record) => {
         if (err) {
           console.log("Undefined product data");
@@ -54,6 +56,7 @@ export default class DrugDetailsController extends WebcController {
           });
           return
         }
+        record = await recordUtils.updateRecordData(this.enclaveDB, record);
         this.gtinSSI = record.gtinSSI;
         this.gs1Fields = record.gs1Fields;
         this.model.serialNumber = this.gs1Fields.serialNumber === "0" ? "-" : this.gs1Fields.serialNumber;
@@ -241,6 +244,8 @@ export default class DrugDetailsController extends WebcController {
       });
       if (this.model.product.gtin && this.model.product.showEPIOnUnknownBatchNumber) {
         this.model.showEPI = true;
+      } else {
+        this.model.showEPI = false;
       }
     } else {
       if (this.model.batch.defaultMessage || this.model.batch.recalled) {

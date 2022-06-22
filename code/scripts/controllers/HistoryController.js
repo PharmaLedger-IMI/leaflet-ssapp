@@ -1,6 +1,6 @@
 import constants from "../../constants.js";
 import SettingsService from "../services/SettingsService.js";
-import BatchStatusService from "../services/BatchStatusService.js";
+import recordUtils from "../../utils.js"
 
 const gtinResolver = require("gtin-resolver");
 const utils = gtinResolver.utils;
@@ -37,7 +37,7 @@ class HistoryDataSource extends DataSource {
         results = results.slice(startOffset, startOffset + dataLengthForCurrentPage);
         for (let result of results) {
           if (Date.now() - result['__timestamp'] > this.secondsToUpdate * 1000) {
-            result = await this.updateRecordData(result);
+            result = await recordUtils.updateRecordData(this.enclaveDB, result);
           }
           result.advancedView = this.advancedUser;
         }
@@ -78,38 +78,6 @@ class HistoryDataSource extends DataSource {
     return products;
   }
 
-  async updateRecordData(dataObj) {
-
-    let productModel;
-    let batchModel;
-    let batchStatusService = new BatchStatusService();
-    try {
-      let leafletInfo = await LeafletInfoService.init(dataObj.gs1Fields, dataObj.networkName);
-      productModel = await leafletInfo.getProductClientModel();
-      try {
-        batchModel = await leafletInfo.getBatchClientModel();
-        batchStatusService.getProductStatus(batchModel, dataObj.gs1Fields);
-      } catch (e) {
-        batchStatusService.unableToVerify();
-      }
-    } catch (e) {
-      console.log("Could not update record. ", e);
-      return;
-    }
-
-
-    dataObj.status = batchStatusService.status;
-    dataObj.statusMessage = batchStatusService.statusMessage;
-    dataObj.statusType = batchStatusService.statusType;
-    dataObj.expiryForDisplay = batchStatusService.expiryForDisplay;
-    dataObj.expiryTime = batchStatusService.expiryTime;
-    dataObj.snCheck = batchStatusService.snCheck;
-    dataObj.product = productModel;
-    dataObj.batch = batchModel;
-    let result = await $$.promisify(this.enclaveDB.updateRecord)(constants.HISTORY_TABLE, dataObj.pk, dataObj)
-    return result;
-  }
-
 }
 
 export default class HistoryController extends WebcController {
@@ -144,12 +112,11 @@ export default class HistoryController extends WebcController {
 
         enclaveDB.getRecord(constants.HISTORY_TABLE, model.pk, async (err, record) => {
           if (err) {
-            console.log("Could not find record for pk: ", pk);
+            console.log("Could not find record for pk: ", model.pk);
             return;
           }
-          let drugDetails = await productsDataSource.updateRecordData(record);
           this.navigateToPageTag("drug-details", {
-            productData: drugDetails.pk
+            productData: record.pk
           })
         })
       });

@@ -534,16 +534,21 @@ export default class ScanController extends WebcController {
 
   addConstProductDSUToHistory(acdcEvt) {
     if (this.leafletInfo.gtinSSI) {
-      this.leafletInfo.checkConstProductDSUExists((err, status) => {
+      this.leafletInfo.checkConstProductDSUExists(async (err, status) => {
         if (err) {
           return console.log("Failed to check constProductDSU existence", err);
         }
         if (status) {
-          this.addPackageToHistoryAndRedirect(this.leafletInfo.gtinSSI, this.leafletInfo.gs1Fields, acdcEvt, (err) => {
-            if (err) {
-              return this.redirectToError(this.translate("err_to_history"), this.leafletInfo.gs1Fields, err.message)
-            }
-          });
+          let alreadyScanned = await $$.promisify(this.packageAlreadyScanned.bind(this))();
+          if(alreadyScanned.status === false){
+            this.addPackageToHistoryAndRedirect(this.leafletInfo.gtinSSI, this.leafletInfo.gs1Fields, acdcEvt, (err) => {
+              if (err) {
+                return this.redirectToError(this.translate("err_to_history"), this.leafletInfo.gs1Fields, err.message)
+              }
+            });
+          }else{
+            this.redirectToDrugDetails({productData: alreadyScanned.record.pk})
+          }
         } else {
           return this.redirectToError(this.translate("err_combination"), this.leafletInfo.gs1Fields);
         }
