@@ -25,7 +25,8 @@ export default class DrugDetailsController extends WebcController {
       selectUserType: false,
       preferredDocType: "",
       twoOrMoreLanguages: false,
-      documentLanguages: []
+      documentLanguages: [],
+      acdc: history.location.state.acdc
     };
 
     this.model.aboutLabel = this.translate("about")
@@ -296,7 +297,8 @@ export default class DrugDetailsController extends WebcController {
             ssi: this.model.batch.acdcAuthFeatureSSI,
             gtinSSI: this.gtinSSI,
             gs1Fields: this.gs1Fields,
-            networkName: this.networkName
+            networkName: this.networkName,
+            acdc: this.model.acdc
           },
           disableExpanding: true,
           disableFooter: true
