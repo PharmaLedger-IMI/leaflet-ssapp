@@ -1,91 +1,24 @@
 <link href="pages/settingsPage/settings.css" rel="stylesheet"/>
 <div class="mobile-container">
-    <page-template id="home-page-template" roundShape="true" shadow>
-        <landing-header goBack="true" slot="header-slot"></landing-header>
-        <webc-container controller="SettingsController" slot="content-slot">
-            <div class="section-title">{{$main_title}}</div>
-            <div class="accordion">
-                <leaflet-accordion description="$lang_subtitle" label="$lang_title">
+
+    <webc-container controller="SettingsController" slot="content-slot">
+        <div class="close-page" data-tag="go-home"></div>
+        <div class="section-title">{{$main_title}}</div>
+        <div class="page-body-section bottom-rounded-container">
+            <div class="page-body">
+                <div>
+                    <div class="label"> {{$lang_title}}</div>
                     <ion-select class="select-options" data-for="@appLanguages" data-for-option="rerender"
                                 data-tag="language.select" interface="action-sheet" placeholder="$select_option"
                                 value="@preferredLanguage">
                         <ion-select-option value="@value">{{ @label }} ({{@nativeName}})</ion-select-option>
                     </ion-select>
-                </leaflet-accordion>
 
-                <leaflet-accordion description="$origin_subtitle" label="$origin_title">
-                    <div>{{ @origin }}</div>
-                </leaflet-accordion>
-
-                <leaflet-accordion description="$network_subtitle" label="$network_title">
-                    <div data-if="@networkEditMode">
-                        <div slot="true">
-                            <input class="settings-input" data-view-model="@networkName" type="text"/>
-                            <ion-button data-tag="change-network">{{$save_btn}}</ion-button>
-                            <ion-button data-tag="change-default-network">{{$reset_btn}}</ion-button>
-                        </div>
-                        <div slot="false">
-                            <input class="settings-input" data-view-model="@networkName"
-                                   readonly type="text"/>
-                            <ion-button class="network-edit-button" data="networkEditMode"
-                                        data-tag="change-edit-mode"> {{$edit_btn}} <i class="fa fa-pencil-square-o"></i>
-                            </ion-button>
-                        </div>
-                    </div>
-                </leaflet-accordion>
-
-                <leaflet-accordion description="$scandit_subtitle" label="$scandit_title">
-                    <div data-if="@scanditLicenseEditMode">
-                        <div slot="true">
-                            <input class="settings-input" data-view-model="@scanditLicense" type="text"/>
-                            <ion-button data-tag="set-scandit-license">{{$set_btn}}</ion-button>
-                        </div>
-                        <div slot="false">
-                            <input class="settings-input" data-view-model="@scanditLicense" readonly type="text"/>
-                            <ion-button class="network-edit-button" data="scanditLicenseEditMode"
-                                        data-tag="change-edit-mode"> {{$edit_btn}} <i class="fa fa-pencil-square-o"></i>
-                            </ion-button>
-                        </div>
-                    </div>
-                </leaflet-accordion>
-
-                <leaflet-accordion description="$advanced_subtitle" label="$advanced_title">
-                    <div class="checkbox-layout">
-                        <span>{{ $checkbox }}</span>
-                        <ion-checkbox checked="@advancedUser" id="advancedUserCheckbox" slot="end"></ion-checkbox>
-                    </div>
-                    <div class="env-settings-container">
-                        <span>{{$env_settings_label}}</span>
-                        <ion-button data-tag="view-env">{{$view_btn}}</ion-button>
-                        <div data-if="@editableFeatures">
-                            <ion-button data-tag="edit-env" slot="true">{{$edit_btn}}</ion-button>
-                        </div>
-
-                    </div>
-
-                </leaflet-accordion>
-
-                <leaflet-accordion description="$refresh_subtitle" label="$refresh_title">
-                    <div data-if="@refreshPeriodEditMode">
-                        <div slot="true">
-                            <input class="settings-input" data-view-model="@refreshPeriod" type="text"/>
-                            <ion-button data-tag="change-refresh-period">{{$save_btn}}</ion-button>
-                            <ion-button data-tag="change-default-refresh-period">{{$reset_btn}}</ion-button>
-                        </div>
-                        <div slot="false">
-                            <input class="settings-input" data-view-model="@refreshPeriod" readonly type="text"/>
-                            <ion-button class="network-edit-button" data="refreshPeriodEditMode"
-                                        data-tag="change-edit-mode"> {{$edit_btn}} <i class="fa fa-pencil-square-o"></i>
-                            </ion-button>
-                        </div>
-                    </div>
-                </leaflet-accordion>
-
-                <leaflet-accordion description="$acdc_subtitle" label="$acdc_title">
                     <div class="acdc-container">
                         <div class="checkbox-layout">
-                            <span>{{ $acdc_checkbox }}</span>
-                            <ion-checkbox checked="@acdc.enabled" id="acdcEnabledCheckbox" slot="end"></ion-checkbox>
+                            <div class="label">{{ $acdc_checkbox }}</div>
+                            <ion-checkbox checked="@acdc.enabled" id="acdcEnabledCheckbox"
+                                          slot="end"></ion-checkbox>
                         </div>
                         <div class="acdcOptionsContainer" hidden="true">
                             <div class="checkbox-layout acdc-option">
@@ -100,23 +33,102 @@
                             </div>
                         </div>
                     </div>
-                </leaflet-accordion>
 
 
-                <leaflet-accordion class="dev-options" description="$dev_subtitle" hidden="@devOptions.areDisabled"
-                                   label="$dev_title">
-                    <ion-item button class="dev-options" class="ion"
-                              detail="false">
-                        <p>
-                            <ion-badge color="dark" mode="ios">Experimental</ion-badge>
-                            <br>Applicable only for iOS
-                            <br>By clicking the following button you will be redirected to native integration page.
-                        </p>
-                        <ion-button data-tag="navigate-to-native-page">{{$test_native_integration}}</ion-button>
-                    </ion-item>
-                </leaflet-accordion>
+                    <div class="forward-to-page" data-tag="go-to-help">
+                        <div class="label"> {{$fwd_help}}</div>
+                        <div class="fwd-icon"></div>
+                    </div>
+                    <div class="forward-to-page" data-tag="go-to-about">
+                        <div class="label"> {{$fwd_about}}</div>
+                        <div class="fwd-icon"></div>
+                    </div>
+
+
+                    <div class="advanced-settings" data-if="@showAdvanced">
+                        <div class="label"> {{$origin_subtitle}}</div>
+                        <div>{{ @origin }}</div>
+                        <div class="label"> {{$network_subtitle}}</div>
+                        <div data-if="@networkEditMode">
+                            <div slot="true">
+                                <input class="settings-input" data-view-model="@networkName" type="text"/>
+                                <ion-button data-tag="change-network">{{$save_btn}}</ion-button>
+                                <ion-button data-tag="change-default-network">{{$reset_btn}}</ion-button>
+                            </div>
+                            <div slot="false">
+                                <input class="settings-input" data-view-model="@networkName"
+                                       readonly type="text"/>
+                                <ion-button class="network-edit-button" data="networkEditMode"
+                                            data-tag="change-edit-mode"> {{$edit_btn}} <i
+                                        class="fa fa-pencil-square-o"></i>
+                                </ion-button>
+                            </div>
+                        </div>
+                        <div class="label"> {{$scandit_subtitle}}</div>
+                        <div data-if="@scanditLicenseEditMode">
+                            <div slot="true">
+                                <input class="settings-input" data-view-model="@scanditLicense" type="text"/>
+                                <ion-button data-tag="set-scandit-license">{{$set_btn}}</ion-button>
+                            </div>
+                            <div slot="false">
+                                <input class="settings-input" data-view-model="@scanditLicense" readonly
+                                       type="text"/>
+                                <ion-button class="network-edit-button" data="scanditLicenseEditMode"
+                                            data-tag="change-edit-mode"> {{$edit_btn}} <i
+                                        class="fa fa-pencil-square-o"></i>
+                                </ion-button>
+                            </div>
+                        </div>
+                        <div class="label"> {{$advanced_subtitle}}</div>
+                        <div class="checkbox-layout">
+                            <span>{{ $checkbox }}</span>
+                            <ion-checkbox checked="@advancedUser" id="advancedUserCheckbox"
+                                          slot="end"></ion-checkbox>
+                        </div>
+                        <div class="env-settings-container">
+                            <span>{{$env_settings_label}}</span>
+                            <ion-button data-tag="view-env">{{$view_btn}}</ion-button>
+                            <div data-if="@editableFeatures">
+                                <ion-button data-tag="edit-env" slot="true">{{$edit_btn}}</ion-button>
+                            </div>
+
+                        </div>
+                        <div class="label"> {{$refresh_subtitle}}</div>
+                        <div data-if="@refreshPeriodEditMode">
+                            <div slot="true">
+                                <input class="settings-input" data-view-model="@refreshPeriod" type="text"/>
+                                <ion-button data-tag="change-refresh-period">{{$save_btn}}</ion-button>
+                                <ion-button data-tag="change-default-refresh-period">{{$reset_btn}}</ion-button>
+                            </div>
+                            <div slot="false">
+                                <input class="settings-input" data-view-model="@refreshPeriod" readonly
+                                       type="text"/>
+                                <ion-button class="network-edit-button" data="refreshPeriodEditMode"
+                                            data-tag="change-edit-mode"> {{$edit_btn}} <i
+                                        class="fa fa-pencil-square-o"></i>
+                                </ion-button>
+                            </div>
+                        </div>
+                        <div hidden="@devOptions.areDisabled">
+                            <div class="label"> {{$dev_subtitle}}</div>
+                            <ion-item button class="dev-options" class="ion"
+                                      detail="false">
+                                <p>
+                                    <ion-badge color="dark" mode="ios">Experimental</ion-badge>
+                                    <br>Applicable only for iOS
+                                    <br>By clicking the following button you will be redirected to native
+                                    integration
+                                    page.
+                                </p>
+                                <ion-button data-tag="navigate-to-native-page">{{$test_native_integration}}
+                                </ion-button>
+                            </ion-item>
+                        </div>
+
+                    </div>
+                </div>
             </div>
-        </webc-container>
-    </page-template>
+        </div>
+    </webc-container>
 </div>
 

@@ -2,20 +2,22 @@
     display: flex;
     justify-content: center;
     width: 100%;
-    position: relative;
-    bottom: 90px;
-    margin-left: auto;
-    margin-right: auto;
+    position: absolute;
+    bottom: 24px;
 }
-
+.scan-button ion-button{
+    height: 62px;
+    margin-right: 16px;
+    margin-left: 16px;
+    width: 100%;
+}
 .scan-button ion-button::part(native) {
     background: var(--primary-backgtound-color);
     border-radius: var(--xxl-border-radius);
     text-transform: capitalize;
     padding: 8px;
-    width: 264px;
-    height: 62px;
     font-size: var(--m-text-size);
+    --ripple-color: transparent;
 }
 
 .scan-image {

@@ -1,65 +1,64 @@
 <link href="pages/scanPage/scan.css" rel="stylesheet">
-<div class="mobile-container">
-    <page-template roundShape="false" shadow>
-        <scan-header slot="header-slot"></scan-header>
-        <webc-container controller="ScanController" slot="content-slot">
+<div class="mobile-container dark-screen">
+    <webc-container controller="ScanController" shadow>
 
-            <div data-if="@useScandit">
-                <div id="scandit-barcode-picker-wrapper" slot="true">
-                    <div id="scandit-barcode-picker"></div>
-                </div>
-                <div data-if="@hasCode" slot="false" id="watcherIf" data-if-options="events">
-                    <div class="barcode-scanner-container" slot="false">
-                        <div id="scanner-placeholder">
-                            <!-- injected automatically -->
-                        </div>
-                        <webc-switch condition="@scannerStatus">
-                            <section class="message" slot="feedback">
-                                <h3>{{ $status.feedback.0 }}</h3>
-                                <div>{{ $status.feedback.1 }}</div>
-                            </section>
-                            <section class="message" slot="no-cameras">
-                                <h3>{{ $status.no-cameras.0 }}</h3>
-                                <div>{{ $status.no-cameras.1 }}</div>
-                            </section>
-                            <section class="message" slot="permission-denied">
-                                <h3>{{ $status.permission-denied.0 }}</h3>
-                                <div>{{ $status.permission-denied.1 }}</div>
-                            </section>
-                            <section slot="active">
-                                <img src="./assets/icons/scan-in-progress.svg"/>
-                            </section>
-                            <section slot="done">
-                                <img src="./assets/icons/scan-done.svg"/>
-                            </section>
-                        </webc-switch>
-                        <!--<psk-barcode-scanner data="@data" slot="false" snap-video>
-                            <div slot="init">
-                                <img class="scan-status" src="./assets/icons/scan-in-progress.svg"/>
-                            </div>
-                            <div slot="feedback">
-                                <img class="scan-status" src="./assets/icons/scan-in-progress.svg"/>
-                            </div>
-                            <div class="camera-error" slot="access_denied">
-                                <h3>{{$alert1}}</h3>
-                                <span>{{$alert2}} </span>
-                            </div>
-                            <div class="camera-error" slot="error">
-                                <h3>{{$alert3}}</h3>
-                                <span>{{$alert4}}</span>
-                            </div>
-                            <div slot="done">
-                                <img class="scan-status" src="./assets/icons/scan-done.svg"/>
-                            </div>
-                            <div class="scan-shape" slot="active">
-                                <img class="scan-status" src="./assets/icons/scan-in-progress.svg"/>
-                            </div>
-                        </psk-barcode-scanner>-->
+        <scan-header></scan-header>
+        <div data-if="@useScandit">
+            <div id="scandit-barcode-picker-wrapper" slot="true">
+                <div id="scandit-barcode-picker"></div>
+            </div>
+            <div data-if="@hasCode" slot="false" id="watcherIf" data-if-options="events">
+                <div class="barcode-scanner-container" slot="false">
+                    <div id="scanner-placeholder">
+                        <!-- injected automatically -->
                     </div>
+                    <webc-switch condition="@scannerStatus">
+                        <section class="message" slot="feedback">
+                            <h3>{{ $status.feedback.0 }}</h3>
+                            <div>{{ $status.feedback.1 }}</div>
+                        </section>
+                        <section class="message" slot="no-cameras">
+                            <h3>{{ $status.no-cameras.0 }}</h3>
+                            <div>{{ $status.no-cameras.1 }}</div>
+                        </section>
+                        <section class="message" slot="permission-denied">
+                            <h3>{{ $status.permission-denied.0 }}</h3>
+                            <div>{{ $status.permission-denied.1 }}</div>
+                        </section>
+                        <section slot="active">
+                            <img src="./assets/images/icons/scan-in-progress.svg"/>
+                        </section>
+                        <section slot="done">
+                            <img src="./assets/images/icons/scan-done.svg"/>
+                        </section>
+                    </webc-switch>
+                    <!--<psk-barcode-scanner data="@data" slot="false" snap-video>
+                        <div slot="init">
+                            <img class="scan-status" src="./assets/icons/scan-in-progress.svg"/>
+                        </div>
+                        <div slot="feedback">
+                            <img class="scan-status" src="./assets/icons/scan-in-progress.svg"/>
+                        </div>
+                        <div class="camera-error" slot="access_denied">
+                            <h3>{{$alert1}}</h3>
+                            <span>{{$alert2}} </span>
+                        </div>
+                        <div class="camera-error" slot="error">
+                            <h3>{{$alert3}}</h3>
+                            <span>{{$alert4}}</span>
+                        </div>
+                        <div slot="done">
+                            <img class="scan-status" src="./assets/icons/scan-done.svg"/>
+                        </div>
+                        <div class="scan-shape" slot="active">
+                            <img class="scan-status" src="./assets/icons/scan-in-progress.svg"/>
+                        </div>
+                    </psk-barcode-scanner>-->
                 </div>
             </div>
-        </webc-container>
-    </page-template>
+        </div>
+    </webc-container>
+
 
     <scan-status-button></scan-status-button>
 

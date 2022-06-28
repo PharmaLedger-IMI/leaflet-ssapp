@@ -3,7 +3,7 @@ function getEmbeddedVideo(encodedVideoSource) {
   let videoUrl;
 
   if (videoSource.startsWith("https://www.youtube.com/")) {
-    videoUrl = `https://www.youtube.com/embed/${videoSource.split("v=")[1]}?autoplay=1`
+    videoUrl = `https://www.youtube.com/embed/${videoSource.split("v=")[1]}?autoplay=0`
   }
   if (videoSource.startsWith("https://vimeo.com/")) {
     videoUrl = `https://player.vimeo.com/video/${videoSource.split("vimeo.com/")[1]}`

@@ -1,0 +1,31 @@
+<link href="pages/onBoardingPage/onboarding.css" rel="stylesheet">
+<div class="mobile-container dark-screen">
+    <webc-container controller="OnBoardingController">
+        <div class="page-header"></div>
+        <div class="page-body" data-if="@firstStep">
+            <div class="page-title-section" slot="true">{{ $title }}</div>
+            <div class="page-title-section" slot="false">
+                {{ $terms_title_first_row }} <br>
+                {{$terms_title_second_row}}
+            </div>
+            <div class="content-container" slot="true">
+                <div class="icon-div"></div>
+            </div>
+            <div class="explain-container" slot="true">
+                <span>{{$scan_explain}}</span>
+            </div>
+            <div class="page-submit-button-section" data-tag="get-started" slot="true">
+                {{$get_started}}
+            </div>
+            <div class="terms-and-conditions" slot="false">
+                <div class="terms-text">{{$terms_and_conditions}}</div>
+                <div class="buttons-container">
+                    <div class="terms-button disagree" data-tag="disagree-terms">{{$disagree}}</div>
+                    <div class="terms-button agree" data-tag="agree-terms">{{$agree}}</div>
+                </div>
+            </div>
+        </div>
+
+    </webc-container>
+
+</div>

@@ -15,6 +15,7 @@ export default class SettingsController extends WebcController {
       networkEditMode: true,
       scanditLicenseEditMode: true,
       refreshPeriodEditMode: true,
+      showAdvanced: false,
       networkName: {value: constants.DEFAULT_NETWORK_NAME},
       advancedUser: false,
       refreshPeriod: {value: constants.DEFAULT_REFRESH_PERIOD},
@@ -58,9 +59,14 @@ export default class SettingsController extends WebcController {
     // ACDC integration settings
     this.acdc = require('acdc').ReportingService.getInstance(this.settingsService);
 
-    this.acdc.setSettingsToModel(this.model, err => console.log(err
-      ? `Error Binding ACDC settings to model: ${err}`
-      : "Acdc Settings Added"));
+    this.acdc.setSettingsToModel(this.model, (err) => {
+      if (err) {
+        console.log(`Error Binding ACDC settings to model: ${err}`);
+      } else {
+        console.log("Acdc Settings Added");
+        this.querySelector(".acdcOptionsContainer").hidden = !this.model.acdc.enabled;
+      }
+    });
 
     this.setDeveloperOptions();
   }
@@ -154,6 +160,24 @@ export default class SettingsController extends WebcController {
     this.navigateToPageTag("native")
   }
 
+  addIonicListeners() {
+    try {
+      this.querySelector("ion-checkbox#advancedUserCheckbox").addEventListener("ionChange", (ev) => {
+        this.model.advancedUser = ev.detail.checked;
+        this.settingsService.writeSetting("advancedUser", ev.detail.checked, (err) => {
+          if (err) {
+            console.log(err);
+            return;
+          }
+        })
+      })
+
+
+    } catch (e) {
+
+    }
+  }
+
   addListeners() {
 
     this.onTagClick('navigate-to-native-page', this.navigateToNativeIntegrationPage);
@@ -209,30 +233,6 @@ export default class SettingsController extends WebcController {
     });
 
     this.onTagEvent('language.select', 'ionChange', this.changeLanguageHandler);
-    this.querySelector("ion-checkbox#advancedUserCheckbox").addEventListener("ionChange", (ev) => {
-      this.model.advancedUser = ev.detail.checked;
-      this.settingsService.writeSetting("advancedUser", ev.detail.checked, (err) => {
-        if (err) {
-          console.log(err);
-          return;
-        }
-      })
-    })
-
-    this.querySelector("ion-checkbox#acdcEnabledCheckbox").addEventListener("ionChange", (ev) => {
-      this.model.acdc.enabled = ev.detail.checked;
-      this.querySelector(".acdcOptionsContainer").hidden = !this.model.acdc.enabled;
-      if (!this.model.acdc.enabled) {
-        this.model.acdc.did_enabled = this.model.acdc.location_enabled = this.model.acdc.enabled;
-      }
-    })
-
-    this.querySelector("ion-checkbox#acdcDidCheckbox").addEventListener("ionChange", (ev) => {
-      this.model.acdc.did_enabled = ev.detail.checked;
-    })
-    this.querySelector("ion-checkbox#acdcLocationCheckbox").addEventListener("ionChange", (ev) => {
-      this.model.acdc.location_enabled = ev.detail.checked;
-    })
 
     this.onTagClick("set-scandit-license", (model, target, event) => {
       let newValue = target.parentElement.querySelector("input").value;
@@ -266,5 +266,45 @@ export default class SettingsController extends WebcController {
         {controller: "FeaturesModalController", disableExpanding: true}
       );
     })
+
+    this.querySelector("ion-checkbox#acdcEnabledCheckbox").addEventListener("ionChange", (ev) => {
+      this.model.acdc.enabled = ev.detail.checked;
+      this.querySelector(".acdcOptionsContainer").hidden = !this.model.acdc.enabled;
+      if (!this.model.acdc.enabled) {
+        this.model.acdc.did_enabled = this.model.acdc.location_enabled = this.model.acdc.enabled;
+      }
+    })
+
+    this.querySelector("ion-checkbox#acdcDidCheckbox").addEventListener("ionChange", (ev) => {
+      this.model.acdc.did_enabled = ev.detail.checked;
+    })
+
+    this.querySelector("ion-checkbox#acdcLocationCheckbox").addEventListener("ionChange", (ev) => {
+      this.model.acdc.location_enabled = ev.detail.checked;
+    })
+
+    this.onTagClick("go-to-about", () => {
+      this.navigateToPageTag("about");
+    });
+
+    this.onTagClick("go-home", () => {
+      this.navigateToPageTag("home");
+    });
+
+    this.onTagClick("go-to-help", () => {
+      this.navigateToPageTag("help");
+    })
+    let clickCounter = 0;
+    this.querySelector(".section-title").addEventListener("click", () => {
+      clickCounter++;
+      if (clickCounter >= 5) {
+        this.model.showAdvanced = true;
+        clickCounter = 0;
+      }
+    })
+    if (this.model.showAdvanced) {
+      this.addIonicListeners();
+    }
+
   }
 }

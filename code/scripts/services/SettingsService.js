@@ -5,7 +5,8 @@ const DEFAULT_VALUES = {
   "networkName": constants.DEFAULT_NETWORK_NAME,
   "scanditLicense": "",
   "advancedUser": false,
-  "refreshPeriod": constants.DEFAULT_REFRESH_PERIOD
+  "refreshPeriod": constants.DEFAULT_REFRESH_PERIOD,
+  "onboardingComplete": false
 
 }
 export default class SettingsService {

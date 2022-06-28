@@ -1,5 +1,14 @@
+.mobile-container.dark-screen {
+    background-color: black;
+}
+
+scan-header {
+    position: relative;
+    top: 25px;
+}
+
+
 .barcode-scanner-container {
-    height: calc(100vh - 97px);
     background: var(--primary-backgtound-color);
 }
 
@@ -9,7 +18,8 @@
 
 #scanner-placeholder ~ webc-switch > * {
     position: absolute;
-    left: 0.5em; right: 0.5em;
+    left: 0.5em;
+    right: 0.5em;
     bottom: 1em;
     text-align: center;
     color: var(--secondary-background-color);
@@ -17,7 +27,8 @@
 }
 
 #scanner-placeholder ~ webc-switch > *.message {
-    top: 50%; bottom: unset;
+    top: 50%;
+    bottom: unset;
     padding-bottom: 1em;
     padding-left: var(--l-space);
     padding-right: var(--l-space);

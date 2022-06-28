@@ -1,15 +1,28 @@
 <link href="components/page-template/page-template.css" rel="stylesheet">
 
-<ion-header id="header-template">
+<!--
+<ion-header id="header-template" page-theme="@page-theme">
     <ion-toolbar>
         <slot name="header-slot"></slot>
     </ion-toolbar>
 </ion-header>
-<div class="page-content-container" roundShape="@roundShape" pageName="@pageName">
+<div class="page-content-container" page-name="@page-name" page-theme="@page-theme">
     <ion-content id="page-ion-content">
-        <div class="content-slot-wrapper" no-padding="@no-padding">
+        <div class="content-slot-wrapper" no-padding="@no-padding" part="content-part">
             <slot name="content-slot">
             </slot>
         </div>
     </ion-content>
+</div>
+-->
+<div class="page-container" page-theme="@page-theme">
+    <div id="header-template">
+        <slot name="header-slot"></slot>
+    </div>
+    <div class="page-content-container" page-name="@page-name" page-theme="@page-theme">
+        <div class="content-slot-wrapper" no-padding="@no-padding" part="content-part">
+            <slot name="content-slot">
+            </slot>
+        </div>
+    </div>
 </div>

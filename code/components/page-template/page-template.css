@@ -1,7 +1,31 @@
+.page-content-container[page-theme="dark-theme"] {
+    --background: var(--primary-backgtound-color);
+    --color: white;
+}
+#header-template ion-toolbar {
+    height: 97px;
+    display: flex;
+    justify-content: center;
+}
+.page-content-container {
+    height: calc(100% - 97px);
+    max-height: 100%;
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+}
+/*
+#header-template[page-theme="dark-theme"] ion-toolbar,
+.page-content-container[page-theme="dark-theme"] ion-content {
+    --background: var(--primary-backgtound-color);
+    --color: white;
+}
+
+#header-template::after {
+    background-image: none !important;
+}
 
 #header-template ion-toolbar {
-    --background: var(--primary-backgtound-color);
-    color: white;
     height: 97px;
     display: flex;
     justify-content: center;
@@ -12,44 +36,22 @@
 }
 
 .page-content-container {
-    background: var(--primary-backgtound-color);
     height: calc(100% - 97px);
     max-height: 100%;
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
 }
 
 .page-content-container ion-content {
     top: 0px;
-    background: var(--secondary-background-color);
 }
 
-.empty-history.page-content-container ion-content::part(scroll) {
+.page-content-container[page-name="onboarding"] div::part(content-part) {
     height: 100%;
     display: flex;
     flex-direction: column;
     justify-content: center;
     text-align: center
 }
-
-.page-content-container[pageName="about"] ion-content .content-slot-wrapper {
-    height: 100%;
-}
-
-.page-content-container[roundShape=true] ion-content .content-slot-wrapper {
-    padding: 20px 25px 0px 25px;
-}
-
-.page-content-container[roundShape=true] ion-content {
-    border-top-right-radius: var(--xl-border-radius);
-    border-top-left-radius: var(--xl-border-radius);
-}
-
-.page-content-container[roundShape=false] ion-content .content-slot-wrapper,
-.page-content-container[roundShape=true] ion-content .content-slot-wrapper[no-padding=true] {
-    padding: 0px;
-}
-
-.page-content-container[roundShape=false] ion-content .content-slot-wrapper {
-    padding: 0px;
-    height: 100%;
-}
-
+*/

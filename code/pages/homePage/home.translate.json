@@ -1,7 +1,7 @@
 {
   "title": "Scan History",
-  "welcome_row1": "Welcome to Pharmaledger",
-  "welcome_row2": "An app created to help you inquire about new or prescribed medications",
+  "welcome_row1": "Welcome!",
+  "welcome_row2": "Scan your first 2D code on your medicine to scan and view information",
   "info1": "Expiry:",
   "info2": "Batch number:",
   "title1": "STEP 1",

@@ -1,0 +1,143 @@
+.page-header {
+    height: 8%;
+    width: 100%;
+    position: relative;
+    background: url("./../../assets/images/icons/app-icon.svg") no-repeat center;
+    background-position-y: bottom;
+}
+
+.page-body {
+    padding: 0 35px;
+    display: flex;
+    flex-flow: column;
+    height: 100%;
+}
+
+.page-body .page-title-section {
+    font-size: 18px;
+    line-height: 150%;
+    font-family: "DM Sans bold";
+    margin-top: 3.66%;
+}
+
+.page-body .content-container {
+    margin-top: 30%;
+}
+
+@keyframes animatedBackground {
+    0% {
+        background-position: 15% 97%;
+    }
+    100% {
+        background-position: 75% 0;
+    }
+}
+
+@keyframes animatedIcon {
+    0% {
+        background-image: url(../../assets/images/icons/good-icon.svg);
+    }
+    55% {
+        background-image: url(../../assets/images/icons/wrong-icon.svg);
+    }
+}
+
+
+.content-container {
+    align-self: center;
+    background-image: url(./../../assets/images/medicine-pack.png);
+    aspect-ratio: 1 / 1;
+    background-position: 15% 97%;
+    background-repeat: no-repeat;
+    transition: 1s auto;
+    background-size: 220% 115%;
+    animation: animatedBackground 5s linear infinite;
+    -moz-animation: animatedBackground 5s linear infinite;
+    -webkit-animation: animatedBackground 5s linear infinite;
+    -ms-animation: animatedBackground 5s linear infinite;
+    -o-animation: animatedBackground 5s linear infinite;
+    animation-delay: 1s;
+    animation-direction: alternate;
+    border-radius: 24px;
+    width: calc(100% - 72px);
+}
+
+.icon-div {
+    position: relative;
+    top: -32px;
+    right: -32px;
+    width: 64px;
+    height: 64px;
+    animation: animatedIcon 5s steps(1, end) infinite;
+    -moz-animation: animatedIcon 5s steps(1, end) infinite;
+    -webkit-animation: animatedIcon 5s steps(1, end) infinite;
+    -ms-animation: animatedIcon 5s steps(1, end) infinite;
+    -o-animation: animatedIcon 5s steps(1, end) infinite;
+    animation-delay: 1s;
+    animation-direction: alternate;
+    background-image: url(../../assets/images/icons/good-icon.svg);
+    float: right;
+}
+
+.explain-container {
+    font-family: "DM Sans bold";
+    font-size: 15px;
+    line-height: 150%;
+    margin-top: 24px;
+}
+
+.page-submit-button-section {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 8px;
+    gap: 10px;
+    font-family: "DM Sans bold";
+    height: 62px;
+    background: #61E4A3;
+    border-radius: 42px;
+    color: #02272F;
+    bottom: 77px;
+    position: absolute;
+    left: 35px;
+    right: 35px;
+}
+
+.terms-and-conditions {
+    background: #F0EEEC;
+    border-radius: 20px;
+    margin-top: 30px;
+    color: #516266;
+    padding: 24px;
+    text-align: justify;
+    max-height: 69%;
+    overflow: auto;
+    position: relative;
+}
+
+.buttons-container {
+    display: flex;
+    justify-content: space-around;
+    margin-top: 30px;
+}
+
+.terms-button {
+    font-family: "DM Sans bold";
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 8px;
+    gap: 10px;
+    width: 135px;
+    height: 40px;
+    border: 1px solid #516266;
+    border-radius: 62px;
+}
+
+.terms-button.agree {
+    background: #013646;
+    color: white;
+}

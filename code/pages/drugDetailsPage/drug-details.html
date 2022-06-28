@@ -1,92 +1,77 @@
 <link href="pages/drugDetailsPage/drug-details.css" rel="stylesheet"/>
 
-<div class="mobile-container">
-    <page-template id="home-page-template" roundShape="false" shadow>
-        <landing-header goBack="true" slot="header-slot"></landing-header>
+<div class="mobile-container dark-screen">
 
-        <webc-container controller="DrugDetailsController" slot="content-slot">
-            <div data-if="@displayStatus">
-                <div class="status-container" data-tag="learn-more" slot="true" status-type="@statusType">
-                    <div class="icon-container"></div>
-                    <span>{{@statusMessage}}</span>
-                    <span class="learn-more-link">{{$learn_more}}</span>
+    <webc-container controller="DrugDetailsController">
+        <div class="page-content-wrapper">
+            <div class="page-header">
+                <div class="product-name-container">
+                    <div class="back-button" data-tag="go-back"></div>
+                    <div class="product-name" searchbar="@searchbarStatus">{{ @product.name }}</div>
+                    <div class="search-container" searchbar="@searchbarStatus" status-type="@statusType">
+                        <div class="status-icon-container"></div>
+                        <ion-searchbar showCancelButton="focus" searchIcon="undefined"
+                                       enterkeyhint="enter"></ion-searchbar>
+                    </div>
+                    <div class="search-button" data-tag="do-search" searchbar="@searchbarStatus">
+                    </div>
+                    <div class="close-search-button" data-tag="close-search" searchbar="@searchbarStatus">
+                    </div>
+
                 </div>
-                <div class="padding-item" slot="true"></div>
+                <div class="product-description" searchbar="@searchbarStatus">{{ @product.description }}</div>
+                <div data-if="@displayStatus">
+                    <div class="status-container" slot="true" searchbar="@searchbarStatus" status-type="@statusType">
+                        <div class="status-icon-container"></div>
+                        <span>{{@statusMessage}}</span>
+                    </div>
+                    <div class="padding-item" slot="true"></div>
+                </div>
             </div>
-            <div class="content-slot-container">
-                <header hidden id="leaflet-header" show-leaflet="@showEPI">
-                    <section>
-                        <div class="product-name">
-                            <div>{{ @product.name }}</div>
-                            <div class="verified-icon" data-tag="click-verified">
-                                <img src="./assets/icons/leaflet-verified.svg"/>
+            <div class="content-slot-container bottom-rounded-container">
+                <div data-if="@loadingData">
+                    <leaflet-spinner slot="true"></leaflet-spinner>
+                    <div data-if="@showEPI" slot="false" class="leaflet-wrapper">
+                        <div class="video-container" data-if="@showVideoLink" slot="true">
+                            <div class="video-content" data-view-model="@videoSourceHtml">
                             </div>
                         </div>
-                        <div class="product-description">{{ @product.description }}</div>
-
-                        <div class="auth-feature-container" data-if="@showACDCAuthLink">
-                            <h6 data-tag="auth-feature">{{$verify_package}}</h6>
-                            <div class="auth-feature product-description" data-tag="auth-feature">
-                                <img src="./assets/icons/verify-package.svg"/>
+                        <div class="leaflet-icon-options-container" slot="true">
+                            <div class="e-leaflet-icon">{{ $e_leaflet }}</div>
+                            <div class="leaflet-options-container" data-if="@showLeafletOptions">
+                                <div data-tag="toggle-leaflet-options" slot="true">
+                                </div>
                             </div>
                         </div>
-                        <div class="video-container" data-if="@showVideoLink">
-                            <h6 data-tag="show-video">{{$watch_video}}</h6>
-                            <div class="product-video product-description" data-tag="show-video">
-                                <img src="./assets/icons/youtube-logo.png"/>
-                            </div>
-                        </div>
-                        <div class="language-doc-type-container">
+                        <div class="leaflet-options-wrapper" slot="true" data-if="@showLeafletOptions">
                             <div class="select-document-type-container" hidden>
                                 <ion-select class="select-document-type" interface="action-sheet"
-                                            placeholder="Select Document Type" value="@preferredDocType">
+                                            placeholder="Select Document Type"
+                                            value="@preferredDocType">
                                     <ion-select-option value="smpc">{{$smpc}}</ion-select-option>
                                     <ion-select-option value="leaflet">{{$leaflet}}</ion-select-option>
                                 </ion-select>
                             </div>
                             <div class="select-document-language-container" hidden>
-                                <ion-select class="select-document-language" data-for="@documentLanguages"
+                                <ion-select class="select-document-language"
+                                            data-for="@documentLanguages"
                                             data-for-option="rerender"
-                                            interface="action-sheet" placeholder="$select_lang_placeholder"
+                                            interface="action-sheet"
+                                            placeholder="$select_lang_placeholder"
                                             value="@preferredLanguage">
-                                    <ion-select-option value="@value">{{@label}} ({{@nativeName}})</ion-select-option>
+                                    <ion-select-option value="@value">{{@label}} ({{@nativeName}})
+                                    </ion-select-option>
                                 </ion-select>
                             </div>
-                        </div>
-                    </section>
-                    <div class="leaflet-shortcuts-container" hidden>
-
-                        <div class="search-container">
-                            <ion-searchbar showCancelButton="focus"></ion-searchbar>
-                        </div>
-                        <leaflet-shortcuts button="Back To Top" shadow slot="true">
-                            <leaflet-button icon="./assets/icons/leaflet-about-circle.svg" label="@aboutLabel"
-                                            tag="about"></leaflet-button>
-                            <leaflet-button icon="./assets/icons/leaflet-before-taking-circle.svg"
-                                            label="@beforeTakingLabel"
-                                            tag="before-taking"></leaflet-button>
-                            <leaflet-button icon="./assets/icons/leaflet-how-to-take-circle.svg" label="@howToLabel"
-                                            tag="how-to-take"></leaflet-button>
-                            <leaflet-button icon="./assets/icons/leaflet-side-effects-circle.svg"
-                                            label="@sideEffectsLabel"
-                                            tag="side-effects"></leaflet-button>
-                            <leaflet-button icon="./assets/icons/leaflet-storing-circle.svg" label="@storingLabel"
-                                            tag="storing"></leaflet-button>
-                            <leaflet-button icon="./assets/icons/leaflet-more-circle.svg" label="@moreLabel"
-                                            tag="more"></leaflet-button>
-                        </leaflet-shortcuts>
-                    </div>
-                </header>
-
-                <div data-if="@loadingData">
-                    <div slot="true">
-                        <leaflet-spinner></leaflet-spinner>
-                    </div>
-                    <div data-if="@showEPI" slot="false">
-                        <div slot="true">
-                            <div id="leaflet-content">
-                                <leaflet-spinner></leaflet-spinner>
+                            <div class="auth-feature-container" data-if="@showACDCAuthLink">
+                                <h6 data-tag="auth-feature">{{$verify_package}}</h6>
+                                <div class="auth-feature product-description" data-tag="auth-feature">
+                                    <img src="./assets/images/icons/verify-package.svg"/>
+                                </div>
                             </div>
+                        </div>
+                        <div id="leaflet-content" slot="true">
+                            <leaflet-spinner></leaflet-spinner>
                         </div>
                         <div slot="false">
                             <div class="no-leaflet-container">
@@ -97,25 +82,10 @@
                         </div>
                     </div>
                 </div>
-
-                <!--                <div data-if="@loadingData">-->
-                <!--                    <div slot="true">-->
-                <!--                        <ion-spinner name="bubbles"></ion-spinner>-->
-                <!--                    </div>-->
-                <!--                    <div data-if="@showEPI" slot="false">-->
-                <!--                        <div slot="true">-->
-                <!--                            <div id="leaflet-content"></div>-->
-                <!--                        </div>-->
-                <!--                        <div slot="false">-->
-                <!--                            <div class="no-leaflet-container">-->
-                <!--                                <div class="no-leaflet-image"></div>-->
-                <!--                                <div class="no-leaflet-title">{{$title}}</div>-->
-                <!--                                <div class="no-leaflet-text">{{$text}}</div>-->
-                <!--                            </div>-->
-                <!--                        </div>-->
-                <!--                    </div>-->
-                <!--                </div>-->
+                <div class="scroll-to-top" data-if="@showScrollToTop" slot="true">
+                    <div data-tag="scroll-top" slot="true"> {{ $scroll_to_top }}</div>
+                </div>
             </div>
-        </webc-container>
-    </page-template>
+        </div>
+    </webc-container>
 </div>

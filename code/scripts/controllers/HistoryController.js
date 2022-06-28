@@ -56,11 +56,7 @@ class HistoryDataSource extends DataSource {
       product.statusMessage = this.translate(product.statusMessage);
       if (!this.groups[date]) {
         this.groups[date] = [];
-        product.firstGroupItem = true;
-      } else {
-        product.firstGroupItem = false;
       }
-
       let humanDate = utils.convertFromISOtoYYYY_HM(product.createdAt.split('T')[0], true, "");
       let month = this.translate(humanDate.slice(4).slice(0, -6));
       product.groupDate = `${month} ${humanDate.slice(-4)}`;
@@ -75,6 +71,18 @@ class HistoryDataSource extends DataSource {
       }
       this.groups[date].push(product);
     }
+
+    Object.values(this.groups).forEach(group => {
+      group[0].firstGroupItem = true;
+      if (group.length > 1) {
+        group[0].groupPosition = "first"
+        group[group.length - 1].groupPosition = "last"
+      } else {
+        group[0].groupPosition = "one-item-group"
+      }
+
+    })
+
     return products;
   }
 
@@ -96,6 +104,12 @@ export default class HistoryController extends WebcController {
 
       const {productsDataSource} = this.model;
       let settingsService = new SettingsService(enclaveDB);
+      let onbordingComplete = await settingsService.asyncReadSetting("onbordingComplete");
+
+      if (!onbordingComplete) {
+        this.navigateToPageTag("onboarding")
+      }
+
       let appLang = await settingsService.asyncReadSetting("preferredLanguage");
       this.applySkinForCurrentPage(appLang);
       this.setSkin(appLang);
@@ -115,11 +129,15 @@ export default class HistoryController extends WebcController {
             console.log("Could not find record for pk: ", model.pk);
             return;
           }
-          this.navigateToPageTag("drug-details", {
+          this.navigateToPageTag("drug-summary", {
             productData: record.pk
           })
         })
       });
+      this.onTagClick("open-settings", () => {
+        this.navigateToPageTag("settings")
+      })
+
     })
   }
 }

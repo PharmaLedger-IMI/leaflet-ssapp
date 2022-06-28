@@ -4,6 +4,11 @@
     display: flex;
 }
 
+.app-icon{
+    background: url("./../../assets/images/icons/app-icon.svg") no-repeat center;
+    height: 33px;
+    width: 100%;
+}
 .menu-icon {
     left: var(--l-space);
 }

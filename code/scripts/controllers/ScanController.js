@@ -187,6 +187,14 @@ export default class ScanController extends WebcController {
         });
       });
     });
+
+    this.onTagClick('switch-camera', async () => {
+      document.dispatchEvent(new CustomEvent('leaflet-ssapp:switch-camera'));
+    });
+
+    this.onTagClick('cancel-scan', () => {
+      this.navigateToPageTag("home");
+    });
   }
 
   async startScanning() {
@@ -663,7 +671,7 @@ export default class ScanController extends WebcController {
 
   redirectToDrugDetails(state) {
     this.disposeOfBarcodePicker();
-    this.navigateToPageTag("drug-details", JSON.parse(JSON.stringify(state)));
+    this.navigateToPageTag("drug-summary", JSON.parse(JSON.stringify(state)));
   }
 
   getNativeApiHandler(callback) {

@@ -6,24 +6,49 @@ webc-app-root {
 @font-face {
     font-family: 'DM Sans regular';
     font-style: normal;
-    src: url('../assets/css/fonts/DM_Sans/dm-sans-v6-latin-ext_latin-regular.eot'); /* IE9 Compat Modes */
+    font-weight: 400;
     src: local(''),
-    url('../assets/css/fonts/DM_Sans/dm-sans-v6-latin-ext_latin-regular.eot?#iefix') format('embedded-opentype'),
-        /* IE6-IE8 */ url('../assets/css/fonts/DM_Sans/dm-sans-v6-latin-ext_latin-regular.woff2') format('woff2'),
-        /* Super Modern Browsers */ url('../assets/css/fonts/DM_Sans/dm-sans-v6-latin-ext_latin-regular.woff') format('woff'),
-        /* Modern Browsers */ url('../assets/css/fonts/DM_Sans/dm-sans-v6-latin-ext_latin-regular.ttf') format('truetype'),
-        /* Safari, Android, iOS */ url('../assets/css/fonts/DM_Sans/dm-sans-v6-latin-ext_latin-regular.svg#DMSans') format('svg'); /* Legacy iOS */
+    url('../assets/css/fonts/DM_Sans/dm-sans-v11-latin-ext_latin-regular.woff2') format('woff2'), /* Chrome 26+, Opera 23+, Firefox 39+ */ url('../assets/css/fonts/DM_Sans/dm-sans-v11-latin-ext_latin-regular.woff') format('woff'); /* Chrome 6+, Firefox 3.6+, IE 9+, Safari 5.1+ */
+}
+
+/* dm-sans-500 - latin-ext_latin */
+@font-face {
+    font-family: 'DM Sans medium';
+    font-style: normal;
+    font-weight: 500;
+    src: local(''),
+    url('../assets/css/fonts/DM_Sans/dm-sans-v11-latin-ext_latin-500.woff2') format('woff2'), /* Chrome 26+, Opera 23+, Firefox 39+ */ url('../assets/css/fonts/DM_Sans/dm-sans-v11-latin-ext_latin-500.woff') format('woff'); /* Chrome 6+, Firefox 3.6+, IE 9+, Safari 5.1+ */
+}
+
+/* dm-sans-700 - latin-ext_latin */
+@font-face {
+    font-family: 'DM Sans bold';
+    font-style: normal;
+    font-weight: 700;
+    src: local(''),
+    url('../assets/css/fonts/DM_Sans/dm-sans-v11-latin-ext_latin-700.woff2') format('woff2'), /* Chrome 26+, Opera 23+, Firefox 39+ */ url('../assets/css/fonts/DM_Sans/dm-sans-v11-latin-ext_latin-700.woff') format('woff'); /* Chrome 6+, Firefox 3.6+, IE 9+, Safari 5.1+ */
 }
 
 :root {
-    --primary-backgtound-color: #02272F;
-    --secondary-background-color: #FAFAFA;
+    --primary-backgtound-color: #013646;
+    --secondary-background-color: #F0EEEC;
+    --olivegreen: #013646;
+    --mintgreen: #61E4A3;
+    --beige: #FDF0EC;
+    --grey: #E1E7EF;
+    --green-200: #5F0808;
+    --red-200: #CC2A2A;
+    --red-100: #FEEFEE;
+    --yellow-200: #FFCB45;
+    --yellow-100: #FFECBB;
+
     --ion-background-color: transparent;
     --ion-font-family: "DM Sans regular";
     --webc-font-family: "DM Sans regular";
     font-family: "DM Sans regular";
     --ion-backdrop-opacity: 0.6;
     --app-max-width: 414px;
+    --app-max-height: 812px;
     --xxxl-text-size: 40px;
     --xxl-text-size: 32px;
     --xl-text-size: 24px;
@@ -49,113 +74,37 @@ webc-app-root {
     --xs-space: 5px;
 
 
-    --ion-color-gray-one: #F4F6F6;
-    --ion-color-gray-one-rgb: 244, 246, 246;
-    --ion-color-gray-one-contrast: #000000;
-    --ion-color-gray-one-contrast-rgb: 0, 0, 0;
-    --ion-color-gray-one-shade: #d7d8d8;
-    --ion-color-gray-one-tint: #f5f7f7;
-
-    --ion-color-gray-two: #F4F6F6;
-    --ion-color-gray-two-rgb: 244, 246, 246;
-    --ion-color-gray-two-contrast: #000000;
-    --ion-color-gray-two-contrast-rgb: 0, 0, 0;
-    --ion-color-gray-two-shade: #d7d8d8;
-    --ion-color-gray-two-tint: #f5f7f7;
-
-    --ion-color-gray-three: #E5EAEB;
-    --ion-color-gray-three-rgb: 229, 234, 235;
-    --ion-color-gray-three-contrast: #000000;
-    --ion-color-gray-three-contrast-rgb: 0, 0, 0;
-    --ion-color-gray-three-shade: #cacecf;
-    --ion-color-gray-three-tint: #e8eced;
-
-    --ion-color-gray-four: #D3D9DA;
-    --ion-color-gray-four-rgb: 211, 217, 218;
-    --ion-color-gray-four-contrast: #000000;
-    --ion-color-gray-four-contrast-rgb: 0, 0, 0;
-    --ion-color-gray-four-shade: #babfc0;
-    --ion-color-gray-four-tint: #d7ddde;
-
-    --ion-color-gray-five: #A1ADB0;
-    --ion-color-gray-five-rgb: 161, 173, 176;
-    --ion-color-gray-five-contrast: #000000;
-    --ion-color-gray-five-contrast-rgb: 0, 0, 0;
-    --ion-color-gray-five-shade: #8e989b;
-    --ion-color-gray-five-tint: #aab5b8;
-
-    --ion-color-gray-six: #708084;
-    --ion-color-gray-six-rgb: 112, 128, 132;
-    --ion-color-gray-six-contrast: #ffffff;
-    --ion-color-gray-six-contrast-rgb: 255, 255, 255;
-    --ion-color-gray-six-shade: #637174;
-    --ion-color-gray-six-tint: #7e8d90;
-
-    --ion-color-gray-seven: #516266;
-    --ion-color-gray-seven-rgb: 81, 98, 102;
-    --ion-color-gray-seven-contrast: #ffffff;
-    --ion-color-gray-seven-contrast-rgb: 255, 255, 255;
-    --ion-color-gray-seven-shade: #47565a;
-    --ion-color-gray-seven-tint: #627275;
-
-    --ion-color-gray-eight: #1E393F;
-    --ion-color-gray-eight-rgb: 30, 57, 63;
-    --ion-color-gray-eight-contrast: #ffffff;
-    --ion-color-gray-eight-contrast-rgb: 255, 255, 255;
-    --ion-color-gray-eight-shade: #1a3237;
-    --ion-color-gray-eight-tint: #354d52;
-
-    --ion-color-gray-nine: #1E393F;
-    --ion-color-gray-nine-rgb: 30, 57, 63;
-    --ion-color-gray-nine-contrast: #ffffff;
-    --ion-color-gray-nine-contrast-rgb: 255, 255, 255;
-    --ion-color-gray-nine-shade: #1a3237;
-    --ion-color-gray-nine-tint: #354d52;
-
-    --ion-color-gray-ten: #04313B;
-    --ion-color-gray-ten-rgb: 4, 49, 59;
-    --ion-color-gray-ten-contrast: #ffffff;
-    --ion-color-gray-ten-contrast-rgb: 255, 255, 255;
-    --ion-color-gray-ten-shade: #042b34;
-    --ion-color-gray-ten-tint: #1d464f;
-
-    --ion-color-cornflower: #5A59FD;
-    --ion-color-cornflower-rgb: 90, 89, 253;
-    --ion-color-cornflower-contrast: #ffffff;
-    --ion-color-cornflower-contrast-rgb: 255, 255, 255;
-    --ion-color-cornflower-shade: #4f4edf;
-    --ion-color-cornflower-tint: #6b6afd;
 }
 
 
 h1 {
     font-size: var(--xxxl-text-size);
-    font-weight: var(--bold-font-weight);
+    font-family: "DM Sans bold";
 }
 
 h2 {
     font-size: var(--xxl-text-size);
-    font-weight: var(--bold-font-weight);
+    font-family: "DM Sans bold";
 }
 
 h3 {
     font-size: var(--xl-text-size);
-    font-weight: var(--bold-font-weight);
+    font-family: "DM Sans bold";
 }
 
 h4 {
     font-size: var(--l-text-size);
-    font-weight: var(--bold-font-weight);
+    font-family: "DM Sans bold";
 }
 
 h5 {
     font-size: var(--m-text-size);
-    font-weight: var(--bold-font-weight);
+    font-family: "DM Sans bold";
 }
 
 h6 {
     font-size: var(--s-text-size);
-    font-weight: var(--bold-font-weight);
+    font-family: "DM Sans bold";
 }
 
 .ion-color-cornflower {
@@ -261,18 +210,57 @@ ion-button {
     --border-radius: 10px;
 }
 
+@media only screen and (min-device-width: 900px) and (max-device-width: 3000px) {
+    .mobile-container {
+        max-height: var(--app-max-height);
+        position: relative;
+        border-radius: 35px;
+        top: calc((100% - var(--app-max-height)) / 2);
+        padding-top: 2.34%;
+    }
+
+    .mobile-container:before {
+        content: url("./images/icons/mobile-info-icon.svg");
+        position: absolute;
+        right: 2.34%;
+        top: 2.34%;
+        filter: invert(12%) sepia(83%) saturate(1757%) hue-rotate(170deg) brightness(33%) contrast(99%);
+    }
+
+    .mobile-container.dark-screen:before {
+        filter: none;
+    }
+
+    .bottom-rounded-container {
+        border-bottom-left-radius: 34px;
+        border-bottom-right-radius: 34px;
+    }
+}
+
+@media only screen and (max-device-width: 340px) {
+    .mobile-container {
+        padding: 0;
+    }
+}
+
 .mobile-container {
     margin: 0 auto;
-    padding: 0;
     width: 100%;
     height: 100%;
     max-width: var(--app-max-width);
     box-shadow: 0 0 5px rgba(0, 0, 0, 0.25);
+    background-color: var(--secondary-background-color);
+}
+
+.mobile-container.dark-screen {
+    background-color: var(--olivegreen);
+    color: white;
+    text-align: center;
 }
 
 .section-title {
     font-size: 24px;
-    font-weight: bold;
+    font-family: "DM Sans bold";
     margin-top: 24px;
 }
 
@@ -284,7 +272,7 @@ ion-button {
 .scan-button-text {
     font-family: "DM Sans regular";
     font-style: normal;
-    font-weight: bold;
+    font-family: "DM Sans bold";
     font-size: 18px;
     text-align: center;
     letter-spacing: 0.3px;
@@ -293,11 +281,11 @@ ion-button {
 ion-select {
     height: 56px;
     background: #fff;
-    border-radius: 16px;
+    border-radius: 12px;
     padding: 16px;
     color: black;
     font-size: 16px;
-    font-weight: bold;
+    font-family: "DM Sans bold";
 }
 
 ion-select::part(icon) {
@@ -308,7 +296,7 @@ ion-select::part(icon) {
 ion-select::after {
     width: 24px;
     height: 24px;
-    background: url(../assets/icons/select-arrow.svg) no-repeat;
+    background: url(../assets/images/icons/select-arrow.svg) no-repeat;
     content: "";
     position: relative;
     top: 9px;
@@ -329,25 +317,28 @@ webc-modal::part(dialog) {
 
 webc-modal::part(content) {
     margin: 12px;
-    border-radius: 20px;
+    border-radius: 32px;
     justify-content: center;
 }
 
 webc-modal::part(header) {
-    border-top-left-radius: 20px;
-    border-top-right-radius: 20px;
-    text-align: center;
-    padding: 29px 0px;
+    border-top-left-radius: 32px;
+    border-top-right-radius: 32px;
+    text-align: left;
+    padding: 24px;
     display: block;
 }
 
 webc-modal::part(close) {
-    background: none;
-    height: 17px;
-    width: 17px;
+    background: #013646;
+    height: 24px;
+    width: 24px;
     position: absolute;
-    top: 24px;
-    right: 24px;
+    top: 16px;
+    right: 16px;
+    color: white;
+    border-radius: 50%;
+    font-size: 15px;
 }
 
 psk-input .form-control {
@@ -356,7 +347,7 @@ psk-input .form-control {
     height: calc(1.5em + .75rem + 2px);
     padding: .375rem .75rem;
     font-size: 1rem;
-    font-weight: 400;
+    font-family: "DM Sans regular";
     line-height: 1.5;
     color: #495057;
     background-color: #fff;
@@ -369,141 +360,6 @@ psk-input .form-control {
 
 /* CSS required by Reactive HTML Elements
 /* leaflet-<components> specific */
-
-#leaflet-header[show-leaflet] {
-    display: block;
-}
-
-#leaflet-header[show-leaflet][effect="collapse"] > section {
-    border-radius: 0;
-    padding-bottom: 105px;
-}
-
-#leaflet-header[effect="collapse"] > section::after {
-    position: absolute;
-    content: '';
-    bottom: 8px;
-    width: 30%;
-    height: 4px;
-    background: #FFFFFF;
-    border-radius: 1rem;
-}
-
-#leaflet-header[effect="collapse"] > section > * {
-    display: none;
-}
-
-[effect="collapse"] leaflet-shortcuts {
-    --background: var(--primary-backgtound-color);
-    --scrollbar-color: #073C47;
-    --scrollbar-background: var(--primary-backgtound-color);
-}
-
-[effect="collapse"] leaflet-shortcuts::part(container) {
-    box-sizing: border-box;
-    display: flex;
-    overflow-x: scroll;
-    overflow-y: visible;
-    scroll-behavior: smooth;
-    top: 53px;
-    margin: 0;
-    padding: 0.4rem 1rem;
-    gap: 1rem;
-    width: 100%;
-    border-radius: 0;
-    transform: translateY(0);
-}
-
-[effect="collapse"] leaflet-shortcuts > leaflet-button {
-    --button-height: auto;
-    min-width: fit-content;
-    border-radius: 0.5rem;
-    overflow: hidden;
-}
-
-[effect="collapse"] leaflet-shortcuts > leaflet-button > ion-item {
-    --background: rgba(255, 255, 255, 0.2);
-    --color: #FFFFFF;
-}
-
-[effect="collapse"] leaflet-shortcuts > leaflet-button[active] > ion-item {
-    --background: rgba(255, 255, 255, 1);
-    --color: var(--primary-backgtound-color);
-}
-
-[effect="collapse"] leaflet-shortcuts > leaflet-button[active] .icon {
-    height: 40px;
-}
-
-[effect="collapse"] leaflet-shortcuts > leaflet-button[active] .container {
-    padding-left: 0.25rem;
-}
-
-[effect="collapse"] leaflet-shortcuts > leaflet-button .container {
-    flex-direction: row;
-    padding: 0 0.75rem;
-    gap: 1rem;
-}
-
-#leaflet-header {
-    display: none;
-    position: sticky;
-    z-index: 2;
-    top: 0;
-    --button-height: 120px;
-}
-
-#leaflet-header > section {
-    background: var(--primary-backgtound-color);
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    width: 100%;
-    border-bottom-right-radius: var(--xl-border-radius);
-    border-bottom-left-radius: var(--xl-border-radius);
-    height: fit-content;
-    padding-left: 24px;
-    padding-right: 24px;
-    padding-bottom: calc(var(--button-height) + 24px);
-    word-break: break-word;
-    text-align: center;
-}
-
-leaflet-shortcuts {
-    --delta-normal: 379px; /* impact over scrolling breakpoints */
-    --delta-collapse: 94px; /* impact over scrolling breakpoints */
-    --background: #E5EAEB;
-    --box-shadow: 0 10px 40px rgba(0, 64, 120, 0.1);
-}
-
-leaflet-shortcuts::part(container) {
-    position: absolute;
-    left: 0; top: 100%;
-    transform: translateY(-60%);
-    margin: 0 24px;
-    padding: 0;
-    width: calc(100% - 48px);
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 1px;
-    border-radius: 12px;
-    overflow: hidden;
-    background: var(--background);
-    box-shadow: var(--box-shadow);
-    transition: top 200ms ease-in-out;
-}
-
-leaflet-shortcuts::part(scroll-top) {
-    --background: var(--primary-backgtound-color);
-    position: fixed;
-    top: 98%;
-    left: 50%;
-    transform: translate(-50%, -100%);
-    height: 3rem;
-    --padding-end: 3.5rem;
-    --padding-start: 3.5rem;
-    text-transform: none;
-}
 
 leaflet-button > ion-item {
     --background: #FFFFFF;
@@ -557,10 +413,6 @@ leaflet-section::part(header) {
     --background: #FFFFFF;
     --border-color: #E5EAEB;
     box-shadow: 0 10px 40px rgba(0, 64, 128, 0.1);
-}
-
-leaflet-section::part(icon) {
-    padding-left: 10px;
 }
 
 leaflet-accordion::part(toggle),
@@ -646,7 +498,6 @@ leaflet-section[active]::part(content) {
 
 #leaflet-content {
     display: block;
-    margin-top: 170px;
     background-color: #FFFFFF;
 }
 

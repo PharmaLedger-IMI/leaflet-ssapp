@@ -12,10 +12,22 @@
       "path": "./"
     },
     {
+      "name": "Onboarding",
+      "tag": "onboarding",
+      "src": "./onBoardingPage/onboarding.html",
+      "path": "./onboarding"
+    },
+    {
       "name": "Scan",
       "tag": "scan",
       "src": "./scanPage/scan.html",
       "path": "./scan"
+    },
+    {
+      "name": "Drug summary",
+      "tag": "drug-summary",
+      "src": "./drugSummary/drug-summary.html",
+      "path": "./drug-summary"
     },
     {
       "name": "About",

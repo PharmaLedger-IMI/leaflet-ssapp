@@ -4,23 +4,23 @@
 
         <ion-row class="header-row ">
             <ion-col class="menu-icon" size="2">
+                <div class="go-back-state" data-tag="menu-go-back" data-if="@goBack">
+                    <img src="./assets/icons/menu-back.svg">
+                </div>
+            </ion-col>
+            <ion-col size="8">
+                <ion-row class="title">
+                    <div class="app-icon"></div>
+                    <div class="app-name" data-if="@showName">Pharmaledger</div>
+                </ion-row>
+            </ion-col>
+            <ion-col class="menu-icon" size="2">
                 <div class="initial-state" data-tag="open-menu" data-if="@homePage">
                     <img src="./assets/icons/menu-light.svg">
                 </div>
                 <div class="open-state ion-hide" data-tag="close-menu" data-if="@homePage">
                     <img src="./assets/icons/menu-close-light.svg">
                 </div>
-                <div class="go-back-state" data-tag="menu-go-back"  data-if="@goBack">
-                    <img src="./assets/icons/menu-back.svg">
-                </div>
-            </ion-col>
-            <ion-col size="8">
-                <ion-row class="title">
-                    <div>Pharmaledger</div>
-                </ion-row>
-            </ion-col>
-            <ion-col size="2">
-                <!--for notification -->
             </ion-col>
         </ion-row>
 
