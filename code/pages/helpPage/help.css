@@ -1,0 +1,25 @@
+.close-page {
+    height: 25px;
+    width: 25px;
+    position: relative;
+    background: url(../../assets/images/icons/close-page.svg) no-repeat right;
+    top: 16px;
+    left: calc(100% - 41px);
+}
+
+.section-title {
+    padding: 0px 24px 24px;
+}
+
+.page-body-section {
+    background: #fff;
+    height: 87%;
+}
+
+.page-body {
+    height: 95%;
+    position: relative;
+    overflow: auto;
+    padding: 24px;
+    color: #013646;
+}

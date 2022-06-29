@@ -1,16 +1,22 @@
+<link href="pages/helpPage/help.css" rel="stylesheet"/>
+
 <div class="mobile-container">
-    <page-template id="home-page-template" roundShape="true" shadow>
-        <landing-header goBack="true" slot="header-slot"></landing-header>
-        <webc-container controller="HelpController" slot="content-slot">
-            <div class="section-title">{{ $title }}</div>
-            <div class="accordion">
-                <leaflet-accordion label="$section_title">{{ $section_text }}</leaflet-accordion>
-                <leaflet-accordion label="$section_title1">{{ $section_text1 }}</leaflet-accordion>
-                <leaflet-accordion label="$section_title2">{{ $section_text2 }}</leaflet-accordion>
-                <leaflet-accordion label="$section_title3">{{ $section_text3 }}</leaflet-accordion>
-                <leaflet-accordion label="$section_title4">{{ $section_text4 }}</leaflet-accordion>
-                <leaflet-accordion label="$section_title5">{{ $section_text5 }}</leaflet-accordion>
+    <webc-container controller="HelpController" slot="content-slot">
+        <div class="close-page" data-tag="close-page"></div>
+        <div class="section-title">{{$title}}</div>
+        <div class="page-body-section bottom-rounded-container">
+            <div class="page-body">
+                <div class="accordion">
+                    <leaflet-accordion label="$section_title">{{ $section_text }}</leaflet-accordion>
+                    <leaflet-accordion label="$section_title1">{{ $section_text1 }}</leaflet-accordion>
+                    <leaflet-accordion label="$section_title2">{{ $section_text2 }}</leaflet-accordion>
+                    <leaflet-accordion label="$section_title3">{{ $section_text3 }}</leaflet-accordion>
+                    <leaflet-accordion label="$section_title4">{{ $section_text4 }}</leaflet-accordion>
+                    <leaflet-accordion label="$section_title5">{{ $section_text5 }}</leaflet-accordion>
+                </div>
             </div>
-        </webc-container>
-    </page-template>
+        </div>
+
+    </webc-container>
+
 </div>

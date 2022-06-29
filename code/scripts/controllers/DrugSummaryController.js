@@ -86,25 +86,29 @@ export default class DrugSummaryController extends WebcController {
 
   addListeners() {
     this.onTagClick("go-home", () => {
+      this.modalWindow.destroy();
       this.navigateToPageTag("home");
     });
 
     this.onTagClick("scan-again", () => {
+      this.modalWindow.destroy();
       this.navigateToPageTag("scan");
     })
 
     this.onTagClick("lang-proceed", async () => {
+      this.modalWindow.destroy();
       let lang = this.querySelector("input[name='languages']:checked").value
       this.navigateToPageTag("drug-details", {productData: this.recordPk, preferredLanguage: lang});
     })
 
     this.onTagClick("view-leaflet", () => {
+      this.modalWindow.destroy();
       this.navigateToPageTag("drug-details", {productData: this.recordPk});
     })
   }
 
   showPopup(config) {
-    this.showModalFromTemplate('drug-summary-modal', () => {
+    this.modalWindow = this.showModalFromTemplate('drug-summary-modal', () => {
     }, () => {
       this.navigateToPageTag("home")
     }, {model: config, disableExpanding: true, disableFooter: true});
