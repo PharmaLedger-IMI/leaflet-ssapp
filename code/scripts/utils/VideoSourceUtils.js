@@ -5,6 +5,11 @@ function getEmbeddedVideo(encodedVideoSource) {
   if (videoSource.startsWith("https://www.youtube.com/")) {
     videoUrl = `https://www.youtube.com/embed/${videoSource.split("v=")[1]}?autoplay=0`
   }
+
+  if (videoSource.startsWith("https://youtu.be/")) {
+    videoUrl = `https://www.youtube.com/embed/${videoSource.split("https://youtu.be/")[1]}?autoplay=0`
+  }
+
   if (videoSource.startsWith("https://vimeo.com/")) {
     videoUrl = `https://player.vimeo.com/video/${videoSource.split("vimeo.com/")[1]}`
   }
@@ -12,6 +17,10 @@ function getEmbeddedVideo(encodedVideoSource) {
     return `<iframe name="url-iframe" allow="autoplay; fullscreen; picture-in-picture" allowfullscreen
             frameborder="0" src="${videoUrl}" width="310">
     </iframe>`
+  }
+
+  if (!videoUrl) {
+    videoUrl = `https://www.youtube.com/embed/${videoSource}?autoplay=0`
   }
 
   if (videoSource.includes("</script>")) {

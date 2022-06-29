@@ -285,6 +285,32 @@ export default class DrugDetailsController extends WebcController {
   }
 
   addEventListeners() {
+
+    if ((!this.acdc || !this.acdc.authResponse) && !!this.model.batch.acdcAuthFeatureSSI) {
+      this.onTagClick('auth-feature', () => {
+        if (!this.model.batch || !this.model.batch.acdcAuthFeatureSSI) {
+          return this.showErrorModal(`Could not find and Authentication Feature`, "Anti Counterfeiting");
+        }
+        this.showModalFromTemplate('acdc-ssapp-modal', () => {
+        }, () => {
+        }, {
+          model: {
+            title: this.translate("verify_package"),
+            ssi: this.model.batch.acdcAuthFeatureSSI,
+            gtinSSI: this.gtinSSI,
+            gs1Fields: this.gs1Fields,
+            networkName: this.networkName,
+            acdc: this.model.acdc
+          },
+          disableExpanding: true,
+          disableFooter: true
+        });
+      });
+    } else if (this.acdc && this.acdc.authResponse) {
+      const {status, error} = this.acdc.authResponse;
+      this.model.packageVerification = status ? this.translate("verified") : `${this.translate("invalid")}${error.message ? `\n${error.message}` : ''}`;
+    }
+
     this.model.onChange('showEPI', async (...props) => {
       this.model.loadingData = this.model.showEPI === undefined;
 
