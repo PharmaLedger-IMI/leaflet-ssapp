@@ -26,5 +26,9 @@
   "scan_again": "Scan again",
   "back_home": "Back to home",
   "view_leaflet": "View leaflet",
-  "lang_proceed": "Proceed"
+  "lang_proceed": "Proceed",
+  "gs1field_sn": "Serial number:",
+  "gs1field_gtin": "Product code:",
+  "gs1field_batch": "Batch number:",
+  "gs1field_date": "Expiry:"
 }

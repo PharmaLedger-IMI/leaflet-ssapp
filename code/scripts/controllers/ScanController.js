@@ -27,12 +27,7 @@ export default class ScanController extends WebcController {
     super(...props);
 
     this.model = {
-      data: '',
-      scannerStatus: undefined,
-      hasCode: false,
-      hasError: false,
-      nativeSupport: false,
-      useScandit: false
+      data: '', scannerStatus: undefined, hasCode: false, hasError: false, nativeSupport: false, useScandit: false
     };
 
     this.on("content-updated", async () => {
@@ -99,8 +94,7 @@ export default class ScanController extends WebcController {
               scan([scanditLicense]).then((resultArray) => {
                 if (resultArray && resultArray.length > 0) {
                   const firstScanObj = {
-                    symbology: resultArray[0],
-                    data: resultArray[1]
+                    symbology: resultArray[0], data: resultArray[1]
                   }
 
                   if (resultArray.length == 2) {
@@ -108,13 +102,9 @@ export default class ScanController extends WebcController {
                   }
 
                   if (resultArray.length == 4) {
-                    const scanObjArray = [
-                      firstScanObj,
-                      {
-                        symbology: resultArray[2],
-                        data: resultArray[3]
-                      }
-                    ]
+                    const scanObjArray = [firstScanObj, {
+                      symbology: resultArray[2], data: resultArray[3]
+                    }]
 
                     return this.processCompositeCodeScan(scanObjArray)
                   }
@@ -300,8 +290,14 @@ export default class ScanController extends WebcController {
       this.redirectToError(this.translate("err_barcode"), this.parseGs1Fields(e.dlOrderedAIlist), e.message);
       return;
     }
+    try {
+      let result = this.parseGs1Fields(gs1FormatFields.ol);
+      return result;
+    } catch (e) {
+      this.redirectToError(this.translate("err_barcode"), gs1FormatFields.ol, e.message);
+      return;
+    }
 
-    return this.parseGs1Fields(gs1FormatFields.ol);
   }
 
   parseCompositeCodeScan(barrcodesArray) {
@@ -317,10 +313,7 @@ export default class ScanController extends WebcController {
     const length = scannedEan13Code && scannedEan13Code.length ? scannedEan13Code.length : 0;
     ean13 = ean13.padStart(14 - length, '0');
     return {
-      "gtin": ean13,
-      "batchNumber": "",
-      "expiry": "",
-      "serialNumber": ""
+      "gtin": ean13, "batchNumber": "", "expiry": "", "serialNumber": ""
     }
   }
 
@@ -398,20 +391,7 @@ export default class ScanController extends WebcController {
 
 
     const defaultScanSettings = {
-      enabledSymbologies: [
-        window.ScanditSDK.Barcode.Symbology.CODE128,
-        window.ScanditSDK.Barcode.Symbology.DATA_MATRIX,
-        window.ScanditSDK.Barcode.Symbology.DOTCODE,
-        window.ScanditSDK.Barcode.Symbology.GS1_DATABAR_LIMITED,
-        window.ScanditSDK.Barcode.Symbology.EAN13,
-        window.ScanditSDK.Barcode.Symbology.PDF417,
-        window.ScanditSDK.Barcode.Symbology.MICRO_PDF417,
-        window.ScanditSDK.Barcode.Symbology.GS1_DATABAR,
-        window.ScanditSDK.Barcode.Symbology.UPCE,
-        window.ScanditSDK.Barcode.Symbology.UPCA,
-        window.ScanditSDK.Barcode.Symbology.EAN8,
-        window.ScanditSDK.Barcode.Symbology.GS1_DATABAR_EXPANDED
-      ],
+      enabledSymbologies: [window.ScanditSDK.Barcode.Symbology.CODE128, window.ScanditSDK.Barcode.Symbology.DATA_MATRIX, window.ScanditSDK.Barcode.Symbology.DOTCODE, window.ScanditSDK.Barcode.Symbology.GS1_DATABAR_LIMITED, window.ScanditSDK.Barcode.Symbology.EAN13, window.ScanditSDK.Barcode.Symbology.PDF417, window.ScanditSDK.Barcode.Symbology.MICRO_PDF417, window.ScanditSDK.Barcode.Symbology.GS1_DATABAR, window.ScanditSDK.Barcode.Symbology.UPCE, window.ScanditSDK.Barcode.Symbology.UPCA, window.ScanditSDK.Barcode.Symbology.EAN8, window.ScanditSDK.Barcode.Symbology.GS1_DATABAR_EXPANDED],
       maxNumberOfCodesPerFrame: 4
     }
     const createNewBarcodePicker = (scanSettings = defaultScanSettings) => {
@@ -426,11 +406,8 @@ export default class ScanController extends WebcController {
         window.requestAnimationFrame(() => {
           this.callAfterElementLoad("#scandit-barcode-picker", (element) => {
             return resolve(window.ScanditSDK.BarcodePicker.create(element, {
-              scanSettings: scanningSettings,
-              cameraSettings: {resolutionPreference: "full-hd"},
-              guiStyle: "none", // "none", "viewfinder", "laser"
-              videoFit: "cover",
-              enableCameraSwitcher: false
+              scanSettings: scanningSettings, cameraSettings: {resolutionPreference: "full-hd"}, guiStyle: "none", // "none", "viewfinder", "laser"
+              videoFit: "cover", enableCameraSwitcher: false
             }))
           })
         })
@@ -460,10 +437,7 @@ export default class ScanController extends WebcController {
           // composite barcode
           if (compositeOngoing) {
             if (compositeMap[compositeOngoing.compositeFlag] === firstBarcodeObj.symbology) {
-              this.processCompositeCodeScan([
-                compositeOngoing,
-                firstBarcodeObj
-              ]);
+              this.processCompositeCodeScan([compositeOngoing, firstBarcodeObj]);
               compositeOngoing = false
             }
           } else {
@@ -548,13 +522,13 @@ export default class ScanController extends WebcController {
         }
         if (status) {
           let alreadyScanned = await $$.promisify(this.packageAlreadyScanned.bind(this))();
-          if(alreadyScanned.status === false){
+          if (alreadyScanned.status === false) {
             this.addPackageToHistoryAndRedirect(this.leafletInfo.gtinSSI, this.leafletInfo.gs1Fields, acdcEvt, (err) => {
               if (err) {
                 return this.redirectToError(this.translate("err_to_history"), this.leafletInfo.gs1Fields, err.message)
               }
             });
-          }else{
+          } else {
             this.redirectToDrugDetails({productData: alreadyScanned.record.pk})
           }
         } else {
@@ -634,10 +608,7 @@ export default class ScanController extends WebcController {
   parseGs1Fields(orderedList) {
     const gs1Fields = {};
     const fieldsConfig = {
-      "GTIN": "gtin",
-      "BATCH/LOT": "batchNumber",
-      "SERIAL": "serialNumber",
-      "USE BY OR EXPIRY": "expiry"
+      "GTIN": "gtin", "BATCH/LOT": "batchNumber", "SERIAL": "serialNumber", "USE BY OR EXPIRY": "expiry"
     };
 
     orderedList.map(el => {
@@ -662,11 +633,10 @@ export default class ScanController extends WebcController {
 
   redirectToError(message, fields, secondaryMessage) {
     this.disposeOfBarcodePicker()
-    this.navigateToPageTag("scan-error", {
-      message,
-      fields,
-      secondaryMessage
-    });
+    let scanErrorData = {
+      message, fields, secondaryMessage
+    }
+    this.navigateToPageTag("drug-summary", {scanErrorData: scanErrorData});
   }
 
   redirectToDrugDetails(state) {

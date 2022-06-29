@@ -67,6 +67,7 @@ export default class DrugDetailsController extends WebcController {
         this.model.snCheck = record.snCheck;
         this.networkName = record.networkName;
         this.model.showVideoLink = false;
+        this.model.preferredLanguage = history.location.state.preferredLanguage;
         this.acdc = history.location.state.acdc;
         this.model.showACDCAuthLink = !!this.model.batch.acdcAuthFeatureSSI;
 
@@ -104,9 +105,9 @@ export default class DrugDetailsController extends WebcController {
                       })
                     })*/
           this.model.preferredDocType = "leaflet";
-        } else {
-          await this.init()
         }
+        await this.init()
+
       })
 
     })
@@ -331,27 +332,31 @@ export default class DrugDetailsController extends WebcController {
       this.querySelector(".leaflet-wrapper").scrollTo(0, 0);
     })
 
+    let docTypesHandler = async (event) => {
+      this.model.preferredDocType = event.detail.value;
+      await this.selectServiceType(this.leafletDisplayService, this.smpcDisplayService);
+    }
+    let langSelectHandler = async (event) => {
+      this.model.preferredLanguage = event.detail.value;
+      this.getVideoSource();
+      this.renderEpi();
+      /*if (this.model.showEPI) {
+        this.documentService.displayXmlForLanguage(this.model.preferredLanguage);
+      }*/
+    }
     this.onTagClick("toggle-leaflet-options", () => {
       this.querySelector(".leaflet-options-wrapper").classList.toggle("show-leaflet-options")
       if (this.model.hasMoreDocTypes) {
         this.querySelector('.select-document-type-container').removeAttribute('hidden');
-        this.querySelector('.select-document-type').addEventListener("ionChange", async (event) => {
-          this.model.preferredDocType = event.detail.value;
-          await this.selectServiceType(this.leafletDisplayService, this.smpcDisplayService);
-        });
+        this.querySelector('.select-document-type').removeEventListener("ionChange", docTypesHandler);
+        this.querySelector('.select-document-type').addEventListener("ionChange", docTypesHandler);
       } else {
         this.querySelector('.select-document-type-container').setAttribute('hidden', true);
       }
       if (this.model.twoOrMoreLanguages) {
         this.querySelector('.select-document-language-container').removeAttribute('hidden');
-        this.querySelector('.select-document-language').addEventListener("ionChange", async (event) => {
-          this.model.preferredLanguage = event.detail.value;
-          this.getVideoSource();
-          this.renderEpi();
-          if (this.model.showEPI) {
-            this.documentService.displayXmlForLanguage(this.model.preferredLanguage);
-          }
-        });
+        this.querySelector('.select-document-language').removeEventListener("ionChange", langSelectHandler);
+        this.querySelector('.select-document-language').addEventListener("ionChange", langSelectHandler);
       } else {
         this.querySelector('.select-document-language-container').setAttribute('hidden', true);
       }

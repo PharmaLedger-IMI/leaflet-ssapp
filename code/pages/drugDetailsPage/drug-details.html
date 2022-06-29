@@ -63,10 +63,12 @@
                                     </ion-select-option>
                                 </ion-select>
                             </div>
-                            <div class="auth-feature-container" data-if="@showACDCAuthLink">
-                                <h6 data-tag="auth-feature">{{$verify_package}}</h6>
-                                <div class="auth-feature product-description" data-tag="auth-feature">
-                                    <img src="./assets/images/icons/verify-package.svg"/>
+                            <div data-if="@showACDCAuthLink">
+                                <div class="auth-feature-container">
+                                    <h6 data-tag="auth-feature">{{$verify_package}}</h6>
+                                    <div class="auth-feature product-description" data-tag="auth-feature">
+                                        <img src="./assets/images/icons/verify-package.svg"/>
+                                    </div>
                                 </div>
                             </div>
                         </div>

@@ -11,6 +11,7 @@ const LeafletInfoService = gtinResolver.LeafletInfoService;
 export default class DrugSummaryController extends WebcController {
   constructor(element, history) {
     super(element, history);
+
     this.model = {
       serialNumberLabel: constants.SN_LABEL,
       statusMessage: constants.SN_OK_MESSAGE,
@@ -18,12 +19,15 @@ export default class DrugSummaryController extends WebcController {
       preferredDocType: "leaflet",
     };
     let dbApi = require("opendsu").loadApi("db");
-    try {
-      dbApi.getMainEnclaveDB(async (err, enclaveDB) => {
+
+    dbApi.getMainEnclaveDB(async (err, enclaveDB) => {
+      try {
+        if (history.location.state.scanErrorData) {
+          throw new Error("ScanError");
+        }
         if (err) {
           console.log('Error on getting enclave DB');
-          throw err;
-          return;
+          this.showPopup(this.getModalConfig("invalid_data", err));
         }
         this.settingsService = new SettingsService(enclaveDB);
         let record = await $$.promisify(enclaveDB.getRecord)(constants.HISTORY_TABLE, history.location.state.productData);
@@ -41,64 +45,43 @@ export default class DrugSummaryController extends WebcController {
         this.model.snCheck = record.snCheck;
         this.recordPk = record.pk;
 
+        // check if gtin only case
+        if (!this.model.batch || Object.keys(this.model.batch).length === 0) {
+          if (this.model.product.gtin && this.model.product.showEPIOnUnknownBatchNumber) {
+            this.model.showEPI = true;
+          } else {
+            this.model.showEPI = false;
+          }
+        } else {
+          let expiryForDisplay = utils.convertFromGS1DateToYYYY_HM(this.model.batch.expiry);
+          if (expiryForDisplay.slice(0, 2) === "00") {
+            expiryForDisplay = expiryForDisplay.slice(5);
+          }
+          let expiryCheck = this.model.expiryForDisplay === expiryForDisplay;
+
+          const currentTime = Date.now();
+          this.model.showEPI = this.leafletInfoService.leafletShouldBeDisplayed(this.model, expiryCheck, currentTime);
+
+        }
+
         this.documentService = await XMLDisplayService.init(element, record.gtinSSI, this.model, "leaflet");
         if (!this.model.preferredLanguage) {
           this.model.preferredLanguage = await this.settingsService.asyncReadSetting("preferredLanguage");
         }
-        this.model.documentLanguages = await $$.promisify(this.documentService.getAvailableLanguagesForXmlType.bind(this.documentService))();
-        if (!this.model.documentLanguages || this.model.documentLanguages.length === 0) {
+        this.availableLanguages = await $$.promisify(this.documentService.getAvailableLanguagesForXmlType.bind(this.documentService))();
+        if (!this.availableLanguages || this.availableLanguages.length === 0) {
           throw new Error("No available language for leaflet");
         }
 
-        let documentLanguage = this.model.documentLanguages.find((item) => item.value === this.model.preferredLanguage);
-        if (documentLanguage) {
-          if (!this.model.batch || Object.keys(this.model.batch).length === 0) {
-            this.updateUIInGTINOnlyCase();
-            if (this.model.product.gtin && this.model.product.showEPIOnUnknownBatchNumber) {
-              this.model.showEPI = true;
-            } else {
-              this.model.showEPI = false;
-            }
-          } else {
-            let expiryForDisplay = utils.convertFromGS1DateToYYYY_HM(this.model.batch.expiry);
-            if (expiryForDisplay.slice(0, 2) === "00") {
-              expiryForDisplay = expiryForDisplay.slice(5);
-            }
-            let expiryCheck = this.model.expiryForDisplay === expiryForDisplay;
+        this.documentLanguage = this.availableLanguages.find((item) => item.value === this.model.preferredLanguage);
 
-            const currentTime = Date.now();
-            this.model.showEPI = this.leafletInfoService.leafletShouldBeDisplayed(this.model, expiryCheck, currentTime);
-
-          }
-
-          this.showPopup(this.getModalConfig(this.model.status));
-          //show modal cu status
-
-        } else {
-          let langContent = `<div class="language-text">${this.translate("language_select_message")}</div>`;
-          this.model.documentLanguages.forEach((lang, index) => {
-            let langRadio = `<div class="language-radio-item">
-                                <label for="${lang.value}"> ${lang.label} - (${lang.nativeName})</label> 
-                                <input type="radio" name="languages" ${index === 0 ? "checked" : ""} value="${lang.value}" id="${lang.value}"></div>`;
-            langContent = langContent + langRadio;
-          })
-          this.showPopup({
-            status: "language-select",
-            statusMessage: this.translate("language_select_status"),
-            title: this.translate("language_select_title"),
-            content: {html: langContent},
-            mainAction: "lang-proceed",
-            mainActionLabel: this.translate("lang_proceed"),
-            secondaryAction: "go-home",
-            secondaryActionLabel: this.translate("back_home")
-          });
-        }
-        this.addListeners();
-      })
-    } catch (err) {
-      this.showPopup(this.getModalConfig("invalid_data"))
-
-    }
+        this.showPopup(this.getModalConfig(this.model.status));
+      } catch (err) {
+        let errData = err.message === "ScanError" ? history.location.state.scanErrorData : err;
+        this.showPopup(this.getModalConfig("invalid_data", errData));
+      }
+    })
+    this.addListeners();
   }
 
   addListeners() {
@@ -112,8 +95,7 @@ export default class DrugSummaryController extends WebcController {
 
     this.onTagClick("lang-proceed", async () => {
       let lang = this.querySelector("input[name='languages']:checked").value
-      await this.settingsService.asyncWriteSetting("preferredLanguage", lang)
-      this.navigateToPageTag("drug-details", {productData: this.recordPk});
+      this.navigateToPageTag("drug-details", {productData: this.recordPk, preferredLanguage: lang});
     })
 
     this.onTagClick("view-leaflet", () => {
@@ -128,7 +110,7 @@ export default class DrugSummaryController extends WebcController {
     }, {model: config, disableExpanding: true, disableFooter: true});
   }
 
-  getModalConfig(status) {
+  getModalConfig(status, additionaData) {
     let configObj = {status: status};
 
     if (this.model.showEPI) {
@@ -136,6 +118,27 @@ export default class DrugSummaryController extends WebcController {
       configObj.mainActionLabel = this.translate("view_leaflet");
       configObj.secondaryAction = "scan-again";
       configObj.secondaryActionLabel = this.translate("scan_again");
+
+      if (!this.documentLanguage) {
+        let langContent = `<div class="language-text">${this.translate("language_select_message")}</div>`;
+        this.availableLanguages.forEach((lang, index) => {
+          let langRadio = `<div class="language-radio-item">
+                                <label> ${lang.label} - (${lang.nativeName})
+                                <input type="radio" name="languages" ${index === 0 ? "checked" : ""} value="${lang.value}" id="${lang.value}">
+                                </label> </div>`;
+          langContent = langContent + langRadio;
+        })
+        return {
+          status: "language-select",
+          statusMessage: this.translate("language_select_status"),
+          title: this.translate("language_select_title"),
+          content: {html: langContent},
+          mainAction: "lang-proceed",
+          mainActionLabel: this.translate("lang_proceed"),
+          secondaryAction: "go-home",
+          secondaryActionLabel: this.translate("back_home")
+        }
+      }
     } else {
       configObj.mainAction = "scan-again";
       configObj.mainActionLabel = this.translate("scan_again");
@@ -143,7 +146,8 @@ export default class DrugSummaryController extends WebcController {
       configObj.secondaryActionLabel = this.translate("back_home");
     }
 
-    switch (this.model.status) {
+
+    switch (status) {
       case "verified":
         configObj.statusMessage = this.translate("verified_status");
         configObj.title = this.model.product.name;
@@ -169,7 +173,23 @@ export default class DrugSummaryController extends WebcController {
       case "invalid_data":
         configObj.statusMessage = this.translate("invalid_data_status");
         configObj.title = this.translate("invalid_data_title");
-        configObj.content = this.translate("invalid_data_message");
+        let objContentHrml = `${this.translate("invalid_data_message")} <div>${additionaData.message}</div>`;
+
+        if (additionaData.fields && Object.keys(additionaData.fields).length > 0) {
+
+          objContentHrml = `${objContentHrml}<br> <div>
+                                                 <div class="label">${this.translate("gs1field_sn")} ${additionaData.fields[0].value}</div>
+                                                 <div class="label">${this.translate("gs1field_gtin")} ${additionaData.fields[1].value}</div>
+                                                 <div class="label">${this.translate("gs1field_batch")} ${additionaData.fields[2].value}</div>
+                                                 <div class="label">${this.translate("gs1field_date")} ${additionaData.fields[3].value}</div>
+                                             </div>`
+        }
+
+        if (additionaData.secondaryMessage) {
+          objContentHrml = `${objContentHrml} <br><br><div>**${additionaData.secondaryMessage}</div>`
+        }
+
+        configObj.content = objContentHrml;
         break;
       case "recalled_batch":
         configObj.statusMessage = this.translate("recalled_batch_status");
