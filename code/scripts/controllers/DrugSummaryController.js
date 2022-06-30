@@ -114,35 +114,51 @@ export default class DrugSummaryController extends WebcController {
     }, {model: config, disableExpanding: true, disableFooter: true});
   }
 
+  getLanguageConfig() {
+    let configObj = {
+      status: "language-select",
+      statusMessage: this.translate("language_select_status"),
+      title: this.translate("language_select_title"),
+    }
+
+    if (this.availableLanguages.length >= 1) {
+      let langContent = `<div class="language-text">${this.translate("language_select_message")}</div>`;
+      this.availableLanguages.forEach((lang, index) => {
+        let langRadio = `<div class="language-radio-item">
+                                <label> ${lang.label} - (${lang.nativeName})
+                                <input type="radio" name="languages" ${index === 0 ? "checked" : ""} value="${lang.value}" id="${lang.value}">
+                                </label> </div>`;
+        langContent = langContent + langRadio;
+      })
+      configObj.mainAction = "lang-proceed";
+      configObj.mainActionLabel = this.translate("lang_proceed");
+      configObj.secondaryAction = "go-home";
+      configObj.secondaryActionLabel = this.translate("back_home");
+      configObj.content = {html: langContent};
+    } else {
+      let noLangContent = `<div class="language-text">${this.translate("no_language_select_message")}</div>`;
+      configObj.mainAction = "go-home";
+      configObj.mainActionLabel = this.translate("back_home");
+      configObj.secondaryAction = "scan-again";
+      configObj.secondaryActionLabel = this.translate("scan_again");
+      configObj.content = {html: noLangContent};
+    }
+
+    return configObj;
+  }
+
   getModalConfig(status, additionaData) {
     let configObj = {status: status};
 
     if (this.model.showEPI) {
+      if (!this.documentLanguage) {
+        return this.getLanguageConfig();
+      }
       configObj.mainAction = "view-leaflet";
       configObj.mainActionLabel = this.translate("view_leaflet");
       configObj.secondaryAction = "scan-again";
       configObj.secondaryActionLabel = this.translate("scan_again");
 
-      if (!this.documentLanguage) {
-        let langContent = `<div class="language-text">${this.translate("language_select_message")}</div>`;
-        this.availableLanguages.forEach((lang, index) => {
-          let langRadio = `<div class="language-radio-item">
-                                <label> ${lang.label} - (${lang.nativeName})
-                                <input type="radio" name="languages" ${index === 0 ? "checked" : ""} value="${lang.value}" id="${lang.value}">
-                                </label> </div>`;
-          langContent = langContent + langRadio;
-        })
-        return {
-          status: "language-select",
-          statusMessage: this.translate("language_select_status"),
-          title: this.translate("language_select_title"),
-          content: {html: langContent},
-          mainAction: "lang-proceed",
-          mainActionLabel: this.translate("lang_proceed"),
-          secondaryAction: "go-home",
-          secondaryActionLabel: this.translate("back_home")
-        }
-      }
     } else {
       configObj.mainAction = "scan-again";
       configObj.mainActionLabel = this.translate("scan_again");
