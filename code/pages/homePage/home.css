@@ -14,9 +14,6 @@
     background-position-y: bottom;
     height: 100%;
     width: 100%;
-    /*
-    filter: invert(12%) sepia(83%) saturate(1757%) hue-rotate(170deg) brightness(33%) contrast(99%);
-    */
 }
 
 .settings-menu {
@@ -89,13 +86,12 @@
     padding: var(--m-space) 16px;
     margin-bottom: 1px;
     background: #fff;
-    color: var(--ion-color-gray-seven);
     box-shadow: 4px 11px 9px rgb(0 64 63 / 4%);
 }
 
 .history-item-container .productItem_name {
     color: var(--primary-backgtound-color);
-    font-weight: bold;
+    font-family: 'DM Sans bold';
 }
 
 .history-item-container[group-position="first"] {
@@ -155,13 +151,6 @@
 .productItem_status {
     padding: 2px 8px;
     font-size: var(--xxs-text-size);
-}
-
-.status-icon {
-    width: 20px;
-    height: 20px;
-    float: left;
-    padding-right: 5px;
 }
 
 .product-info-row[status="verified"] {

@@ -1,19 +1,25 @@
 <link href="pages/helpPage/help.css" rel="stylesheet"/>
 
 <div class="mobile-container">
-    <webc-container controller="HelpController" slot="content-slot">
+    <webc-container controller="HelpController">
         <div class="close-page" data-tag="close-page"></div>
         <div class="section-title">{{$title}}</div>
         <div class="page-body-section bottom-rounded-container">
             <div class="page-body">
-                <div class="accordion">
-                    <leaflet-accordion label="$section_title">{{ $section_text }}</leaflet-accordion>
-                    <leaflet-accordion label="$section_title1">{{ $section_text1 }}</leaflet-accordion>
-                    <leaflet-accordion label="$section_title2">{{ $section_text2 }}</leaflet-accordion>
-                    <leaflet-accordion label="$section_title3">{{ $section_text3 }}</leaflet-accordion>
-                    <leaflet-accordion label="$section_title4">{{ $section_text4 }}</leaflet-accordion>
-                    <leaflet-accordion label="$section_title5">{{ $section_text5 }}</leaflet-accordion>
-                </div>
+
+                <div class="label">{{$section_title}}</div>
+                <div class="content">{{ $section_text }}</div>
+                <div class="label">{{$section_title1}}</div>
+                <div class="content">{{ $section_text1 }}</div>
+                <div class="label">{{$section_title2}}</div>
+                <div class="content">{{ $section_text2 }}</div>
+                <div class="label">{{$section_title3}}</div>
+                <div class="content">{{ $section_text3 }}</div>
+                <div class="label">{{$section_title4}}</div>
+                <div class="content">{{ $section_text4 }}</div>
+                <div class="label">{{$section_title5}}</div>
+                <div class="content">{{ $section_text5 }}</div>
+
             </div>
         </div>
 

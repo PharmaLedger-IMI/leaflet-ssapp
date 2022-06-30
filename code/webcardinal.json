@@ -26,7 +26,7 @@
     {
       "name": "Drug summary",
       "tag": "drug-summary",
-      "src": "./drugSummary/drug-summary.html",
+      "src": "./drugSummaryPage/drug-summary.html",
       "path": "./drug-summary"
     },
     {

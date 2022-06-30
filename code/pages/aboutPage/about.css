@@ -19,17 +19,18 @@
 .page-body {
     height: 95%;
     position: relative;
-    overflow: auto;
-    padding: 24px;
+    overflow: hidden;
     color: #013646;
 }
 
-.label {
-    font-family: "DM Sans bold";
+iframe {
+    height: 100%;
+    width: 100%;
+    z-index: 3000;
+    border: none;
 }
 
-.content {
-    font-family: "DM Sans regular";
-    padding: 16px;
-    text-align: justify;
+.content-wrapper-container {
+    height: 100%;
+    width: 100%;
 }

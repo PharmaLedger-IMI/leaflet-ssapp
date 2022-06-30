@@ -7,10 +7,6 @@ async function defineNativeComponents() {
     };
 
     await Promise.all([
-        define('leaflet-shortcuts'),
-        define('leaflet-section'),
-        define('leaflet-button'),
-        define('leaflet-accordion'),
         define('leaflet-spinner'),
     ]);
 }
@@ -23,7 +19,6 @@ function defineWebCardinalComponents() {
     define('scan-header', 'scan-header/scan-header');
     define('landing-header', 'landing-header/landing-header');
     define('menu-popover', 'menu-popover/menu-popover');
-    define('history-item', 'history-item/history-item');
     define('accordion-item', 'accordion-item/accordion-item');
 }
 
