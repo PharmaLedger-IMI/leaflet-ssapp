@@ -196,12 +196,12 @@ export default class DrugSummaryController extends WebcController {
         let objContentHrml = `${this.translate("invalid_data_message")} <div>${additionaData.message}</div>`;
 
         if (additionaData.fields && Object.keys(additionaData.fields).length > 0) {
-
+          let gs1Values = Object.values(additionaData.fields);
           objContentHrml = `${objContentHrml}<br> <div>
-                                                 <div class="label">${this.translate("gs1field_sn")} ${additionaData.fields[0].value}</div>
-                                                 <div class="label">${this.translate("gs1field_gtin")} ${additionaData.fields[1].value}</div>
-                                                 <div class="label">${this.translate("gs1field_batch")} ${additionaData.fields[2].value}</div>
-                                                 <div class="label">${this.translate("gs1field_date")} ${additionaData.fields[3].value}</div>
+                                                 <div class="label">${this.translate("gs1field_sn")} ${gs1Values[0]}</div>
+                                                 <div class="label">${this.translate("gs1field_gtin")} ${gs1Values[1]}</div>
+                                                 <div class="label">${this.translate("gs1field_batch")} ${gs1Values[2]}</div>
+                                                 <div class="label">${this.translate("gs1field_date")} ${gs1Values[3]}</div>
                                              </div>`
         }
 

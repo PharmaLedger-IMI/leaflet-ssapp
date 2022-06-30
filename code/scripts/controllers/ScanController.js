@@ -294,7 +294,10 @@ export default class ScanController extends WebcController {
       let result = this.parseGs1Fields(gs1FormatFields.ol);
       return result;
     } catch (e) {
-      this.redirectToError(this.translate("err_barcode"), gs1FormatFields.ol, e.message);
+      let fields = gs1FormatFields.ol.map((field) => {
+        return field.value
+      })
+      this.redirectToError(this.translate("err_barcode"), fields, e.message);
       return;
     }
 
