@@ -371,6 +371,7 @@ export default class DrugDetailsController extends WebcController {
       }*/
     }
     this.onTagClick("toggle-leaflet-options", () => {
+      this.querySelector(".leaflet-options-container").classList.toggle("opened");
       this.querySelector(".leaflet-options-wrapper").classList.toggle("show-leaflet-options")
       if (this.model.hasMoreDocTypes) {
         this.querySelector('.select-document-type-container').removeAttribute('hidden');

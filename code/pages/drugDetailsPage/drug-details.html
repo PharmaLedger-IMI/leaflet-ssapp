@@ -36,15 +36,6 @@
                             <div class="video-content" data-view-model="@videoSourceHtml">
                             </div>
                         </div>
-                        <div class="leaflet-icon-options-container" slot="true">
-                            <div class="e-leaflet-icon">{{ $e_leaflet }}</div>
-                            <div data-if="@showLeafletOptions">
-                                <div class="leaflet-options-container" slot="true">
-                                    <div data-tag="toggle-leaflet-options">
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
                         <div class="leaflet-options-wrapper" slot="true" data-if="@showLeafletOptions">
                             <div class="select-document-type-container" hidden>
                                 <ion-select class="select-document-type" interface="action-sheet"
@@ -74,6 +65,17 @@
                                 </div>
                             </div>
                         </div>
+                        <div class="leaflet-icon-options-container" slot="true">
+
+                            <div class="e-leaflet-icon">{{ $e_leaflet }}</div>
+                            <div data-if="@showLeafletOptions">
+                                <div class="leaflet-options-container" slot="true">
+                                    <div data-tag="toggle-leaflet-options">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
                         <div id="leaflet-content" slot="true">
                             <leaflet-spinner></leaflet-spinner>
                         </div>

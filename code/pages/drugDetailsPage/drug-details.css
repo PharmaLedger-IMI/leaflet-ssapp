@@ -196,10 +196,14 @@ div[status-type="error"] .status-icon-container {
 }
 
 .leaflet-options-container {
-    background: url("../../assets/images/icons/leaflet-options-icon.svg") no-repeat;
+    background: url("../../assets/images/icons/leaflet-options-icon_up.svg") no-repeat;
     width: 62px;
     height: 38px;
     background-size: contain;
+}
+
+.leaflet-options-container.opened {
+    background: url("../../assets/images/icons/leaflet-options-icon.svg") no-repeat;
 }
 
 .leaflet-options-container > div {
