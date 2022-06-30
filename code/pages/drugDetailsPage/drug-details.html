@@ -38,8 +38,10 @@
                         </div>
                         <div class="leaflet-icon-options-container" slot="true">
                             <div class="e-leaflet-icon">{{ $e_leaflet }}</div>
-                            <div class="leaflet-options-container" data-if="@showLeafletOptions">
-                                <div data-tag="toggle-leaflet-options" slot="true">
+                            <div data-if="@showLeafletOptions">
+                                <div class="leaflet-options-container" slot="true">
+                                    <div data-tag="toggle-leaflet-options">
+                                    </div>
                                 </div>
                             </div>
                         </div>
