@@ -1,16 +1,24 @@
+.header-title-container {
+    display: flex;
+    flex-direction: row;
+    gap: 10px;
+    align-content: center;
+    align-items: center;
+}
+
 .close-page {
     height: 25px;
     width: 25px;
-    position: absolute;
     background: url(../../assets/images/icons/close-page.png) no-repeat right;
-    top: 16px;
     background-size: cover;
-    left: calc(100% - 41px);
+    align-self: center;
+    margin-right: 16px;
 }
 
 .section-title {
     padding: 24px;
     margin-top: 0px;
+    flex-grow: 1;
 }
 
 .page-body-section {

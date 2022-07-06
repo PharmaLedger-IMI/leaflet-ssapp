@@ -1,15 +1,24 @@
+.header-title-container {
+    display: flex;
+    flex-direction: row;
+    gap: 10px;
+    align-content: center;
+    align-items: center;
+}
+
 .close-page {
     height: 25px;
     width: 25px;
     position: relative;
     background: url(../../assets/images/icons/close-page.png) no-repeat right;
-    top: 24px;
-    left: calc(100% - 41px);
     background-size: cover;
+    margin-right: 16px;
 }
+
 
 .section-title {
     padding: 0px 24px 24px;
+    flex-grow: 1;
 }
 
 .page-body-section {
