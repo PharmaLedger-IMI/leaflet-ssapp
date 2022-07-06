@@ -1,8 +1,11 @@
 <link href="pages/settingsPage/settings.css" rel="stylesheet"/>
 <div class="mobile-container">
-    <webc-container controller="SettingsController" slot="content-slot">
-        <div class="close-page" data-tag="go-home"></div>
-        <div class="section-title">{{$main_title}}</div>
+    <webc-container controller="SettingsController">
+        <div>
+            <div class="close-page" data-tag="go-home"></div>
+            <div class="section-title">{{$main_title}}</div>
+        </div>
+
         <div class="page-body-section bottom-rounded-container">
             <div class="page-body">
                 <div>

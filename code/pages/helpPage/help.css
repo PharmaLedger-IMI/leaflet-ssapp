@@ -2,9 +2,10 @@
     height: 25px;
     width: 25px;
     position: relative;
-    background: url(../../assets/images/icons/close-page.svg) no-repeat right;
-    top: 16px;
+    background: url(../../assets/images/icons/close-page.png) no-repeat right;
+    top: 24px;
     left: calc(100% - 41px);
+    background-size: cover;
 }
 
 .section-title {

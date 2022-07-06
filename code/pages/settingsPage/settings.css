@@ -1,19 +1,21 @@
 .close-page {
     height: 25px;
     width: 25px;
-    position: relative;
-    background: url(../../assets/images/icons/close-page.svg) no-repeat right;
+    position: absolute;
+    background: url(../../assets/images/icons/close-page.png) no-repeat right;
     top: 16px;
+    background-size: cover;
     left: calc(100% - 41px);
 }
 
 .section-title {
-    padding: 0px 24px 24px;
+    padding: 24px;
+    margin-top: 0px;
 }
 
 .page-body-section {
     background: #fff;
-    height: 87%;
+    height: 92%;
 }
 
 .page-body {
