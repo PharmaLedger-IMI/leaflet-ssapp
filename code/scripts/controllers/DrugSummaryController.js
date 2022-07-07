@@ -17,6 +17,7 @@ export default class DrugSummaryController extends WebcController {
       statusMessage: constants.SN_OK_MESSAGE,
       serialNumber: "",
       preferredDocType: "leaflet",
+      loadingData: true
     };
     let dbApi = require("opendsu").loadApi("db");
 
@@ -43,7 +44,7 @@ export default class DrugSummaryController extends WebcController {
         this.model.status = record.status;
         this.model.statusMessage = this.translate(record.statusMessage);
         this.model.snCheck = record.snCheck;
-        this.recordPk = record.pk;
+        this.record = record;
 
         // check if gtin only case
         if (!this.model.batch || Object.keys(this.model.batch).length === 0) {
@@ -98,12 +99,20 @@ export default class DrugSummaryController extends WebcController {
     this.onTagClick("lang-proceed", async () => {
       this.modalWindow.destroy();
       let lang = this.querySelector("input[name='languages']:checked").value
-      this.navigateToPageTag("drug-details", {productData: this.recordPk, preferredLanguage: lang});
+      this.navigateToPageTag("drug-details", {
+        productData: JSON.parse(JSON.stringify(this.record)),
+        preferredLanguage: lang,
+        availableLanguages: JSON.parse(JSON.stringify(this.availableLanguages))
+      });
     })
 
     this.onTagClick("view-leaflet", () => {
       this.modalWindow.destroy();
-      this.navigateToPageTag("drug-details", {productData: this.recordPk});
+      this.navigateToPageTag("drug-details", {
+        productData: JSON.parse(JSON.stringify(this.record)),
+        preferredLanguage: this.documentLanguage,
+        availableLanguages: JSON.parse(JSON.stringify(this.availableLanguages))
+      });
     })
   }
 
@@ -112,6 +121,7 @@ export default class DrugSummaryController extends WebcController {
     }, () => {
       this.navigateToPageTag("home")
     }, {model: config, disableExpanding: true, disableFooter: true});
+    this.model.loadingData = false;
   }
 
   getLanguageConfig() {

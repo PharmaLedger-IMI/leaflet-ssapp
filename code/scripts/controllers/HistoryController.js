@@ -104,11 +104,6 @@ export default class HistoryController extends WebcController {
 
       const {productsDataSource} = this.model;
       let settingsService = new SettingsService(enclaveDB);
-      let onbordingComplete = await settingsService.asyncReadSetting("onbordingComplete");
-
-      if (!onbordingComplete) {
-        this.navigateToPageTag("onboarding")
-      }
 
       let appLang = await settingsService.asyncReadSetting("preferredLanguage");
       this.applySkinForCurrentPage(appLang);

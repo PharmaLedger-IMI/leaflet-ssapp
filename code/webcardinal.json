@@ -6,10 +6,16 @@
   },
   "pages": [
     {
+      "name": "Landing",
+      "tag": "landing",
+      "src": "./landingPage/landing.html",
+      "path": "./"
+    },
+    {
       "name": "Home",
       "tag": "home",
       "src": "./homePage/home.html",
-      "path": "./"
+      "path": "./home"
     },
     {
       "name": "Onboarding",

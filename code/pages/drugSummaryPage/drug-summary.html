@@ -1,5 +1,8 @@
 <link href="pages/drugSummaryPage/drug-summary.css" rel="stylesheet"/>
 <div class="mobile-container dark-screen">
     <webc-container controller="DrugSummaryController">
+        <div data-if="@loadingData">
+            <leaflet-spinner></leaflet-spinner>
+        </div>
     </webc-container>
 </div>

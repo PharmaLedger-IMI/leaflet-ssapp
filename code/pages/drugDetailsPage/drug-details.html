@@ -29,65 +29,56 @@
                 </div>
             </div>
             <div class="content-slot-container bottom-rounded-container">
-                <div data-if="@loadingData">
-                    <leaflet-spinner slot="true"></leaflet-spinner>
-                    <div data-if="@showEPI" slot="false" class="leaflet-wrapper">
-                        <div class="video-container" data-if="@showVideoLink" slot="true">
-                            <div class="video-content" data-view-model="@videoSourceHtml">
-                            </div>
+                <div class="leaflet-wrapper">
+                    <div class="video-container" data-if="@showVideoLink">
+                        <div class="video-content" data-view-model="@videoSourceHtml">
                         </div>
-                        <div class="leaflet-options-wrapper" slot="true" data-if="@showLeafletOptions">
-                            <div class="select-document-type-container" hidden>
-                                <ion-select class="select-document-type" interface="action-sheet"
-                                            placeholder="Select Document Type"
-                                            value="@preferredDocType">
-                                    <ion-select-option value="smpc">{{$smpc}}</ion-select-option>
-                                    <ion-select-option value="leaflet">{{$leaflet}}</ion-select-option>
-                                </ion-select>
-                            </div>
-                            <div class="select-document-language-container" hidden>
-                                <ion-select class="select-document-language"
-                                            data-for="@documentLanguages"
-                                            data-for-option="rerender"
-                                            interface="action-sheet"
-                                            placeholder="$select_lang_placeholder"
-                                            value="@preferredLanguage">
-                                    <ion-select-option value="@value">{{@label}} ({{@nativeName}})
-                                    </ion-select-option>
-                                </ion-select>
-                            </div>
-                            <div data-if="@showACDCAuthLink">
-                                <div class="auth-feature-container">
-                                    <h6 data-tag="auth-feature">{{$verify_package}}</h6>
-                                    <div class="auth-feature product-description" data-tag="auth-feature">
-                                        <img src="./assets/images/icons/verify-package.svg"/>
-                                    </div>
+                    </div>
+                    <div class="leaflet-options-wrapper" data-if="@showLeafletOptions">
+                        <div class="select-document-type-container" hidden>
+                            <ion-select class="select-document-type" interface="action-sheet"
+                                        placeholder="Select Document Type"
+                                        value="@preferredDocType">
+                                <ion-select-option value="smpc">{{$smpc}}</ion-select-option>
+                                <ion-select-option value="leaflet">{{$leaflet}}</ion-select-option>
+                            </ion-select>
+                        </div>
+                        <div class="select-document-language-container" hidden>
+                            <ion-select class="select-document-language"
+                                        data-for="@documentLanguages"
+                                        data-for-option="rerender"
+                                        interface="action-sheet"
+                                        placeholder="$select_lang_placeholder"
+                                        value="@preferredLanguage">
+                                <ion-select-option value="@value">{{@label}} ({{@nativeName}})
+                                </ion-select-option>
+                            </ion-select>
+                        </div>
+                        <div data-if="@showACDCAuthLink">
+                            <div class="auth-feature-container">
+                                <h6 data-tag="auth-feature">{{$verify_package}}</h6>
+                                <div class="auth-feature product-description" data-tag="auth-feature">
+                                    <img src="./assets/images/icons/verify-package.svg"/>
                                 </div>
-                            </div>
-                        </div>
-                        <div class="leaflet-icon-options-container" slot="true">
-
-                            <div class="e-leaflet-icon">{{ $e_leaflet }}</div>
-                            <div data-if="@showLeafletOptions">
-                                <div class="leaflet-options-container" slot="true">
-                                    <div data-tag="toggle-leaflet-options">
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div id="leaflet-content" slot="true">
-                            <leaflet-spinner></leaflet-spinner>
-                        </div>
-                        <div slot="false">
-                            <div class="no-leaflet-container">
-                                <div class="no-leaflet-image"></div>
-                                <div class="no-leaflet-title">{{ $title }}</div>
-                                <div class="no-leaflet-text">{{ $text }}</div>
                             </div>
                         </div>
                     </div>
+                    <div class="leaflet-icon-options-container">
+
+                        <div class="e-leaflet-icon">{{ $e_leaflet }}</div>
+                        <div data-if="@showLeafletOptions">
+                            <div class="leaflet-options-container" slot="true">
+                                <div data-tag="toggle-leaflet-options">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div id="leaflet-content">
+                        <leaflet-spinner></leaflet-spinner>
+                    </div>
                 </div>
+
                 <div class="scroll-to-top" data-if="@showScrollToTop" slot="true">
                     <div data-tag="scroll-top" slot="true"> {{ $scroll_to_top }}</div>
                 </div>
