@@ -119,14 +119,8 @@ export default class HistoryController extends WebcController {
       });
       this.onTagClick("view-details", (model, target, event) => {
 
-        enclaveDB.getRecord(constants.HISTORY_TABLE, model.pk, async (err, record) => {
-          if (err) {
-            console.log("Could not find record for pk: ", model.pk);
-            return;
-          }
-          this.navigateToPageTag("drug-summary", {
-            productData: record.pk
-          })
+        this.navigateToPageTag("drug-summary", {
+          productData: model.pk
         })
       });
       this.onTagClick("open-settings", () => {

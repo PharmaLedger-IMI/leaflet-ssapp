@@ -65,16 +65,17 @@ export default class DrugSummaryController extends WebcController {
 
         }
 
+        //default epi type is leaflet. New design has no epi type selection
         this.documentService = await XMLDisplayService.init(element, record.gtinSSI, this.model, "leaflet");
-        if (!this.model.preferredLanguage) {
-          this.model.preferredLanguage = await this.settingsService.asyncReadSetting("preferredLanguage");
-        }
+        //epi preferred language is app language
+        this.preferredLanguage = await this.settingsService.asyncReadSetting("preferredLanguage");
+
         this.availableLanguages = await $$.promisify(this.documentService.getAvailableLanguagesForXmlType.bind(this.documentService))();
         if (!this.availableLanguages || this.availableLanguages.length === 0) {
           throw new Error("No available language for leaflet");
         }
 
-        this.documentLanguage = this.availableLanguages.find((item) => item.value === this.model.preferredLanguage);
+        this.documentLanguage = this.availableLanguages.find((item) => item.value === this.preferredLanguage);
 
         this.showPopup(this.getModalConfig(this.model.status));
       } catch (err) {
@@ -83,6 +84,14 @@ export default class DrugSummaryController extends WebcController {
       }
     })
     this.addListeners();
+  }
+
+  goToDrugDetailsPage(preferredLanguage) {
+    this.navigateToPageTag("drug-details", {
+      productData: JSON.parse(JSON.stringify(this.record)),
+      preferredLanguage: preferredLanguage,
+      availableLanguages: JSON.parse(JSON.stringify(this.availableLanguages)),
+    });
   }
 
   addListeners() {
@@ -99,20 +108,12 @@ export default class DrugSummaryController extends WebcController {
     this.onTagClick("lang-proceed", async () => {
       this.modalWindow.destroy();
       let lang = this.querySelector("input[name='languages']:checked").value
-      this.navigateToPageTag("drug-details", {
-        productData: JSON.parse(JSON.stringify(this.record)),
-        preferredLanguage: lang,
-        availableLanguages: JSON.parse(JSON.stringify(this.availableLanguages))
-      });
+      this.goToDrugDetailsPage(lang);
     })
 
     this.onTagClick("view-leaflet", () => {
       this.modalWindow.destroy();
-      this.navigateToPageTag("drug-details", {
-        productData: JSON.parse(JSON.stringify(this.record)),
-        preferredLanguage: this.documentLanguage,
-        availableLanguages: JSON.parse(JSON.stringify(this.availableLanguages))
-      });
+      this.goToDrugDetailsPage(this.documentLanguage);
     })
   }
 
@@ -206,12 +207,11 @@ export default class DrugSummaryController extends WebcController {
         let objContentHrml = `${this.translate("invalid_data_message")} <div>${additionaData.message}</div>`;
 
         if (additionaData.fields && Object.keys(additionaData.fields).length > 0) {
-          let gs1Values = Object.values(additionaData.fields);
           objContentHrml = `${objContentHrml}<br> <div>
-                                                 <div class="label">${this.translate("gs1field_sn")} ${gs1Values[0]}</div>
-                                                 <div class="label">${this.translate("gs1field_gtin")} ${gs1Values[1]}</div>
-                                                 <div class="label">${this.translate("gs1field_batch")} ${gs1Values[2]}</div>
-                                                 <div class="label">${this.translate("gs1field_date")} ${gs1Values[3]}</div>
+                                                 <div class="label">${this.translate("gs1field_sn")} ${additionaData.serialNumber}</div>
+                                                 <div class="label">${this.translate("gs1field_gtin")} ${additionaData.gtin} </div>
+                                                 <div class="label">${this.translate("gs1field_batch")} ${additionaData.batchNumber} </div>
+                                                 <div class="label">${this.translate("gs1field_date")} ${additionaData.expiry} </div>
                                              </div>`
         }
 

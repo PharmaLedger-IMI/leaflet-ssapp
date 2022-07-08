@@ -294,10 +294,7 @@ export default class ScanController extends WebcController {
       let result = this.parseGs1Fields(gs1FormatFields.ol);
       return result;
     } catch (e) {
-      let fields = gs1FormatFields.ol.map((field) => {
-        return field.value
-      })
-      this.redirectToError(this.translate("err_barcode"), fields, e.message);
+      this.redirectToError(this.translate("err_barcode"), null, e.message);
       return;
     }
 
@@ -368,7 +365,9 @@ export default class ScanController extends WebcController {
       } else {
         evt.setBatchDSUStatus(true);
         await this.updateReport(evt);
-        this.redirectToDrugDetails({productData: alreadyScanned.record.pk, acdc: evt});
+        alreadyScanned.record.acdc = evt;
+        await $$.promisify(this.enclaveDB.updateRecord)(constants.HISTORY_TABLE, alreadyScanned.record.pk, alreadyScanned.record);
+        this.redirectToDrugDetails({productData: alreadyScanned.record.pk});
       }
     })
   }
@@ -542,8 +541,8 @@ export default class ScanController extends WebcController {
   }
 
   addPackageToHistoryAndRedirect(gtinSSI, gs1Fields, acdcEvt, callback) {
-    this.addPackageToScannedPackagesList().then(record => {
-      this.redirectToDrugDetails({productData: record.pk, acdc: acdcEvt});
+    this.addPackageToScannedPackagesList(acdcEvt).then(record => {
+      this.redirectToDrugDetails({productData: record.pk});
     }).catch(err => {
       return callback(err);
     })
@@ -579,7 +578,7 @@ export default class ScanController extends WebcController {
     })
   }
 
-  async addPackageToScannedPackagesList() {
+  async addPackageToScannedPackagesList(acdcEvt) {
     let batchStatusService = new BatchStatusService();
     let productModel;
     let batchModel;
@@ -603,6 +602,7 @@ export default class ScanController extends WebcController {
       snCheck: batchStatusService.snCheck,
       product: productModel,
       batch: batchModel,
+      acdc: acdcEvt,
       createdAt: new Date().toISOString()
     });
     return result;

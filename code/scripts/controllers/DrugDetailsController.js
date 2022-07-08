@@ -140,7 +140,6 @@ export default class DrugDetailsController extends WebcController {
       twoOrMoreLanguages: false,
       showLeafletOptions: false,
       documentLanguages: [],
-      acdc: history.location.state.acdc
     };
 
     let record = history.location.state.productData;
@@ -161,7 +160,7 @@ export default class DrugDetailsController extends WebcController {
     this.model.showVideoLink = false;
     this.model.preferredLanguage = history.location.state.preferredLanguage;
     this.model.documentLanguages = history.location.state.availableLanguages;
-    this.acdc = history.location.state.acdc;
+    this.model.acdc = record.acdc;
     this.model.showACDCAuthLink = !!this.model.batch.acdcAuthFeatureSSI;
     this.model.displayStatus = this.model.statusMessage !== constants.SN_OK_MESSAGE
   }
