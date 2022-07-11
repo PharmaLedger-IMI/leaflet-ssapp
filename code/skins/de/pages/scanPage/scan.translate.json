@@ -1,11 +1,11 @@
 {
     "status": {
         "feedback": [
-            "Scanner starten",
+            "Scanner wird initialisiert",
             "Warten auf Benutzergenehmigung..."
         ],
         "permission-denied": [
-            "Zugriff verweigert!",
+            "Erlaubnis verweigert!",
             "Um mit dem Scannen zu beginnen, überprüfen Sie bitte Ihre Einstellungen und erlauben Sie den Zugriff auf die Kamera."
         ],
         "no-cameras": [
@@ -13,16 +13,16 @@
             "Es scheint, dass Ihr Gerät keine Kamera hat."
         ]
     },
-    "cancel": "Abbrechen",
-    "guide": "Anleitung",
-    "err_no_code_scanned": "2dMatrix-Code-Scan-Vorgang beendet. Kein Code gescannt oder Prozess abgebrochen.",
+    "cancel": "Absagen",
+    "guide": "Führen",
+    "err_no_code_scanned": "2D-Matrix-Code-Scanvorgang abgeschlossen. Kein Code gescannt oder Vorgang abgebrochen.",
     "err_no_code_found": "Keine GS1-Datenmatrix gefunden.",
     "err_scan_not_supported": "Der Code kann nicht gescannt werden.",
-    "err_cam_unavailable": "Keine Kamera zum Scannen verfügbar. Bitte überprüfen Sie die Verfügbarkeit und Berechtigungen der Kamera",
-    "err_default": "GS1-Datenmatrix konnte nicht gescannt werden.",
+    "err_cam_unavailable": "Keine Kamera zum Scannen verfügbar. Bitte überprüfen Sie die Verfügbarkeit und Berechtigungen der Kamera.",
+    "err_default": "Fehler beim Scannen der GS1-Datenmatrix.",
     "err_unknown": "Code-Scannen und -Verarbeitung mit Fehlern beendet.",
-    "err_barcode": "Barcode ist nicht lesbar, bitte wenden Sie sich an die Apotheke/den Arzt, die/der die Arzneimittelpackung ausgestellt hat.",
-    "err_combination": "Produktcode-Kombination konnte nicht aufgelöst werden.",
-    "err_to_history": "Paket konnte nicht zur Historie hinzugefügt werden",
-    "err_network_not_found": "Einstellungen enthalten keinen Netzwerkwert. Bitte überprüfen Sie die Einstellungen und aktualisieren Sie den Netzwerkwert."
+    "err_barcode": "Barcode ist nicht lesbar, bitte wenden Sie sich an die Apotheke / den Arzt, der die Arzneimittelpackung ausgestellt hat.",
+    "err_combination": "Produktcodekombination konnte nicht aufgelöst werden.",
+    "err_to_history": "Paket konnte nicht zum Verlauf hinzugefügt werden",
+    "err_network_not_found": "Die Einstellungen enthalten keinen Netzwerkwert. Bitte überprüfen Sie die Einstellungen und aktualisieren Sie den Netzwerkwert"
 }

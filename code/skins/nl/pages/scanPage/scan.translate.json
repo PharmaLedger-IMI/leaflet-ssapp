@@ -1,0 +1,28 @@
+{
+    "status": {
+        "feedback": [
+            "Scanner initialiseren",
+            "Wachten op goedkeuring van de gebruiker..."
+        ],
+        "permission-denied": [
+            "Geen toestemming!",
+            "Controleer uw instellingen en geef toegang tot de camera om te beginnen met scannen."
+        ],
+        "no-cameras": [
+            "Camera niet gevonden!",
+            "Het lijkt erop dat uw apparaat geen camera heeft."
+        ]
+    },
+    "cancel": "Annuleren",
+    "guide": "Gids",
+    "err_no_code_scanned": "2D Matrix-codescanproces voltooid. Geen code gescand of proces geannuleerd.",
+    "err_no_code_found": "Geen GS1-datamatrix gevonden.",
+    "err_scan_not_supported": "De code kan niet worden gescand.",
+    "err_cam_unavailable": "Geen camera beschikbaar om te scannen. Controleer de beschikbaarheid en machtigingen van de camera.",
+    "err_default": "Kan GS1-datamatrix niet scannen.",
+    "err_unknown": "Scannen en verwerken van codes eindigde met fouten.",
+    "err_barcode": "Barcode is niet leesbaar, neem contact op met apotheek/arts die het medicijnpakket heeft afgegeven.",
+    "err_combination": "Productcodecombinatie kon niet worden opgelost.",
+    "err_to_history": "Kan pakket niet toevoegen aan geschiedenis",
+    "err_network_not_found": "Instellingen bevatten geen netwerkwaarde. Controleer de instellingen een update netwerkwaarde"
+}

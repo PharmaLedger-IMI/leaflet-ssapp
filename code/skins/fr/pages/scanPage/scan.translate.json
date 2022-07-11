@@ -1,0 +1,28 @@
+{
+    "status": {
+        "feedback": [
+            "Initialisation du scanner",
+            "En attente de l'approbation de l'utilisateur..."
+        ],
+        "permission-denied": [
+            "Permission refusée!",
+            "Pour commencer la numérisation, veuillez vérifier vos paramètres et autoriser l'accès à la caméra."
+        ],
+        "no-cameras": [
+            "Caméra introuvable !",
+            "Il semble que votre appareil n'ait pas de caméra."
+        ]
+    },
+    "cancel": "Annuler",
+    "guide": "Guide",
+    "err_no_code_scanned": "Processus de numérisation de code matriciel 2d terminé. Aucun code scanné ou processus annulé.",
+    "err_no_code_found": "Aucune matrice de données GS1 trouvée.",
+    "err_scan_not_supported": "Le code ne peut pas être scanné.",
+    "err_cam_unavailable": "Aucune caméra disponible pour la numérisation. Veuillez vérifier la disponibilité et les autorisations de la caméra.",
+    "err_default": "Échec de l'analyse de la matrice de données GS1.",
+    "err_unknown": "La numérisation et le traitement du code se sont terminés avec des erreurs.",
+    "err_barcode": "Le code-barres n'est pas lisible, veuillez contacter la pharmacie / le médecin qui a délivré l'emballage du médicament.",
+    "err_combination": "La combinaison de code de produit n'a pas pu être résolue.",
+    "err_to_history": "Impossible d'ajouter le package à l'historique",
+    "err_network_not_found": "Les paramètres ne contiennent pas de valeur réseau. Veuillez vérifier les paramètres et mettre à jour la valeur du réseau"
+}

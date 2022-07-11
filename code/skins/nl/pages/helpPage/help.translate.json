@@ -1,0 +1,15 @@
+{
+    "title": "Veelgestelde vragen",
+    "section_title": "Wat is EPI?",
+    "section_text": "EPI staat voor elektronische productinformatie. Het is een inspanning van deelnemende bedrijven in de Europese farmaceutische industrie om nauwkeurige en meest recente informatie over een product te verstrekken en de herkomst van geneesmiddelen te waarborgen.",
+    "section_title1": "Wat is PharmaLedger?",
+    "section_text1": "PharmaLedger is een blockchain-consortium met 29 leden, waaronder 12 wereldwijde farmaceutische bedrijven. Het is bedoeld om zorginnovatie mogelijk te maken voor de toeleveringsketen, klinische proeven en gezondheidsgegevens. Het doel van het PharmaLedger-project is om een ​​op blockchain gebaseerd platform voor de gezondheidszorg te leveren, waarbij de toeleveringsketen, klinische onderzoeken en gezondheidsgegevens als casestudies worden gebruikt.",
+    "section_title2": "Hoe de app gebruiken?",
+    "section_text2": "Klik op 'Scan Pack' en laat de applicatie de camera gebruiken. In een fatsoenlijk verlichte omgeving, lijn het pakket fysiek uit met het scangebied en wacht op een groene indicator en pieptoon. Zodra het pakket met succes is gescand, verschijnt er een code. Klik op de knop 'Productinformatie' om de folder te bekijken.",
+    "section_title3": "Waarom geeft mijn 2D-code geen resultaat?",
+    "section_text3": "Er zijn meerdere redenen waarom de code op uw pack niet kon worden opgelost. Een van de redenen is dat de code onleesbaar of onscherp is voor de camera. Probeer de code op een goed verlichte plaats te scannen en de code duidelijk zichtbaar op het scherm. De andere reden kan zijn dat het product nog geen onderdeel is van de productdatabase van PharmaLedger. Neem contact op met de fabrikant of hun product al deel uitmaakt van de PharmaLedger.",
+    "section_title4": "Wat geeft de productstatus op mijn app aan?",
+    "section_text4": "De productstatusindicator wordt gebruikt om te controleren of uw pakket door de fabrikant is uitgegeven. Dit bevestigt niet dat het fysieke pakket authentiek is, maar is een garantie dat het digitaal is geverifieerd en beschikbaar is in de database van de fabrikant.",
+    "section_title5": "Wat is productinformatie?",
+    "section_text5": "De elektronische versie van het gedrukte materiaal dat beschikbaar is in de wettelijke farmacologische beschrijving van een geneesmiddel, onderhevig aan gedetailleerde wettelijke specificaties, inclusief goedgekeurde chemische en merknamen, beschrijving en classificatie, klinische farmacologie, goedgekeurde indicaties en gebruik, contra-indicaties, waarschuwingen, voorzorgsmaatregelen, bijwerkingen , informatie over drugsmisbruik en -afhankelijkheid, discussie over overdosering, dosering en toediening, formuleringen en geschikte referenties; in de VS wordt over dergelijke materialen onderhandeld tussen de fabrikant(en) van het medicijn en de Amerikaanse Food and Drug Administration."
+}

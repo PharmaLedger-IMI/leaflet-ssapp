@@ -1,0 +1,15 @@
+{
+    "title": "FAQ",
+    "section_title": "Qu'est-ce que le PEV ?",
+    "section_text": "EPI signifie information électronique sur les produits. Il s'agit d'un effort des entreprises participantes de l'industrie pharmaceutique européenne pour fournir des informations précises et à jour sur un produit et garantir la provenance du médicament.",
+    "section_title1": "Qu'est-ce que PharmaLedger ?",
+    "section_text1": "PharmaLedger est un consortium blockchain de 29 membres, dont 12 sociétés pharmaceutiques mondiales. Il vise à permettre l'innovation dans le domaine de la santé pour la chaîne d'approvisionnement, les essais cliniques et les données de santé. L'objectif du projet PharmaLedger est de fournir une plate-forme basée sur la blockchain pour le secteur de la santé, en utilisant la chaîne d'approvisionnement, les essais cliniques et les données de santé comme études de cas.",
+    "section_title2": "Comment utiliser l'appli ?",
+    "section_text2": "Cliquez sur \"Scan Pack\" et autorisez l'application à utiliser l'appareil photo. Dans un environnement correctement éclairé, alignez physiquement le pack sur la zone de numérisation et attendez un indicateur vert et un bip sonore. Une fois le pack scanné avec succès, un code apparaît. Cliquez sur le bouton « Informations sur le produit » pour afficher la notice.",
+    "section_title3": "Pourquoi mon code 2D ne donne-t-il pas de résultat ?",
+    "section_text3": "Il existe plusieurs raisons pour lesquelles le code de votre pack n'a pas pu être résolu. L'une des raisons étant que le code est illisible ou flou pour la caméra. Veuillez essayer de scanner le code dans un endroit bien éclairé et le code clairement visible à l'écran. L'autre raison pourrait être que le produit ne fait pas encore partie de la base de données de produits de PharmaLedger. Veuillez vérifier auprès du fabricant si son produit fait déjà partie du PharmaLedger.",
+    "section_title4": "Qu'indique l'état du produit sur mon application ?",
+    "section_text4": "L'indicateur d'état du produit permet de vérifier si votre pack est émis par le fabricant. Cela ne certifie pas que le pack physique est authentique, mais c'est une assurance qu'il a été vérifié numériquement et qu'il est disponible dans la base de données du fabricant.",
+    "section_title5": "Qu'est-ce que les informations sur le produit ?",
+    "section_text5": "La version électronique des documents imprimés disponibles dans la description pharmacologique légale d'un médicament, sous réserve de spécifications réglementaires détaillées, y compris les noms chimiques et propriétaires approuvés, la description et la classification, la pharmacologie clinique, les indications et l'utilisation approuvées, les contre-indications, les avertissements, les précautions, les effets indésirables , informations sur l'abus de drogues et la dépendance, discussion sur le surdosage, posologie et administration, formulations et références appropriées ; aux États-Unis, ces matériaux sont négociés entre le ou les fabricants du médicament et la Food and Drug Administration des États-Unis."
+}

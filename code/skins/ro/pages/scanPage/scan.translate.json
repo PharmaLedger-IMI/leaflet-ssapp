@@ -1,28 +1,28 @@
 {
-  "status": {
-    "feedback": [
-      "Etapa de initializare",
-      "Așteptăm accesul la camera video..."
-    ],
-    "permission-denied": [
-      "Acces nepermis!",
-      "Pentru a începe scanarea verifică drepturile de accesare a camerelor."
-    ],
-    "no-cameras": [
-      "Nicio cameră disponibilă!",
-      "Se pare că dispozitivul dvs. nu este dotat cu camera."
-    ]
-  },
-  "cancel": "Anulează",
-  "guide": "Ghid",
-  "err_no_code_scanned": "Procesul de scanare a codului 2dMatrix s-a încheiat. Niciun cod scanat sau proces anulat.",
-  "err_no_code_found": "Nu a fost găsită nicio matrice de date GS1.",
-  "err_scan_not_supported": "Codul nu poate fi scanat.",
-  "err_cam_unavailable": "Nici o cameră disponibilă pentru scanare. Va rugam sa verificati setarile si permisiunile camerei",
-  "err_default": "Scanarea matricei de date GS1 a eșuat.",
-  "err_unknown": "Scanarea și procesarea codului s-a încheiat cu erori.",
-  "err_barcode": "Codul de bare nu poate fi citit, vă rugăm să contactați farmacia/medicul care a eliberat pachetul de medicamente.",
-  "err_combination": "Combinația de coduri de produs nu a putut fi rezolvată.",
-  "err_to_history": "Nu s-a putut adăuga pachetul la istoric",
-  "err_network_not_found": "Setările nu conțin valoarea rețelei. Vă rugăm să verificați setările și sa actualizati valoarea pentru rețea"
+    "status": {
+        "feedback": [
+            "Se inițializează scanerul",
+            "Se așteaptă aprobarea utilizatorului..."
+        ],
+        "permission-denied": [
+            "Acces refuzat!",
+            "Pentru a începe scanarea, verificați setările și permiteți accesul la cameră."
+        ],
+        "no-cameras": [
+            "Aparatul foto nu a fost găsit!",
+            "Se pare că dispozitivul tău nu are nicio cameră."
+        ]
+    },
+    "cancel": "Anulare",
+    "guide": "Ghid",
+    "err_no_code_scanned": "Procesul de scanare a codului 2d Matrix sa încheiat. Niciun cod scanat sau proces anulat.",
+    "err_no_code_found": "Nu a fost găsită nicio matrice de date GS1.",
+    "err_scan_not_supported": "Codul nu poate fi scanat.",
+    "err_cam_unavailable": "Nu există cameră disponibilă pentru scanare. Vă rugăm să verificați disponibilitatea camerei și permisiunile.",
+    "err_default": "Nu s-a putut scana matricea de date GS1.",
+    "err_unknown": "Scanarea și procesarea codului s-au încheiat cu erori.",
+    "err_barcode": "Codul de bare nu poate fi citit, vă rugăm să contactați farmacia/medicul care a emis pachetul de medicamente.",
+    "err_combination": "Combinația de coduri de produs nu a putut fi rezolvată.",
+    "err_to_history": "Nu s-a putut adăuga pachetul la istoric",
+    "err_network_not_found": "Setările nu conțin valoarea rețelei. Verificați setările și actualizați valoarea rețelei"
 }

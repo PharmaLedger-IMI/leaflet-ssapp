@@ -1,0 +1,11 @@
+{
+    "title": "Bienvenue sur Pharmaledger",
+    "scan_explain": "Trouvez le code 2D sur votre médicament pour scanner et afficher les informations",
+    "get_started": "Commencer",
+    "terms_title_first_row": "Presque là!",
+    "terms_title_second_row": "Veuillez lire et accepter les termes et conditions.",
+    "disagree_extra_text": "\"Pharmaledger\" ne fonctionnera pas tant que vous n'aurez pas accepté les termes et conditions. Veuillez lire les termes et conditions.",
+    "agree": "Accepter",
+    "disagree": "Être en désaccord",
+    "terms_and_conditions": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum"
+}

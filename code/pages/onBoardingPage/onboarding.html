@@ -18,9 +18,17 @@
                 {{$get_started}}
             </div>
             <div class="terms-and-conditions" slot="false">
-                <div class="terms-text">{{$terms_and_conditions}}</div>
+                <div class="terms-text">
+                    <section data-if="@confirmDisagree">
+                        <h6>{{$disagree_extra_text}}</h6>
+                    </section>
+                    <p>{{$terms_and_conditions}}</p></div>
                 <div class="buttons-container">
-                    <div class="terms-button disagree" data-tag="disagree-terms">{{$disagree}}</div>
+                    <section data-if="@confirmDisagree">
+                        <div slot="true" class="terms-button disagree" data-tag="disagree-terms-confirm">{{$disagree}}
+                        </div>
+                        <div slot="false" class="terms-button disagree" data-tag="disagree-terms">{{$disagree}}</div>
+                    </section>
                     <div class="terms-button agree" data-tag="agree-terms">{{$agree}}</div>
                 </div>
             </div>
