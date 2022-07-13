@@ -10,7 +10,7 @@ scan-header {
 
 
 .barcode-scanner-container {
-    background: var(--primary-backgtound-color);
+    background: var(--olivegreen);
 }
 
 #scanner-placeholder {

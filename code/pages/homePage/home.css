@@ -90,7 +90,7 @@
 }
 
 .history-item-container .productItem_name {
-    color: var(--primary-backgtound-color);
+    color: var(--olivegreen);
     font-family: 'DM Sans bold';
 }
 
@@ -173,7 +173,7 @@
     border-radius: 18px;
 }
 
-@media only screen and (min-device-width: 900px) and (max-device-width: 3000px) {
+@media only screen and (min-device-width: 900px){
     .webc-datatable--scroll {
         --height: calc(100vh - 400px);
     }

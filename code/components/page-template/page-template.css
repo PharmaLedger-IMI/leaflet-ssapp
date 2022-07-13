@@ -1,5 +1,5 @@
 .page-content-container[page-theme="dark-theme"] {
-    --background: var(--primary-backgtound-color);
+    --background: var(--olivegreen);
     --color: white;
 }
 #header-template ion-toolbar {
@@ -17,7 +17,7 @@
 /*
 #header-template[page-theme="dark-theme"] ion-toolbar,
 .page-content-container[page-theme="dark-theme"] ion-content {
-    --background: var(--primary-backgtound-color);
+    --background: var(--olivegreen);
     --color: white;
 }
 

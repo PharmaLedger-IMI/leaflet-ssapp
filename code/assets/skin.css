@@ -30,7 +30,6 @@ webc-app-root {
 }
 
 :root {
-    --primary-backgtound-color: #013646;
     --secondary-background-color: #F0EEEC;
     --olivegreen: #013646;
     --mintgreen: #61E4A3;
@@ -72,8 +71,6 @@ webc-app-root {
     --m-space: 14px;
     --s-space: 8px;
     --xs-space: 5px;
-
-
 }
 
 
@@ -109,39 +106,6 @@ h6 {
 
 ion-button {
     --border-radius: 10px;
-}
-
-@media only screen and (min-device-width: 900px) and (max-device-width: 3000px) {
-    .mobile-container {
-        max-height: var(--app-max-height);
-        position: relative;
-        border-radius: 35px;
-        top: calc((100% - var(--app-max-height)) / 2);
-        padding-top: 2.34%;
-    }
-
-    .mobile-container:before {
-        content: url("./images/icons/mobile-info-icon.svg");
-        position: absolute;
-        right: 2.34%;
-        top: 2.34%;
-        filter: invert(12%) sepia(83%) saturate(1757%) hue-rotate(170deg) brightness(33%) contrast(99%);
-    }
-
-    .mobile-container.dark-screen:before {
-        filter: none;
-    }
-
-    .bottom-rounded-container {
-        border-bottom-left-radius: 34px;
-        border-bottom-right-radius: 34px;
-    }
-}
-
-@media only screen and (max-device-width: 340px) {
-    .mobile-container {
-        padding: 0;
-    }
 }
 
 .mobile-container {
@@ -360,3 +324,65 @@ leaflet-spinner .loader-container {
     justify-content: center;
     z-index: 10;
 }
+
+#leaflet-content table {
+    display: block;
+    overflow-x: auto;
+}
+
+.leaflet-accordion-item table,
+.leaflet-accordion-item table td,
+.leaflet-accordion-item table th {
+    border: 1px solid;
+    border-collapse: collapse;
+    font-size: inherit;
+}
+
+.leaflet-accordion-item td,
+.leaflet-accordion-item th {
+    padding: 15px;
+    width: 100%;
+    height: 100%;
+}
+
+#leaflet-content figure {
+    margin: 0px;
+}
+
+#leaflet-content img {
+    width: 100%;
+}
+
+@media only screen and (max-device-width: 340px) {
+    .mobile-container {
+        padding: 0;
+    }
+}
+
+@media only screen and (min-device-width: 900px) {
+    .mobile-container {
+        max-height: var(--app-max-height);
+        position: relative;
+        border-radius: 35px;
+        top: calc((100% - var(--app-max-height)) / 2);
+        padding-top: 2.34%;
+    }
+
+    .mobile-container:before {
+        content: url("./images/icons/mobile-info-icon.svg");
+        position: absolute;
+        right: 2.34%;
+        top: 2.34%;
+        filter: invert(12%) sepia(83%) saturate(1757%) hue-rotate(170deg) brightness(33%) contrast(99%);
+    }
+
+    .mobile-container.dark-screen:before {
+        filter: none;
+    }
+
+    .bottom-rounded-container {
+        border-bottom-left-radius: 34px;
+        border-bottom-right-radius: 34px;
+    }
+}
+

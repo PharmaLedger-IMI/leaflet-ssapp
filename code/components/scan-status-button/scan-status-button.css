@@ -9,7 +9,7 @@
 }
 
 .scan-button ion-button::part(native) {
-    background: var(--primary-backgtound-color);
+    background: var(--olivegreen);
     border-radius: var(--xxl-border-radius);
     text-transform: capitalize;
     padding: var(--s-space);

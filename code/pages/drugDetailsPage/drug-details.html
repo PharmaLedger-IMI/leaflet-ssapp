@@ -10,8 +10,11 @@
                     <div class="product-name" searchbar="@searchbarStatus">{{ @product.name }}</div>
                     <div class="search-container" searchbar="@searchbarStatus" status-type="@statusType">
                         <div class="status-icon-container"></div>
-                        <ion-searchbar showCancelButton="focus" searchIcon="undefined"
-                                       enterkeyhint="enter"></ion-searchbar>
+                        <ion-searchbar show-clear-button="always"
+                                       search-icon="search-circle-outline"
+                                       clear-icon="trash-outline"
+                                       enterkeyhint="search">
+                        </ion-searchbar>
                     </div>
                     <div class="search-button" data-tag="do-search" searchbar="@searchbarStatus">
                     </div>

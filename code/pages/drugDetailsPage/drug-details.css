@@ -167,7 +167,7 @@ div[status-type="error"] .status-icon-container {
     display: flex;
     justify-content: space-between;
     gap: 10px;
-    margin: 26px 24px 0px;
+    margin: 26px 8px 8px 24px;
 }
 
 .leaflet-options-container {
@@ -222,9 +222,8 @@ div[status-type="error"] .status-icon-container {
 }
 
 .leaflet-accordion-item h5 {
-    margin-top: 0px;
     margin-bottom: 20px;
-    max-width: 315px;
+    max-width: 305px;
 }
 
 .leaflet-accordion-item-content {
@@ -246,20 +245,20 @@ div[status-type="error"] .status-icon-container {
 }
 
 .leaflet-accordion-item:before {
-    content: url("../../assets/images/icons/accordion-item-closed.svg");
-    margin-right: 5px;
-    visibility: visible;
-    right: 0px;
+    content: "";
+    margin-right: -15px;
     position: relative;
     float: right;
-    width: 100%;
-    text-align: right;
-    top: 18px;
+    width: 21px;
+    height: 21px;
+    background-image: url(../../assets/images/icons/accordion-item-closed.svg);
+    background-position: top;
+    background-size: contain;
+    background-repeat: no-repeat;
 }
 
 .leaflet-accordion-item.active:before {
-    content: url("../../assets/images/icons/accordion-item-oppened.svg");
-    top: 14px;
+    background-image: url("../../assets/images/icons/accordion-item-oppened.svg");
 }
 
 .scroll-to-top {

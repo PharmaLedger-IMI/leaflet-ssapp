@@ -114,16 +114,14 @@ export default class DrugDetailsController extends WebcController {
 
   setAccordionHandlers(init) {
     let accordionItems = document.querySelectorAll("div.leaflet-accordion-item");
-    let eventHandler = (evt) => {
-      evt.target.classList.toggle("active");
-    };
-
     accordionItems.forEach((accItem, index) => {
-      if (index === 0 && init) {
+      accItem.addEventListener("click", () => {
         accItem.classList.toggle("active");
-      }
-      accItem.removeEventListener("click", eventHandler);
-      accItem.addEventListener("click", eventHandler);
+        accItem.querySelector(".leaflet-accordion-item-content").addEventListener("click", (event) => {
+          event.stopImmediatePropagation();
+          event.stopPropagation();
+        })
+      });
 
     })
   }
@@ -194,6 +192,8 @@ export default class DrugDetailsController extends WebcController {
       this.querySelector('.select-document-type-container').removeAttribute('hidden');
       this.querySelector('.select-document-type').removeEventListener("ionChange", this.docTypesHandler);
       this.querySelector('.select-document-type').addEventListener("ionChange", this.docTypesHandler);
+    } else {
+      this.querySelector('.select-document-type-container').setAttribute('hidden', true);
     }
 
 
