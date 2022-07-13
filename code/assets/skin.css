@@ -328,6 +328,8 @@ leaflet-spinner .loader-container {
 #leaflet-content table {
     display: block;
     overflow-x: auto;
+    height: 100%;
+    width: 100%;
 }
 
 .leaflet-accordion-item table,
@@ -351,6 +353,11 @@ leaflet-spinner .loader-container {
 
 #leaflet-content img {
     width: 100%;
+}
+
+#leaflet-content li ul {
+    margin-left: 40px;
+    padding-left: 0px;
 }
 
 @media only screen and (max-device-width: 340px) {

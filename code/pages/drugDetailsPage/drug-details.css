@@ -217,7 +217,7 @@ div[status-type="error"] .status-icon-container {
 }
 
 .leaflet-accordion-item, .leaflet-accordion-item h5, .leaflet-accordion-item-content h3 {
-    font-size: var(--xs-text-size);
+    font-size: var(--m-text-size);
     font-family: "DM Sans bold";
 }
 
@@ -231,7 +231,7 @@ div[status-type="error"] .status-icon-container {
     margin-right: 5px;
     height: fit-content;
     font-family: "DM Sans regular";
-    font-size: var(--xs-text-size);
+    font-size: var(--s-text-size);
     padding-left: 15px;
     margin: 18px 0px;
 }
