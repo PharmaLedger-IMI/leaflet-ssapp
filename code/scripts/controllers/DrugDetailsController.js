@@ -6,7 +6,6 @@ const gtinResolver = require("gtin-resolver");
 const utils = gtinResolver.utils;
 const XMLDisplayService = gtinResolver.XMLDisplayService;
 
-
 export default class DrugDetailsController extends WebcController {
   constructor(element, history) {
     super(element, history);
@@ -140,6 +139,15 @@ export default class DrugDetailsController extends WebcController {
       documentLanguages: [],
     };
 
+    let notificationMap = {};
+    notificationMap[constants.SN_FAIL_MESSAGE] = "invalid_sn_status_message";
+    notificationMap[constants.SN_RECALLED_MESSAGE] = "recalled_sn_status_message";
+    notificationMap[constants.SN_DECOMMISSIONED_MESSAGE] = "decommissioned_sn_status_message";
+    notificationMap[constants.BATCH_RECALLED_MESSAGE] = "recalled_batch_status_message";
+    notificationMap[constants.PRODUCT_STATUS_FAIL_MESSAGE] = "incorrect_date_status_message";
+    notificationMap[constants.PRODUCT_EXPIRED_MESSAGE] = "expired_date_status_message";
+    notificationMap[constants.PRODUCT_STATUS_UNABLE_TO_VALIDATE_MESSAGE] = "invalid_data_status_message";
+
     let record = history.location.state.productData;
 
     this.gtinSSI = record.gtinSSI;
@@ -153,6 +161,7 @@ export default class DrugDetailsController extends WebcController {
     this.model.statusType = record.statusType;
     this.model.status = record.status;
     this.model.statusMessage = this.translate(record.statusMessage);
+    this.model.notificationMessage = "";
     this.model.snCheck = record.snCheck;
     this.networkName = record.networkName;
     this.model.showVideoLink = false;
@@ -161,6 +170,9 @@ export default class DrugDetailsController extends WebcController {
     this.model.acdc = record.acdc;
     this.model.showACDCAuthLink = !!this.model.batch.acdcAuthFeatureSSI;
     this.model.displayStatus = this.model.statusMessage !== constants.SN_OK_MESSAGE
+    if (this.model.displayStatus) {
+      this.model.notificationMessage = this.translate(notificationMap[record.statusMessage])
+    }
   }
 
   docTypesHandler = async (event) => {
@@ -268,6 +280,22 @@ export default class DrugDetailsController extends WebcController {
       this.querySelector(".leaflet-options-container").classList.toggle("opened");
       this.querySelector(".leaflet-options-wrapper").classList.toggle("show-leaflet-options");
       this.updateOptions();
+    })
+
+    this.onTagClick("show-more", (model, target, event) => {
+      this.querySelector(".notification-content p").style.display = "block";
+      target.classList.toggle("display-none");
+      this.querySelector(".show-less").classList.toggle("display-none");
+    })
+
+    this.onTagClick("show-less", (model, target, event) => {
+      this.querySelector(".notification-content p").style.display = "-webkit-box";
+      target.classList.toggle("display-none");
+      this.querySelector(".show-more").classList.toggle("display-none");
+    })
+
+    this.onTagClick("close-notification", (model, target, event) => {
+      this.querySelector(".notification-wrapper").classList.toggle("display-none");
     })
   }
 }

@@ -33,8 +33,34 @@
             </div>
             <div class="content-slot-container bottom-rounded-container">
                 <div class="leaflet-wrapper">
+                    <div data-if="@displayStatus">
+                        <div class="notification-wrapper" slot="true">
+                            <div class="close-notification" data-tag="close-notification"></div>
+                            <div class="notification-content">
+                                <p>{{@notificationMessage}}</p>
+                                <div class="show-more" data-tag="show-more">
+                                    {{$_more}}
+                                </div>
+                                <div class="show-less display-none" data-tag="show-less">
+                                    {{$_less}}
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
                     <div class="video-container" data-if="@showVideoLink">
                         <div class="video-content" data-view-model="@videoSourceHtml">
+                        </div>
+                    </div>
+
+                    <div class="leaflet-icon-options-container">
+
+                        <div class="e-leaflet-icon">{{ $e_leaflet }}</div>
+                        <div data-if="@showLeafletOptions">
+                            <div class="leaflet-options-container" slot="true">
+                                <div data-tag="toggle-leaflet-options">
+                                </div>
+                            </div>
                         </div>
                     </div>
                     <div class="leaflet-options-wrapper" data-if="@showLeafletOptions">
@@ -66,17 +92,6 @@
                             </div>
                         </div>
                     </div>
-                    <div class="leaflet-icon-options-container">
-
-                        <div class="e-leaflet-icon">{{ $e_leaflet }}</div>
-                        <div data-if="@showLeafletOptions">
-                            <div class="leaflet-options-container" slot="true">
-                                <div data-tag="toggle-leaflet-options">
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
                     <div id="leaflet-content">
                         <leaflet-spinner></leaflet-spinner>
                     </div>

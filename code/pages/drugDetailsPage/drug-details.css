@@ -90,7 +90,7 @@
 .status-container {
     display: flex;
     justify-content: left;
-    background: #fff;
+    background: rgba(255, 255, 255, 0.17);
     border-radius: 8px;
     color: #191C32;
     font-size: 14px;
@@ -121,6 +121,8 @@ div[status-type="error"] .status-icon-container {
 
 .leaflet-wrapper, #leaflet-content {
     height: calc(100% - 48px);
+    border-bottom-left-radius: 30px;
+    border-bottom-right-radius: 30px;
 }
 
 .page-content-wrapper {
@@ -147,6 +149,62 @@ div[status-type="error"] .status-icon-container {
 
 }
 
+.notification-wrapper {
+    margin: 16px 16px 0px;
+    padding-left: 8px;
+    border-radius: 8px;
+    background: #FF5252;
+}
+
+.notification-content {
+    padding: 35px 24px 9px;
+    background: #FFEEEE;
+    border-bottom-right-radius: 8px;
+    border-top-right-radius: 8px;
+}
+
+.close-notification {
+    background: url("../../assets/images/icons/close-notification.svg") center no-repeat;
+    width: 20px;
+    height: 20px;
+    background-size: cover;
+    position: absolute;
+    right: 24px;
+    top: 24px;
+}
+
+.notification-content p {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+}
+
+.show-less,
+.show-more {
+    color: #FF5252;
+    font-size: 14px;
+    font-family: 'DM Sans medium';
+    margin-top: 9px;
+}
+
+.show-less:before {
+    content: url("../../assets/images/icons/read-less-arrow.svg");
+}
+
+.show-more:before {
+    content: url("../../assets/images/icons/read-more-arrow.svg");
+}
+
+.display-none {
+    display: none;
+}
+
+.video-container {
+    margin: 16px 16px 0px;
+}
+
 .video-content iframe {
     height: 203px;
     width: 100%;
@@ -171,14 +229,14 @@ div[status-type="error"] .status-icon-container {
 }
 
 .leaflet-options-container {
-    background: url("../../assets/images/icons/leaflet-options-icon_up.svg") no-repeat;
+    background: url("../../assets/images/icons/leaflet-options-icon.svg") no-repeat;
     width: 62px;
     height: 38px;
     background-size: contain;
 }
 
 .leaflet-options-container.opened {
-    background: url("../../assets/images/icons/leaflet-options-icon.svg") no-repeat;
+    background: url("../../assets/images/icons/leaflet-options-icon_up.svg") no-repeat;
 }
 
 .leaflet-options-container > div {
@@ -193,8 +251,14 @@ div[status-type="error"] .status-icon-container {
     display: flex;
     flex-direction: column;
     gap: 16px;
-    background: var(--olivegreen);
     padding: 24px;
+    border-bottom: 1px solid #E5EAEB;
+    border-top: 1px solid #E5EAEB;
+}
+
+.leaflet-options-wrapper.show-leaflet-options ion-select,
+.auth-feature-container {
+    border: 1px solid var(--olivegreen);
 }
 
 .auth-feature-container {
