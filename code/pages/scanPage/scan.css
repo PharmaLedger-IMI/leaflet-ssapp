@@ -2,15 +2,17 @@
     background-color: black;
 }
 
+webc-container div {
+    height: 100%;
+    position: relative;
+}
+
 scan-header {
     position: relative;
     top: 25px;
     z-index: 100;
-}
-
-
-.barcode-scanner-container {
-    background: var(--olivegreen);
+    display: block;
+    height: 42px;
 }
 
 #scanner-placeholder {
@@ -37,4 +39,10 @@ scan-header {
     flex-direction: column;
     max-width: var(--app-max-width);
     transform: translateY(-50%);
+}
+
+@media only screen and (min-device-width: 900px) {
+    scan-header {
+        height: calc(2.34% + 42px);
+    }
 }
