@@ -42,6 +42,7 @@ export default class DrugSummaryController extends WebcController {
         this.model.batch = record.batch || {};
         this.model.statusType = record.statusType;
         this.model.status = record.status;
+        this.model.networkName = record.networkName;
         this.model.statusMessage = this.translate(record.statusMessage);
         this.model.snCheck = record.snCheck;
         this.record = record;

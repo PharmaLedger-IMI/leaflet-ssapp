@@ -149,7 +149,6 @@ export default class DrugDetailsController extends WebcController {
     notificationMap[constants.PRODUCT_STATUS_UNABLE_TO_VALIDATE_MESSAGE] = "invalid_data_status_message";
 
     let record = history.location.state.productData;
-
     this.gtinSSI = record.gtinSSI;
     this.gs1Fields = record.gs1Fields;
     this.model.gtin = this.gs1Fields.gtin;
@@ -164,6 +163,7 @@ export default class DrugDetailsController extends WebcController {
     this.model.notificationMessage = "";
     this.model.snCheck = record.snCheck;
     this.networkName = record.networkName;
+    this.model.networkName = record.networkName;
     this.model.showVideoLink = false;
     this.model.preferredLanguage = history.location.state.preferredLanguage;
     this.model.documentLanguages = history.location.state.availableLanguages;
