@@ -121,8 +121,6 @@ div[status-type="error"] .status-icon-container {
 
 .leaflet-wrapper, #leaflet-content {
     height: calc(100% - 48px);
-    border-bottom-left-radius: 30px;
-    border-bottom-right-radius: 30px;
 }
 
 .page-content-wrapper {
@@ -278,24 +276,24 @@ div[status-type="error"] .status-icon-container {
 .leaflet-accordion-item {
     border-bottom: 1px solid #E5EAEB;
     padding: 0px 24px;
+    font-family: "DM Sans bold";
 }
 
-.leaflet-accordion-item, .leaflet-accordion-item h5, .leaflet-accordion-item-content h3 {
-    font-size: var(--m-text-size);
+.leaflet-accordion-item h5, .leaflet-accordion-item-content h3 {
     font-family: "DM Sans bold";
+    font-size: calc(100% + 1.2vmin);
 }
 
 .leaflet-accordion-item h5 {
     margin-bottom: 20px;
-    max-width: 305px;
+    max-width: 290px;
 }
 
 .leaflet-accordion-item-content {
     display: none;
-    margin-right: 5px;
     height: fit-content;
     font-family: "DM Sans regular";
-    font-size: var(--s-text-size);
+    font-size: calc(100% + 0.6vmin);
     padding-left: 15px;
     margin: 18px 0px;
 }
@@ -337,10 +335,20 @@ div[status-type="error"] .status-icon-container {
     text-align: center;
     font-family: "DM Sans bold";
     color: #02272F;
-    font-size: 14px;
+    font-size: calc(100% + 0.2vmin);
     position: relative;
     top: -48px;
     right: 24px;
     border-radius: 62px;
     float: right;
+}
+
+@media only screen and (min-device-width: 900px) {
+    .leaflet-accordion-item h5, .leaflet-accordion-item-content h3 {
+        font-size: calc(100% + 0.6vmin);
+    }
+
+    .leaflet-accordion-item-content {
+        font-size: calc(100% + 0.4vmin);
+    }
 }

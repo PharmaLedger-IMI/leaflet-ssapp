@@ -14,7 +14,7 @@
 }
 
 .page-body .page-title-section {
-    font-size: 18px;
+    font-size: calc(100% + 0.8vmin);
     line-height: 150%;
     font-family: "DM Sans bold";
     margin-top: 3.66%;
@@ -81,9 +81,9 @@
 
 .explain-container {
     font-family: "DM Sans bold";
-    font-size: 15px;
     line-height: 150%;
     margin-top: 24px;
+    font-size: calc(100% + 0.1vmin);
 }
 
 .page-submit-button-section {
