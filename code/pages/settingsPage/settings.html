@@ -111,6 +111,54 @@
                                 </ion-button>
                             </div>
                         </div>
+                        <div class="label"> Socket camera FPS</div>
+                        <div data-if="@socketCameraFPSEditMode">
+                            <div slot="true">
+                                <input class="settings-input" data-view-model="@socketCameraFPS" type="text"/>
+                                <ion-button data-tag="change-socket-camera-FPS">{{$save_btn}}</ion-button>
+                                <ion-button data-tag="change-default-socket-camera-FPS">{{$reset_btn}}</ion-button>
+                            </div>
+                            <div slot="false">
+                                <input class="settings-input" data-view-model="@socketCameraFPS" readonly
+                                       type="text"/>
+                                <ion-button class="network-edit-button" data="socketCameraFPSEditMode"
+                                            data-tag="change-socket-camera-FPS-edit-mode"> {{$edit_btn}} <i
+                                        class="fa fa-pencil-square-o"></i>
+                                </ion-button>
+                            </div>
+                        </div>
+                        <div class="label"> HTTP camera FPS</div>
+                        <div data-if="@httpCameraFPSEditMode">
+                            <div slot="true">
+                                <input class="settings-input" data-view-model="@httpCameraFPS" type="text"/>
+                                <ion-button data-tag="change-http-camera-FPS">{{$save_btn}}</ion-button>
+                                <ion-button data-tag="change-default-http-camera-FPS">{{$reset_btn}}</ion-button>
+                            </div>
+                            <div slot="false">
+                                <input class="settings-input" data-view-model="@httpCameraFPS" readonly
+                                       type="text"/>
+                                <ion-button class="network-edit-button" data="httpCameraFPSEditMode"
+                                            data-tag="change-http-camera-FPS-edit-mode"> {{$edit_btn}} <i
+                                        class="fa fa-pencil-square-o"></i>
+                                </ion-button>
+                            </div>
+                        </div>
+                        <div class="label"> Use socket connection for camera</div>
+                        <div data-if="@useSocketConnectionForCameraEditMode">
+                            <div slot="true">
+                                <input class="settings-input" data-view-model="@useSocketConnectionForCamera" type="text"/>
+                                <ion-button data-tag="change-use-socket-connection-for-camera">{{$save_btn}}</ion-button>
+                                <ion-button data-tag="change-default-use-socket-connection-for-camera">{{$reset_btn}}</ion-button>
+                            </div>
+                            <div slot="false">
+                                <input class="settings-input" data-view-model="@useSocketConnectionForCamera" readonly
+                                       type="text"/>
+                                <ion-button class="network-edit-button" data="useSocketConnectionForCameraEditMode"
+                                            data-tag="change-use-socket-connection-for-camera-edit-mode"> {{$edit_btn}} <i
+                                        class="fa fa-pencil-square-o"></i>
+                                </ion-button>
+                            </div>
+                        </div>
                         <div hidden="@devOptions.areDisabled">
                             <div class="label"> {{$dev_subtitle}}</div>
                             <ion-item button class="dev-options" class="ion"

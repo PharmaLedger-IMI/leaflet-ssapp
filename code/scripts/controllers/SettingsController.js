@@ -15,11 +15,17 @@ export default class SettingsController extends WebcController {
       networkEditMode: true,
       scanditLicenseEditMode: true,
       refreshPeriodEditMode: true,
-      showAdvanced: false,
+      showAdvanced: true,
       networkName: {value: constants.DEFAULT_NETWORK_NAME},
       advancedUser: false,
       refreshPeriod: {value: constants.DEFAULT_REFRESH_PERIOD},
       scanditLicense: {value: ""},
+      useSocketConnectionForCameraEditMode: true,
+      socketCameraFPSEditMode: true,
+      useSocketConnectionForCamera: { value: "false" },
+      socketCameraFPS: { value: "10" },
+      httpCameraFPSEditMode: true,
+      httpCameraFPS: { value: "10" },
       appLanguages: [],
       devOptions: {
         areEnabled: undefined,
@@ -52,6 +58,13 @@ export default class SettingsController extends WebcController {
       this.model.refreshPeriod.value = await this.settingsService.asyncReadSetting("refreshPeriod");
       let lockFeatures = await $$.promisify(config.getEnv)("lockFeatures");
       this.model.editableFeatures = !!lockFeatures;
+      try {
+        this.model.useSocketConnectionForCamera.value = await this.settingsService.asyncReadSetting("useSocketConnectionForCamera");
+        this.model.socketCameraFPS.value = await this.settingsService.asyncReadSetting("socketCameraFPS");
+        this.model.httpCameraFPS.value = await this.settingsService.asyncReadSetting("httpCameraFPS");
+      } catch (e) {
+        // nothing
+      }
       this.addListeners();
     })
 
@@ -186,6 +199,18 @@ export default class SettingsController extends WebcController {
       this.toggleEditMode(target.getAttribute("data"));
     });
 
+    this.onTagClick("change-socket-camera-FPS-edit-mode", (model, target, event) => {
+      this.toggleEditMode(target.getAttribute("data"));
+    });
+
+    this.onTagClick("change-http-camera-FPS-edit-mode", (model, target, event) => {
+      this.toggleEditMode(target.getAttribute("data"));
+    });
+
+    this.onTagClick("change-use-socket-connection-for-camera-edit-mode", (model, target, event) => {
+      this.toggleEditMode(target.getAttribute("data"));
+    });
+
     this.onTagClick("change-network", (model, target, event) => {
       let newValue = target.parentElement.querySelector("input").value;
       this.settingsService.writeSetting("networkName", newValue, (err) => {
@@ -231,6 +256,81 @@ export default class SettingsController extends WebcController {
         this.toggleEditMode("refreshPeriodEditMode");
       });
     });
+
+    ///// Socket camera FPS
+    this.onTagClick("change-socket-camera-FPS", (model, target, event) => {
+      let newValue = target.parentElement.querySelector("input").value;
+      this.settingsService.writeSetting("socketCameraFPS", newValue, (err) => {
+        if (err) {
+          console.log(err);
+          return;
+        }
+        this.model.socketCameraFPS.value = newValue;
+        this.toggleEditMode("socketCameraFPSEditMode");
+      });
+    });
+
+    this.onTagClick("change-default-socket-camera-FPS", (model, target, event) => {
+      this.settingsService.writeSetting("socketCameraFPS", constants.DEFAULT_SOCKET_CAMERA_FPS, (err) => {
+        if (err) {
+          console.log(err);
+          return;
+        }
+        this.model.socketCameraFPS.value = constants.DEFAULT_SOCKET_CAMERA_FPS;
+        this.toggleEditMode("socketCameraFPSEditMode");
+      });
+    });
+    /////
+
+    ///// HTTP camera FPS
+    this.onTagClick("change-http-camera-FPS", (model, target, event) => {
+      let newValue = target.parentElement.querySelector("input").value;
+      this.settingsService.writeSetting("httpCameraFPS", newValue, (err) => {
+        if (err) {
+          console.log(err);
+          return;
+        }
+        this.model.httpCameraFPS.value = newValue;
+        this.toggleEditMode("httpCameraFPSEditMode");
+      });
+    });
+
+    this.onTagClick("change-default-http-camera-FPS", (model, target, event) => {
+      this.settingsService.writeSetting("httpCameraFPS", constants.DEFAULT_HTTP_CAMERA_FPS, (err) => {
+        if (err) {
+          console.log(err);
+          return;
+        }
+        this.model.httpCameraFPS.value = constants.DEFAULT_HTTP_CAMERA_FPS;
+        this.toggleEditMode("httpCameraFPSEditMode");
+      });
+    });
+    /////
+
+    ///// Use socket connection for camera
+    this.onTagClick("change-use-socket-connection-for-camera", (model, target, event) => {
+      let newValue = target.parentElement.querySelector("input").value;
+      this.settingsService.writeSetting("useSocketConnectionForCamera", newValue, (err) => {
+        if (err) {
+          console.log(err);
+          return;
+        }
+        this.model.useSocketConnectionForCamera.value = newValue;
+        this.toggleEditMode("useSocketConnectionForCameraEditMode");
+      });
+    });
+
+    this.onTagClick("change-default-use-socket-connection-for-camera", (model, target, event) => {
+      this.settingsService.writeSetting("useSocketConnectionForCamera", "false", (err) => {
+        if (err) {
+          console.log(err);
+          return;
+        }
+        this.model.useSocketConnectionForCamera.value = "false";
+        this.toggleEditMode("useSocketConnectionForCameraEditMode");
+      });
+    });
+    /////
 
     this.onTagEvent('language.select', 'ionChange', this.changeLanguageHandler);
 

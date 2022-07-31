@@ -4,6 +4,8 @@ export default {
   SETTINGS_STORAGE_PATH: "/data/settings.json",
   DEFAULT_NETWORK_NAME: "epi",
   DEFAULT_REFRESH_PERIOD: "3600",
+  DEFAULT_SOCKET_CAMERA_FPS: "15",
+  DEFAULT_HTTP_CAMERA_FPS: "15",
   XSL_PATH: "/code/assets/xml/leaflet.xsl",
   SN_LABEL: "Serial number",
   SN_FAIL_ICON: "assets/icons/serial_number/sn_fail_red_x.svg",

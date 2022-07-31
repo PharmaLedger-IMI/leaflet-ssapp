@@ -184,6 +184,7 @@ export default class ScanController extends WebcController {
 
     this.onTagClick('cancel-scan', () => {
       this.navigateToPageTag("home");
+      this.scanService.stop();
     });
   }
 
@@ -192,6 +193,29 @@ export default class ScanController extends WebcController {
       this.startScanningAsSoonAsPossible = true;
       return;
     }
+
+    const self = this;
+    const processResult = (result) => {
+      if (!result) {
+        return;
+      }
+      self.onScannerStatusChanged(SCANNER_STATUS.DONE);
+
+      console.log("Scan result:", result);
+      self.scanService.stop();
+    
+      self.processGS1Fields(self.parseGS1Code(result.text));
+    }
+
+    if(!this.scanService.usingNativeLayer) {
+      processResult(await this.scanService.scanner.scan());
+    } else {
+      this.scanService.scanWithCallback((result) => {
+        processResult(result);
+      });
+    }
+
+    return;
     this.scanInterval = setInterval(() => {
       this.scanService.scan().then(result => {
         if (!result) {
