@@ -1,6 +1,6 @@
 {
     "name": "leaflet-ssapp",
-    "version": "1.0.7",
+    "version": "v1.0.7",
     "description": "",
     "main": "index.js",
     "scripts": {
