@@ -209,10 +209,10 @@ export default class DrugSummaryController extends WebcController {
 
         if (additionaData.fields && Object.keys(additionaData.fields).length > 0) {
           objContentHrml = `${objContentHrml}<br> <div>
-                                                 <div class="label">${this.translate("gs1field_sn")} ${additionaData.serialNumber}</div>
-                                                 <div class="label">${this.translate("gs1field_gtin")} ${additionaData.gtin} </div>
-                                                 <div class="label">${this.translate("gs1field_batch")} ${additionaData.batchNumber} </div>
-                                                 <div class="label">${this.translate("gs1field_date")} ${additionaData.expiry} </div>
+                                                 <div class="label">${this.translate("gs1field_sn")} ${additionaData.fields.serialNumber}</div>
+                                                 <div class="label">${this.translate("gs1field_gtin")} ${additionaData.fields.gtin} </div>
+                                                 <div class="label">${this.translate("gs1field_batch")} ${additionaData.fields.batchNumber} </div>
+                                                 <div class="label">${this.translate("gs1field_date")} ${additionaData.fields.expiry} </div>
                                              </div>`
         }
 
