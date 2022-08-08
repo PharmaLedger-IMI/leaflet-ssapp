@@ -56,6 +56,7 @@
 
 .search-container[searchbar="visible"] {
     display: flex;
+    width: 100%;
 }
 
 .search-container .status-icon-container {

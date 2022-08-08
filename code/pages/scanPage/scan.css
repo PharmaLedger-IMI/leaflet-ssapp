@@ -2,8 +2,8 @@
     background-color: black;
 }
 
-webc-container div {
-    height: 96%;
+webc-container > div {
+    height: calc(100% - 60px);
     position: relative;
 }
 
@@ -12,7 +12,7 @@ scan-header {
     top: 25px;
     z-index: 100;
     display: block;
-    height: 42px;
+    height: 65px;
 }
 
 #scanner-placeholder {
@@ -44,5 +44,10 @@ scan-header {
 @media only screen and (min-device-width: 900px) {
     scan-header {
         height: calc(2.34% + 42px);
+    }
+
+    #scanner-placeholder {
+        border-bottom-left-radius: 30px;
+        border-bottom-right-radius: 30px;
     }
 }
