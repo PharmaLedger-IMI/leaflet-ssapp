@@ -287,6 +287,7 @@ div[status-type="error"] .status-icon-container {
 .leaflet-accordion-item h5 {
     margin-bottom: 20px;
     max-width: 290px;
+    text-align: left;
 }
 
 .leaflet-accordion-item-content {
