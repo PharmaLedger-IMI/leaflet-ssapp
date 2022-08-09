@@ -40,7 +40,10 @@ export default class ScanController extends WebcController {
         try {
           await this.scanService.setup();
         } catch (err) {
-          this.redirectToError(this.translate("err_cam_unavailable"), null, err.message);
+          console.log(this.translate("err_cam_unavailable"));
+
+          this.redirectToError("err_cam_unavailable", null, this.wrapError(err, constants.STAGES.INITIALIZATION));
+          return;
         }
 
       } else {
@@ -52,7 +55,7 @@ export default class ScanController extends WebcController {
         try {
           await this.startScanning();
         } catch (err) {
-          this.redirectToError(this.translate("err_unknown"), null, err.message);
+          this.redirectToError("err_unknown", null, this.wrapError(err, constants.STAGES.START_SCANNING));
         }
 
       }
@@ -109,17 +112,17 @@ export default class ScanController extends WebcController {
                     return this.processCompositeCodeScan(scanObjArray)
                   }
                 }
-                this.redirectToError(this.translate("err_no_code_scanned"));
+                this.redirectToError("err_no_code_scanned");
               }, (error) => {
                 switch (error) {
                   case "ERR_NO_CODE_FOUND":
-                    this.redirectToError(this.translate("err_no_code_found"));
+                    this.redirectToError("err_no_code_found");
                     break;
                   case "ERR_SCAN_NOT_SUPPORTED":
-                    this.redirectToError(this.translate("err_scan_not_supported"));
+                    this.redirectToError("err_scan_not_supported");
                     break;
                   case "ERR_CAM_UNAVAILABLE":
-                    this.redirectToError(this.translate("err_cam_unavailable"));
+                    this.redirectToError("err_cam_unavailable");
                     break;
                   case "ERR_USER_CANCELLED":
                     this.disposeOfBarcodePicker()
@@ -127,41 +130,13 @@ export default class ScanController extends WebcController {
                     //   this.history.push(`${new URL(this.history.win.basePath).pathname}home`);
                     break;
                   default:
-                    this.redirectToError(this.translate("err_default"));
+                    this.redirectToError("err_default");
                 }
               }).catch((err) => {
-                this.redirectToError(this.translate("err_unknown"));
+                this.redirectToError("err_unknown");
               });
             } else {
               this.startScanning();
-              /*const scan = handler.importNativeAPI("dataMatrixScan");
-              scan().then((resultArray) => {
-                  if (resultArray && resultArray.length > 0) {
-                      return this.processGS1Fields(this.parseGS1Code(resultArray[0]));
-                  }
-                  this.redirectToError(this.translate("err_no_code_scanned"));
-              }, (error) => {
-                  switch (error) {
-                      case "ERR_NO_CODE_FOUND":
-                          this.redirectToError(this.translate("err_no_code_found"));
-                          break;
-                      case "ERR_SCAN_NOT_SUPPORTED":
-                          this.redirectToError(this.translate("err_scan_not_supported"));
-                          break;
-                      case "ERR_CAM_UNAVAILABLE":
-                          this.redirectToError(this.translate("err_cam_unavailable"));
-                          break;
-                      case "ERR_USER_CANCELLED":
-                          this.disposeOfBarcodePicker()
-                          this.navigateToPageTag("home");
-                          // this.history.push(`${new URL(this.history.win.basePath).pathname}home`);
-                          break;
-                      default:
-                          this.redirectToError(this.translate("err_default"));
-                  }
-              }).catch((err) => {
-                  this.redirectToError(this.translate("err_unknown"));
-              });*/
             }
           });
           return;
@@ -187,6 +162,14 @@ export default class ScanController extends WebcController {
     });
   }
 
+  wrapError(err, stage){
+    const newError = {
+      message: err.message,
+      stage
+    }
+
+    return newError;
+  }
   async startScanning() {
     if (!this.scanService) {
       this.startScanningAsSoonAsPossible = true;
@@ -250,7 +233,7 @@ export default class ScanController extends WebcController {
       try {
         await this.scanService.setup();
       } catch (err) {
-        this.redirectToError(this.translate("err_cam_unavailable"), null, err.message);
+        this.redirectToError("err_cam_unavailable", null, this.wrapError(err, constants.STAGES.CAMERA_SWITCH));
       }
       return;
     }
@@ -287,14 +270,14 @@ export default class ScanController extends WebcController {
     try {
       gs1FormatFields = interpretGS1scan.interpretScan(scannedBarcode);
     } catch (e) {
-      this.redirectToError(this.translate("err_barcode"), this.parseGs1Fields(e.dlOrderedAIlist), e.message);
+      this.redirectToError("err_barcode", this.parseGs1Fields(e.dlOrderedAIlist), this.wrapError(e, constants.STAGES.INTERPRET_SCAN));
       return;
     }
     try {
       let result = this.parseGs1Fields(gs1FormatFields.ol);
       return result;
     } catch (e) {
-      this.redirectToError(this.translate("err_barcode"), null, e.message);
+      this.redirectToError("err_barcode", null, this.wrapError(e, constants.STAGES.PARSE_BARCODE));
       return;
     }
 
@@ -329,13 +312,13 @@ export default class ScanController extends WebcController {
   processGS1Fields(gs1Fields) {
     console.log("Processing fields: ", gs1Fields);
     if (!this.hasMandatoryFields(gs1Fields)) {
-      return this.redirectToError(this.translate("err_barcode"), gs1Fields);
+      return this.redirectToError("err_barcode", gs1Fields, this.wrapError(Error("Missing mandatory fields", constants.STAGES.CHECK_MANDATORY_FIELDS)));
     }
 
     const evt = this.acdc.createScanEvent(gs1Fields);
     this.settingsService.readSetting("networkName", async (err, networkName) => {
       if (err || typeof networkName === "undefined") {
-        return this.redirectToError(this.translate("err_network_not_found"), gs1Fields, err.message);
+        return this.redirectToError("err_network_not_found", gs1Fields, this.wrapError(err, constants.STAGES.NETWORK_NOT_FOUND));
       }
 
       this.leafletInfo = await LeafletInfoService.init(gs1Fields, networkName);
@@ -344,7 +327,7 @@ export default class ScanController extends WebcController {
         alreadyScanned = await $$.promisify(this.packageAlreadyScanned.bind(this))()
       } catch (e) {
         await this.updateReport(evt);
-        return this.redirectToError(this.translate("err_combination"), gs1Fields);
+        return this.redirectToError("err_combination", gs1Fields, this.wrapError(e, constants.STAGES.WRONG_COMBINATION));
       }
       let batchAnchorExists = false;
       if (alreadyScanned.status === false) {
@@ -354,7 +337,7 @@ export default class ScanController extends WebcController {
           await this.updateReport(evt);
           this.addPackageToHistoryAndRedirect(this.leafletInfo.gtinSSI, gs1Fields, evt, (err) => {
             if (err) {
-              return this.redirectToError(this.translate("err_to_history"), gs1Fields, err.message);
+              return this.redirectToError("err_to_history", gs1Fields, this.wrapError(err, constants.STAGES.ADD_TO_HISTORY));
             }
           })
         } else {
@@ -527,14 +510,14 @@ export default class ScanController extends WebcController {
           if (alreadyScanned.status === false) {
             this.addPackageToHistoryAndRedirect(this.leafletInfo.gtinSSI, this.leafletInfo.gs1Fields, acdcEvt, (err) => {
               if (err) {
-                return this.redirectToError(this.translate("err_to_history"), this.leafletInfo.gs1Fields, err.message)
+                return this.redirectToError("err_to_history", this.leafletInfo.gs1Fields, this.wrapError(err, constants.STAGES.ADD_TO_HISTORY))
               }
             });
           } else {
             this.redirectToDrugDetails({productData: alreadyScanned.record.pk})
           }
         } else {
-          return this.redirectToError(this.translate("err_combination"), this.leafletInfo.gs1Fields);
+          return this.redirectToError("err_combination", this.leafletInfo.gs1Fields, this.wrapError(err, constants.STAGES.WRONG_COMBINATION));
         }
       });
     }

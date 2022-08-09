@@ -31,5 +31,13 @@
   "gs1field_sn": "Serial number:",
   "gs1field_gtin": "Product code:",
   "gs1field_batch": "Batch number:",
-  "gs1field_date": "Expiry:"
+  "gs1field_date": "Expiry:",
+  "err_cam_unavailable": "No camera available for scanning. Please check camera availability and permissions.",
+  "unknown_error": "Error",
+  "err_default": "Failed to scan GS1 data matrix.",
+  "err_unknown": "Code scanning and processing finished with errors.",
+  "err_barcode": "Barcode is not readable, please contact pharmacy / doctor who issued the medicine package.",
+  "err_combination": "Product code combination could not be resolved.",
+  "err_to_history": "Failed to add package to history",
+  "err_network_not_found": "Settings doesn't contain network value. Please check settings an update network value "
 }

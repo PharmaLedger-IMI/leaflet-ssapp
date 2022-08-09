@@ -29,5 +29,16 @@ export default {
   PATH_TO_PRODUCT_DSU: "/product/",
   PATH_TO_BATCH_DSU: "/batch/",
   HISTORY_ITEM_DEFAULT_ICON: "./assets/icons/product_image_placeholder.svg",
-  IOS_USE_FRAMES: 'dev-options:ios-use-frames'
+  IOS_USE_FRAMES: 'dev-options:ios-use-frames',
+  STAGES: {
+    INITIALIZATION: "initialization",
+    START_SCANNING: "start-scanning",
+    CAMERA_SWITCH: "camera-switch",
+    ADD_TO_HISTORY: "add-to-history",
+    INTERPRET_SCAN:"interpret-scan",
+    PARSE_BARCODE: "parse-barcode",
+    CHECK_MANDATORY_FIELDS: "check-mandatory-fields",
+    NETWORK_NOT_FOUND: "network-not-found",
+    WRONG_COMBINATION: "wrong-combination",
+  }
 }

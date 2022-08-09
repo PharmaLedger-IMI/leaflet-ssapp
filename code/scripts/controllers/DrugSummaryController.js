@@ -22,13 +22,15 @@ export default class DrugSummaryController extends WebcController {
     let dbApi = require("opendsu").loadApi("db");
 
     dbApi.getMainEnclaveDB(async (err, enclaveDB) => {
-      try {
-        if (history.location.state.scanErrorData) {
-          throw new Error("ScanError");
+      let scanErrorData = history.location.state.scanErrorData;
+        if (scanErrorData) {
+          this.showPopup(this.getModalConfigForFailedScan(scanErrorData.secondaryMessage.stage, scanErrorData));
+          return;
         }
+      try {
         if (err) {
           console.log('Error on getting enclave DB');
-          this.showPopup(this.getModalConfig("invalid_data", err));
+          this.showPopup(this.getModalConfigForSuccessScan("invalid_data", err));
         }
         this.settingsService = new SettingsService(enclaveDB);
         let record = await $$.promisify(enclaveDB.getRecord)(constants.HISTORY_TABLE, history.location.state.productData);
@@ -78,10 +80,10 @@ export default class DrugSummaryController extends WebcController {
 
         this.documentLanguage = this.availableLanguages.find((item) => item.value === this.preferredLanguage);
 
-        this.showPopup(this.getModalConfig(this.model.status));
+        this.showPopup(this.getModalConfigForSuccessScan(this.model.status));
       } catch (err) {
         let errData = err.message === "ScanError" ? history.location.state.scanErrorData : err;
-        this.showPopup(this.getModalConfig("invalid_data", errData));
+        this.showPopup(this.getModalConfigForSuccessScan("invalid_data", errData));
       }
     })
     this.addListeners();
@@ -159,7 +161,39 @@ export default class DrugSummaryController extends WebcController {
     return configObj;
   }
 
-  getModalConfig(status, additionaData) {
+  getModalConfigForFailedScan(stage, error){
+    let configObj = {stage};
+    configObj.mainAction = "scan-again";
+    configObj.mainActionLabel = this.translate("scan_again");
+    configObj.secondaryAction = "go-home";
+    configObj.secondaryActionLabel = this.translate("back_home");
+
+    configObj.status = "error";
+    configObj.title = this.translate("unknown_error");
+    configObj.subtitle = error.secondaryMessage.message;
+
+    switch (stage) {
+      case constants.STAGES.INITIALIZATION:
+      case constants.STAGES.START_SCANNING:
+      case constants.STAGES.CAMERA_SWITCH:
+      case constants.STAGES.INTERPRET_SCAN:
+      case constants.STAGES.PARSE_BARCODE:
+      case constants.STAGES.CHECK_MANDATORY_FIELDS:
+      case constants.STAGES.NETWORK_NOT_FOUND:
+      case constants.STAGES.WRONG_COMBINATION:
+        configObj.content = this.translate(error.message);
+        break;
+      default:
+        configObj.content = this.translate("err_default");
+    }
+
+    let objContentHtml = `<div>${configObj.content}</div>`;
+
+    configObj.content = {html: `<div>${objContentHtml}</div>`};
+    return configObj;
+  }
+
+  getModalConfigForSuccessScan(status, additionalData) {
     let configObj = {status: status};
 
     if (this.model.showEPI) {
@@ -205,19 +239,19 @@ export default class DrugSummaryController extends WebcController {
       case "invalid_data":
         configObj.statusMessage = this.translate("invalid_data_status");
         configObj.title = this.translate("invalid_data_title");
-        let objContentHrml = `${this.translate("invalid_data_message")} <div>${additionaData.message}</div>`;
+        let objContentHrml = `${this.translate("invalid_data_message")} <div>${additionalData.message}</div>`;
 
-        if (additionaData.fields && Object.keys(additionaData.fields).length > 0) {
+        if (additionalData.fields && Object.keys(additionalData.fields).length > 0) {
           objContentHrml = `${objContentHrml}<br> <div>
-                                                 <div class="label">${this.translate("gs1field_sn")} ${additionaData.fields.serialNumber}</div>
-                                                 <div class="label">${this.translate("gs1field_gtin")} ${additionaData.fields.gtin} </div>
-                                                 <div class="label">${this.translate("gs1field_batch")} ${additionaData.fields.batchNumber} </div>
-                                                 <div class="label">${this.translate("gs1field_date")} ${additionaData.fields.expiry} </div>
+                                                 <div class="label">${this.translate("gs1field_sn")} ${additionalData.fields.serialNumber}</div>
+                                                 <div class="label">${this.translate("gs1field_gtin")} ${additionalData.fields.gtin} </div>
+                                                 <div class="label">${this.translate("gs1field_batch")} ${additionalData.fields.batchNumber} </div>
+                                                 <div class="label">${this.translate("gs1field_date")} ${additionalData.fields.expiry} </div>
                                              </div>`
         }
 
-        if (additionaData.secondaryMessage) {
-          objContentHrml = `${objContentHrml} <br><br><div>**${additionaData.secondaryMessage}</div>`
+        if (additionalData.secondaryMessage) {
+          objContentHrml = `${objContentHrml} <br><br><div>**${additionalData.secondaryMessage}</div>`
         }
 
         configObj.content = objContentHrml;
