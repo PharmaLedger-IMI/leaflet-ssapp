@@ -1,14 +1,20 @@
 import constants from "../../constants.js";
+import SettingsService from "./SettingsService.js";
+
 const gtinResolver = require("gtin-resolver");
 const utils = gtinResolver.utils;
 
 export default class BatchStatusService {
-  statusMessage = constants.SN_OK_MESSAGE;
-  statusType = "";
-  status = "verified";
-  expiryForDisplay;
-  snCheck;
-  expiryTime;
+  constructor(enclaveDB) {
+    this.statusMessage = constants.SN_OK_MESSAGE;
+    this.statusType = "";
+    this.status = "verified";
+    this.expiryForDisplay = null;
+    this.snCheck = null;
+    this.expiryTime = null;
+    this.enclaveDB = enclaveDB
+  }
+
 
   checkSNCheck(batchData, serialNumber) {
     let res = {
@@ -106,9 +112,26 @@ export default class BatchStatusService {
     }
   }
 
-  unableToVerify() {
-    this.statusMessage = constants.PRODUCT_STATUS_UNABLE_TO_VALIDATE_MESSAGE;
-    this.statusType = "error";
-    this.status = "invalid_data";
+  async unableToVerify(batch) {
+    //for unknown batch (gtin-only case) show error status just for advanced users
+    this.settingsService = new SettingsService(this.enclaveDB);
+    let advancedUser = await this.settingsService.asyncReadSetting("advancedUser");
+    this.advancedUser = !!advancedUser;
+    if (advancedUser) {
+      this.statusMessage = constants.PRODUCT_STATUS_UNABLE_TO_VALIDATE_MESSAGE;
+      this.statusType = "error";
+      this.status = "invalid_data"
+    } else {
+      if (batch) {
+        this.statusMessage = constants.PRODUCT_STATUS_UNABLE_TO_VALIDATE_MESSAGE;
+        this.statusType = "error";
+        this.status = "invalid_data"
+      } else {
+        this.statusMessage = constants.SN_OK_MESSAGE;
+        this.statusType = "valid";
+        this.status = "invalid_batch";
+      }
+    }
+
   }
 }

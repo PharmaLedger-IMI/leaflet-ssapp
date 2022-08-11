@@ -27,5 +27,17 @@
     "scan_again": "Numériser à nouveau",
     "back_home": "De retour à la maison",
     "view_leaflet": "Voir la brochure",
-    "lang_proceed": "Procéder"
+    "lang_proceed": "Procéder",
+    "gs1field_sn": "Numéro de série:",
+    "gs1field_gtin": "Code produit:",
+    "gs1field_batch": "Numéro de lot:",
+    "gs1field_date": "Expiration:",
+    "err_cam_unavailable": "Aucune caméra disponible pour le scan. Veuillez vérifier la disponibilité et les autorisations de la caméra.",
+    "unknown_error": "Erreur",
+    "err_default": "Échec de l'analyse de la matrice de données GS1.",
+    "err_unknown": "L'analyse et le traitement du code se sont terminés avec des erreurs.",
+    "err_barcode": "Le code-barres n'est pas lisible, veuillez contacter la pharmacie/le médecin qui a délivré l'emballage du médicament.",
+    "err_combination": "La combinaison de code produit n'a pas pu être résolue.",
+    "err_to_history": "Échec de l'ajout du paquet à l'historique",
+    "err_network_not_found": "Les paramètres ne contiennent pas de valeur réseau. Veuillez vérifier les paramètres et mettre à jour la valeur réseau",
 }

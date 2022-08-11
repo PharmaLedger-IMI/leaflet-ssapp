@@ -1,5 +1,6 @@
 import BatchStatusService from "./scripts/services/BatchStatusService.js";
 import constants from "./constants.js";
+
 const gtinResolver = require("gtin-resolver");
 const LeafletInfoService = gtinResolver.LeafletInfoService;
 
@@ -17,20 +18,15 @@ async function updateRecordData(enclaveDB, dataObj) {
 
   let productModel;
   let batchModel;
-  let batchStatusService = new BatchStatusService();
+  let batchStatusService = new BatchStatusService(enclaveDB);
   try {
     let leafletInfo = await LeafletInfoService.init(dataObj.gs1Fields, dataObj.networkName);
     leafletInfo.gtinSSI = dataObj.gtinSSI; // this is for gtin only case (ignore batch number)
     productModel = await leafletInfo.getProductClientModel();
-    try {
-      batchModel = await leafletInfo.getBatchClientModel();
-      batchStatusService.getProductStatus(batchModel, dataObj.gs1Fields);
-    } catch (e) {
-      batchStatusService.unableToVerify();
-    }
+    batchModel = await getBatchWithStatus(leafletInfo, batchStatusService, dataObj.gs1Fields)
   } catch (e) {
     console.log("Could not update record. ", e);
-    return;
+    throw e;
   }
 
   dataObj.status = batchStatusService.status;
@@ -45,7 +41,20 @@ async function updateRecordData(enclaveDB, dataObj) {
   return result;
 }
 
+async function getBatchWithStatus(leafletInfo, batchStatusService, gs1Fields) {
+  let batchModel;
+  try {
+    batchModel = await leafletInfo.getBatchClientModel();
+    batchStatusService.getProductStatus(batchModel, gs1Fields);
+  } catch (e) {
+    await batchStatusService.unableToVerify(batchModel);
+
+  }
+  return batchModel;
+}
+
 export default {
   getFetchUrl,
-  updateRecordData
+  updateRecordData,
+  getBatchWithStatus
 };

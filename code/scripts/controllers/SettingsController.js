@@ -22,8 +22,7 @@ export default class SettingsController extends WebcController {
       scanditLicense: {value: ""},
       appLanguages: [],
       devOptions: {
-        areEnabled: undefined,
-        useFrames: {
+        areEnabled: undefined, useFrames: {
           // Check also: webcardinal.json > leaflet > devOptions > useFrames
           checked: false, value: 'off'
         }
@@ -53,9 +52,13 @@ export default class SettingsController extends WebcController {
       let lockFeatures = await $$.promisify(config.getEnv)("lockFeatures");
       this.model.editableFeatures = !!lockFeatures;
       this.addListeners();
+      await this.setDeveloperOptions();
     })
 
 
+  }
+
+  initACDCModel() {
     // ACDC integration settings
     this.acdc = require('acdc').ReportingService.getInstance(this.settingsService);
 
@@ -67,8 +70,6 @@ export default class SettingsController extends WebcController {
         this.querySelector(".acdcOptionsContainer").hidden = !this.model.acdc.enabled;
       }
     });
-
-    this.setDeveloperOptions();
   }
 
   async renderEnvData() {
@@ -172,9 +173,23 @@ export default class SettingsController extends WebcController {
         })
       })
 
+      this.querySelector("ion-checkbox#acdcEnabledCheckbox").addEventListener("ionChange", (ev) => {
+        this.model.acdc.enabled = ev.detail.checked;
+        this.querySelector(".acdcOptionsContainer").hidden = !this.model.acdc.enabled;
+        if (!this.model.acdc.enabled) {
+          this.model.acdc.did_enabled = this.model.acdc.location_enabled = this.model.acdc.enabled;
+        }
+      })
+
+      this.querySelector("ion-checkbox#acdcDidCheckbox").addEventListener("ionChange", (ev) => {
+        this.model.acdc.did_enabled = ev.detail.checked;
+      })
+
+      this.querySelector("ion-checkbox#acdcLocationCheckbox").addEventListener("ionChange", (ev) => {
+        this.model.acdc.location_enabled = ev.detail.checked;
+      })
 
     } catch (e) {
-
     }
   }
 
@@ -252,36 +267,18 @@ export default class SettingsController extends WebcController {
       this.showModalFromTemplate("view-env-data", () => {
       }, () => {
       }, {
-        model: {title: "Environment settings", envData: this.model.envData}, disableExpanding: true,
-        disableFooter: true
+        model: {title: "Environment settings", envData: this.model.envData}, disableExpanding: true, disableFooter: true
       })
     });
 
     this.onTagClick("edit-env", () => {
       this.showModalFromTemplate("manage-available-features", () => {
-          return;
-        }, () => {
-          return;
-        },
-        {controller: "FeaturesModalController", disableExpanding: true}
-      );
+        return;
+      }, () => {
+        return;
+      }, {controller: "FeaturesModalController", disableExpanding: true});
     })
 
-    this.querySelector("ion-checkbox#acdcEnabledCheckbox").addEventListener("ionChange", (ev) => {
-      this.model.acdc.enabled = ev.detail.checked;
-      this.querySelector(".acdcOptionsContainer").hidden = !this.model.acdc.enabled;
-      if (!this.model.acdc.enabled) {
-        this.model.acdc.did_enabled = this.model.acdc.location_enabled = this.model.acdc.enabled;
-      }
-    })
-
-    this.querySelector("ion-checkbox#acdcDidCheckbox").addEventListener("ionChange", (ev) => {
-      this.model.acdc.did_enabled = ev.detail.checked;
-    })
-
-    this.querySelector("ion-checkbox#acdcLocationCheckbox").addEventListener("ionChange", (ev) => {
-      this.model.acdc.location_enabled = ev.detail.checked;
-    })
 
     this.onTagClick("go-to-about", () => {
       this.navigateToPageTag("about");
@@ -299,12 +296,14 @@ export default class SettingsController extends WebcController {
       clickCounter++;
       if (clickCounter >= 5) {
         this.model.showAdvanced = true;
+        this.querySelector(".advanced-settings").hidden = false;
         clickCounter = 0;
       }
     })
-    if (this.model.showAdvanced) {
-      this.addIonicListeners();
-    }
 
+    this.model.onChange("showAdvanced", () => {
+      this.addIonicListeners();
+      this.initACDCModel();
+    })
   }
 }

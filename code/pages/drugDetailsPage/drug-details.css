@@ -93,9 +93,8 @@
     justify-content: left;
     background: rgba(255, 255, 255, 0.17);
     border-radius: 8px;
-    color: #191C32;
+    color: #d3d9da;
     font-size: 14px;
-    /* width: 100%; */
     padding: 6px 8px;
     column-gap: 6px;
     margin-left: 42px;
@@ -132,7 +131,7 @@ div[status-type="error"] .status-icon-container {
 }
 
 .content-slot-container {
-    height: 89%;
+    height: 90%;
     background: #fff;
 }
 
@@ -164,8 +163,8 @@ div[status-type="error"] .status-icon-container {
 
 .close-notification {
     background: url("../../assets/images/icons/close-notification.svg") center no-repeat;
-    width: 20px;
-    height: 20px;
+    width: 16px;
+    height: 16px;
     background-size: cover;
     position: absolute;
     right: 24px;

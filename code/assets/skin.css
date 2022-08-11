@@ -386,10 +386,5 @@ leaflet-spinner .loader-container {
     .mobile-container.dark-screen:before {
         filter: none;
     }
-
-    .bottom-rounded-container {
-        border-bottom-left-radius: 34px;
-        border-bottom-right-radius: 34px;
-    }
 }
 

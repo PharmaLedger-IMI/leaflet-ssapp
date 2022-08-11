@@ -22,16 +22,18 @@ export default class DrugSummaryController extends WebcController {
     let dbApi = require("opendsu").loadApi("db");
 
     dbApi.getMainEnclaveDB(async (err, enclaveDB) => {
+      if (err) {
+        console.log('Error on getting enclave DB');
+        this.showPopup(this.getModalConfigForSuccessScan("invalid_data", err));
+        return;
+      }
       let scanErrorData = history.location.state.scanErrorData;
-        if (scanErrorData) {
-          this.showPopup(this.getModalConfigForFailedScan(scanErrorData.secondaryMessage.stage, scanErrorData));
-          return;
-        }
+      if (scanErrorData) {
+        this.showPopup(this.getModalConfigForFailedScan(scanErrorData.secondaryMessage.stage, scanErrorData));
+        return;
+      }
       try {
-        if (err) {
-          console.log('Error on getting enclave DB');
-          this.showPopup(this.getModalConfigForSuccessScan("invalid_data", err));
-        }
+
         this.settingsService = new SettingsService(enclaveDB);
         let record = await $$.promisify(enclaveDB.getRecord)(constants.HISTORY_TABLE, history.location.state.productData);
         record = await recordUtils.updateRecordData(enclaveDB, record);
@@ -161,7 +163,7 @@ export default class DrugSummaryController extends WebcController {
     return configObj;
   }
 
-  getModalConfigForFailedScan(stage, error){
+  getModalConfigForFailedScan(stage, error) {
     let configObj = {stage};
     configObj.mainAction = "scan-again";
     configObj.mainActionLabel = this.translate("scan_again");
@@ -169,8 +171,8 @@ export default class DrugSummaryController extends WebcController {
     configObj.secondaryActionLabel = this.translate("back_home");
 
     configObj.status = "error";
-    configObj.title = this.translate("unknown_error");
-    configObj.subtitle = error.secondaryMessage.message;
+    configObj.statusMessage = this.translate("unknown_error");
+    configObj.title = error.secondaryMessage.message;
 
     switch (stage) {
       case constants.STAGES.INITIALIZATION:
@@ -194,7 +196,7 @@ export default class DrugSummaryController extends WebcController {
   }
 
   getModalConfigForSuccessScan(status, additionalData) {
-    let configObj = {status: status};
+    let configObj = {};
 
     if (this.model.showEPI) {
       if (!this.documentLanguage) {
@@ -205,6 +207,10 @@ export default class DrugSummaryController extends WebcController {
       configObj.secondaryAction = "scan-again";
       configObj.secondaryActionLabel = this.translate("scan_again");
 
+      //for gtin only case id show leaflet is true do not show error
+      if (status === "invalid_batch") {
+        status = "verified"
+      }
     } else {
       configObj.mainAction = "scan-again";
       configObj.mainActionLabel = this.translate("scan_again");
@@ -212,6 +218,7 @@ export default class DrugSummaryController extends WebcController {
       configObj.secondaryActionLabel = this.translate("back_home");
     }
 
+    configObj.status = status;
 
     switch (status) {
       case "verified":
@@ -239,22 +246,27 @@ export default class DrugSummaryController extends WebcController {
       case "invalid_data":
         configObj.statusMessage = this.translate("invalid_data_status");
         configObj.title = this.translate("invalid_data_title");
-        let objContentHrml = `${this.translate("invalid_data_message")} <div>${additionalData.message}</div>`;
+        let objContentHtml = `${this.translate("invalid_data_message")}`;
+        if (additionalData) {
+          if (additionalData.message) {
+            objContentHtml = `${objContentHtml}<br><div>${additionalData.message}</div>`
+          }
 
-        if (additionalData.fields && Object.keys(additionalData.fields).length > 0) {
-          objContentHrml = `${objContentHrml}<br> <div>
+          if (additionalData.fields && Object.keys(additionalData.fields).length > 0) {
+            objContentHtml = `${objContentHtml}<br> <div>
                                                  <div class="label">${this.translate("gs1field_sn")} ${additionalData.fields.serialNumber}</div>
                                                  <div class="label">${this.translate("gs1field_gtin")} ${additionalData.fields.gtin} </div>
                                                  <div class="label">${this.translate("gs1field_batch")} ${additionalData.fields.batchNumber} </div>
                                                  <div class="label">${this.translate("gs1field_date")} ${additionalData.fields.expiry} </div>
                                              </div>`
+          }
+
+          if (additionalData.secondaryMessage) {
+            objContentHtml = `${objContentHtml} <br><br><div>**${additionalData.secondaryMessage}</div>`
+          }
         }
 
-        if (additionalData.secondaryMessage) {
-          objContentHrml = `${objContentHrml} <br><br><div>**${additionalData.secondaryMessage}</div>`
-        }
-
-        configObj.content = objContentHrml;
+        configObj.content = objContentHtml;
         break;
       case "recalled_batch":
         configObj.statusMessage = this.translate("recalled_batch_status");
@@ -273,17 +285,17 @@ export default class DrugSummaryController extends WebcController {
         break;
     }
 
-    let objContentHrml = `<div>${configObj.content}</div>`;
+    let objContentHtml = `<div>${configObj.content}</div>`;
 
     if (this.model.batch && this.model.batch.defaultMessage) {
-      objContentHrml = `${objContentHrml} <div>${this.model.batch.defaultMessage}</div>`
+      objContentHtml = `${objContentHtml} <div>${this.model.batch.defaultMessage}</div>`
     }
 
     if (this.model.batch && this.model.batch.recalled && this.model.batch.recalledMessage) {
-      objContentHrml = `${objContentHrml} <div>${this.model.batch.recalledMessage}</div>`
+      objContentHtml = `${objContentHtml} <div>${this.model.batch.recalledMessage}</div>`
     }
 
-    configObj.content = {html: `<div>${objContentHrml}</div>`};
+    configObj.content = {html: `<div>${objContentHtml}</div>`};
     return configObj;
   }
 

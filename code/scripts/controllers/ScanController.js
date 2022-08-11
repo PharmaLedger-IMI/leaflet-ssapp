@@ -1,13 +1,13 @@
 import SettingsService from "../services/SettingsService.js";
 import interpretGS1scan from "../gs1ScanInterpreter/interpretGS1scan/interpretGS1scan.js";
-
+import utils from "../../utils.js"
 import constants from "../../constants.js";
 import BatchStatusService from "../services/BatchStatusService.js";
 import ScanService, {SCANNER_STATUS} from "../services/ScanService.js";
 
 const {WebcController} = WebCardinal.controllers;
 const gtinResolver = require("gtin-resolver");
-const utils = gtinResolver.utils;
+const gtinUtils = gtinResolver.utils;
 const LeafletInfoService = gtinResolver.LeafletInfoService;
 
 const opendsu = require("opendsu");
@@ -162,14 +162,19 @@ export default class ScanController extends WebcController {
     });
   }
 
-  wrapError(err, stage){
+  wrapError(err, stage) {
+    let errMsg = "";
+    if (err) {
+      errMsg = err.message;
+    }
     const newError = {
-      message: err.message,
+      message: errMsg,
       stage
     }
 
     return newError;
   }
+
   async startScanning() {
     if (!this.scanService) {
       this.startScanningAsSoonAsPossible = true;
@@ -517,7 +522,7 @@ export default class ScanController extends WebcController {
             this.redirectToDrugDetails({productData: alreadyScanned.record.pk})
           }
         } else {
-          return this.redirectToError("err_combination", this.leafletInfo.gs1Fields, this.wrapError(err, constants.STAGES.WRONG_COMBINATION));
+          return this.redirectToError("err_combination", this.leafletInfo.gs1Fields, this.wrapError(null, constants.STAGES.WRONG_COMBINATION));
         }
       });
     }
@@ -550,7 +555,7 @@ export default class ScanController extends WebcController {
   }
 
   packageAlreadyScanned(callback) {
-    this.enclaveDB.getRecord(constants.HISTORY_TABLE, utils.getRecordPKey(this.leafletInfo.gtinSSI, this.leafletInfo.gs1Fields), (err, result) => {
+    this.enclaveDB.getRecord(constants.HISTORY_TABLE, gtinUtils.getRecordPKey(this.leafletInfo.gtinSSI, this.leafletInfo.gs1Fields), (err, result) => {
       if (err || !result) {
         callback(undefined, {status: false, record: null});
       } else {
@@ -562,17 +567,11 @@ export default class ScanController extends WebcController {
   }
 
   async addPackageToScannedPackagesList(acdcEvt) {
-    let batchStatusService = new BatchStatusService();
-    let productModel;
-    let batchModel;
-    productModel = await this.leafletInfo.getProductClientModel();
-    try {
-      batchModel = await this.leafletInfo.getBatchClientModel();
-      batchStatusService.getProductStatus(batchModel, this.leafletInfo.gs1Fields);
-    } catch (e) {
-      batchStatusService.unableToVerify();
-    }
-    const pk = utils.getRecordPKey(this.leafletInfo.gtinSSI, this.leafletInfo.gs1Fields);
+    let batchStatusService = new BatchStatusService(this.enclaveDB);
+    let productModel = await this.leafletInfo.getProductClientModel();
+    let batchModel = await utils.getBatchWithStatus(this.leafletInfo, batchStatusService, this.leafletInfo.gs1Fields)
+
+    const pk = gtinUtils.getRecordPKey(this.leafletInfo.gtinSSI, this.leafletInfo.gs1Fields);
     let result = await $$.promisify(this.enclaveDB.insertRecord)(constants.HISTORY_TABLE, pk, {
       networkName: this.leafletInfo.networkName,
       gs1Fields: this.leafletInfo.gs1Fields,
@@ -603,7 +602,7 @@ export default class ScanController extends WebcController {
     })
 
     if (gs1Fields.expiry) {
-      gs1Fields.expiry = utils.convertFromISOtoYYYY_HM(gs1Fields.expiry);
+      gs1Fields.expiry = gtinUtils.convertFromISOtoYYYY_HM(gs1Fields.expiry);
     }
 
     return gs1Fields;
