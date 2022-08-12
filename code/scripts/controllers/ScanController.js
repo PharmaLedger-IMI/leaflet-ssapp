@@ -338,6 +338,8 @@ export default class ScanController extends WebcController {
       if (alreadyScanned.status === false) {
         batchAnchorExists = await $$.promisify(this.leafletInfo.checkBatchAnchorExists.bind(this.leafletInfo))();
         if (batchAnchorExists) {
+          let product = await this.leafletInfo.getProductClientModel();
+          evt.destination = product.reportURL;
           evt.setBatchDSUStatus(true);
           await this.updateReport(evt);
           this.addPackageToHistoryAndRedirect(this.leafletInfo.gtinSSI, gs1Fields, evt, (err) => {
@@ -351,6 +353,8 @@ export default class ScanController extends WebcController {
           this.addConstProductDSUToHistory(evt);
         }
       } else {
+        let product = await this.leafletInfo.getProductClientModel();
+        evt.destination = product.reportURL;
         evt.setBatchDSUStatus(true);
         await this.updateReport(evt);
         alreadyScanned.record.acdc = evt;
