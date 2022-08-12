@@ -331,7 +331,7 @@ export default class ScanController extends WebcController {
       try {
         alreadyScanned = await $$.promisify(this.packageAlreadyScanned.bind(this))()
       } catch (e) {
-        await this.updateReport(evt);
+        this.updateReport(evt);
         return this.redirectToError("err_combination", gs1Fields, this.wrapError(e, constants.STAGES.WRONG_COMBINATION));
       }
       let batchAnchorExists = false;
@@ -341,7 +341,7 @@ export default class ScanController extends WebcController {
           let product = await this.leafletInfo.getProductClientModel();
           evt.destination = product.reportURL;
           evt.setBatchDSUStatus(true);
-          await this.updateReport(evt);
+          this.updateReport(evt);
           this.addPackageToHistoryAndRedirect(this.leafletInfo.gtinSSI, gs1Fields, evt, (err) => {
             if (err) {
               return this.redirectToError("err_to_history", gs1Fields, this.wrapError(err, constants.STAGES.ADD_TO_HISTORY));
@@ -349,14 +349,14 @@ export default class ScanController extends WebcController {
           })
         } else {
           evt.setBatchDSUStatus(false);
-          await this.updateReport(evt);
+          this.updateReport(evt);
           this.addConstProductDSUToHistory(evt);
         }
       } else {
         let product = await this.leafletInfo.getProductClientModel();
         evt.destination = product.reportURL;
         evt.setBatchDSUStatus(true);
-        await this.updateReport(evt);
+        this.updateReport(evt);
         alreadyScanned.record.acdc = evt;
         await $$.promisify(this.enclaveDB.updateRecord)(constants.HISTORY_TABLE, alreadyScanned.record.pk, alreadyScanned.record);
         this.redirectToDrugDetails({productData: alreadyScanned.record.pk});
