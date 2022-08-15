@@ -14,9 +14,12 @@
             <div class="explain-container" slot="true">
                 <span>{{$scan_explain}}</span>
             </div>
-            <div class="page-submit-button-section" data-tag="get-started" slot="true">
-                {{$get_started}}
+            <div class="page-submit-button-section" slot="true">
+                <div class="page-submit-button" data-tag="get-started">
+                    {{$get_started}}
+                </div>
             </div>
+
             <div class="terms-and-conditions" slot="false">
                 <div class="terms-text">
                     <section data-if="@confirmDisagree">

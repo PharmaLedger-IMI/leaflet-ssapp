@@ -89,19 +89,22 @@
 .page-submit-button-section {
     display: flex;
     flex-direction: column;
+    width: 100%;
+    flex-grow: 1;
+    justify-content: end;
+}
+
+.page-submit-button-section .page-submit-button {
+    display: flex;
+    flex-direction: column;
     justify-content: center;
-    align-items: center;
-    padding: 8px;
-    gap: 10px;
     font-family: "DM Sans bold";
     height: 62px;
     background: #61E4A3;
     border-radius: 42px;
     color: #02272F;
-    bottom: 77px;
-    position: absolute;
-    left: 35px;
-    right: 35px;
+    width: 100%;
+    margin-bottom: 35%;
 }
 
 .terms-and-conditions {
