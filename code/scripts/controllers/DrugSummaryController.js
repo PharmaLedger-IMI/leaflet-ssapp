@@ -92,11 +92,19 @@ export default class DrugSummaryController extends WebcController {
   }
 
   goToDrugDetailsPage(preferredLanguage) {
-    this.navigateToPageTag("drug-details", {
+    this.modalWindow.destroy();
+    let drugDetailsState = {
       productData: JSON.parse(JSON.stringify(this.record)),
       preferredLanguage: preferredLanguage,
       availableLanguages: JSON.parse(JSON.stringify(this.availableLanguages)),
-    });
+    }
+    if (this.model.batch && (this.model.batch.defaultMessage || (this.model.batch.recalled && this.model.batch.recalledMessage))) {
+      this.showAdditionalInfoPopup(drugDetailsState)
+    } else {
+      this.model.loadingData = false;
+      this.navigateToPageTag("drug-details", drugDetailsState);
+    }
+
   }
 
   addListeners() {
@@ -111,13 +119,11 @@ export default class DrugSummaryController extends WebcController {
     })
 
     this.onTagClick("lang-proceed", async () => {
-      this.modalWindow.destroy();
       let lang = this.querySelector("input[name='languages']:checked").value
       this.goToDrugDetailsPage(lang);
     })
 
     this.onTagClick("view-leaflet", () => {
-      this.modalWindow.destroy();
       this.goToDrugDetailsPage(this.documentLanguage);
     })
   }
@@ -128,6 +134,32 @@ export default class DrugSummaryController extends WebcController {
       this.navigateToPageTag("home")
     }, {model: config, disableExpanding: true, disableFooter: true});
     this.model.loadingData = false;
+  }
+
+  showAdditionalInfoPopup(drugDetailsState) {
+    let configObj = {}
+    configObj.statusMessage = this.translate("_note");
+    configObj.title = this.translate("batch_additional_info");
+    configObj.content = this.translate("invalid_sn_status_message");
+    configObj.mainActionLabel = this.translate("_ok");
+    let contentHtml = "";
+    if (this.model.batch.defaultMessage) {
+      contentHtml = `${contentHtml} <div>${this.model.batch.defaultMessage}</div> <br>`;
+    }
+
+    if (this.model.batch.recalled && this.model.batch.recalledMessage) {
+      contentHtml = `${contentHtml} <div>${this.model.batch.recalledMessage}</div> <br>`
+    }
+    configObj.content = {html: `<div> ${contentHtml}</div>`}
+
+    this.modalWindow = this.showModalFromTemplate('drug-additional-info-modal', () => {
+      this.model.loadingData = false;
+      this.navigateToPageTag("drug-details", drugDetailsState);
+    }, () => {
+      this.model.loadingData = false;
+      this.navigateToPageTag("drug-details", drugDetailsState);
+    }, {model: configObj, disableExpanding: true, disableFooter: true});
+
   }
 
   getLanguageConfig() {
@@ -285,17 +317,7 @@ export default class DrugSummaryController extends WebcController {
         break;
     }
 
-    let objContentHtml = `<div>${configObj.content}</div>`;
-
-    if (this.model.batch && this.model.batch.defaultMessage) {
-      objContentHtml = `${objContentHtml} <div>${this.model.batch.defaultMessage}</div>`
-    }
-
-    if (this.model.batch && this.model.batch.recalled && this.model.batch.recalledMessage) {
-      objContentHtml = `${objContentHtml} <div>${this.model.batch.recalledMessage}</div>`
-    }
-
-    configObj.content = {html: `<div>${objContentHtml}</div>`};
+    configObj.content = {html: `<div>${configObj.content}</div>`};
     return configObj;
   }
 

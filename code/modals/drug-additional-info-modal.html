@@ -1,0 +1,91 @@
+<style>
+
+    webc-modal::part(header) {
+        padding: 0px;
+    }
+
+    webc-modal::part(main) {
+        padding: 24px;
+    }
+
+    webc-modal::part(close) {
+       /* background: url("assets/images/icons/close-notification.svg") no-repeat center;*/
+        background-size: contain;
+    }
+
+    .custom-modal-header.header-color {
+        padding: 24px;
+        border-top-left-radius: 32px;
+        border-top-right-radius: 32px;
+        background: #FFCB45;
+    }
+
+    .custom-modal-header .status {
+        font-family: "DM Sans bold";
+        font-size: 14px;
+    }
+
+    .custom-modal-header .title {
+        font-family: "DM Sans bold";
+        font-size: 20px;
+    }
+
+    .custom-modal-header .subtitle {
+        font-family: "DM Sans medium";
+        font-size: 14px;
+    }
+
+    .status-container {
+        display: flex;
+        max-width: calc(100% - 48px);
+    }
+
+    .status-icon {
+        width: 19px;
+        height: 19px;
+        background-size: contain !important;
+        margin-right: 5px;
+        background: url("assets/images/icons/modal-yellow-status.svg") no-repeat center;
+    }
+
+
+    .main-action {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        padding: 8px;
+        gap: 10px;
+        background: #013646;
+        border-radius: 62px;
+        font-size: calc(100% + 0.6vmin);
+        color: #fff;
+        font-family: "DM Sans bold";
+        height: 56px;
+        margin-top: 16px;
+    }
+
+    .modal-content {
+        text-align: justify;
+        font-size: calc(100% + 0.8vmin);
+    }
+
+    .modal-content > div {
+        max-height: 360px;
+        overflow: auto;
+    }
+</style>
+
+<div class="custom-modal-header header-color" slot="header" >
+    <div class="status-container">
+        <div class="status-icon"></div>
+        <div class="status">{{@statusMessage}}</div>
+    </div>
+
+    <div class="title"> {{@title}}</div>
+    <div class="subtitle">{{@subtitle}}</div>
+</div>
+<main>
+    <div class="modal-content" data-view-model="@content"></div>
+    <div class="main-action"data-confirm>{{@mainActionLabel}}</div>
+</main>

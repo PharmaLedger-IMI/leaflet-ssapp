@@ -27,5 +27,8 @@
     "scan_again": "Erneut scannen",
     "back_home": "Zurück nach Hause",
     "view_leaflet": "Merkblatt ansehen",
-    "lang_proceed": "Fortfahren"
+    "lang_proceed": "Fortfahren",
+    "_note": "Hinweis",
+    "batch_additional_info": "Chargeninfo",
+    "_ok": "Ok"
 }

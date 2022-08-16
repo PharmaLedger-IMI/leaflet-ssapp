@@ -40,4 +40,7 @@
     "err_combination": "La combinaison de code produit n'a pas pu être résolue.",
     "err_to_history": "Échec de l'ajout du paquet à l'historique",
     "err_network_not_found": "Les paramètres ne contiennent pas de valeur réseau. Veuillez vérifier les paramètres et mettre à jour la valeur réseau",
+    "_note": "Remarque",
+    "batch_additional_info": "Informations sur le lot",
+    "_ok": "Ok"
 }

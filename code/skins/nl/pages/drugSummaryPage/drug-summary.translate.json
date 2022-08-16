@@ -39,5 +39,8 @@
     "err_barcode": "Barcode is niet leesbaar, neem contact op met de apotheek / arts die het medicijnpakket heeft uitgegeven.",
     "err_combination": "Productcodecombinatie kon niet worden opgelost.",
     "err_to_history": "Kan pakket niet toevoegen aan geschiedenis",
-    "err_network_not_found": "Instellingen bevatten geen netwerkwaarde. Controleer de instellingen een update netwerkwaarde "
+    "err_network_not_found": "Instellingen bevatten geen netwerkwaarde. Controleer de instellingen een update netwerkwaarde ",
+    "_note": "Opmerking",
+    "batch_additional_info": "Batch-info",
+    "_ok": "Oke"
 }

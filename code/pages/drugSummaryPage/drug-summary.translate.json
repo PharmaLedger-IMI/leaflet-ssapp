@@ -39,5 +39,8 @@
   "err_barcode": "Barcode is not readable, please contact pharmacy / doctor who issued the medicine package.",
   "err_combination": "Product code combination could not be resolved.",
   "err_to_history": "Failed to add package to history",
-  "err_network_not_found": "Settings doesn't contain network value. Please check settings an update network value "
+  "err_network_not_found": "Settings doesn't contain network value. Please check settings an update network value ",
+  "_note": "Note",
+  "batch_additional_info": "Batch info",
+  "_ok": "Ok"
 }

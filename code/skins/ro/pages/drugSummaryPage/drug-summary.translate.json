@@ -39,5 +39,8 @@
   "err_barcode": "Codul de bare nu poate fi citit, vă rugăm să contactați farmacia/medicul care a eliberat pachetul de medicamente.",
   "err_combination": "Combinația de coduri de produs nu a putut fi rezolvată.",
   "err_to_history": "Nu s-a putut adăuga pachetul la istoric",
-  "err_network_not_found": "Setările nu conțin valoarea rețelei. Vă rugăm să verificați setările și o actualizare a valorii rețelei "
+  "err_network_not_found": "Setările nu conțin valoarea rețelei. Vă rugăm să verificați setările și o actualizare a valorii rețelei ",
+  "_note": "Nota",
+  "batch_additional_info": "Informații despre lot",
+  "_ok": "Ok"
 }
