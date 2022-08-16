@@ -140,7 +140,7 @@ div[status-type="error"] .status-icon-container {
     color: #04313B;
     overflow-y: auto;
     overflow-x: hidden;
-    text-align: justify;
+    text-align: left;
     position: absolute;
     height: 77%;
     width: 100%;
@@ -295,9 +295,13 @@ div[status-type="error"] .status-icon-container {
     height: fit-content;
     font-family: "DM Sans regular";
     font-size: calc(100% + 0.6vmin);
-    padding-left: 15px;
     margin: 18px 0px;
 }
+
+.leaflet-accordion-item-content ul {
+    margin-left: 20px;
+}
+
 
 .leaflet-accordion-item.active .leaflet-accordion-item-content {
     height: fit-content;
