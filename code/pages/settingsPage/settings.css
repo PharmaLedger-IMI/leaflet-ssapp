@@ -81,6 +81,7 @@ ion-select {
     grid-template-columns: 1fr auto;
     align-items: center;
     height: 3rem;
+    gap: 10px;
 }
 
 .env-settings-container {

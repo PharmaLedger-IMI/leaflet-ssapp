@@ -29,5 +29,6 @@
   "view_btn": "View",
   "test_native_integration": "Test native integration",
   "fwd_help": "Help",
-  "fwd_about": "About"
+  "fwd_about": "About",
+  "socket_for_camera": "Use socket connection for camera"
 }

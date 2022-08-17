@@ -20,9 +20,16 @@ export default class SettingsController extends WebcController {
       advancedUser: false,
       refreshPeriod: {value: constants.DEFAULT_REFRESH_PERIOD},
       scanditLicense: {value: ""},
+      useSocketConnectionForCameraEditMode: true,
+      socketCameraFPSEditMode: true,
+      useSocketConnectionForCamera: false,
+      socketCameraFPS: {value: "10"},
+      httpCameraFPSEditMode: true,
+      httpCameraFPS: {value: "10"},
       appLanguages: [],
       devOptions: {
-        areEnabled: undefined, useFrames: {
+        areEnabled: undefined,
+        useFrames: {
           // Check also: webcardinal.json > leaflet > devOptions > useFrames
           checked: false, value: 'off'
         }
@@ -51,26 +58,31 @@ export default class SettingsController extends WebcController {
       this.model.refreshPeriod.value = await this.settingsService.asyncReadSetting("refreshPeriod");
       let lockFeatures = await $$.promisify(config.getEnv)("lockFeatures");
       this.model.editableFeatures = !!lockFeatures;
+      try {
+        this.model.useSocketConnectionForCamera = await this.settingsService.asyncReadSetting("useSocketConnectionForCamera");
+        this.model.socketCameraFPS.value = await this.settingsService.asyncReadSetting("socketCameraFPS");
+        this.model.httpCameraFPS.value = await this.settingsService.asyncReadSetting("httpCameraFPS");
+      } catch (e) {
+        // nothing
+      }
       this.addListeners();
       await this.setDeveloperOptions();
     })
 
-
   }
+    initACDCModel() {
+      // ACDC integration settings
+      this.acdc = require('acdc').ReportingService.getInstance(this.settingsService);
 
-  initACDCModel() {
-    // ACDC integration settings
-    this.acdc = require('acdc').ReportingService.getInstance(this.settingsService);
-
-    this.acdc.setSettingsToModel(this.model, (err) => {
-      if (err) {
-        console.log(`Error Binding ACDC settings to model: ${err}`);
-      } else {
-        console.log("Acdc Settings Added");
-        this.querySelector(".acdcOptionsContainer").hidden = !this.model.acdc.enabled;
-      }
-    });
-  }
+      this.acdc.setSettingsToModel(this.model, (err) => {
+        if (err) {
+          console.log(`Error Binding ACDC settings to model: ${err}`);
+        } else {
+          console.log("Acdc Settings Added");
+          this.querySelector(".acdcOptionsContainer").hidden = !this.model.acdc.enabled;
+        }
+      });
+    }
 
   async renderEnvData() {
     let envFile = await $$.promisify(config.readEnvFile)();
@@ -189,6 +201,39 @@ export default class SettingsController extends WebcController {
         this.model.acdc.location_enabled = ev.detail.checked;
       })
 
+      ///// Use socket connection for camera
+      this.querySelector("ion-checkbox#socketConnectionForCameraCheckbox").addEventListener("ionChange", (ev) => {
+        this.model.useSocketConnectionForCamera = ev.detail.checked;
+        this.settingsService.writeSetting("useSocketConnectionForCamera", ev.detail.checked, (err) => {
+          if (err) {
+            console.log(err);
+            return;
+          }
+        })
+      })
+     /* this.onTagClick("change-use-socket-connection-for-camera", (model, target, event) => {
+        let newValue = target.parentElement.querySelector("input").value;
+        this.settingsService.writeSetting("useSocketConnectionForCamera", newValue, (err) => {
+          if (err) {
+            console.log(err);
+            return;
+          }
+          this.model.useSocketConnectionForCamera.value = newValue;
+          this.toggleEditMode("useSocketConnectionForCameraEditMode");
+        });
+      });
+
+      this.onTagClick("change-default-use-socket-connection-for-camera", (model, target, event) => {
+        this.settingsService.writeSetting("useSocketConnectionForCamera", "false", (err) => {
+          if (err) {
+            console.log(err);
+            return;
+          }
+          this.model.useSocketConnectionForCamera.value = "false";
+          this.toggleEditMode("useSocketConnectionForCameraEditMode");
+        });
+      });*/
+      /////
     } catch (e) {
     }
   }
@@ -198,6 +243,18 @@ export default class SettingsController extends WebcController {
     this.onTagClick('navigate-to-native-page', this.navigateToNativeIntegrationPage);
 
     this.onTagClick("change-edit-mode", (model, target, event) => {
+      this.toggleEditMode(target.getAttribute("data"));
+    });
+
+    this.onTagClick("change-socket-camera-FPS-edit-mode", (model, target, event) => {
+      this.toggleEditMode(target.getAttribute("data"));
+    });
+
+    this.onTagClick("change-http-camera-FPS-edit-mode", (model, target, event) => {
+      this.toggleEditMode(target.getAttribute("data"));
+    });
+
+    this.onTagClick("change-use-socket-connection-for-camera-edit-mode", (model, target, event) => {
       this.toggleEditMode(target.getAttribute("data"));
     });
 
@@ -246,6 +303,57 @@ export default class SettingsController extends WebcController {
         this.toggleEditMode("refreshPeriodEditMode");
       });
     });
+
+    ///// Socket camera FPS
+    this.onTagClick("change-socket-camera-FPS", (model, target, event) => {
+      let newValue = target.parentElement.querySelector("input").value;
+      this.settingsService.writeSetting("socketCameraFPS", newValue, (err) => {
+        if (err) {
+          console.log(err);
+          return;
+        }
+        this.model.socketCameraFPS.value = newValue;
+        this.toggleEditMode("socketCameraFPSEditMode");
+      });
+    });
+
+    this.onTagClick("change-default-socket-camera-FPS", (model, target, event) => {
+      this.settingsService.writeSetting("socketCameraFPS", constants.DEFAULT_SOCKET_CAMERA_FPS, (err) => {
+        if (err) {
+          console.log(err);
+          return;
+        }
+        this.model.socketCameraFPS.value = constants.DEFAULT_SOCKET_CAMERA_FPS;
+        this.toggleEditMode("socketCameraFPSEditMode");
+      });
+    });
+    /////
+
+    ///// HTTP camera FPS
+    this.onTagClick("change-http-camera-FPS", (model, target, event) => {
+      let newValue = target.parentElement.querySelector("input").value;
+      this.settingsService.writeSetting("httpCameraFPS", newValue, (err) => {
+        if (err) {
+          console.log(err);
+          return;
+        }
+        this.model.httpCameraFPS.value = newValue;
+        this.toggleEditMode("httpCameraFPSEditMode");
+      });
+    });
+
+    this.onTagClick("change-default-http-camera-FPS", (model, target, event) => {
+      this.settingsService.writeSetting("httpCameraFPS", constants.DEFAULT_HTTP_CAMERA_FPS, (err) => {
+        if (err) {
+          console.log(err);
+          return;
+        }
+        this.model.httpCameraFPS.value = constants.DEFAULT_HTTP_CAMERA_FPS;
+        this.toggleEditMode("httpCameraFPSEditMode");
+      });
+    });
+    /////
+
 
     this.onTagEvent('language.select', 'ionChange', this.changeLanguageHandler);
 

@@ -159,6 +159,7 @@ export default class ScanController extends WebcController {
 
     this.onTagClick('cancel-scan', () => {
       this.navigateToPageTag("home");
+      this.scanService.stop();
     });
   }
 
@@ -180,22 +181,30 @@ export default class ScanController extends WebcController {
       this.startScanningAsSoonAsPossible = true;
       return;
     }
-    this.scanInterval = setInterval(() => {
-      this.scanService.scan().then(result => {
-        if (!result) {
-          return;
-        }
-        this.onScannerStatusChanged(SCANNER_STATUS.DONE);
 
-        console.log("Scan result:", result);
-        this.scanService.stop();
-        clearInterval(this.scanInterval);
+    const self = this;
+    const processResult = (result) => {
+      if (!result) {
+        return;
+      }
+      self.onScannerStatusChanged(SCANNER_STATUS.DONE);
 
-        this.processGS1Fields(this.parseGS1Code(result.text));
-      }).catch(err => {
-        console.log("Caught", err);
+      console.log("Scan result:", result);
+      self.scanService.stop();
+
+      self.processGS1Fields(self.parseGS1Code(result.text));
+    }
+
+    if (!this.scanService.usingNativeLayer) {
+      processResult(await this.scanService.scanner.scan());
+    } else {
+      this.scanService.scanWithCallback((result) => {
+        processResult(result);
       });
-    }, 100);
+    }
+
+    return;
+
   }
 
   onScannerStatusChanged(status) {
@@ -322,46 +331,47 @@ export default class ScanController extends WebcController {
 
     const evt = this.acdc.createScanEvent(gs1Fields);
     this.settingsService.readSetting("networkName", async (err, networkName) => {
-      if (err || typeof networkName === "undefined") {
-        return this.redirectToError("err_network_not_found", gs1Fields, this.wrapError(err, constants.STAGES.NETWORK_NOT_FOUND));
-      }
+        if (err || typeof networkName === "undefined") {
+          return this.redirectToError("err_network_not_found", gs1Fields, this.wrapError(err, constants.STAGES.NETWORK_NOT_FOUND));
+        }
 
-      this.leafletInfo = await LeafletInfoService.init(gs1Fields, networkName);
-      let alreadyScanned;
-      try {
-        alreadyScanned = await $$.promisify(this.packageAlreadyScanned.bind(this))()
-      } catch (e) {
-        this.updateReport(evt);
-        return this.redirectToError("err_combination", gs1Fields, this.wrapError(e, constants.STAGES.WRONG_COMBINATION));
-      }
-      let batchAnchorExists = false;
-      if (alreadyScanned.status === false) {
-        batchAnchorExists = await $$.promisify(this.leafletInfo.checkBatchAnchorExists.bind(this.leafletInfo))();
-        if (batchAnchorExists) {
+        this.leafletInfo = await LeafletInfoService.init(gs1Fields, networkName);
+        let alreadyScanned;
+        try {
+          alreadyScanned = await $$.promisify(this.packageAlreadyScanned.bind(this))()
+        } catch (e) {
+          this.updateReport(evt);
+          return this.redirectToError("err_combination", gs1Fields, this.wrapError(e, constants.STAGES.WRONG_COMBINATION));
+        }
+        let batchAnchorExists = false;
+        if (alreadyScanned.status === false) {
+          batchAnchorExists = await $$.promisify(this.leafletInfo.checkBatchAnchorExists.bind(this.leafletInfo))();
+          if (batchAnchorExists) {
+            let product = await this.leafletInfo.getProductClientModel();
+            evt.destination = product.reportURL;
+            evt.setBatchDSUStatus(true);
+            this.updateReport(evt);
+            this.addPackageToHistoryAndRedirect(this.leafletInfo.gtinSSI, gs1Fields, evt, (err) => {
+              if (err) {
+                return this.redirectToError("err_to_history", gs1Fields, this.wrapError(err, constants.STAGES.ADD_TO_HISTORY));
+              }
+            })
+          } else {
+            evt.setBatchDSUStatus(false);
+            this.updateReport(evt);
+            this.addConstProductDSUToHistory(evt);
+          }
+        } else {
           let product = await this.leafletInfo.getProductClientModel();
           evt.destination = product.reportURL;
           evt.setBatchDSUStatus(true);
           this.updateReport(evt);
-          this.addPackageToHistoryAndRedirect(this.leafletInfo.gtinSSI, gs1Fields, evt, (err) => {
-            if (err) {
-              return this.redirectToError("err_to_history", gs1Fields, this.wrapError(err, constants.STAGES.ADD_TO_HISTORY));
-            }
-          })
-        } else {
-          evt.setBatchDSUStatus(false);
-          this.updateReport(evt);
-          this.addConstProductDSUToHistory(evt);
+          alreadyScanned.record.acdc = evt;
+          await $$.promisify(this.enclaveDB.updateRecord)(constants.HISTORY_TABLE, alreadyScanned.record.pk, alreadyScanned.record);
+          this.redirectToDrugDetails({productData: alreadyScanned.record.pk});
         }
-      } else {
-        let product = await this.leafletInfo.getProductClientModel();
-        evt.destination = product.reportURL;
-        evt.setBatchDSUStatus(true);
-        this.updateReport(evt);
-        alreadyScanned.record.acdc = evt;
-        await $$.promisify(this.enclaveDB.updateRecord)(constants.HISTORY_TABLE, alreadyScanned.record.pk, alreadyScanned.record);
-        this.redirectToDrugDetails({productData: alreadyScanned.record.pk});
       }
-    })
+    )
   }
 
   insertScanditStyles() {

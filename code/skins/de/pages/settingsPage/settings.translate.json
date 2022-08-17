@@ -27,5 +27,6 @@
     "edit_btn": "Bearbeiten",
     "set_btn": "Satz",
     "view_btn": "Aussicht",
-    "test_native_integration": "Testen Sie die native Integration"
+    "test_native_integration": "Testen Sie die native Integration",
+    "socket_for_camera": "Socket-Verbindung für Kamera verwenden"
 }

@@ -27,5 +27,6 @@
     "edit_btn": "Éditer",
     "set_btn": "Régler",
     "view_btn": "Voir",
-    "test_native_integration": "Tester l'intégration native"
+    "test_native_integration": "Tester l'intégration native",
+    "socket_for_camera": "Utiliser la connexion socket pour la caméra"
 }

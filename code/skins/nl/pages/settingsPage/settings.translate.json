@@ -27,5 +27,6 @@
     "edit_btn": "Bewerk",
     "set_btn": "Set",
     "view_btn": "Visie",
-    "test_native_integration": "Systeemeigen integratie testen"
+    "test_native_integration": "Systeemeigen integratie testen",
+    "socket_for_camera": "Gebruik socketverbinding voor camera"
 }

@@ -27,5 +27,6 @@
     "edit_btn": "Editați | ×",
     "set_btn": "A stabilit",
     "view_btn": "Vedere",
-    "test_native_integration": "Testați integrarea nativă"
+    "test_native_integration": "Testați integrarea nativă",
+    "socket_for_camera": "Utilizați socket pentru cameră"
 }

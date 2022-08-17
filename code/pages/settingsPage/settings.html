@@ -27,24 +27,24 @@
 
 
                     <div class="advanced-settings" hidden="true">
-                        <div class="checkbox-layout">
+                        <div class="checkbox-layout label">
                             <span>{{ $checkbox }}</span>
                             <ion-checkbox checked="@advancedUser" id="advancedUserCheckbox"
                                           slot="end"></ion-checkbox>
                         </div>
                         <div class="acdc-container">
-                            <div class="checkbox-layout">
-                                <div class="label">{{ $acdc_checkbox }}</div>
+                            <div class="checkbox-layout label">
+                                <div>{{ $acdc_checkbox }}</div>
                                 <ion-checkbox checked="@acdc.enabled" id="acdcEnabledCheckbox"
                                               slot="end"></ion-checkbox>
                             </div>
                             <div class="acdcOptionsContainer" hidden="true">
-                                <div class="checkbox-layout acdc-option">
+                                <div class="checkbox-layout acdc-option label">
                                     <span>{{ $acdc_did_checkbox }}</span>
                                     <ion-checkbox checked="@acdc.did_enabled" id="acdcDidCheckbox"
                                                   slot="end"></ion-checkbox>
                                 </div>
-                                <div class="checkbox-layout acdc-option">
+                                <div class="checkbox-layout acdc-option label">
                                     <span>{{ $acdc_location_checkbox }}</span>
                                     <ion-checkbox checked="@acdc.location_enabled" id="acdcLocationCheckbox"
                                                   slot="end"></ion-checkbox>
@@ -110,6 +110,45 @@
                                 </ion-button>
                             </div>
                         </div>
+                        <div class="label"> Socket camera FPS</div>
+                        <div data-if="@socketCameraFPSEditMode">
+                            <div slot="true">
+                                <input class="settings-input" data-view-model="@socketCameraFPS" type="text"/>
+                                <ion-button data-tag="change-socket-camera-FPS">{{$save_btn}}</ion-button>
+                                <ion-button data-tag="change-default-socket-camera-FPS">{{$reset_btn}}</ion-button>
+                            </div>
+                            <div slot="false">
+                                <input class="settings-input" data-view-model="@socketCameraFPS" readonly
+                                       type="text"/>
+                                <ion-button class="network-edit-button" data="socketCameraFPSEditMode"
+                                            data-tag="change-socket-camera-FPS-edit-mode"> {{$edit_btn}} <i
+                                        class="fa fa-pencil-square-o"></i>
+                                </ion-button>
+                            </div>
+                        </div>
+                        <div class="label"> HTTP camera FPS</div>
+                        <div data-if="@httpCameraFPSEditMode">
+                            <div slot="true">
+                                <input class="settings-input" data-view-model="@httpCameraFPS" type="text"/>
+                                <ion-button data-tag="change-http-camera-FPS">{{$save_btn}}</ion-button>
+                                <ion-button data-tag="change-default-http-camera-FPS">{{$reset_btn}}</ion-button>
+                            </div>
+                            <div slot="false">
+                                <input class="settings-input" data-view-model="@httpCameraFPS" readonly
+                                       type="text"/>
+                                <ion-button class="network-edit-button" data="httpCameraFPSEditMode"
+                                            data-tag="change-http-camera-FPS-edit-mode"> {{$edit_btn}} <i
+                                        class="fa fa-pencil-square-o"></i>
+                                </ion-button>
+                            </div>
+                        </div>
+
+                        <div class="checkbox-layout label">
+                            <span>{{$socket_for_camera}}</span>
+                            <ion-checkbox checked="@useSocketConnectionForCamera" id="socketConnectionForCameraCheckbox"
+                                          slot="end"></ion-checkbox>
+                        </div>
+
                         <div hidden="@devOptions.areDisabled">
                             <div class="label"> {{$dev_subtitle}}</div>
                             <ion-item button class="dev-options" class="ion"

@@ -1,4 +1,5 @@
 import Scanner from "../../lib/zxing-wrapper/scanner.js";
+import SettingsService from "./SettingsService.js";
 
 const TAG = '[ScanService]'
 
@@ -109,6 +110,128 @@ function switchFacingMode(facingMode) {
     }
 }
 
+class PullStreamScanAPI {
+    constructor(fps) {
+        this.fps = fps || 10;
+    }
+
+    openStream() {
+        const self = this;
+        return new Promise((resolve, reject) => {
+            opendsu_native_apis.createNativeBridge(async (err, handler) => {
+                if (err) {
+                    reject(err);
+                }
+
+                try {
+                    self.photoStream = handler.importNativeStreamAPI("photoCaptureStream");
+                    const settings = JSON.stringify({"captureType": "rgba"});
+                    self.photoStream.openStream([settings]).then(resolve, reject);
+                } catch (err) {
+                    reject(err)
+                }
+            });
+        });
+    }
+
+    retrieveNextFrame() {
+        const self = this;
+        return new Promise((resolve, reject) => {
+            self.photoStream.retrieveNextValue().then(async (resultArray) => {
+                try {
+                    self.startDecodingTime = Date.now();
+                    const frameBlob = resultArray[0];
+                    const width = resultArray[1];
+                    const height = resultArray[2];
+
+                    const arrayBuffer = await frameBlob.arrayBuffer();
+                    const imageBuffer = new Uint8ClampedArray(arrayBuffer);
+                    let imageData = new ImageData(imageBuffer, width, height);
+                    resolve(imageData);
+                } catch (err) {
+                    reject(err);
+                }
+            }, (error) => {
+                reject(error);
+            });
+        });
+    }
+
+    beginScanning(imageDataResultCallback) {
+        const self = this;
+        this.scanInterval = setInterval(async () => {
+            try {
+                let data = await self.retrieveNextFrame();
+                imageDataResultCallback(data);
+            } catch (e) {
+                // nothing
+            }
+        }, 1000 / this.fps);
+    }
+
+    close() {
+        this.photoStream.close();
+        clearInterval(this.scanInterval);
+    }
+}
+
+class PushStreamScanAPI {
+    constructor(fps) {
+        this.fps = fps || 1;
+    }
+
+    openStream() {
+        const self = this;
+        return new Promise((resolve, reject) => {
+            opendsu_native_apis.createNativeBridge(async (err, handler) => {
+                const stream = handler.importNativePushStreamAPI("photoCapturePushStream");
+                self.stream = stream;
+                stream.openStream(["rgba", self.fps]).then(() => {
+                    stream.openChannel("main").then((channel) => {
+                        self.channel = channel;
+                        channel.setNewEventHandler((arrayBuffer) => {
+                            self.currentArrayBuffer = arrayBuffer;
+                        });
+                        resolve();
+                    }, reject);
+                });
+            });
+        });
+    }
+
+    retrieveNextFrame() {
+        const self = this;
+        return new Promise((resolve, reject) => {
+            if(!self.currentArrayBuffer) {
+                reject("No data received from the socket connection");
+                return;
+            }
+
+            const sizeView = new Int32Array(self.currentArrayBuffer);
+            const width = sizeView[0];
+            const height = sizeView[1];
+            const imageBitmapViewArray = new Uint8ClampedArray(self.currentArrayBuffer, 8);
+            const imageData = new ImageData(imageBitmapViewArray, width, height);
+            resolve(imageData);
+        });
+    }
+
+    beginScanning(imageDataResultCallback) {
+        this.channel.setNewEventHandler((arrayBuffer) => {
+            const sizeView = new Int32Array(arrayBuffer);
+            const width = sizeView[0];
+            const height = sizeView[1];
+            const imageBitmapViewArray = new Uint8ClampedArray(arrayBuffer, 8);
+            const imageData = new ImageData(imageBitmapViewArray, width, height);
+            imageDataResultCallback(imageData);
+        });
+    }
+
+    close() {
+        this.stream.closeStream();
+    }
+}
+
 class ScanService {
     constructor(domElement) {
         this._status = SCANNER_STATUS.INITIALIZING;
@@ -153,6 +276,60 @@ class ScanService {
         }
     }
 
+    async setupScanUtility() {
+        return new Promise((resolve, reject) => {
+            const dbApi = require("opendsu").loadApi("db");
+            dbApi.getMainEnclaveDB(async (err, enclaveDB) => {
+                if (err) {
+                    reject('Error on getting enclave DB');
+                    return;
+                }
+                let settingsService = new SettingsService(enclaveDB);
+                try {
+                    let useSocketConnectionForCamera = await settingsService.asyncReadSetting("useSocketConnectionForCamera");
+                    let socketCameraFPS = await settingsService.asyncReadSetting("socketCameraFPS");
+                    let httpCameraFPS = await settingsService.asyncReadSetting("httpCameraFPS");
+                    var photoStream;
+                    if (useSocketConnectionForCamera == "true") {
+                        photoStream = new PushStreamScanAPI(Number.parseInt(socketCameraFPS));
+                    } else {
+                        photoStream = new PullStreamScanAPI(Number.parseInt(httpCameraFPS));
+                    }
+                    resolve(photoStream);
+                } catch (e) {
+                    resolve(new PullStreamScanAPI(10));
+                }
+            });
+        });
+    }
+
+    scanWithCallback(scannerResultCallback, errorCallback) {
+        const self = this;
+        const beginScanning = () => {
+            self.photoStream.beginScanning(async (resultImageData) => {
+                try {
+                    self.startDecodingTime = Date.now();
+                    let scanResult = await self.scanner.scanImageData(resultImageData);
+                    scannerResultCallback(scanResult);
+                } catch (err) {
+                    errorCallback(err);
+                }
+            });
+        };
+        if(!this.photoStream) {
+            this.setupScanUtility().then((photoStream) => {
+                self.photoStream = photoStream;
+                photoStream.openStream().then(() => {
+                    beginScanning();
+                }, (error) => {
+                    console.log("Error opening the stream: " + error);
+                })
+            });
+        } else {
+            beginScanning();
+        }
+    }
+
     async scan() {
         if (!this.usingNativeLayer) {
             return await this.scanner.scan();
@@ -161,18 +338,10 @@ class ScanService {
                 let scanOneFrame = () => {
                     return new Promise((resolve, reject) => {
                         let executePromise = () => {
-                            this.photoStream.retrieveNextValue().then(async (resultArray) => {
+                            this.photoStream.retrieveNextFrame().then(async (resultImageData) => {
                                 try {
                                     this.startDecodingTime = Date.now();
-                                    const frameBlob = resultArray[0];
-                                    const width = resultArray[1];
-                                    const height = resultArray[2];
-
-                                    const arrayBuffer = await frameBlob.arrayBuffer();
-                                    const imageBuffer = new Uint8ClampedArray(arrayBuffer);
-                                    let imageData = new ImageData(imageBuffer, width, height);
-
-                                    let scanResult = await this.scanner.scanImageData(imageData);
+                                    let scanResult = await this.scanner.scanImageData(resultImageData);
                                     resolve(scanResult);
                                 } catch (err) {
                                     reject(err);
@@ -187,21 +356,14 @@ class ScanService {
 
                 let result;
                 if (!this.photoStream) {
-                    opendsu_native_apis.createNativeBridge(async (err, handler) => {
-                        if (err) {
-                            reject(err);
-                        }
-
-                        try {
-                            this.photoStream = handler.importNativeStreamAPI("photoCaptureStream");
-                            const settings = JSON.stringify({"captureType": "rgba"});
-                            await this.photoStream.openStream([settings]);
-                            result = await scanOneFrame();
-                        } catch (err) {
-                            reject(err)
-                        }
-                        resolve(result);
-                    });
+                    try {
+                        this.photoStream = await this.setupScanUtility();
+                        await this.photoStream.openStream();
+                        result = await scanOneFrame();
+                    } catch (err) {
+                        reject(err)
+                    }
+                    resolve(result);
                 } else {
                     try {
                         result = await scanOneFrame();
