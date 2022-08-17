@@ -158,8 +158,8 @@ export default class ScanController extends WebcController {
     });
 
     this.onTagClick('cancel-scan', () => {
-      this.navigateToPageTag("home");
       this.scanService.stop();
+      this.navigateToPageTag("home");
     });
   }
 
@@ -175,6 +175,7 @@ export default class ScanController extends WebcController {
 
     return newError;
   }
+
 
   async startScanning() {
     if (!this.scanService) {
@@ -195,16 +196,16 @@ export default class ScanController extends WebcController {
       self.processGS1Fields(self.parseGS1Code(result.text));
     }
 
-    if (!this.scanService.usingNativeLayer) {
-      processResult(await this.scanService.scanner.scan());
-    } else {
-      this.scanService.scanWithCallback((result) => {
-        processResult(result);
-      });
+    let callingScan = async () => {
+      if (!this.scanService.usingNativeLayer) {
+        processResult(await this.scanService.scanner.scan());
+      } else {
+        this.scanService.scanWithCallback((result) => {
+          processResult(result);
+        });
+      }
     }
-
-    return;
-
+    callingScan();
   }
 
   onScannerStatusChanged(status) {
