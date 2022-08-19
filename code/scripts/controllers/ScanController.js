@@ -186,6 +186,7 @@ export default class ScanController extends WebcController {
     const self = this;
     const processResult = (result) => {
       if (!result) {
+        callingScan();
         return;
       }
       self.onScannerStatusChanged(SCANNER_STATUS.DONE);

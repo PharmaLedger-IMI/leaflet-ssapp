@@ -15,11 +15,22 @@ scan-header {
     height: 65px;
 }
 
+#watcherIf {
+    height: 100%;
+}
+
+.barcode-scanner-container {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
 #scanner-placeholder {
     overflow: hidden;
 }
 
-#scanner-placeholder ~ webc-switch > * {
+#scanner-placeholder ~ webc-switch > .active-scan {
     position: absolute;
     left: 0.5em;
     right: 0.5em;
@@ -39,6 +50,22 @@ scan-header {
     flex-direction: column;
     max-width: var(--app-max-width);
     transform: translateY(-50%);
+}
+
+#scanner-placeholder ~ webc-switch .scan-done {
+    width: 100%;
+    height: 100%;
+}
+
+#scanner-placeholder ~ webc-switch .scan-done img {
+    margin-left: auto;
+    margin-right: auto;
+    margin-left: auto;
+    margin-right: auto;
+    position: absolute;
+    left: 0.5em;
+    right: 0.5em;
+    bottom: 3em;
 }
 
 @media only screen and (min-device-width: 900px) {

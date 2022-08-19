@@ -25,10 +25,11 @@
                             <h3>{{ $status.permission-denied.0 }}</h3>
                             <div>{{ $status.permission-denied.1 }}</div>
                         </section>
-                        <section slot="active">
+                        <section slot="active" class="active-scan">
                             <img src="./assets/images/icons/scan-in-progress.svg"/>
                         </section>
-                        <section slot="done">
+                        <section slot="done" class="scan-done">
+                            <leaflet-spinner></leaflet-spinner>
                             <img src="./assets/images/icons/scan-done.svg"/>
                         </section>
                     </webc-switch>

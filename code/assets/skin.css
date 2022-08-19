@@ -322,7 +322,7 @@ leaflet-spinner .loader-container {
     background: #00000099;
     flex-direction: column;
     justify-content: center;
-    z-index: 10;
+    z-index: 1000;
 }
 
 #leaflet-content table {
