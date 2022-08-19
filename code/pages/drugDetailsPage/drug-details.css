@@ -302,6 +302,14 @@ div[status-type="error"] .status-icon-container {
     margin-left: 20px;
 }
 
+.leaflet-accordion-item-content p {
+    display: block;
+    margin-block-start: 1em;
+    margin-block-end: 1em;
+    margin-inline-start: 0px;
+    margin-inline-end: 0px;
+}
+
 
 .leaflet-accordion-item.active .leaflet-accordion-item-content {
     height: fit-content;
