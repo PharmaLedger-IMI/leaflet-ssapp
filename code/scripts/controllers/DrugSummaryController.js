@@ -17,19 +17,21 @@ export default class DrugSummaryController extends WebcController {
       statusMessage: constants.SN_OK_MESSAGE,
       serialNumber: "",
       preferredDocType: "leaflet",
-      loadingData: true
+      loadingData: true,
+      showEPI: false
     };
     let dbApi = require("opendsu").loadApi("db");
 
     dbApi.getMainEnclaveDB(async (err, enclaveDB) => {
       if (err) {
         console.log('Error on getting enclave DB');
-        this.showPopup(this.getModalConfigForSuccessScan("invalid_data", err));
+        err.secondaryMessage = this.translate("enclave_error");
+        this.showPopup(this.getModalConfig("error", err));
         return;
       }
       let scanErrorData = history.location.state.scanErrorData;
       if (scanErrorData) {
-        this.showPopup(this.getModalConfigForFailedScan(scanErrorData.secondaryMessage.stage, scanErrorData));
+        this.showPopup(this.getModalConfig("error", scanErrorData));
         return;
       }
       try {
@@ -53,11 +55,7 @@ export default class DrugSummaryController extends WebcController {
 
         // check if gtin only case
         if (!this.model.batch || Object.keys(this.model.batch).length === 0) {
-          if (this.model.product.gtin && this.model.product.showEPIOnUnknownBatchNumber) {
-            this.model.showEPI = true;
-          } else {
-            this.model.showEPI = false;
-          }
+          this.model.showEPI = !!(this.model.product.gtin && this.model.product.showEPIOnUnknownBatchNumber);
         } else {
           let expiryForDisplay = utils.convertFromGS1DateToYYYY_HM(this.model.batch.expiry);
           if (expiryForDisplay.slice(0, 2) === "00") {
@@ -82,10 +80,10 @@ export default class DrugSummaryController extends WebcController {
 
         this.documentLanguage = this.availableLanguages.find((item) => item.value === this.preferredLanguage);
 
-        this.showPopup(this.getModalConfigForSuccessScan(this.model.status));
+        this.showPopup(this.getModalConfig(this.model.status));
       } catch (err) {
-        let errData = err.message === "ScanError" ? history.location.state.scanErrorData : err;
-        this.showPopup(this.getModalConfigForSuccessScan("invalid_data", errData));
+        let errData = err;
+        this.showPopup(this.getModalConfig("error", errData));
       }
     })
     this.addListeners();
@@ -195,39 +193,7 @@ export default class DrugSummaryController extends WebcController {
     return configObj;
   }
 
-  getModalConfigForFailedScan(stage, error) {
-    let configObj = {stage};
-    configObj.mainAction = "scan-again";
-    configObj.mainActionLabel = this.translate("scan_again");
-    configObj.secondaryAction = "go-home";
-    configObj.secondaryActionLabel = this.translate("back_home");
-
-    configObj.status = "error";
-    configObj.statusMessage = this.translate("unknown_error");
-    configObj.title = error.secondaryMessage.message;
-
-    switch (stage) {
-      case constants.STAGES.INITIALIZATION:
-      case constants.STAGES.START_SCANNING:
-      case constants.STAGES.CAMERA_SWITCH:
-      case constants.STAGES.INTERPRET_SCAN:
-      case constants.STAGES.PARSE_BARCODE:
-      case constants.STAGES.CHECK_MANDATORY_FIELDS:
-      case constants.STAGES.NETWORK_NOT_FOUND:
-      case constants.STAGES.WRONG_COMBINATION:
-        configObj.content = this.translate(error.message);
-        break;
-      default:
-        configObj.content = this.translate("err_default");
-    }
-
-    let objContentHtml = `<div>${configObj.content}</div>`;
-
-    configObj.content = {html: `<div>${objContentHtml}</div>`};
-    return configObj;
-  }
-
-  getModalConfigForSuccessScan(status, additionalData) {
+  initModalConfig(status) {
     let configObj = {};
 
     if (this.model.showEPI) {
@@ -238,11 +204,6 @@ export default class DrugSummaryController extends WebcController {
       configObj.mainActionLabel = this.translate("view_leaflet");
       configObj.secondaryAction = "scan-again";
       configObj.secondaryActionLabel = this.translate("scan_again");
-
-      //for gtin only case id show leaflet is true do not show error
-      if (status === "invalid_batch") {
-        status = "verified"
-      }
     } else {
       configObj.mainAction = "scan-again";
       configObj.mainActionLabel = this.translate("scan_again");
@@ -251,8 +212,14 @@ export default class DrugSummaryController extends WebcController {
     }
 
     configObj.status = status;
+    return configObj;
+  }
 
-    switch (status) {
+  getSuccessModalConfig(configObj) {
+
+    switch (configObj.status) {
+      //for gtin only case invalid_batch do not show error
+      case "invalid_batch":
       case "verified":
         configObj.statusMessage = this.translate("verified_status");
         configObj.title = this.model.product.name;
@@ -275,31 +242,6 @@ export default class DrugSummaryController extends WebcController {
         configObj.subtitle = this.model.product.description;
         configObj.content = this.translate("expired_date_message");
         break;
-      case "invalid_data":
-        configObj.statusMessage = this.translate("invalid_data_status");
-        configObj.title = this.translate("invalid_data_title");
-        let objContentHtml = `${this.translate("invalid_data_message")}`;
-        if (additionalData) {
-          if (additionalData.message) {
-            objContentHtml = `${objContentHtml}<br><div>${additionalData.message}</div>`
-          }
-
-          if (additionalData.fields && Object.keys(additionalData.fields).length > 0) {
-            objContentHtml = `${objContentHtml}<br> <div>
-                                                 <div class="label">${this.translate("gs1field_sn")} ${additionalData.fields.serialNumber}</div>
-                                                 <div class="label">${this.translate("gs1field_gtin")} ${additionalData.fields.gtin} </div>
-                                                 <div class="label">${this.translate("gs1field_batch")} ${additionalData.fields.batchNumber} </div>
-                                                 <div class="label">${this.translate("gs1field_date")} ${additionalData.fields.expiry} </div>
-                                             </div>`
-          }
-
-          if (additionalData.secondaryMessage) {
-            objContentHtml = `${objContentHtml} <br><br><div>**${additionalData.secondaryMessage}</div>`
-          }
-        }
-
-        configObj.content = objContentHtml;
-        break;
       case "recalled_batch":
         configObj.statusMessage = this.translate("recalled_batch_status");
         configObj.title = this.translate("recalled_batch_title");
@@ -315,6 +257,48 @@ export default class DrugSummaryController extends WebcController {
         configObj.title = this.translate("decommissioned_sn_title");
         configObj.content = this.translate("decommissioned_sn_status_message");
         break;
+    }
+    return;
+  }
+
+  getFailedModalConfig(configObj, additionalData) {
+    let stage = additionalData.secondaryMessage.stage;
+    let objContentHtml = "";
+    configObj.statusMessage = this.translate("unknown_error");
+    configObj.title = additionalData.secondaryMessage.message;
+    switch (stage) {
+      case constants.STAGES.WRONG_COMBINATION:
+      case constants.STAGES.INITIALIZATION:
+      case constants.STAGES.START_SCANNING:
+      case constants.STAGES.CAMERA_SWITCH:
+      case constants.STAGES.INTERPRET_SCAN:
+      case constants.STAGES.PARSE_BARCODE:
+      case constants.STAGES.CHECK_MANDATORY_FIELDS:
+      case constants.STAGES.NETWORK_NOT_FOUND:
+        objContentHtml = `${this.translate(additionalData.message)}`;
+        if (additionalData.fields && Object.keys(additionalData.fields).length > 0) {
+          configObj.title = this.translate("invalid_data_title");
+          objContentHtml = `${objContentHtml}<br> <div class="scanned-info-container">
+                                                 <div class="label">${this.translate("gs1field_sn")} ${additionalData.fields.serialNumber}</div>
+                                                 <div class="label">${this.translate("gs1field_gtin")} ${additionalData.fields.gtin} </div>
+                                                 <div class="label">${this.translate("gs1field_batch")} ${additionalData.fields.batchNumber} </div>
+                                                 <div class="label">${this.translate("gs1field_date")} ${additionalData.fields.expiry} </div>
+                                             </div>`
+        }
+        break
+
+      default:
+        objContentHtml = this.translate("err_default");
+    }
+    configObj.content = objContentHtml;
+  }
+
+  getModalConfig(status, additionalData) {
+    let configObj = this.initModalConfig(status);
+    if (status !== "error") {
+      this.getSuccessModalConfig(configObj);
+    } else {
+      this.getFailedModalConfig(configObj, additionalData)
     }
 
     configObj.content = {html: `<div>${configObj.content}</div>`};

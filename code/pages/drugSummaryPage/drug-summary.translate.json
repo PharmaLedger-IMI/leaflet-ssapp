@@ -42,5 +42,6 @@
   "err_network_not_found": "Settings doesn't contain network value. Please check settings an update network value ",
   "_note": "Note",
   "batch_additional_info": "Batch info",
-  "_ok": "Ok"
+  "_ok": "Ok",
+  "enclave_error": "Error on getting enclave DB"
 }
