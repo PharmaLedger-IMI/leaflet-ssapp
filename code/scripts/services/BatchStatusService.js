@@ -88,27 +88,32 @@ export default class BatchStatusService {
   }
 
   getProductStatus(batchData, gs1Fields) {
-    this.checkSNCheck(batchData, gs1Fields.serialNumber);
-    this.expiryForDisplay = utils.getDateForDisplay(gs1Fields.expiry);
 
-    if (gs1Fields.expiry.slice(0, 2) === "00") {
-      this.normalizedExpiryDate = utils.convertToLastMonthDay(gs1Fields.expiry);
-    } else {
-      this.normalizedExpiryDate = this.expiryForDisplay.replaceAll(' ', '');
-    }
-    try {
-      this.expiryTime = new Date(this.normalizedExpiryDate).getTime();
-    } catch (err) {
-      // do nothing
-    }
-    if (batchData.incorrectDateCheck && (!this.expiryTime || utils.convertFromGS1DateToYYYY_HM(batchData.expiry) !== gs1Fields.expiry)) {
-      this.statusMessage = constants.PRODUCT_STATUS_FAIL_MESSAGE;
-      this.statusType = "error";
-      this.status = "incorrect_date";
-    } else if (batchData.expiredDateCheck && (!this.expiryTime || this.expiryTime < Date.now())) {
-      this.statusMessage = constants.PRODUCT_EXPIRED_MESSAGE;
-      this.statusType = "error";
-      this.status = "expired_date";
+    this.checkSNCheck(batchData, gs1Fields.serialNumber);
+    if (batchData.incorrectDateCheck || batchData.expiredDateCheck) {
+      try {
+        this.expiryForDisplay = utils.getDateForDisplay(gs1Fields.expiry);
+
+        if (gs1Fields.expiry.slice(0, 2) === "00") {
+          this.normalizedExpiryDate = utils.convertToLastMonthDay(gs1Fields.expiry);
+        } else {
+          this.normalizedExpiryDate = this.expiryForDisplay.replaceAll(' ', '');
+        }
+
+        this.expiryTime = new Date(this.normalizedExpiryDate).getTime();
+      } catch (err) {
+        // do nothing
+
+      }
+      if (batchData.incorrectDateCheck && (!this.expiryTime || utils.convertFromGS1DateToYYYY_HM(batchData.expiry) !== gs1Fields.expiry)) {
+        this.statusMessage = constants.PRODUCT_STATUS_FAIL_MESSAGE;
+        this.statusType = "error";
+        this.status = "incorrect_date";
+      } else if (batchData.expiredDateCheck && (!this.expiryTime || this.expiryTime < Date.now())) {
+        this.statusMessage = constants.PRODUCT_EXPIRED_MESSAGE;
+        this.statusType = "error";
+        this.status = "expired_date";
+      }
     }
   }
 
