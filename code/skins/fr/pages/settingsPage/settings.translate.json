@@ -28,5 +28,10 @@
     "set_btn": "Régler",
     "view_btn": "Voir",
     "test_native_integration": "Tester l'intégration native",
-    "socket_for_camera": "Utiliser la connexion socket pour la caméra"
+    "socket_for_camera": "Utiliser la connexion socket pour la caméra",
+    "fwd_help": "Aide",
+    "fwd_about": "À propos",
+    "fwd_privacy": "Politique de confidentialité",
+    "fwd_terms": "Termes et conditions",
+    "app_version_label": "App version "
 }

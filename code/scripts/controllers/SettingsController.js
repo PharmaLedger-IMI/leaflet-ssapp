@@ -47,6 +47,11 @@ export default class SettingsController extends WebcController {
       this.settingsService = new SettingsService(enclaveDB);
 
       this.model.preferredLanguage = await this.settingsService.asyncReadSetting("preferredLanguage");
+
+      this.envFile = await $$.promisify(config.readEnvFile)();
+
+      this.model.appVersion = this.envFile["epiProtocolVersion"];
+
       if (appLanguages[this.model.preferredLanguage]) {
         this.model.appLanguages = appLanguages[this.model.preferredLanguage]
       } else {
@@ -70,25 +75,26 @@ export default class SettingsController extends WebcController {
     })
 
   }
-    initACDCModel() {
-      // ACDC integration settings
-      this.acdc = require('acdc').ReportingService.getInstance(this.settingsService);
 
-      this.acdc.setSettingsToModel(this.model, (err) => {
-        if (err) {
-          console.log(`Error Binding ACDC settings to model: ${err}`);
-        } else {
-          console.log("Acdc Settings Added");
-          this.querySelector(".acdcOptionsContainer").hidden = !this.model.acdc.enabled;
-        }
-      });
-    }
+  initACDCModel() {
+    // ACDC integration settings
+    this.acdc = require('acdc').ReportingService.getInstance(this.settingsService);
 
-  async renderEnvData() {
-    let envFile = await $$.promisify(config.readEnvFile)();
+    this.acdc.setSettingsToModel(this.model, (err) => {
+      if (err) {
+        console.log(`Error Binding ACDC settings to model: ${err}`);
+      } else {
+        console.log("Acdc Settings Added");
+        this.querySelector(".acdcOptionsContainer").hidden = !this.model.acdc.enabled;
+      }
+    });
+  }
+
+  renderEnvData() {
+
     let displayData = [];
-    Object.keys(envFile).forEach(key => {
-      displayData.push({key: key, value: envFile[key]})
+    Object.keys(this.envFile).forEach(key => {
+      displayData.push({key: key, value: this.envFile[key]})
     })
     this.model.envData = displayData;
   }
@@ -211,28 +217,28 @@ export default class SettingsController extends WebcController {
           }
         })
       })
-     /* this.onTagClick("change-use-socket-connection-for-camera", (model, target, event) => {
-        let newValue = target.parentElement.querySelector("input").value;
-        this.settingsService.writeSetting("useSocketConnectionForCamera", newValue, (err) => {
-          if (err) {
-            console.log(err);
-            return;
-          }
-          this.model.useSocketConnectionForCamera.value = newValue;
-          this.toggleEditMode("useSocketConnectionForCameraEditMode");
-        });
-      });
+      /* this.onTagClick("change-use-socket-connection-for-camera", (model, target, event) => {
+         let newValue = target.parentElement.querySelector("input").value;
+         this.settingsService.writeSetting("useSocketConnectionForCamera", newValue, (err) => {
+           if (err) {
+             console.log(err);
+             return;
+           }
+           this.model.useSocketConnectionForCamera.value = newValue;
+           this.toggleEditMode("useSocketConnectionForCameraEditMode");
+         });
+       });
 
-      this.onTagClick("change-default-use-socket-connection-for-camera", (model, target, event) => {
-        this.settingsService.writeSetting("useSocketConnectionForCamera", "false", (err) => {
-          if (err) {
-            console.log(err);
-            return;
-          }
-          this.model.useSocketConnectionForCamera.value = "false";
-          this.toggleEditMode("useSocketConnectionForCameraEditMode");
-        });
-      });*/
+       this.onTagClick("change-default-use-socket-connection-for-camera", (model, target, event) => {
+         this.settingsService.writeSetting("useSocketConnectionForCamera", "false", (err) => {
+           if (err) {
+             console.log(err);
+             return;
+           }
+           this.model.useSocketConnectionForCamera.value = "false";
+           this.toggleEditMode("useSocketConnectionForCameraEditMode");
+         });
+       });*/
       /////
     } catch (e) {
     }
@@ -371,7 +377,7 @@ export default class SettingsController extends WebcController {
     });
 
     this.onTagClick("view-env", async () => {
-      await this.renderEnvData();
+      this.renderEnvData();
       this.showModalFromTemplate("view-env-data", () => {
       }, () => {
       }, {
@@ -387,6 +393,12 @@ export default class SettingsController extends WebcController {
       }, {controller: "FeaturesModalController", disableExpanding: true});
     })
 
+    this.onTagClick("go-to-privacy-policy", () => {
+      this.navigateToPageTag("privacy_policy");
+    });
+    this.onTagClick("go-to-terms", () => {
+      this.navigateToPageTag("terms_conditions");
+    });
 
     this.onTagClick("go-to-about", () => {
       this.navigateToPageTag("about");

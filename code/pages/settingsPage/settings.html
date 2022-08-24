@@ -16,15 +16,27 @@
                         <ion-select-option value="@value">{{ @label }} ({{@nativeName}})</ion-select-option>
                     </ion-select>
 
+                    <div class="forward-to-page" data-tag="go-to-privacy-policy">
+                        <div class="label"> {{$fwd_privacy}}</div>
+                        <div class="fwd-icon"></div>
+                    </div>
+                    <div class="forward-to-page" data-tag="go-to-terms">
+                        <div class="label"> {{$fwd_terms}}</div>
+                        <div class="fwd-icon"></div>
+                    </div>
+
                     <div class="forward-to-page" data-tag="go-to-help">
                         <div class="label"> {{$fwd_help}}</div>
                         <div class="fwd-icon"></div>
                     </div>
+
                     <div class="forward-to-page" data-tag="go-to-about">
                         <div class="label"> {{$fwd_about}}</div>
                         <div class="fwd-icon"></div>
                     </div>
-
+                    <div class="label app-version-label">
+                        {{$app_version_label}} {{@appVersion}}
+                    </div>
 
                     <div class="advanced-settings" hidden="true">
                         <div class="checkbox-layout label">
@@ -84,10 +96,9 @@
                                 </ion-button>
                             </div>
                         </div>
-                        <div class="label"> {{$advanced_subtitle}}</div>
 
                         <div class="env-settings-container">
-                            <span>{{$env_settings_label}}</span>
+                            <span class="label">{{$env_settings_label}}</span>
                             <ion-button data-tag="view-env">{{$view_btn}}</ion-button>
                             <div data-if="@editableFeatures">
                                 <ion-button data-tag="edit-env" slot="true">{{$edit_btn}}</ion-button>
@@ -145,7 +156,8 @@
 
                         <div class="checkbox-layout label">
                             <span>{{$socket_for_camera}}</span>
-                            <ion-checkbox checked="@useSocketConnectionForCamera" id="socketConnectionForCameraCheckbox"
+                            <ion-checkbox checked="@useSocketConnectionForCamera"
+                                          id="socketConnectionForCameraCheckbox"
                                           slot="end"></ion-checkbox>
                         </div>
 

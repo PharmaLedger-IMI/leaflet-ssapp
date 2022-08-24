@@ -67,6 +67,10 @@ ion-select {
     padding-right: 10px;
 }
 
+.app-version-label {
+    margin-top: 24px;
+}
+
 .settings-input {
     width: 100%;
     padding: var(--s-space);
@@ -131,5 +135,10 @@ ion-select {
 @media only screen and (min-device-width: 900px) {
     .close-page {
         top: calc(2.34% + 16px);
+    }
+
+    .page-body-section.bottom-rounded-container {
+        border-bottom-right-radius: 35px;
+        border-bottom-left-radius: 35px;
     }
 }

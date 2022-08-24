@@ -28,5 +28,10 @@
     "set_btn": "Satz",
     "view_btn": "Aussicht",
     "test_native_integration": "Testen Sie die native Integration",
-    "socket_for_camera": "Socket-Verbindung für Kamera verwenden"
+    "socket_for_camera": "Socket-Verbindung für Kamera verwenden",
+    "fwd_help": "Hilfe",
+    "fwd_about": "Über",
+    "fwd_privacy": "Datenschutzerklärung",
+    "fwd_terms": "Allgemeine Geschäftsbedingungen",
+    "app_version_label": "App version "
 }

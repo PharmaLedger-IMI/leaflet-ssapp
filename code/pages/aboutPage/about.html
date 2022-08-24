@@ -1,17 +1,21 @@
-<link href="pages/aboutPage/about.css" rel="stylesheet"/>
+<style>
+    iframe {
+        height: 100%;
+        width: 100%;
+        z-index: 3000;
+        border: none;
+    }
+
+    .content-wrapper-container {
+        height: 100%;
+        width: 100%;
+    }
+
+</style>
 
 <div class="mobile-container">
-    <webc-container controller="HelpController">
-        <div class="header-title-container">
-            <div class="section-title">{{$title}}</div>
-            <div class="close-page" data-tag="close-page"></div>
-        </div>
-        <div class="page-body-section bottom-rounded-container">
-            <div class="page-body">
-                <div class="content-wrapper-container" slot="content-slot">
-                    <iframe src="https://Pharmaledger.eu"></iframe>
-                </div>
-            </div>
-        </div>
+    <webc-container controller="AboutController" shadow>
+        <info-page data-view-model="@">
+        </info-page>
     </webc-container>
 </div>

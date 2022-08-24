@@ -28,5 +28,10 @@
     "set_btn": "A stabilit",
     "view_btn": "Vedere",
     "test_native_integration": "Testați integrarea nativă",
-    "socket_for_camera": "Utilizați socket pentru cameră"
+    "socket_for_camera": "Utilizați socket pentru cameră",
+    "fwd_help": "Ajutor",
+    "fwd_about": "Despre",
+    "fwd_privacy": "Politica de Confidențialitate",
+    "fwd_terms": "Termeni si conditii",
+    "app_version_label": "App version "
 }

@@ -30,5 +30,8 @@
   "test_native_integration": "Test native integration",
   "fwd_help": "Help",
   "fwd_about": "About",
-  "socket_for_camera": "Use socket connection for camera"
+  "fwd_privacy": "Privacy policy",
+  "fwd_terms": "Terms and conditions",
+  "socket_for_camera": "Use socket connection for camera",
+  "app_version_label": "App version "
 }

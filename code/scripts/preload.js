@@ -20,6 +20,7 @@ function defineWebCardinalComponents() {
     define('landing-header', 'landing-header/landing-header');
     define('menu-popover', 'menu-popover/menu-popover');
     define('accordion-item', 'accordion-item/accordion-item');
+    define('info-page', 'info-page/info-page');
 }
 
 function overwriteIframeLog() {

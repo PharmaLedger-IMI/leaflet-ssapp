@@ -28,5 +28,10 @@
     "set_btn": "Set",
     "view_btn": "Visie",
     "test_native_integration": "Systeemeigen integratie testen",
-    "socket_for_camera": "Gebruik socketverbinding voor camera"
+    "socket_for_camera": "Gebruik socketverbinding voor camera",
+    "fwd_help": "Help",
+    "fwd_about": "Over",
+    "fwd_privacy": "Privacybeleid",
+    "fwd_terms": "Algemene voorwaarden",
+    "app_version_label": "App version "
 }

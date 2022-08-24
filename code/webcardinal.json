@@ -36,6 +36,18 @@
       "path": "./drug-summary"
     },
     {
+      "name": "Privacy Policy",
+      "tag": "privacy_policy",
+      "src": "./privacyPolicyPage/privacy.html",
+      "path": "./privacy_policy"
+    },
+    {
+      "name": "Terms and Conditions",
+      "tag": "terms_conditions",
+      "src": "./termsAndConditionsPage/terms.html",
+      "path": "./terms_conditions"
+    },
+    {
       "name": "About",
       "tag": "about",
       "src": "./aboutPage/about.html",

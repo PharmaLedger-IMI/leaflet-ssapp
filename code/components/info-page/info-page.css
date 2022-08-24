@@ -23,7 +23,7 @@
 
 .page-body-section {
     background: #fff;
-    height: 87%;
+    height: 90%;
 }
 
 .page-body {
@@ -42,4 +42,11 @@
     font-family: "DM Sans regular";
     padding: 16px;
     text-align: justify;
+}
+
+@media only screen and (min-device-width: 900px) {
+    .page-body-section.bottom-rounded-container {
+        border-bottom-right-radius: 35px;
+        border-bottom-left-radius: 35px;
+    }
 }
