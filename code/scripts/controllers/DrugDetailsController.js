@@ -208,7 +208,72 @@ export default class DrugDetailsController extends WebcController {
       this.querySelector('.select-document-type-container').setAttribute('hidden', true);
     }
 
+  }
 
+  searchResultsClickHandler() {
+    if (this.searchResults.length <= 1 || this.model.currentSearchResult >= this.searchResults.length) {
+      this.querySelector(".next-search-btn").setAttribute("disabled", true);
+    } else {
+      this.querySelector(".next-search-btn").removeAttribute("disabled");
+    }
+    if (this.model.currentSearchResult <= 1) {
+      this.querySelector(".prev-search-btn").setAttribute("disabled", true);
+    } else {
+      this.querySelector(".prev-search-btn").removeAttribute("disabled");
+    }
+    this.toggleActiveMark();
+    this.scrollToSearchResult(this.searchResults[this.model.currentSearchResult - 1]);
+
+  }
+
+  toggleActiveMark() {
+    let currentNode = this.searchResults[this.model.currentSearchResult - 1]
+    currentNode.querySelector("mark").classList.toggle("active");
+  }
+
+  handleSearchResultsButtons(prevBtn, nextBtn) {
+    //remove event listeners
+    let new_prevBtn = prevBtn.cloneNode(true);
+    prevBtn.parentNode.replaceChild(new_prevBtn, prevBtn);
+    let new_nextBtn = nextBtn.cloneNode(true);
+    nextBtn.parentNode.replaceChild(new_nextBtn, nextBtn);
+
+    new_prevBtn.addEventListener("click", () => {
+      if (this.searchResults.length > 1) {
+        this.toggleActiveMark();
+        this.model.currentSearchResult--;
+      }
+      this.searchResultsClickHandler();
+    });
+    new_nextBtn.addEventListener("click", () => {
+      if (this.model.currentSearchResult < this.searchResults.length) {
+        this.toggleActiveMark();
+        this.model.currentSearchResult++;
+      }
+      this.searchResultsClickHandler();
+    })
+  }
+
+  updateSearchResults() {
+    if (this.searchResults && this.searchResults.length > 0) {
+      this.querySelector(".search-results-info").classList.remove("hidden-container");
+    } else {
+      this.querySelector(".search-results-info").classList.add("hidden-container");
+      return
+    }
+
+    this.model.totalSearchResults = this.searchResults.length;
+    this.model.currentSearchResult = 1;
+    let prevBtn = this.querySelector(".prev-search-btn");
+    let nextBtn = this.querySelector(".next-search-btn");
+    this.handleSearchResultsButtons(prevBtn, nextBtn);
+    this.searchResultsClickHandler();
+  }
+
+  scrollToSearchResult(node) {
+    node.closest(".leaflet-accordion-item").classList.add("active");
+    node.scrollIntoView({block: "nearest"});
+    window.scroll(0, node.getBoundingClientRect().height);
   }
 
   addEventListeners() {
@@ -228,9 +293,7 @@ export default class DrugDetailsController extends WebcController {
             gs1Fields: this.gs1Fields,
             networkName: this.networkName,
             acdc: this.model.acdc
-          },
-          disableExpanding: true,
-          disableFooter: true
+          }, disableExpanding: true, disableFooter: true
         });
       });
     } else if (this.acdc && this.acdc.authResponse) {
@@ -243,32 +306,46 @@ export default class DrugDetailsController extends WebcController {
     })
 
     let searchHandler = (event) => {
-      if (event.key === "Enter") {
-        const query = event.target.value.toLowerCase().trim();
-        //clear all highlights
-        this.documentService.searchInHtml(query);
-        //search removes listeners by replacing inner html
-        this.setAccordionHandlers();
+      if ((event.key && event.key === "Enter") || event.type === "click") {
+        let inputElement = this.querySelector(".searchbar-input");
+        searchInLeaflet(inputElement.value.toLowerCase().trim())
       }
     }
+
+    let searchInLeaflet = (searchValue) => {
+      //clear all highlights
+      this.searchResults = this.documentService.searchInHtml(searchValue);
+      //search removes listeners by replacing inner html
+      this.setAccordionHandlers();
+      this.updateSearchResults();
+    }
+
 
     this.onTagClick("do-search", async () => {
       try {
         this.model.searchbarStatus = "visible";
         const searchbar = this.querySelector('ion-searchbar');
+        let submitSearchButton = this.querySelector(".search-click-trigger");
+        submitSearchButton.addEventListener("click", searchHandler);
+        searchbar.addEventListener("ionClear", () => {
+          searchInLeaflet("");
+        })
+
         searchbar.addEventListener('keyup', searchHandler);
         searchbar.querySelector("input").addEventListener('input', searchHandler);
-        searchbar.addEventListener('touchend', searchHandler);
       } catch (e) {
         console.log("Error on do-search event", e);
       }
-
-      // searchbar.addEventListener('keyup', searchHandler);
     })
 
     this.onTagClick("close-search", () => {
-      const searchbar = this.querySelector('ion-searchbar');
+      let searchbar = this.querySelector('ion-searchbar');
+      let submitSearchButton = this.querySelector(".search-click-trigger");
       searchbar.removeEventListener('keyup', searchHandler);
+      searchbar.removeEventListener('input', searchHandler);
+      submitSearchButton.removeEventListener('click', searchHandler);
+      this.querySelector(".searchbar-input").value = "";
+      searchInLeaflet("");
       this.model.searchbarStatus = "hidden";
     })
 

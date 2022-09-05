@@ -32,11 +32,9 @@
 .product-name-container .search-button[searchbar="visible"],
 .product-name[searchbar="visible"],
 .product-description[searchbar="visible"],
-.status-container[searchbar="visible"] {
-    display: none;
-}
-
-.product-name-container .close-search-button[searchbar="hidden"] {
+.status-container[searchbar="visible"],
+.product-name-container .close-search-button[searchbar="hidden"],
+.hidden-container {
     display: none;
 }
 
@@ -72,6 +70,58 @@
     padding: 0px;
     height: 36px;
     margin-left: 16px;
+}
+
+.search-click-trigger {
+    width: 20px;
+    height: 20px;
+    position: absolute;
+    right: 10px;
+    z-index: 100;
+}
+
+.search-container ion-searchbar .searchbar-clear-button {
+    right: unset;
+    left: 8px;
+    height: 50%;
+    top: 10px;
+}
+
+.search-container ion-searchbar .searchbar-input-container .searchbar-search-icon {
+    right: 10px;
+    left: unset;
+}
+
+.search-results-info {
+    margin: 0px 16px 10px 18px;
+}
+
+.search-results-info span {
+    float: left;
+    color: #708084;
+}
+
+.search-results-info .search-results-buttons-container {
+    float: right;
+}
+
+.search-results-info .search-results-buttons-container button {
+    height: 14px;
+    width: 18px;
+    background-size: contain;
+}
+
+.search-results-info .search-results-buttons-container button[disabled] {
+    opacity: 0.5;
+}
+
+.search-results-info .search-results-buttons-container .prev-search-btn {
+    background: url(../../assets/images/icons/search-prev.svg) no-repeat center;
+    margin-right: 30px;
+}
+
+.search-results-info .search-results-buttons-container .next-search-btn {
+    background: url(../../assets/images/icons/search-next.svg) no-repeat center;
 }
 
 
@@ -354,6 +404,10 @@ div[status-type="error"] .status-icon-container {
     right: 24px;
     border-radius: 62px;
     float: right;
+}
+
+mark.active {
+    background: #61E4A3;
 }
 
 @media only screen and (min-device-width: 900px) {

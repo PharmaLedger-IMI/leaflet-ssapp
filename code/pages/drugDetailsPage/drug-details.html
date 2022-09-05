@@ -11,9 +11,9 @@
                     <div class="search-container" searchbar="@searchbarStatus" status-type="@statusType">
                         <div class="status-icon-container"></div>
                         <ion-searchbar show-clear-button="always"
-                                       search-icon="search-circle-outline"
                                        clear-icon="trash-outline"
                                        enterkeyhint="search">
+                            <div class="search-click-trigger"></div>
                         </ion-searchbar>
                     </div>
                     <div class="search-button" data-tag="do-search" searchbar="@searchbarStatus">
@@ -29,6 +29,13 @@
                         <span>{{@statusMessage}}</span>
                     </div>
                     <div class="padding-item" slot="true"></div>
+                </div>
+            </div>
+            <div class="search-results-info hidden-container">
+                <span>{{@currentSearchResult}}/{{@totalSearchResults}}</span>
+                <div class="search-results-buttons-container">
+                    <button class="prev-search-btn"></button>
+                    <button class="next-search-btn"></button>
                 </div>
             </div>
             <div class="content-slot-container bottom-rounded-container">
