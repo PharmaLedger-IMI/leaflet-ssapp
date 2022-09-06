@@ -1,14 +1,25 @@
 <style>
     .custom-modal-header {
         display: flex;
-        justify-content: center;
-        flex-direction: row;
+        justify-content: left;
+        flex-direction: column;
         width: 100%;
+        text-align: left;
+    }
+
+    .custom-modal-header div {
+        display: flex;
+        flex-direction: row;
         gap: 10px
     }
 
-    .custom-modal-header img {
-        width: 25px;
+
+    .custom-modal-header h6 {
+        margin: 0;
+    }
+
+    .custom-modal-header h4 {
+        margin: 8px 0 0 0;
     }
 
     main {
@@ -17,8 +28,7 @@
     }
 
     webc-modal::part(header) {
-        background: linear-gradient(
-                0deg, rgba(90, 89, 253, 0.1), rgba(90, 89, 253, 0.1)), #FFFFFF;
+        background: #FF5252;
     }
 
     webc-modal::part(main) {
@@ -28,8 +38,12 @@
     }
 </style>
 <div class="custom-modal-header header-color" slot="header">
-    <img src="./assets/icons/error.svg">
-    <h5>{{@title}}</h5>
+    <div>
+        <img src="./assets/images/icons/modal-red-status.svg">
+        <h6>{{@title}}</h6>
+    </div>
+
+    <h4>{{@subtitle}}</h4>
 </div>
 <main>
     <div class="custom-modal-header">{{@messageText}}</div>
