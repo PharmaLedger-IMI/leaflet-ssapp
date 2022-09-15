@@ -55,7 +55,7 @@ export default class DrugSummaryController extends WebcController {
 
         // check if gtin only case
         if (!this.model.batch || Object.keys(this.model.batch).length === 0) {
-          this.model.showEPI = !!(this.model.product.gtin && this.model.product.showEPIOnUnknownBatchNumber);
+          this.model.showEPI = !!this.model.product.gtin;
         } else {
           let expiryForDisplay = utils.convertFromGS1DateToYYYY_HM(this.model.batch.expiry);
           if (expiryForDisplay.slice(0, 2) === "00") {
