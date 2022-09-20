@@ -51,6 +51,7 @@ export default class SettingsController extends WebcController {
       this.envFile = await $$.promisify(config.readEnvFile)();
 
       this.model.appVersion = this.envFile["epiProtocolVersion"];
+      this.allowAdvancedSettings = !!this.envFile["allowAdvancedSettings"];
 
       if (appLanguages[this.model.preferredLanguage]) {
         this.model.appLanguages = appLanguages[this.model.preferredLanguage]
@@ -412,14 +413,17 @@ export default class SettingsController extends WebcController {
       this.navigateToPageTag("help");
     })
     let clickCounter = 0;
-    this.querySelector(".section-title").addEventListener("click", () => {
-      clickCounter++;
-      if (clickCounter >= 5) {
-        this.model.showAdvanced = true;
-        this.querySelector(".advanced-settings").hidden = false;
-        clickCounter = 0;
-      }
-    })
+    if (this.allowAdvancedSettings) {
+      this.querySelector(".section-title").addEventListener("click", () => {
+        clickCounter++;
+        if (clickCounter >= 5) {
+          this.model.showAdvanced = true;
+          this.querySelector(".advanced-settings").hidden = false;
+          clickCounter = 0;
+        }
+      })
+    }
+
 
     this.model.onChange("showAdvanced", () => {
       this.addIonicListeners();
