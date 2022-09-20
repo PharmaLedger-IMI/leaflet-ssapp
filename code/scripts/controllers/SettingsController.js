@@ -62,7 +62,7 @@ export default class SettingsController extends WebcController {
       this.model.advancedUser = await this.settingsService.asyncReadSetting("advancedUser");
       this.model.refreshPeriod.value = await this.settingsService.asyncReadSetting("refreshPeriod");
       let lockFeatures = await $$.promisify(config.getEnv)("lockFeatures");
-      this.model.editableFeatures = !!lockFeatures;
+      this.model.editableFeatures = !(!!lockFeatures);
       try {
         this.model.useSocketConnectionForCamera = await this.settingsService.asyncReadSetting("useSocketConnectionForCamera");
         this.model.socketCameraFPS.value = await this.settingsService.asyncReadSetting("socketCameraFPS");
