@@ -41,7 +41,10 @@ export default class OnBoardingController extends WebcController {
         return;
       }
       let settingsService = new SettingsService(enclaveDB);
-      let onbordingComplete = await settingsService.asyncReadSetting("onbordingComplete")
+      let onbordingComplete = await settingsService.asyncReadSetting("onbordingComplete");
+      let appLang = await settingsService.asyncReadSetting("preferredLanguage");
+      this.applySkinForCurrentPage(appLang);
+      this.setSkin(appLang);
       if (!onbordingComplete) {
         this.navigateToPageTag("onboarding")
       } else {

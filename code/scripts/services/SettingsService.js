@@ -1,7 +1,7 @@
 import constants from "../../constants.js";
 
 const DEFAULT_VALUES = {
-  "preferredLanguage": "en",
+  "preferredLanguage": null,
   "networkName": constants.DEFAULT_NETWORK_NAME,
   "scanditLicense": "",
   "advancedUser": false,
