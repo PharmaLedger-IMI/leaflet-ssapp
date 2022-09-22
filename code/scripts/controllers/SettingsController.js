@@ -50,7 +50,7 @@ export default class SettingsController extends WebcController {
 
       this.envFile = await $$.promisify(config.readEnvFile)();
 
-      this.model.appVersion = this.envFile["epiProtocolVersion"];
+      this.model.appVersion = this.envFile["appBuildVersion"];
       this.allowAdvancedSettings = !!this.envFile["allowAdvancedSettings"];
 
       if (appLanguages[this.model.preferredLanguage]) {

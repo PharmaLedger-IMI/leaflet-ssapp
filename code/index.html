@@ -22,59 +22,74 @@
     <!-- WebCardinal -->
     <script src="webcardinal/webcardinal.js" type="module"></script>
     <link href="webcardinal/webcardinal.css" rel="stylesheet">
-
+    <link href="./assets/css/preloader.css" rel="stylesheet">
 
     <!--    ACDC PATCH START -->
     <script src="scripts/bundles/acdc.js"></script>
     <script type="text/javascript">
-		(function(d, script) {
-			script = d.createElement('script');
-			script.type = 'text/javascript';
-			script.async = true;
-			script.onload = function(){
-				console.log("Camera.js bundle has loaded.");
-			};
+      (function (d, script) {
+        script = d.createElement('script');
+        script.type = 'text/javascript';
+        script.async = true;
+        script.onload = function () {
+          console.log("Camera.js bundle has loaded.");
+        };
 
-			script.onerror = function(){
-				console.log("Camera.js not available! Take note that some native APIs we will not work!");
-			};
+        script.onerror = function () {
+          console.log("Camera.js not available! Take note that some native APIs we will not work!");
+        };
 
-			let baseURL = window.top.location.href;
+        let baseURL = window.top.location.href;
 
-			if(window.top.location.hash !== ""){
-				baseURL = baseURL.replace(window.top.location.hash, "");
-			}
+        if (window.top.location.hash !== "") {
+          baseURL = baseURL.replace(window.top.location.hash, "");
+        }
 
-			if(window.top.location.search !== ""){
-				baseURL = baseURL.replace(window.top.location.search, "");
-            }
+        if (window.top.location.search !== "") {
+          baseURL = baseURL.replace(window.top.location.search, "");
+        }
 
-			//if the url contains a file name like index.html or other we remove it
-			if(baseURL.split('/').pop().indexOf('.') > -1){
-				baseURL = baseURL.replace(baseURL.split('/').pop(), "");
-			}
+        //if the url contains a file name like index.html or other we remove it
+        if (baseURL.split('/').pop().indexOf('.') > -1) {
+          baseURL = baseURL.replace(baseURL.split('/').pop(), "");
+        }
 
-			if(baseURL[baseURL.length-1] !== "/"){
-				baseURL +="/";
-            }
+        if (baseURL[baseURL.length - 1] !== "/") {
+          baseURL += "/";
+        }
 
-			script.src = baseURL+'camera.js';
+        script.src = baseURL + 'camera.js';
 
-			d.getElementsByTagName('head')[0].appendChild(script);
-		}(document));
+        d.getElementsByTagName('head')[0].appendChild(script);
+      }(document));
     </script>
-<!--
-    <script type="module" src="assets/pdm-web-components/pdm-web-components.esm.js"></script>-->
+    <!--
+        <script type="module" src="assets/pdm-web-components/pdm-web-components.esm.js"></script>-->
     <!--    ACDC PATCH END -->
 
 </head>
 
 <body>
-    <ion-app>
-        <webc-app-root preload="scripts/preload.js" loader="leaflet-spinner">
-            <webc-app-router></webc-app-router>
-        </webc-app-root>
-    </ion-app>
+
+<div class="loader-container">
+    <div class="sk-cube-grid">
+        <div class="sk-cube sk-cube1"></div>
+        <div class="sk-cube sk-cube2"></div>
+        <div class="sk-cube sk-cube3"></div>
+        <div class="sk-cube sk-cube4"></div>
+        <div class="sk-cube sk-cube5"></div>
+        <div class="sk-cube sk-cube6"></div>
+        <div class="sk-cube sk-cube7"></div>
+        <div class="sk-cube sk-cube8"></div>
+        <div class="sk-cube sk-cube9"></div>
+    </div>
+</div>
+
+<ion-app>
+    <webc-app-root preload="scripts/preload.js" loader="leaflet-spinner">
+        <webc-app-router></webc-app-router>
+    </webc-app-root>
+</ion-app>
 </body>
 
 </html>

@@ -63,3 +63,7 @@ addHook('beforeAppLoads', async () => {
 
 
 });
+
+addHook('afterAppLoads', () => {
+  document.querySelector("body > .loader-container").setAttribute('style', 'display:none');
+})
