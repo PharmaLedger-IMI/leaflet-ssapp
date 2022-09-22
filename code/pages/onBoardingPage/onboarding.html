@@ -22,21 +22,27 @@
 
             <div class="terms-and-conditions" slot="false">
                 <div class="terms-text">
-                    <section data-if="@confirmDisagree">
+                    <div data-if="@confirmDisagree">
                         <h6>{{$disagree_extra_text}}</h6>
-                    </section>
-                    <p>{{$terms_and_conditions}}</p></div>
-                <div class="buttons-container">
-                    <section data-if="@confirmDisagree">
-                        <div slot="true" class="terms-button disagree" data-tag="disagree-terms-confirm">{{$disagree}}
-                        </div>
-                        <div slot="false" class="terms-button disagree" data-tag="disagree-terms">{{$disagree}}</div>
-                    </section>
-                    <div class="terms-button agree" data-tag="agree-terms">{{$agree}}</div>
+                    </div>
+                    <iframe style="width: 100%; height: 100%; font-family: 'DM Sans regular'; border: 0"
+                            src="https://app.termly.io/document/terms-of-use-for-website/76a94ec4-766a-4a6a-b7fe-c68834af6811"></iframe>
+                    <div class="buttons-container">
+                        <section data-if="@confirmDisagree">
+                            <div slot="true" class="terms-button disagree" data-tag="disagree-terms-confirm">
+                                {{$disagree}}
+                            </div>
+                            <div slot="false" class="terms-button disagree" data-tag="disagree-terms">{{$disagree}}
+                            </div>
+                        </section>
+                        <div class="terms-button agree" data-tag="agree-terms">{{$agree}}</div>
+                    </div>
                 </div>
+
             </div>
         </div>
 
     </webc-container>
 
 </div>
+
