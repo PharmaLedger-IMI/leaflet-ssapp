@@ -6,6 +6,7 @@ export default class OnBoardingController extends WebcController {
   constructor(...props) {
     super(...props);
     this.model = {loading: true}
+    this.showJailbreakClicks = 0;
     let dbApi = require("opendsu").loadApi("db");
     dbApi.getMainEnclaveDB(async (err, enclaveDB) => {
       if (err) {
@@ -31,7 +32,8 @@ export default class OnBoardingController extends WebcController {
               model: {
                 title: this.translate("_warning"),
                 subtitle: this.translate("_subtitle"),
-                messageText: this.translate("jailbroken_msg")
+                messageText: this.translate("jailbroken_msg"),
+                additionalInfo: textString
               }, disableExpanding: true, disableFooter: true
             });
           } else {
@@ -41,6 +43,12 @@ export default class OnBoardingController extends WebcController {
         this.model.loading = false;
         this.initialize();
       });
+      this.onTagClick("show-jailbreak-msg", () => {
+        this.showJailbreakClicks++;
+        if (this.showJailbreakClicks >= 3) {
+          document.querySelector(".custom-modal-header.additional-info").classList.remove("hiddenElement");
+        }
+      })
     })
 
   }
