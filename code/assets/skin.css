@@ -230,6 +230,14 @@ psk-input .form-control {
     background-color: #FFFFFF;
 }
 
+#leaflet-content > * {
+    padding: 0px 24px;
+    font-size: calc(100% + 0.6vmin);
+}
+
+.leaflet_hidden_section.ignore_from_ui {
+    display: none !important;
+}
 
 #leaflet-content table {
     display: block;

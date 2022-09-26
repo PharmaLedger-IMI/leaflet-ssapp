@@ -325,7 +325,6 @@ div[status-type="error"] .status-icon-container {
 
 .leaflet-accordion-item {
     border-bottom: 1px solid #E5EAEB;
-    padding: 0px 24px;
     font-family: "DM Sans bold";
 }
 
@@ -344,7 +343,6 @@ div[status-type="error"] .status-icon-container {
     display: none;
     height: fit-content;
     font-family: "DM Sans regular";
-    font-size: calc(100% + 0.6vmin);
     margin: 18px 0px;
 }
 
@@ -415,7 +413,7 @@ mark.active {
         font-size: calc(100% + 0.6vmin);
     }
 
-    .leaflet-accordion-item-content {
+    #leaflet-content > * {
         font-size: calc(100% + 0.4vmin);
     }
 }

@@ -180,14 +180,14 @@ export default class DrugSummaryController extends WebcController {
       configObj.mainActionLabel = this.translate("lang_proceed");
       configObj.secondaryAction = "go-home";
       configObj.secondaryActionLabel = this.translate("back_home");
-      configObj.content = {html: langContent};
+      configObj.content = langContent;
     } else {
       let noLangContent = `<div class="language-text">${this.translate("no_language_select_message")}</div>`;
       configObj.mainAction = "go-home";
       configObj.mainActionLabel = this.translate("back_home");
       configObj.secondaryAction = "scan-again";
       configObj.secondaryActionLabel = this.translate("scan_again");
-      configObj.content = {html: noLangContent};
+      configObj.content = noLangContent;
     }
 
     return configObj;

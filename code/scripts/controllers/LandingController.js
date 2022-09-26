@@ -20,7 +20,14 @@ export default class OnBoardingController extends WebcController {
       this.setSkin(appLang);
       let host = window.location.host;
       fetch(`http://${host}/jailbreak/details`)
-        .then(response => response.text())
+        .then(response => {
+          if (response.status === 200) {
+            return response.text()
+          } else {
+            return this.initialize();
+          }
+
+        })
         .then(textString => {
           console.log(textString);
           this.model.loading = false;
