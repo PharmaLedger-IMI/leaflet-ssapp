@@ -51,7 +51,7 @@ export default class SettingsController extends WebcController {
       this.envFile = await $$.promisify(config.readEnvFile)();
 
       this.model.appVersion = this.envFile["appBuildVersion"];
-      this.allowAdvancedSettings = !!this.envFile["allowAdvancedSettings"];
+      this.easterEggEnabled = !!this.envFile["easterEggEnabled"];
 
       if (appLanguages[this.model.preferredLanguage]) {
         this.model.appLanguages = appLanguages[this.model.preferredLanguage]
@@ -412,8 +412,9 @@ export default class SettingsController extends WebcController {
     this.onTagClick("go-to-help", () => {
       this.navigateToPageTag("help");
     })
-    let clickCounter = 0;
-    if (this.allowAdvancedSettings) {
+
+    if (this.easterEggEnabled) {
+      let clickCounter = 0;
       this.querySelector(".section-title").addEventListener("click", () => {
         clickCounter++;
         if (clickCounter >= 5) {

@@ -6,7 +6,7 @@ export default class OnBoardingController extends WebcController {
   constructor(...props) {
     super(...props);
     this.model = {loading: true}
-    this.showJailbreakClicks = 0;
+
     let dbApi = require("opendsu").loadApi("db");
     dbApi.getMainEnclaveDB(async (err, enclaveDB) => {
       if (err) {
@@ -16,6 +16,9 @@ export default class OnBoardingController extends WebcController {
       this.settingsService = new SettingsService(enclaveDB);
 
       let appLang = await this.settingsService.asyncReadSetting("preferredLanguage");
+      const config = require("opendsu").loadApi("config");
+      this.envFile = await $$.promisify(config.readEnvFile)();
+      this.easterEggEnabled = !!this.envFile["easterEggEnabled"];
       this.applySkinForCurrentPage(appLang);
       this.setSkin(appLang);
       let host = window.location.host;
@@ -26,7 +29,6 @@ export default class OnBoardingController extends WebcController {
           } else {
             return this.initialize();
           }
-
         })
         .then(textString => {
           console.log(textString);
@@ -50,12 +52,17 @@ export default class OnBoardingController extends WebcController {
         this.model.loading = false;
         this.initialize();
       });
-      this.onTagClick("show-jailbreak-msg", () => {
-        this.showJailbreakClicks++;
-        if (this.showJailbreakClicks >= 3) {
-          document.querySelector(".custom-modal-header.additional-info").classList.remove("hiddenElement");
-        }
-      })
+
+      if (this.easterEggEnabled) {
+        this.showJailbreakClicks = 0;
+        this.onTagClick("show-jailbreak-msg", () => {
+          this.showJailbreakClicks++;
+          if (this.showJailbreakClicks >= 3) {
+            document.querySelector(".custom-modal-header.additional-info").classList.remove("hiddenElement");
+          }
+        })
+      }
+
     })
 
   }
