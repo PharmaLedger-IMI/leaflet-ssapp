@@ -39,7 +39,7 @@ export default class DrugSummaryController extends WebcController {
         this.settingsService = new SettingsService(enclaveDB);
         let record = await $$.promisify(enclaveDB.getRecord)(constants.HISTORY_TABLE, history.location.state.productData);
         record = await recordUtils.updateRecordData(enclaveDB, record);
-
+        this.gs1Fields = record.gs1Fields;
         this.leafletInfoService = await LeafletInfoService.init(record.gs1Fields, record.networkName);
 
         this.model.expiryForDisplay = record.expiryForDisplay
@@ -75,14 +75,20 @@ export default class DrugSummaryController extends WebcController {
 
         this.availableLanguages = await $$.promisify(this.documentService.getAvailableLanguagesForXmlType.bind(this.documentService))();
         if (!this.availableLanguages || this.availableLanguages.length === 0) {
-          throw new Error("No available language for leaflet");
+          throw new Error("no_language_select_message");
         }
 
         this.documentLanguage = this.availableLanguages.find((item) => item.value === this.preferredLanguage);
 
         this.showPopup(this.getModalConfig(this.model.status));
       } catch (err) {
-        let errData = err;
+        let errData = {
+          message: err.message,
+          secondaryMessage: {
+            stage: err.message,
+            fields: this.gs1Fields,
+          }
+        }
         this.showPopup(this.getModalConfig("error", errData));
       }
     })
@@ -262,8 +268,9 @@ export default class DrugSummaryController extends WebcController {
   }
 
   getFailedModalConfig(configObj, additionalData) {
-    let stage = additionalData.secondaryMessage.stage;
+    let stage = additionalData.secondaryMessage.stage || "";
     let objContentHtml = "";
+    configObj.status = "error";
     configObj.statusMessage = this.translate("unknown_error");
     configObj.title = additionalData.secondaryMessage.message;
     switch (stage) {
@@ -275,6 +282,7 @@ export default class DrugSummaryController extends WebcController {
       case constants.STAGES.PARSE_BARCODE:
       case constants.STAGES.CHECK_MANDATORY_FIELDS:
       case constants.STAGES.NETWORK_NOT_FOUND:
+      case constants.STAGES.LEAFLET_NOT_FOUND:
         objContentHtml = `${this.translate(additionalData.message)}`;
         if (additionalData.fields && Object.keys(additionalData.fields).length > 0) {
           configObj.title = this.translate("invalid_data_title");
@@ -288,7 +296,7 @@ export default class DrugSummaryController extends WebcController {
         break
 
       default:
-        objContentHtml = this.translate("err_default");
+        objContentHtml = `${this.translate("err_default")} <br> <div class="scanned-info-container">${additionalData.message}</div>`;
     }
     configObj.content = objContentHtml;
   }

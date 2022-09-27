@@ -12,6 +12,7 @@
   "side_effects": "Side Effects",
   "storing": "Storing",
   "more": "More",
+  "search_placeholder": "Search",
   "undefined_data": "Undefined product data",
   "batch_not_found": "The batch number in the barcode could not be found",
   "note": "Note",

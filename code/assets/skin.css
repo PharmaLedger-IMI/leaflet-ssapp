@@ -50,14 +50,14 @@ webc-app-root {
     --ion-backdrop-opacity: 0.6;
     --app-max-width: 414px;
     --app-max-height: 812px;
-    --xxxl-text-size: 40px;
-    --xxl-text-size: 32px;
-    --xl-text-size: 24px;
-    --l-text-size: 20px;
-    --m-text-size: 18px;
-    --s-text-size: 16px;
-    --xs-text-size: 14px;
-    --xxs-text-size: 12px;
+    --xxxl-text-size: calc(100% + 2.2vmin);
+    --xxl-text-size: calc(100% + 1.8vmin);
+    --xl-text-size: calc(100% + 1.1vmin);
+    --l-text-size: calc(100% + 0.9vmin);
+    --m-text-size: calc(100% + 0.7vmin);
+    --s-text-size: calc(100% + 0.5vmin);
+    --xs-text-size: calc(100% + 0.3vmin);
+    --xxs-text-size: calc(100% + 0.1vmin);
     --bold-font-weight: 700;
     --medium-font-weight: 500;
     --regular-font-weight: 400;
@@ -126,7 +126,7 @@ ion-button {
 }
 
 .section-title {
-    font-size: 24px;
+    font-size: var(--xl-text-size);
     font-family: "DM Sans bold";
     margin-top: 24px;
 }
@@ -140,7 +140,7 @@ ion-button {
     font-family: "DM Sans regular";
     font-style: normal;
     font-family: "DM Sans bold";
-    font-size: 18px;
+    font-size: var(--xxs-text-size);
     text-align: center;
     letter-spacing: 0.3px;
 }
@@ -151,7 +151,7 @@ ion-select {
     border-radius: 12px;
     padding: 16px;
     color: black;
-    font-size: 16px;
+    font-size: var(--s-text-size);
     font-family: "DM Sans bold";
 }
 
@@ -205,7 +205,7 @@ webc-modal::part(close) {
     right: 16px;
     color: white;
     border-radius: 50%;
-    font-size: 15px;
+    font-size: var(--xxs-text-size)
 }
 
 psk-input .form-control {

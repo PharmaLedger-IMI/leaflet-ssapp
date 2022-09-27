@@ -11,6 +11,7 @@
     "side_effects": "Effets secondaires",
     "storing": "Stockage",
     "more": "Suite",
+    "search_placeholder": "Rechercher",
     "undefined_data": "Données produit non définies",
     "batch_not_found": "Le numéro de lot dans le code-barres est introuvable",
     "note": "Noter",

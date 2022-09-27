@@ -34,7 +34,7 @@
 }
 
 .no-data-container .page-title-section {
-    font-size: 24px;
+    font-size: calc(100% + 1vmin);
     font-family: 'DM Sans bold';
     text-align: center;
     margin-top: 2.2%;
@@ -51,7 +51,7 @@
 }
 
 .no-data-container .explain-container {
-    font-size: 15px;
+    font-size: calc(100% + 0.4vmin);
     font-family: 'DM Sans bold';
     text-align: center;
     margin-top: 16%;
@@ -64,7 +64,7 @@
 }
 
 .section-label {
-    font-size: 24px;
+    font-size: calc(100% + 1vmin);
     font-weight: var(--bold-font-weight);
     line-height: 150%;
     letter-spacing: 0.3px;
@@ -134,13 +134,13 @@
 
 .product-info-row ion-label {
     font-family: "DM Sans regular";
-    font-size: 12px;
+    font-size: calc(100% - 0.4vmin);
     color: #516266;
 }
 
 .product-info-row ion-label.productItem_name {
     font-family: "DM Sans bold";
-    font-size: 16px;
+    font-size: calc(100% + 0.5vmin);
 }
 
 .productItem_status {
@@ -150,7 +150,7 @@
 
 .productItem_status {
     padding: 2px 8px;
-    font-size: var(--xxs-text-size);
+    font-size: calc(100% - 0.4vmin);
 }
 
 .product-info-row[status="verified"],

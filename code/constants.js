@@ -42,5 +42,6 @@ export default {
     CHECK_MANDATORY_FIELDS: "check-mandatory-fields",
     NETWORK_NOT_FOUND: "network-not-found",
     WRONG_COMBINATION: "wrong-combination",
+    LEAFLET_NOT_FOUND: "no_language_select_message"
   }
 }

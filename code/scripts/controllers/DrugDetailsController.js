@@ -160,6 +160,7 @@ export default class DrugDetailsController extends WebcController {
     this.model.statusType = record.statusType;
     this.model.status = record.status;
     this.model.statusMessage = this.translate(record.statusMessage);
+    this.model.searchPlaceholder = this.translate("search_placeholder");
     this.model.notificationMessage = "";
     this.model.snCheck = record.snCheck;
     this.networkName = record.networkName;

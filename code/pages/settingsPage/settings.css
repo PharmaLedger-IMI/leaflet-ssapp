@@ -36,7 +36,7 @@
 
 .label {
     font-family: "DM Sans bold";
-    font-size: 16px;
+    font-size: var(--xxs-text-size)
 }
 
 ion-select {

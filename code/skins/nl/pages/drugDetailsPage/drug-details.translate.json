@@ -11,6 +11,7 @@
     "side_effects": "Bijwerkingen",
     "storing": "Opslaan",
     "more": "Meer",
+    "search_placeholder": "Zoeken",
     "undefined_data": "Ongedefinieerde productgegevens",
     "batch_not_found": "Het batchnummer in de streepjescode kon niet worden gevonden",
     "note": "Opmerking",

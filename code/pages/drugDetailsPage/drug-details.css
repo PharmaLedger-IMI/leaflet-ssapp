@@ -144,7 +144,7 @@
     background: rgba(255, 255, 255, 0.17);
     border-radius: 8px;
     color: #d3d9da;
-    font-size: 14px;
+    font-size: var(--xxs-text-size);
     padding: 6px 8px;
     column-gap: 6px;
     margin-left: 42px;
@@ -232,7 +232,7 @@ div[status-type="error"] .status-icon-container {
 .show-less,
 .show-more {
     color: #FF5252;
-    font-size: 14px;
+    font-size: var(--xxs-text-size);
     font-family: 'DM Sans medium';
     margin-top: 9px;
 }
@@ -260,7 +260,7 @@ div[status-type="error"] .status-icon-container {
 
 .e-leaflet-icon {
     font-family: "DM Sans bold";
-    font-size: 20px;
+    font-size: var(--m-text-size);
     text-align: left;
 }
 
