@@ -6,8 +6,9 @@ const DEFAULT_VALUES = {
   "scanditLicense": "",
   "advancedUser": false,
   "refreshPeriod": constants.DEFAULT_REFRESH_PERIOD,
-  "onboardingComplete": false
-
+  "onboardingComplete": false,
+  "socketCameraFPS": 25,
+  "useSocketConnectionForCamera": true
 }
 export default class SettingsService {
   constructor(enclaveDB) {
