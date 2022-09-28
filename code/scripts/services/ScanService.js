@@ -287,10 +287,13 @@ class ScanService {
                 let settingsService = new SettingsService(enclaveDB);
                 try {
                     let useSocketConnectionForCamera = await settingsService.asyncReadSetting("useSocketConnectionForCamera");
+                    if(typeof useSocketConnectionForCamera === "string"){
+                        useSocketConnectionForCamera = JSON.parse(useSocketConnectionForCamera.toLowerCase())
+                    }
                     let socketCameraFPS = await settingsService.asyncReadSetting("socketCameraFPS");
                     let httpCameraFPS = await settingsService.asyncReadSetting("httpCameraFPS");
                     var photoStream;
-                    if (useSocketConnectionForCamera == "true") {
+                    if (useSocketConnectionForCamera) {
                         photoStream = new PushStreamScanAPI(Number.parseInt(socketCameraFPS));
                     } else {
                         photoStream = new PullStreamScanAPI(Number.parseInt(httpCameraFPS));
