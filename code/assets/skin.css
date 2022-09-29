@@ -1,5 +1,7 @@
 @import url("./css/preloader.css");
 
+
+
 webc-app-root {
     --mode: none;
 }
@@ -73,6 +75,10 @@ webc-app-root {
     --m-space: 14px;
     --s-space: 8px;
     --xs-space: 5px;
+}
+
+body{
+    font: -apple-system-body;
 }
 
 
