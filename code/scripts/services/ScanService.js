@@ -110,7 +110,7 @@ function switchFacingMode(facingMode) {
     }
 }
 
-class PullStreamScanAPI {
+class HttpBasedAPI {
     constructor(fps) {
         this.fps = fps || 10;
     }
@@ -175,7 +175,7 @@ class PullStreamScanAPI {
     }
 }
 
-class PushStreamScanAPI {
+class SocketStreamAPI {
     constructor(fps) {
         this.fps = fps || 1;
     }
@@ -294,13 +294,13 @@ class ScanService {
                     let httpCameraFPS = await settingsService.asyncReadSetting("httpCameraFPS");
                     var photoStream;
                     if (useSocketConnectionForCamera) {
-                        photoStream = new PushStreamScanAPI(Number.parseInt(socketCameraFPS));
+                        photoStream = new SocketStreamAPI(Number.parseInt(socketCameraFPS));
                     } else {
-                        photoStream = new PullStreamScanAPI(Number.parseInt(httpCameraFPS));
+                        photoStream = new HttpBasedAPI(Number.parseInt(httpCameraFPS));
                     }
                     resolve(photoStream);
                 } catch (e) {
-                    resolve(new PullStreamScanAPI(10));
+                    resolve(new HttpBasedAPI(10));
                 }
             });
         });
