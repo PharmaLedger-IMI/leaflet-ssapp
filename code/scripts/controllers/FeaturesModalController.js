@@ -17,7 +17,7 @@ export default class FeaturesModalController extends WebcController {
           code: key,
           value: key,
           label: gtinResolver.constants.DISABLED_FEATURES_MAP[key].description,
-          checked: !!disabledFeatures.find((item) => item === key)
+          checked: !!disabledFeatures.find((item) => item.trim() === key)
         })
       })
 
