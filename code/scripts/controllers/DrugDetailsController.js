@@ -223,13 +223,13 @@ export default class DrugDetailsController extends WebcController {
       this.querySelector(".prev-search-btn").removeAttribute("disabled");
     }
     this.toggleActiveMark();
-    this.scrollToSearchResult(this.searchResults[this.model.currentSearchResult - 1]);
+    this.scrollToSearchResult(document.querySelectorAll("mark")[this.model.currentSearchResult - 1].parentNode);
 
   }
 
   toggleActiveMark() {
-    let currentNode = this.searchResults[this.model.currentSearchResult - 1]
-    currentNode.querySelector("mark").classList.toggle("active");
+    let currentNode = this.searchResults[this.model.currentSearchResult - 1];
+    document.querySelectorAll("mark")[this.model.currentSearchResult - 1].classList.toggle("active");
   }
 
   handleSearchResultsButtons(prevBtn, nextBtn) {
