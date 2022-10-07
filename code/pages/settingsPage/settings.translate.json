@@ -33,5 +33,6 @@
   "fwd_privacy": "Privacy policy",
   "fwd_terms": "Terms and conditions",
   "socket_for_camera": "Use socket connection for camera",
+  "network_name_label": "Network name: ",
   "app_version_label": "App version "
 }
