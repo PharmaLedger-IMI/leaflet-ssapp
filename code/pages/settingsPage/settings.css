@@ -67,6 +67,10 @@ ion-select {
     padding-right: 10px;
 }
 
+.network-name-label {
+    margin-top: 24px;
+}
+
 .app-version-label {
     margin-top: 24px;
 }
