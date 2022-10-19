@@ -128,7 +128,13 @@ export default class DrugSummaryController extends WebcController {
     })
 
     this.onTagClick("view-leaflet", () => {
-      this.goToDrugDetailsPage(this.documentLanguage);
+      this.modalWindow.destroy();
+      if (!this.documentLanguage) {
+        this.showPopup(this.getLanguageConfig());
+      } else {
+        this.goToDrugDetailsPage(this.documentLanguage);
+      }
+
     })
   }
 
@@ -195,7 +201,7 @@ export default class DrugSummaryController extends WebcController {
       configObj.secondaryActionLabel = this.translate("scan_again");
       configObj.content = noLangContent;
     }
-
+    configObj.content = {html: `<div>${configObj.content}</div>`};
     return configObj;
   }
 
@@ -203,9 +209,6 @@ export default class DrugSummaryController extends WebcController {
     let configObj = {};
 
     if (this.model.showEPI) {
-      if (!this.documentLanguage) {
-        return this.getLanguageConfig();
-      }
       configObj.mainAction = "view-leaflet";
       configObj.mainActionLabel = this.translate("view_leaflet");
       configObj.secondaryAction = "scan-again";

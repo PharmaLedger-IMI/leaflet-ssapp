@@ -47,8 +47,11 @@ async function getBatchWithStatus(leafletInfo, batchStatusService, gs1Fields) {
     batchModel = await leafletInfo.getBatchClientModel();
     batchStatusService.getProductStatus(batchModel, gs1Fields);
   } catch (e) {
-    await batchStatusService.unableToVerify(batchModel);
-
+    if (!gs1Fields.expiry) {
+      await batchStatusService.unableToVerify(batchModel);
+    } else {
+      await batchStatusService.getExpiryDateStatus(batchModel, gs1Fields);
+    }
   }
   return batchModel;
 }
