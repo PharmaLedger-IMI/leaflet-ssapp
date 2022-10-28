@@ -588,6 +588,12 @@ export default class ScanController extends WebcController {
     let batchModel = await utils.getBatchWithStatus(this.leafletInfo, batchStatusService, this.leafletInfo.gs1Fields)
 
     const pk = gtinUtils.getRecordPKey(this.leafletInfo.gtinSSI, this.leafletInfo.gs1Fields);
+    try {
+      await $$.promisify(this.enclaveDB.addIndex, this.enclaveDB)(constants.HISTORY_TABLE, "createdAt");
+    } catch (e) {
+      console.log("Could not add index on " + constants.HISTORY_TABLE, e)
+    }
+
     let result = await $$.promisify(this.enclaveDB.insertRecord)(constants.HISTORY_TABLE, pk, {
       networkName: this.leafletInfo.networkName,
       gs1Fields: this.leafletInfo.gs1Fields,

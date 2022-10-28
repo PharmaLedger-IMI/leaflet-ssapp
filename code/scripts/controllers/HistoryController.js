@@ -108,7 +108,7 @@ export default class HistoryController extends WebcController {
       let appLang = await settingsService.asyncReadSetting("preferredLanguage");
       this.applySkinForCurrentPage(appLang);
       this.setSkin(appLang);
-      settingsService.readSetting("refreshPeriod", (err, refreshPeriod) => {
+/*      settingsService.readSetting("refreshPeriod", (err, refreshPeriod) => {
         if (err || !refreshPeriod) {
           refreshPeriod = constants.DEFAULT_REFRESH_PERIOD;
         }
@@ -116,7 +116,7 @@ export default class HistoryController extends WebcController {
           await productsDataSource.forceLoading();
           await productsDataSource.forceUpdate();
         }, refreshPeriod * 1000)
-      });
+      });*/
       this.onTagClick("view-details", (model, target, event) => {
 
         this.navigateToPageTag("drug-summary", {
